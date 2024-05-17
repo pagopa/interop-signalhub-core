@@ -1,0 +1,22 @@
+{
+  "name": "interop-signalhub-core",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "start:push-signals": "turbo start --filter push-signal-service",
+    "build": "turbo build"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "turbo": "latest"
+  },
+  "packageManager": "pnpm@8.9.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@tsconfig/node-lts": "^20.1.3"
+  }
+}

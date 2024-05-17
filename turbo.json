@@ -1,0 +1,23 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "pipeline": {
+    "start": {
+      "persistent": true,
+      "cache": false
+    },
+
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist"]
+    },
+    "lint": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist"]
+    },
+    "lint:autofix": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist"]
+    }
+  }
+}
