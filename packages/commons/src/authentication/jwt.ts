@@ -1,5 +1,6 @@
-import { JwtHeader, SigningKeyCallback, verify } from "jsonwebtoken";
+import jwt, { JwtHeader, SigningKeyCallback } from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
+import { Logger } from "../logging/index.js";
 
 export const getKey =
   (
@@ -15,13 +16,13 @@ export const getKey =
     });
   };
 
-export const validateToken = (token: string) => {
+export const validateToken = (token: string, logger: Logger) => {
   const client = jwksClient({
     jwksUri: "TODO",
   });
 
   return new Promise((resolve, _reject) => {
-    verify(
+    jwt.verify(
       token,
       getKey(client),
       {
@@ -29,7 +30,7 @@ export const validateToken = (token: string) => {
       },
       function (err, _decoded) {
         if (err) {
-          //   logger.warn(`Token verification failed: ${err}`);
+          logger.warn(`Token verification failed: ${err}`);
           return resolve(false);
         }
         return resolve(true);

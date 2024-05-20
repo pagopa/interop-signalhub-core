@@ -1,10 +1,11 @@
 import { Response, Request, NextFunction } from "express";
+import { P, match } from "ts-pattern";
 import { validateToken } from "./jwt.js";
 import { Logger, logger } from "../logging/index.js";
-
+import { Headers } from "../config/express.config.js";
 export const authenticationMiddleware = async (
   req: Request,
-  _response: Response,
+  response: Response,
   next: NextFunction
 ) => {
   const addCtxAuthData = async (
@@ -23,7 +24,7 @@ export const authenticationMiddleware = async (
     }
 
     const jwtToken = authorizationHeader[1];
-    const valid = await validateToken(jwtToken);
+    const valid = await validateToken(jwtToken, logger);
     if (!valid) {
       throw Error("Invalid token");
     }
@@ -40,11 +41,27 @@ export const authenticationMiddleware = async (
   });
 
   try {
-    const authHeader = req.header("Authorization");
-    if (authHeader) {
-      await addCtxAuthData(authHeader, loggerInstance);
+    loggerInstance.info("Start to authenticate: ");
+    const headers = Headers.safeParse(req.headers);
+
+    if (!headers.success) {
+      loggerInstance.error(headers.error);
+      response.send("Invalid headers");
+      next();
     }
-    next();
+
+    return await match(headers.data)
+      .with(
+        {
+          authorization: P.string,
+        },
+        async (headers) => {
+          await addCtxAuthData(headers.authorization, loggerInstance);
+        }
+      )
+      .otherwise(() => {
+        throw Error("Missing header");
+      });
   } catch (error) {
     loggerInstance.error(error);
     next(error);

@@ -26,6 +26,9 @@ importers:
       jwks-rsa:
         specifier: ^3.1.0
         version: 3.1.0
+      ts-pattern:
+        specifier: ^5.1.1
+        version: 5.1.1
       uuid:
         specifier: ^9.0.1
         version: 9.0.1
@@ -3028,6 +3031,10 @@ packages:
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     dev: true
+
+  /ts-pattern@5.1.1:
+    resolution: {integrity: sha512-i+owkHr5RYdQxj8olUgRrqpiWH9x27PuWVfXwDmJ/n/CoF/SAa7WW1i2oUpPDMQpJ4U+bGRUcZkVq7i1m3zFCg==}
+    dev: false
 
   /tsconfig-paths@3.15.0:
     resolution: {integrity: sha512-2Ac2RgzDe/cn48GvOe3M+o82pEFewD3UPbyoUHHdKasHwJKjds4fLXWf/Ux5kATBKN20oaFGu+jbElp1pos0mg==}
