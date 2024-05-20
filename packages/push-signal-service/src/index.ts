@@ -1,9 +1,10 @@
 import express, { Express, Response } from "express";
-
+import { authenticationMiddleware } from "signalhub-commons";
 const app: Express = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
+app.use(authenticationMiddleware);
 
-app.get("/", (_, res: Response) => {
+app.get("/", (_: any, res: Response) => {
   res.send("Hello signal-hub push!");
 });
 

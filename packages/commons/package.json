@@ -1,29 +1,29 @@
 {
-  "name": "push-signal-service",
+  "name": "signalhub-commons",
+  "private": true,
   "version": "1.0.0",
-  "description": "PagoPA Push Signal Service",
-  "type": "module",
+  "description": "PagoPA Signal-hub common utilities",
   "main": "dist",
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "scripts": {
     "start": "node --watch --loader ts-node/esm ./src/index.ts",
-    "lint": "eslint . --ext .ts,.tsx",
-    "lint:autofix": "eslint . --ext .ts,.tsx --fix",
     "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.6.8",
-    "express": "^4.19.2",
-    "signalhub-commons": "workspace:*"
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@pagopa/eslint-config": "^3.0.0",
     "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.11.24",
     "eslint": "^9.3.0",
-    "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }
 }
