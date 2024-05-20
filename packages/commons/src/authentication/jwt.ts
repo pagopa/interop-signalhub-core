@@ -17,8 +17,9 @@ export const getKey =
   };
 
 export const validateToken = (token: string, logger: Logger) => {
+  console.log("process.env", process.env);
   const client = jwksClient({
-    jwksUri: "TODO",
+    jwksUri: process.env.WELL_KNOWN_URL as string,
   });
 
   return new Promise((resolve, _reject) => {
@@ -26,7 +27,7 @@ export const validateToken = (token: string, logger: Logger) => {
       token,
       getKey(client),
       {
-        audience: "TODO",
+        audience: process.env.ACCEPTED_AUDIENCE as string,
       },
       function (err, _decoded) {
         if (err) {

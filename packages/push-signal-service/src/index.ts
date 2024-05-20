@@ -1,7 +1,9 @@
 import express, { Express, Response } from "express";
 import { authenticationMiddleware } from "signalhub-commons";
+import "./config/env.js";
+
 const app: Express = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 app.use(authenticationMiddleware);
 
 app.get("/", (_: any, res: Response) => {

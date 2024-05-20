@@ -60,12 +60,18 @@ importers:
       axios:
         specifier: ^1.6.8
         version: 1.7.0
+      dotenv-flow:
+        specifier: ^4.1.0
+        version: 4.1.0
       express:
         specifier: ^4.19.2
         version: 4.19.2
       signalhub-commons:
         specifier: workspace:*
         version: link:../commons
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@pagopa/eslint-config':
         specifier: ^3.0.0
@@ -1013,6 +1019,18 @@ packages:
     dependencies:
       esutils: 2.0.3
     dev: true
+
+  /dotenv-flow@4.1.0:
+    resolution: {integrity: sha512-0cwP9jpQBQfyHwvE0cRhraZMkdV45TQedA8AAUZMsFzvmLcQyc1HPv+oX0OOYwLFjIlvgVepQ+WuQHbqDaHJZg==}
+    engines: {node: '>= 12.0.0'}
+    dependencies:
+      dotenv: 16.4.5
+    dev: false
+
+  /dotenv@16.4.5:
+    resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
+    engines: {node: '>=12'}
+    dev: false
 
   /ecdsa-sig-formatter@1.0.11:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
