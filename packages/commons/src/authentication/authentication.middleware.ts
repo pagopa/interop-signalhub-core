@@ -1,22 +1,37 @@
 import { Response, Request, NextFunction } from "express";
 import { P, match } from "ts-pattern";
-import { validateToken } from "./jwt.js";
+import { readAuthDataFromJwtToken, validateToken } from "./jwt.js";
 import { Logger, logger } from "../logging/index.js";
-import { Headers } from "../config/express.config.js";
+import { AppContext, Headers } from "../config/express.config.js";
+import { v4 as uuidv4 } from "uuid";
 import {
   makeApiProblemBuilder,
+  missingBearer,
   missingHeader,
   unauthorizedError,
 } from "../errors/index.js";
 
 const makeApiProblem = makeApiProblemBuilder({});
 
+export const contextMiddleware = async (
+  req: Request,
+  _response: Response,
+  next: NextFunction
+) => {
+  // eslint-disable-next-line functional/immutable-data
+  req.ctx = {
+    serviceName: "push",
+    correlationId: uuidv4(),
+  } as AppContext;
+  next();
+};
+
 export const authenticationMiddleware = async (
   req: Request,
   response: Response,
   next: NextFunction
 ) => {
-  const addCtxAuthData = async (
+  const validateTokenAndAddAuthDataToContext = async (
     authHeader: string,
     logger: Logger
   ): Promise<void> => {
@@ -28,7 +43,7 @@ export const authenticationMiddleware = async (
       logger.warn(
         `No authentication has been provided for this call ${req.method} ${req.url}`
       );
-      throw Error("Missing bearer");
+      throw missingBearer;
     }
 
     const jwtToken = authorizationHeader[1];
@@ -37,9 +52,9 @@ export const authenticationMiddleware = async (
       throw unauthorizedError("Invalid token");
     }
 
-    // const authData: AuthData = readAuthDataFromJwtToken(jwtToken);
+    const authData = readAuthDataFromJwtToken(jwtToken);
     // eslint-disable-next-line functional/immutable-data
-    // req.ctx.authData = authData;
+    req.ctx.authData = authData;
     next();
   };
 
@@ -64,7 +79,10 @@ export const authenticationMiddleware = async (
           authorization: P.string,
         },
         async (headers) => {
-          await addCtxAuthData(headers.authorization, loggerInstance);
+          await validateTokenAndAddAuthDataToContext(
+            headers.authorization,
+            loggerInstance
+          );
         }
       )
       .otherwise(() => {
@@ -83,4 +101,13 @@ export const authenticationMiddleware = async (
     );
     return response.status(problem.status).json(problem).end();
   }
+};
+
+export const authorizationMiddleware = async (
+  req: Request,
+  _response: Response,
+  next: NextFunction
+) => {
+  console.log("authorizationMiddleware", req.ctx);
+  next();
 };

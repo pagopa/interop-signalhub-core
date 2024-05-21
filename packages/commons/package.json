@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/uuid": "^9.0.8",
     "jsonwebtoken": "^9.0.2",
     "jwks-rsa": "^3.1.0",
     "ts-pattern": "^5.1.1",
