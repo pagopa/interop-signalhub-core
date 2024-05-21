@@ -3,6 +3,14 @@ import { P, match } from "ts-pattern";
 import { validateToken } from "./jwt.js";
 import { Logger, logger } from "../logging/index.js";
 import { Headers } from "../config/express.config.js";
+import {
+  makeApiProblemBuilder,
+  missingHeader,
+  unauthorizedError,
+} from "../errors/index.js";
+
+const makeApiProblem = makeApiProblemBuilder({});
+
 export const authenticationMiddleware = async (
   req: Request,
   response: Response,
@@ -26,7 +34,7 @@ export const authenticationMiddleware = async (
     const jwtToken = authorizationHeader[1];
     const valid = await validateToken(jwtToken, logger);
     if (!valid) {
-      throw Error("Invalid token");
+      throw unauthorizedError("Invalid token");
     }
 
     // const authData: AuthData = readAuthDataFromJwtToken(jwtToken);
@@ -60,10 +68,19 @@ export const authenticationMiddleware = async (
         }
       )
       .otherwise(() => {
-        throw Error("Missing header");
+        throw missingHeader();
       });
   } catch (error) {
-    loggerInstance.error(error);
-    next(error);
+    const problem = makeApiProblem(
+      error,
+      (err) =>
+        match(err.code)
+          .with("unauthorizedError", () => 401)
+          .with("operationForbidden", () => 403)
+          .with("missingHeader", () => 400)
+          .otherwise(() => 500),
+      loggerInstance
+    );
+    return response.status(problem.status).json(problem).end();
   }
 };
