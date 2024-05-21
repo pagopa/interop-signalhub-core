@@ -102,12 +102,3 @@ export const authenticationMiddleware = async (
     return response.status(problem.status).json(problem).end();
   }
 };
-
-export const authorizationMiddleware = async (
-  req: Request,
-  _response: Response,
-  next: NextFunction
-) => {
-  console.log("authorizationMiddleware", req.ctx);
-  next();
-};

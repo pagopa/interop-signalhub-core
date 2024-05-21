@@ -27,9 +27,7 @@ const decodeJwtToken = (jwtToken: string): JwtPayload | null => {
 };
 export const readAuthDataFromJwtToken = (jwtToken: string): AuthData => {
   const decoded = decodeJwtToken(jwtToken);
-  console.log("decoded", decoded);
   const token = AuthToken.safeParse(decoded);
-  console.log("token", token);
   if (token.success === false) {
     throw invalidClaim(token.error);
   } else {
@@ -38,7 +36,6 @@ export const readAuthDataFromJwtToken = (jwtToken: string): AuthData => {
 };
 
 export const validateToken = (token: string, logger: Logger) => {
-  console.log("process.env", process.env);
   const client = jwksClient({
     jwksUri: process.env.WELL_KNOWN_URL as string,
   });
