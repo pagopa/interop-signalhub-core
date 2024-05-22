@@ -1,6 +1,7 @@
-import express, { Express, Response } from "express";
+import express, { Express, Response, Request } from "express";
 import { authenticationMiddleware, contextMiddleware } from "signalhub-commons";
 import { authorizationMiddleware } from "./authorization/authorization.middleware.js";
+import router from "./routes/index.ts.js";
 import "./config/env.js";
 
 const app: Express = express();
@@ -11,9 +12,10 @@ app.use(express.json());
 app.use(contextMiddleware);
 app.use(authenticationMiddleware);
 app.use(authorizationMiddleware);
+app.use("/", router);
 
-app.post("/", (_: unknown, res: Response) => {
-  res.send("Hello signal-hub push!");
+app.post("/", (_request: Request, res: Response) => {
+  res.send("Hi!");
 });
 
 app.listen(port, () => {
