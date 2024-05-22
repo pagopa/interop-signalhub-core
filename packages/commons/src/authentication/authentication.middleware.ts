@@ -5,6 +5,7 @@ import { Logger, logger } from "../logging/index.js";
 import { AppContext, Headers } from "../config/express.config.js";
 import { v4 as uuidv4 } from "uuid";
 import {
+  jwtNotPresent,
   makeApiProblemBuilder,
   missingBearer,
   missingHeader,
@@ -18,7 +19,6 @@ export const contextMiddleware = async (
   _response: Response,
   next: NextFunction
 ) => {
-  // eslint-disable-next-line functional/immutable-data
   req.ctx = {
     serviceName: "push",
     correlationId: uuidv4(),
@@ -35,7 +35,12 @@ export const authenticationMiddleware = async (
     authHeader: string,
     logger: Logger
   ): Promise<void> => {
+    if (!authHeader) {
+      throw jwtNotPresent;
+    }
+
     const authorizationHeader = authHeader.split(" ");
+
     if (
       authorizationHeader.length !== 2 ||
       authorizationHeader[0] !== "Bearer"
@@ -53,8 +58,9 @@ export const authenticationMiddleware = async (
     }
 
     const authData = readAuthDataFromJwtToken(jwtToken);
-    // eslint-disable-next-line functional/immutable-data
     req.ctx.authData = authData;
+
+    loggerInstance.info("Authentication proccess ended");
     next();
   };
 
@@ -64,25 +70,37 @@ export const authenticationMiddleware = async (
   });
 
   try {
-    loggerInstance.info("Start to authenticate: ");
+    loggerInstance.info("Authentication process start");
     const headers = Headers.safeParse(req.headers);
 
     if (!headers.success) {
-      loggerInstance.error(headers.error);
-      response.send("Invalid headers");
-      next();
+      throw missingHeader();
     }
 
     return await match(headers.data)
       .with(
         {
           authorization: P.string,
+          "x-correlation-id": P.string,
         },
         async (headers) => {
           await validateTokenAndAddAuthDataToContext(
             headers.authorization,
             loggerInstance
           );
+        }
+      )
+      .with(
+        {
+          authorization: P.nullish,
+          "x-correlation-id": P._,
+        },
+        () => {
+          loggerInstance.warn(
+            `No authentication has been provided for this call ${req.method} ${req.url}`
+          );
+
+          throw jwtNotPresent;
         }
       )
       .otherwise(() => {
@@ -99,6 +117,7 @@ export const authenticationMiddleware = async (
           .otherwise(() => 500),
       loggerInstance
     );
+
     return response.status(problem.status).json(problem).end();
   }
 };

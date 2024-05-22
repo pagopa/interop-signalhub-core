@@ -117,19 +117,14 @@ export function makeApiProblemBuilder<T extends string>(errors: {
 }
 
 const errorCodes = {
-  authenticationSaslFailed: "9000",
   jwtDecodingError: "9001",
   operationForbidden: "9989",
   invalidClaim: "9990",
   genericError: "9991",
-  thirdPartyCallError: "9992",
   unauthorizedError: "9993",
   missingHeader: "9994",
-  tokenGenerationError: "9995",
-  missingRSAKey: "9996",
-  missingKafkaMessageData: "9997",
-  kafkaMessageProcessError: "9998",
   badRequestError: "9999",
+  jwtNotPresent: "10000",
 } as const;
 
 export type CommonErrorCodes = keyof typeof errorCodes;
@@ -153,16 +148,6 @@ export function parseErrorMessage(error: unknown): string {
 
 /* ===== Internal Error ===== */
 
-export function missingKafkaMessageDataError(
-  dataName: string,
-  eventType: string
-): InternalError<CommonErrorCodes> {
-  return new InternalError({
-    code: "missingKafkaMessageData",
-    detail: `"Invalid message: missing data '${dataName}' in ${eventType} event"`,
-  });
-}
-
 export function genericInternalError(
   message: string
 ): InternalError<CommonErrorCodes> {
@@ -172,50 +157,7 @@ export function genericInternalError(
   });
 }
 
-export function thirdPartyCallError(
-  serviceName: string,
-  errorMessage: string
-): InternalError<CommonErrorCodes> {
-  return new InternalError({
-    code: "thirdPartyCallError",
-    detail: `Error while invoking ${serviceName} external service -> ${errorMessage}`,
-  });
-}
-
-export function tokenGenerationError(
-  error: unknown
-): InternalError<CommonErrorCodes> {
-  return new InternalError({
-    code: "tokenGenerationError",
-    detail: `Error during token generation: ${parseErrorMessage(error)}`,
-  });
-}
-
-export function kafkaMessageProcessError(
-  topic: string,
-  partition: number,
-  offset: string,
-  error?: unknown
-): InternalError<CommonErrorCodes> {
-  return new InternalError({
-    code: "kafkaMessageProcessError",
-    detail: `Error while handling kafka message from topic : ${topic} - partition ${partition} - offset ${offset}. ${
-      error ? parseErrorMessage(error) : ""
-    }`,
-  });
-}
-
 /* ===== API Error ===== */
-
-export function authenticationSaslFailed(
-  message: string
-): ApiError<CommonErrorCodes> {
-  return new ApiError({
-    code: "authenticationSaslFailed",
-    title: "SASL authentication fails",
-    detail: `SALS Authentication fails with this error : ${message}`,
-  });
-}
 
 export function genericError(details: string): ApiError<CommonErrorCodes> {
   return new ApiError({
@@ -276,6 +218,12 @@ export const missingBearer: ApiError<CommonErrorCodes> = new ApiError({
   detail: `Authorization Illegal header key.`,
   code: "missingHeader",
   title: "Bearer token has not been passed",
+});
+
+export const jwtNotPresent: ApiError<CommonErrorCodes> = new ApiError({
+  detail: `JWT token has not been passed`,
+  code: "jwtNotPresent",
+  title: "JWT token has not been passed",
 });
 
 export const operationForbidden: ApiError<CommonErrorCodes> = new ApiError({
