@@ -3,7 +3,6 @@ import { P, match } from "ts-pattern";
 import { readAuthDataFromJwtToken, validateToken } from "./jwt.js";
 import { Logger, logger } from "../logging/index.js";
 import { Headers } from "../config/express.config.js";
-import { v4 as uuidv4 } from "uuid";
 import {
   jwtNotPresent,
   makeApiProblemBuilder,
@@ -13,18 +12,6 @@ import {
 } from "../errors/index.js";
 
 const makeApiProblem = makeApiProblemBuilder({});
-
-export const contextMiddleware = async (
-  req: Request,
-  _response: Response,
-  next: NextFunction
-) => {
-  req.ctx = {
-    serviceName: "push",
-    correlationId: uuidv4(),
-  };
-  next();
-};
 
 export const authenticationMiddleware = async (
   req: Request,
