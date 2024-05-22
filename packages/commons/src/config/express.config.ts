@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { AuthData } from "../authentication/authData.js";
+import { SessionData } from "../authentication/authentication.data.js";
 
 export const AppContext = z.object({
   serviceName: z.string(),
   correlationId: z.string(),
-  authData: AuthData,
+  sessionData: SessionData,
 });
 
 export const Headers = z.object({

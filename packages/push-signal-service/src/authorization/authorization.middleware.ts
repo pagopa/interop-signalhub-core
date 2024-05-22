@@ -14,23 +14,21 @@ export const authorizationMiddleware = async (
   next: NextFunction
 ): Promise<void> => {
   const loggerInstance = logger({
-    //@ts-ignore
-    serviceName: req.ctx?.serviceName,
-    //@ts-ignore
-
-    correlationId: req.ctx?.correlationId,
+    serviceName: req.ctx.serviceName,
+    correlationId: req.ctx.correlationId,
   });
   try {
+    loggerInstance.info("Authorization BEGIN");
     const producerId = await producerHasAgreementWithPushSignalEService(
-      //@ts-ignore
-      req.ctx.authData.purposeId
+      req.ctx.sessionData.purposeId
     );
 
-    const eserviceId = req.body.eserviceId;
+    const { eserviceId } = req.body;
 
     console.log("eserviceId", eserviceId);
     console.log("prodId", producerId);
     await isProducerEserviceOwned(producerId, eserviceId);
+    loggerInstance.info("Authorization END");
     next();
   } catch (error) {
     const problem = makeApiProblem(
