@@ -2,7 +2,7 @@ import { Response, Request, NextFunction } from "express";
 import { P, match } from "ts-pattern";
 import { readAuthDataFromJwtToken, validateToken } from "./jwt.js";
 import { Logger, logger } from "../logging/index.js";
-import { AppContext, Headers } from "../config/express.config.js";
+import { Headers } from "../config/express.config.js";
 import { v4 as uuidv4 } from "uuid";
 import {
   jwtNotPresent,
@@ -22,7 +22,7 @@ export const contextMiddleware = async (
   req.ctx = {
     serviceName: "push",
     correlationId: uuidv4(),
-  } as AppContext;
+  };
   next();
 };
 
@@ -81,7 +81,6 @@ export const authenticationMiddleware = async (
       .with(
         {
           authorization: P.string,
-          "x-correlation-id": P.string,
         },
         async (headers) => {
           await validateTokenAndAddAuthDataToContext(
@@ -103,8 +102,21 @@ export const authenticationMiddleware = async (
           throw jwtNotPresent;
         }
       )
+      .with(
+        {
+          authorization: P.string,
+          "x-correlation-id": P.nullish,
+        },
+        () => {
+          loggerInstance.warn(
+            `No authentication has been provided for this call ${req.method} ${req.url}`
+          );
+
+          throw missingHeader("jwtNotPresent");
+        }
+      )
       .otherwise(() => {
-        throw missingHeader();
+        throw missingHeader("ass");
       });
   } catch (error) {
     const problem = makeApiProblem(
