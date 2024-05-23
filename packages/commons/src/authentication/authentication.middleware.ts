@@ -113,12 +113,16 @@ export const authenticationMiddleware = async (
       error,
       (err) =>
         match(err.code)
-          .with("unauthorizedError", () => 401)
+          .with("unauthorizedError", () => {
+            return 401;
+          })
           .with("operationForbidden", () => 403)
           .with("missingHeader", () => 400)
           .otherwise(() => 500),
-      loggerInstance
+      loggerInstance,
+      req.ctx.correlationId
     );
+
     return response.status(problem.status).json(problem).end();
   }
 };

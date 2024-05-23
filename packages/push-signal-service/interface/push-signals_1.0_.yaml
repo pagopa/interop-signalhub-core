@@ -30,11 +30,14 @@ paths:
                   type: string
                 signalId:
                   type: number
+                objectType:
+                  type: string
               required:
                 - signalType
                 - objectId
                 - eserviceId
                 - signalId
+                - objectType
       responses:
         '200':
           description: '200'
