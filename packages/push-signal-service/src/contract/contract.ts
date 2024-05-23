@@ -1,5 +1,10 @@
 import { initContract } from "@ts-rest/core";
-import { ApiError, CommonErrorCodes } from "signalhub-commons";
+import {
+  ApiError,
+  CommonErrorCodes,
+  operationForbidden,
+  unauthorizedError,
+} from "signalhub-commons";
 import { z } from "zod";
 
 const SIGNAL_TYPE = ["CREATE", "UPDATE", "DELETE", "SEEDUPDATE"] as const;
@@ -28,8 +33,8 @@ export const contract = c.router(
       responses: {
         200: Signal,
         400: c.type<ApiError<CommonErrorCodes>>(),
-        401: c.type<ApiError<CommonErrorCodes>>(),
-        403: c.type<ApiError<CommonErrorCodes>>(),
+        401: c.type<typeof unauthorizedError>(),
+        403: c.type<typeof operationForbidden>(),
         429: c.type<ApiError<CommonErrorCodes>>(),
       },
       body: SignalSchema,

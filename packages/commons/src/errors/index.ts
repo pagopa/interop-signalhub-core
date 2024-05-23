@@ -167,7 +167,9 @@ export function genericError(details: string): ApiError<CommonErrorCodes> {
   });
 }
 
-export function unauthorizedError(details: string): ApiError<CommonErrorCodes> {
+export function unauthorizedError(
+  details: string
+): ApiError<"unauthorizedError"> {
   return new ApiError({
     detail: details,
     code: "unauthorizedError",
@@ -214,19 +216,19 @@ export function missingHeader(headerName?: string): ApiError<CommonErrorCodes> {
   });
 }
 
-export const missingBearer: ApiError<CommonErrorCodes> = new ApiError({
+export const missingBearer: ApiError<"missingHeader"> = new ApiError({
   detail: `Authorization Illegal header key.`,
   code: "missingHeader",
   title: "Bearer token has not been passed",
 });
 
-export const jwtNotPresent: ApiError<CommonErrorCodes> = new ApiError({
+export const jwtNotPresent: ApiError<"jwtNotPresent"> = new ApiError({
   detail: `JWT token has not been passed`,
   code: "jwtNotPresent",
   title: "JWT token has not been passed",
 });
 
-export const operationForbidden: ApiError<CommonErrorCodes> = new ApiError({
+export const operationForbidden: ApiError<"operationForbidden"> = new ApiError({
   detail: `Insufficient privileges`,
   code: "operationForbidden",
   title: "Insufficient privileges",
