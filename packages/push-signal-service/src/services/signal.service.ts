@@ -1,11 +1,11 @@
 import { Logger } from "signalhub-commons";
 import { DB } from "../repositories/db.js";
-import { signalHubRepository } from "../repositories/signalhub.repository.js";
+import { signalRepository as signalRepository } from "../repositories/signal.repository.js";
 
-export function signalHubServiceBuilder(dbInstance: DB) {
-  const repository = signalHubRepository(dbInstance);
+export function signalServiceBuilder(dbInstance: DB) {
+  const repository = signalRepository(dbInstance);
   return {
-    async signalAlreadyExists(
+    async signalIdAlreadyExists(
       signalId: number,
       eserviceId: string,
       logger: Logger
@@ -20,4 +20,4 @@ export function signalHubServiceBuilder(dbInstance: DB) {
   };
 }
 
-export type SignalHubService = ReturnType<typeof signalHubServiceBuilder>;
+export type SignalService = ReturnType<typeof signalServiceBuilder>;

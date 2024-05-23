@@ -1,11 +1,11 @@
 import { config } from "../utilities/config.js";
 import { contract } from "../contract/contract.js";
 import { createDbInstance } from "../repositories/db.js";
-import { signalHubServiceBuilder } from "../services/signalhub.service.js";
+import { signalServiceBuilder } from "../services/signal.service.js";
 import { logger } from "signalhub-commons";
 import { AppRouteImplementation } from "@ts-rest/express";
 
-const signalHubService = signalHubServiceBuilder(
+const signalService = signalServiceBuilder(
   createDbInstance({
     username: config.signalhubStoreDbUsername,
     password: config.signalhubStoreDbPassword,
@@ -28,7 +28,7 @@ export const pushController: AppRouteImplementation<
   const { signalId, eserviceId } = request.body;
 
   loggerInstance.info("pushController BEGIN");
-  const signalPresent = await signalHubService.signalAlreadyExists(
+  const signalPresent = await signalService.signalIdAlreadyExists(
     signalId,
     eserviceId,
     loggerInstance

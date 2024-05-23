@@ -1,14 +1,14 @@
 import { genericInternalError } from "signalhub-commons";
 import { DB } from "./db.js";
 
-export interface ISignalHubRepository {
+export interface ISignalRepository {
   findBySignalIdAndEServiceId: (
     signalId: number,
     eserviceId: string
   ) => Promise<number | null>;
 }
 
-export const signalHubRepository = (db: DB): ISignalHubRepository => ({
+export const signalRepository = (db: DB): ISignalRepository => ({
   async findBySignalIdAndEServiceId(
     signalId: number,
     eserviceId: string
@@ -24,4 +24,4 @@ export const signalHubRepository = (db: DB): ISignalHubRepository => ({
   },
 });
 
-export type SignalHubRepository = typeof signalHubRepository;
+export type SignalRepository = typeof signalRepository;
