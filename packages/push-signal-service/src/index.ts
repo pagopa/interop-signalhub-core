@@ -1,4 +1,4 @@
-import express, { Express, Response, Request } from "express";
+import express, { Express } from "express";
 import { authenticationMiddleware, contextMiddleware } from "signalhub-commons";
 import { authorizationMiddleware } from "./authorization/authorization.middleware.js";
 import router from "./routes/index.js";
@@ -14,13 +14,6 @@ app.use(authenticationMiddleware);
 app.use(authorizationMiddleware);
 app.use("/", router);
 
-app.post("/", (_request: Request, res: Response) => {
-  res.status(200).json({ here: "I'm" });
-});
-
 app.listen(port, () => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  // eslint-disable-next-line no-console
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });

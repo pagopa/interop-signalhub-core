@@ -4,10 +4,11 @@ import {
   IClient,
   IConnectionParameters,
 } from "pg-promise/typescript/pg-subset.js";
+import { logger } from "signalhub-commons";
 
 export type DB = IDatabase<unknown>;
 
-export function initDB({
+export function createDbInstance({
   username,
   password,
   host,
@@ -41,5 +42,9 @@ export function initDB({
     ssl: useSSL ? { rejectUnauthorized: false } : undefined,
   };
 
-  return pgp(dbConfig);
+  const loggerInstance = logger({});
+  loggerInstance.info("initDB");
+  // createding a Database object
+  const db = pgp(dbConfig);
+  return db;
 }

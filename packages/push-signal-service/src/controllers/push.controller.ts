@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import { config } from "../utilities/config.js";
-import { initDB } from "../repositories/db.js";
+import { createDbInstance } from "../repositories/db.js";
 import { signalHubServiceBuilder } from "../services/signalhub.service.js";
 import { logger } from "signalhub-commons";
 
 const signalHubService = signalHubServiceBuilder(
-  initDB({
+  createDbInstance({
     username: config.signalhubStoreDbUsername,
     password: config.signalhubStoreDbPassword,
     host: config.signalhubStoreDbHost,
@@ -24,8 +24,13 @@ export const pushController = async (
     serviceName: req.ctx.serviceName,
     correlationId: req.ctx.correlationId,
   });
+  const { signalId, eserviceId } = req.body;
   loggerInstance.info("pushController BEGIN");
-  const done = await signalHubService.getAThing(loggerInstance);
-  loggerInstance.info(`pushController ${JSON.stringify(done)}`);
+  const signalPresent = await signalHubService.signalAlreadyExists(
+    signalId,
+    eserviceId,
+    loggerInstance
+  );
+  loggerInstance.info(`pushController ${JSON.stringify(signalPresent)}`);
   res.status(200).json({ status: "ok" });
 };

@@ -5,10 +5,17 @@ import { signalHubRepository } from "../repositories/signalhub.repository.js";
 export function signalHubServiceBuilder(dbInstance: DB) {
   const repository = signalHubRepository(dbInstance);
   return {
-    async getAThing(logger: Logger) {
+    async signalAlreadyExists(
+      signalId: number,
+      eserviceId: string,
+      logger: Logger
+    ): Promise<boolean> {
       logger.info("SignalHubService::getAThing()");
-      const some = await repository.readSomething();
-      return some;
+      const signalAlredyPresent = await repository.findBySignalIdAndEServiceId(
+        signalId,
+        eserviceId
+      );
+      return signalAlredyPresent !== null;
     },
   };
 }

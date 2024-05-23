@@ -1,18 +1,27 @@
+import { genericInternalError } from "signalhub-commons";
 import { DB } from "./db.js";
 
 export interface ISignalHubRepository {
-  readSomething: () => Promise<void>;
+  findBySignalIdAndEServiceId: (
+    signalId: number,
+    eserviceId: string
+  ) => Promise<number | null>;
 }
 
 export const signalHubRepository = (db: DB): ISignalHubRepository => ({
-  async readSomething(): Promise<any> {
+  async findBySignalIdAndEServiceId(
+    signalId: number,
+    eserviceId: string
+  ): Promise<number | null> {
     try {
-      const eservices = await db.any(
-        "SELECT * FROM eservice WHERE state = $1",
-        "PUBLISHED"
+      const signal = await db.oneOrNone(
+        "SELECT signal_id FROM SIGNAL WHERE eservice_id = $1 AND signal_id = $2",
+        [eserviceId, signalId]
       );
-      return eservices;
-    } catch (error) {}
+      return signal;
+    } catch (error) {
+      throw genericInternalError(`Error findBySignalIdAndEServiceId: ${error}`);
+    }
   },
 });
 
