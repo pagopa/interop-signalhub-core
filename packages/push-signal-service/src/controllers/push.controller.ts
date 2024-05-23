@@ -33,8 +33,9 @@ export const pushController: AppRouteImplementation<
     eserviceId,
     loggerInstance
   );
-  loggerInstance.info(`pushController ${JSON.stringify(signalPresent)}`);
-
+  loggerInstance.info(
+    `pushController signalId [${signalId}] with e-service [${eserviceId}] is present? ${JSON.stringify(signalPresent)}`
+  );
   return {
     status: 200,
     body: {
