@@ -1,25 +1,34 @@
-import express, { Express, Response } from "express";
-import {
-  authenticationMiddleware,
-  authorizationMiddleware,
-  contextMiddleware,
-} from "signalhub-commons";
+import * as swaggerUi from "swagger-ui-express";
+import express, { Express } from "express";
+import { initServer, createExpressEndpoints } from "@ts-rest/express";
+import { authenticationMiddleware, contextMiddleware } from "signalhub-commons";
+import { contract } from "./contract/contract.js";
+import { openApiDocument } from "./scripts/generate-interface.js";
 import "./config/env.js";
+import { pushController } from "./controllers/push.controller.js";
+import { authorizationMiddleware } from "./authorization/authorization.middleware.js";
 
 const app: Express = express();
-const port = process.env.PORT || 3000;
+const server = initServer();
 
-app.use(contextMiddleware);
-app.use(authenticationMiddleware);
-app.use(authorizationMiddleware);
+app.use(express.json());
 
-app.get("/", (_: any, res: Response) => {
-  res.send("Hello signal-hub push!");
+const routes = server.router(contract, {
+  pushSignal: pushController,
 });
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
+
+createExpressEndpoints(contract, routes, app, {
+  globalMiddleware: [
+    contextMiddleware,
+    authenticationMiddleware,
+    authorizationMiddleware,
+  ],
+});
+
+const port = process.env.PORT || 3000;
+
 app.listen(port, () => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  // eslint-disable-next-line no-console
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });

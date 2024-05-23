@@ -1,10 +1,10 @@
 import { Response, Request, NextFunction } from "express";
 import { P, match } from "ts-pattern";
-import { readAuthDataFromJwtToken, validateToken } from "./jwt.js";
+import { readSessionDataFromJwtToken, validateToken } from "./jwt.js";
 import { Logger, logger } from "../logging/index.js";
-import { AppContext, Headers } from "../config/express.config.js";
-import { v4 as uuidv4 } from "uuid";
+import { Headers } from "../config/express.config.js";
 import {
+  jwtNotPresent,
   makeApiProblemBuilder,
   missingBearer,
   missingHeader,
@@ -13,29 +13,21 @@ import {
 
 const makeApiProblem = makeApiProblemBuilder({});
 
-export const contextMiddleware = async (
-  req: Request,
-  _response: Response,
-  next: NextFunction
-) => {
-  // eslint-disable-next-line functional/immutable-data
-  req.ctx = {
-    serviceName: "push",
-    correlationId: uuidv4(),
-  } as AppContext;
-  next();
-};
-
 export const authenticationMiddleware = async (
   req: Request,
   response: Response,
   next: NextFunction
 ) => {
-  const validateTokenAndAddAuthDataToContext = async (
+  const validateTokenAndAddSessionDataToContext = async (
     authHeader: string,
     logger: Logger
   ): Promise<void> => {
+    if (!authHeader) {
+      throw jwtNotPresent;
+    }
+
     const authorizationHeader = authHeader.split(" ");
+
     if (
       authorizationHeader.length !== 2 ||
       authorizationHeader[0] !== "Bearer"
@@ -52,10 +44,7 @@ export const authenticationMiddleware = async (
       throw unauthorizedError("Invalid token");
     }
 
-    const authData = readAuthDataFromJwtToken(jwtToken);
-    // eslint-disable-next-line functional/immutable-data
-    req.ctx.authData = authData;
-    next();
+    req.ctx.sessionData = readSessionDataFromJwtToken(jwtToken);
   };
 
   const loggerInstance = logger({
@@ -63,14 +52,17 @@ export const authenticationMiddleware = async (
     correlationId: req.ctx?.correlationId,
   });
 
+  if (process.env.SKIP_AUTH_VERIFICATION) {
+    loggerInstance.info("Authentication SKIP");
+    return next();
+  }
+
   try {
-    loggerInstance.info("Start to authenticate: ");
+    loggerInstance.info("Authentication BEGIN");
     const headers = Headers.safeParse(req.headers);
 
     if (!headers.success) {
-      loggerInstance.error(headers.error);
-      response.send("Invalid headers");
-      next();
+      throw missingHeader();
     }
 
     return await match(headers.data)
@@ -79,14 +71,42 @@ export const authenticationMiddleware = async (
           authorization: P.string,
         },
         async (headers) => {
-          await validateTokenAndAddAuthDataToContext(
+          await validateTokenAndAddSessionDataToContext(
             headers.authorization,
             loggerInstance
           );
+          loggerInstance.info("Authentication END");
+          next();
+        }
+      )
+      .with(
+        {
+          authorization: P.nullish,
+          "x-correlation-id": P._,
+        },
+        () => {
+          loggerInstance.warn(
+            `No authentication has been provided for this call ${req.method} ${req.url}`
+          );
+
+          throw jwtNotPresent;
+        }
+      )
+      .with(
+        {
+          authorization: P.string,
+          "x-correlation-id": P.nullish,
+        },
+        () => {
+          loggerInstance.warn(
+            `No authentication has been provided for this call ${req.method} ${req.url}`
+          );
+
+          throw missingHeader("jwtNotPresent");
         }
       )
       .otherwise(() => {
-        throw missingHeader();
+        throw missingHeader("ass");
       });
   } catch (error) {
     const problem = makeApiProblem(
@@ -101,13 +121,4 @@ export const authenticationMiddleware = async (
     );
     return response.status(problem.status).json(problem).end();
   }
-};
-
-export const authorizationMiddleware = async (
-  req: Request,
-  _response: Response,
-  next: NextFunction
-) => {
-  console.log("authorizationMiddleware", req.ctx);
-  next();
 };
