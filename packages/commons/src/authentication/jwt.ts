@@ -2,7 +2,7 @@ import jwt, { JwtHeader, JwtPayload, SigningKeyCallback } from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
 import { Logger } from "../logging/index.js";
 import { invalidClaim, jwtDecodingError } from "../errors/index.js";
-import { AuthData, AuthToken, getAuthDataFromToken } from "./authData.js";
+import { SessionData, AuthToken } from "./authentication.data.js";
 // import { AuthData } from "./authData.js";
 
 export const getKey =
@@ -25,13 +25,15 @@ const decodeJwtToken = (jwtToken: string): JwtPayload | null => {
     throw jwtDecodingError(err);
   }
 };
-export const readAuthDataFromJwtToken = (jwtToken: string): AuthData => {
+export const readSessionDataFromJwtToken = (jwtToken: string): SessionData => {
   const decoded = decodeJwtToken(jwtToken);
   const token = AuthToken.safeParse(decoded);
   if (token.success === false) {
     throw invalidClaim(token.error);
   } else {
-    return getAuthDataFromToken(token.data);
+    return {
+      purposeId: token.data.purposeId,
+    };
   }
 };
 

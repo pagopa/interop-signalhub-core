@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction } from "express";
 import { P, match } from "ts-pattern";
-import { readAuthDataFromJwtToken, validateToken } from "./jwt.js";
+import { readSessionDataFromJwtToken, validateToken } from "./jwt.js";
 import { Logger, logger } from "../logging/index.js";
 import { Headers } from "../config/express.config.js";
 import {
@@ -18,7 +18,7 @@ export const authenticationMiddleware = async (
   response: Response,
   next: NextFunction
 ) => {
-  const validateTokenAndAddAuthDataToContext = async (
+  const validateTokenAndAddSessionDataToContext = async (
     authHeader: string,
     logger: Logger
   ): Promise<void> => {
@@ -44,11 +44,7 @@ export const authenticationMiddleware = async (
       throw unauthorizedError("Invalid token");
     }
 
-    const authData = readAuthDataFromJwtToken(jwtToken);
-    req.ctx.authData = authData;
-
-    loggerInstance.info("Authentication proccess ended");
-    next();
+    req.ctx.sessionData = readSessionDataFromJwtToken(jwtToken);
   };
 
   const loggerInstance = logger({
@@ -57,7 +53,7 @@ export const authenticationMiddleware = async (
   });
 
   try {
-    loggerInstance.info("Authentication process start");
+    loggerInstance.info("Authentication BEGIN");
     const headers = Headers.safeParse(req.headers);
 
     if (!headers.success) {
@@ -70,10 +66,12 @@ export const authenticationMiddleware = async (
           authorization: P.string,
         },
         async (headers) => {
-          await validateTokenAndAddAuthDataToContext(
+          await validateTokenAndAddSessionDataToContext(
             headers.authorization,
             loggerInstance
           );
+          loggerInstance.info("Authentication END");
+          next();
         }
       )
       .with(
@@ -116,7 +114,6 @@ export const authenticationMiddleware = async (
           .otherwise(() => 500),
       loggerInstance
     );
-
     return response.status(problem.status).json(problem).end();
   }
 };
