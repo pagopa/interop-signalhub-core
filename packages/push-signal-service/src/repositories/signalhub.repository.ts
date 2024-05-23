@@ -14,11 +14,10 @@ export const signalHubRepository = (db: DB): ISignalHubRepository => ({
     eserviceId: string
   ): Promise<number | null> {
     try {
-      const signal = await db.oneOrNone(
+      return await db.oneOrNone(
         "SELECT signal_id FROM SIGNAL WHERE eservice_id = $1 AND signal_id = $2",
         [eserviceId, signalId]
       );
-      return signal;
     } catch (error) {
       throw genericInternalError(`Error findBySignalIdAndEServiceId: ${error}`);
     }

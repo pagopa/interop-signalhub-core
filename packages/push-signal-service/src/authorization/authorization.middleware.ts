@@ -17,6 +17,10 @@ export const authorizationMiddleware = async (
     serviceName: req.ctx.serviceName,
     correlationId: req.ctx.correlationId,
   });
+  if (process.env.SKIP_AUTH_VERIFICATION) {
+    loggerInstance.info("Authorization SKIP");
+    return next();
+  }
   try {
     loggerInstance.info("Authorization BEGIN");
     const producerId = await producerHasAgreementWithPushSignalEService(

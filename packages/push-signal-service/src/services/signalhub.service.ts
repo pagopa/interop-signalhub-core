@@ -10,12 +10,12 @@ export function signalHubServiceBuilder(dbInstance: DB) {
       eserviceId: string,
       logger: Logger
     ): Promise<boolean> {
-      logger.info("SignalHubService::getAThing()");
-      const signalAlredyPresent = await repository.findBySignalIdAndEServiceId(
+      logger.info("SignalHubService::signalAlreadyExists()");
+      const signalIdPresent = await repository.findBySignalIdAndEServiceId(
         signalId,
         eserviceId
       );
-      return signalAlredyPresent !== null;
+      return signalIdPresent !== null;
     },
   };
 }

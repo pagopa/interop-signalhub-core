@@ -31,6 +31,8 @@ export const pushController = async (
     eserviceId,
     loggerInstance
   );
-  loggerInstance.info(`pushController ${JSON.stringify(signalPresent)}`);
+  loggerInstance.info(
+    `pushController signalId [${signalId}] with e-service [${eserviceId}] is present? ${JSON.stringify(signalPresent)}`
+  );
   res.status(200).json({ status: "ok" });
 };
