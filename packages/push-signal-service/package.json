@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist",
   "scripts": {
-    "start": "node --watch --loader ts-node/esm ./src/index.ts",
+    "start": "node --watch --loader ts-node/esm -r 'dotenv-flow/config'  ./src/index.ts",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:autofix": "eslint . --ext .ts,.tsx --fix",
     "build": "tsc"
@@ -15,12 +15,16 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^1.6.8",
-    "express": "^4.19.2"
+    "dotenv-flow": "^4.1.0",
+    "express": "^4.19.2",
+    "signalhub-commons": "workspace:*",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@pagopa/eslint-config": "^3.0.0",
     "@types/express": "^4.17.21",
     "@types/node": "^20.11.24",
+    "eslint": "^9.3.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }

@@ -1,0 +1,33 @@
+{
+  "name": "signalhub-commons",
+  "private": true,
+  "version": "1.0.0",
+  "description": "PagoPA Signal-hub common utilities",
+  "main": "dist",
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/uuid": "^9.0.8",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.1.0",
+    "ts-pattern": "^5.1.1",
+    "uuid": "^9.0.1",
+    "winston": "^3.13.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.11.24",
+    "eslint": "^9.3.0",
+    "typescript": "^5.3.3"
+  }
+}
