@@ -7,11 +7,14 @@ import { openApiDocument } from "./scripts/generate-interface.js";
 import "./config/env.js";
 import { pushController } from "./controllers/push.controller.js";
 import { authorizationMiddleware } from "./authorization/authorization.middleware.js";
+import { signalServiceBuilder } from "./services/signal.service.js";
 
 const app: Express = express();
 const server = initServer();
 
 app.use(express.json());
+
+const signalService = signalServiceBuilder();
 
 const routes = server.router(contract, {
   pushSignal: pushController,
@@ -23,7 +26,7 @@ createExpressEndpoints(contract, routes, app, {
   globalMiddleware: [
     contextMiddleware,
     authenticationMiddleware,
-    authorizationMiddleware,
+    (req, res, next) => authorizationMiddleware(req, res, next, signalService),
   ],
 });
 

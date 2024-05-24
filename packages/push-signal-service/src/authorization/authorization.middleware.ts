@@ -1,23 +1,22 @@
 import { Request, Response, NextFunction } from "express";
 import { logger, makeApiProblemBuilder } from "signalhub-commons";
 import { match } from "ts-pattern";
-import {
-  isProducerEserviceOwned,
-  producerHasAgreementWithPushSignalEService,
-} from "./authorization.utils.js";
+import { producerHasAgreementWithPushSignalEService } from "./authorization.utils.js";
+import { SignalService } from "../services/signal.service.js";
 
 const makeApiProblem = makeApiProblemBuilder({});
 
 export const authorizationMiddleware = async (
   req: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
+  signalService: SignalService
 ): Promise<void> => {
   const loggerInstance = logger({
     serviceName: req.ctx.serviceName,
     correlationId: req.ctx.correlationId,
   });
-  if (process.env.SKIP_AUTH_VERIFICATION) {
+  if (process.env.SKIP_AUTH_VERIFICATION === true) {
     loggerInstance.info("Authorization SKIP");
     return next();
   }
@@ -26,12 +25,12 @@ export const authorizationMiddleware = async (
     const producerId = await producerHasAgreementWithPushSignalEService(
       req.ctx.sessionData.purposeId
     );
-
+    // const signalService = signalServiceBuilder();
     const { eserviceId } = req.body;
 
     console.log("eserviceId", eserviceId);
     console.log("prodId", producerId);
-    await isProducerEserviceOwned(producerId, eserviceId);
+    await signalService.isOwned(producerId, eserviceId, loggerInstance);
     loggerInstance.info("Authorization END");
     next();
   } catch (error) {

@@ -52,10 +52,10 @@ export const authenticationMiddleware = async (
     correlationId: req.ctx?.correlationId,
   });
 
-  if (process.env.SKIP_AUTH_VERIFICATION) {
-    loggerInstance.info("Authentication SKIP");
-    return next();
-  }
+  // if (process.env.SKIP_AUTH_VERIFICATION) {
+  //   loggerInstance.info("Authentication SKIP");
+  //   return next();
+  // }
 
   try {
     loggerInstance.info("Authentication BEGIN");

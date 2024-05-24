@@ -17,7 +17,7 @@ export const contextMiddleware = async (
   });
   loggerInstance.info("Context init");
   loggerInstance.info(
-    `request ${req.method} ${req.url} ${JSON.stringify(req.body)}`
+    `request ${req.method} ${req.url} ${JSON.stringify(req.body)} - SKIP AUTH VERIFICATION: ${process.env.SKIP_AUTH_VERIFICATION}`
   );
   next();
 };
