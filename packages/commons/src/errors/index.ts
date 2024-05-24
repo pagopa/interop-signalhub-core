@@ -74,7 +74,7 @@ export type MakeApiProblemFn<T extends string> = (
     error: (message: string) => void;
     warn: (message: string) => void;
   },
-  correlationId?: string
+  correlationId: string
 ) => Problem;
 
 const makeProblemLogString = (
