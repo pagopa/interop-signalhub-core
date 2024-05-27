@@ -18,6 +18,7 @@ const SignalSchema = z.object({
   objectId: z.string(),
   eserviceId: z.string(),
   signalId: z.number(),
+  objectType: z.string(),
 });
 
 export type SignalRequest = z.infer<typeof SignalSchema>;

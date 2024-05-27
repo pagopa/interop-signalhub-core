@@ -4,11 +4,11 @@ import { readSessionDataFromJwtToken, validateToken } from "./jwt.js";
 import { Logger, logger } from "../logging/index.js";
 import { Headers } from "../config/express.config.js";
 import {
+  jwtDecodingError,
   jwtNotPresent,
   makeApiProblemBuilder,
   missingBearer,
   missingHeader,
-  unauthorizedError,
 } from "../errors/index.js";
 
 const makeApiProblem = makeApiProblemBuilder({});
@@ -39,9 +39,10 @@ export const authenticationMiddleware = async (
     }
 
     const jwtToken = authorizationHeader[1];
-    const valid = await validateToken(jwtToken, logger);
-    if (!valid) {
-      throw unauthorizedError("Invalid token");
+    const validationResult = await validateToken(jwtToken, logger);
+
+    if (!validationResult.success) {
+      throw jwtDecodingError(validationResult.err);
     }
 
     req.ctx.sessionData = readSessionDataFromJwtToken(jwtToken);
@@ -52,7 +53,7 @@ export const authenticationMiddleware = async (
     correlationId: req.ctx?.correlationId,
   });
 
-  if (process.env.SKIP_AUTH_VERIFICATION) {
+  if (process.env.SKIP_AUTH_VERIFICATION === "true") {
     loggerInstance.info("Authentication SKIP");
     return next();
   }
@@ -109,16 +110,22 @@ export const authenticationMiddleware = async (
         throw missingHeader("ass");
       });
   } catch (error) {
+    console.log("error", error);
     const problem = makeApiProblem(
       error,
       (err) =>
         match(err.code)
-          .with("unauthorizedError", () => 401)
+          .with("unauthorizedError", () => {
+            return 401;
+          })
+          .with("jwtDecodingError", () => 401)
           .with("operationForbidden", () => 403)
           .with("missingHeader", () => 400)
           .otherwise(() => 500),
-      loggerInstance
+      loggerInstance,
+      req.ctx.correlationId
     );
+
     return response.status(problem.status).json(problem).end();
   }
 };

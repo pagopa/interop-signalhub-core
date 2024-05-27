@@ -36,7 +36,10 @@ export const readSessionDataFromJwtToken = (jwtToken: string): SessionData => {
   }
 };
 
-export const validateToken = (token: string, logger: Logger) => {
+export const validateToken = (
+  token: string,
+  logger: Logger
+): Promise<{ success: boolean; err: jwt.JsonWebTokenError | null }> => {
   const client = jwksClient({
     jwksUri: process.env.WELL_KNOWN_URL as string,
   });
@@ -51,9 +54,15 @@ export const validateToken = (token: string, logger: Logger) => {
       function (err, _decoded) {
         if (err) {
           logger.warn(`Token verification failed: ${err}`);
-          return resolve(false);
+          resolve({
+            success: false,
+            err: err,
+          });
         }
-        return resolve(true);
+        return resolve({
+          success: true,
+          err: null,
+        });
       }
     );
   });
