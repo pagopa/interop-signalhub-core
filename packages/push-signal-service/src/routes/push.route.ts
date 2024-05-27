@@ -1,10 +1,7 @@
 import { AppRouteImplementation, initServer } from "@ts-rest/express";
 import { contract } from "../contract/contract.js";
 import { logger } from "signalhub-commons";
-import {
-  SignalService,
-  // signalServiceBuilder,
-} from "../services/signal.service.js";
+import { SignalService } from "../services/signal.service.js";
 
 const s = initServer();
 

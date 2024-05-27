@@ -1,4 +1,4 @@
-import { AppContext } from "../../src/config/express.config.ts";
+import { AppContext } from "../commons";
 
 declare global {
   namespace Express {
