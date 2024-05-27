@@ -16,7 +16,6 @@ export const eserviceRepository = (db: DB): IEserviceRepository => ({
     state: string
   ): Promise<string | null> {
     try {
-      console.log(producerId, eserviceId, state);
       return await db.oneOrNone(
         "SELECT eservice_id FROM eservice WHERE producer_id = $1 AND eservice_id = $2 AND state = $3",
         [producerId, eserviceId, state]
