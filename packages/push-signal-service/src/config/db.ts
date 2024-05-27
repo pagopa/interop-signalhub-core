@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const SignalHubStoreEnv = z
+export const SignalHubStoreConfig = z
   .object({
     SH_DB_HOST: z.string(),
     SH_DB_NAME: z.string(),
@@ -22,4 +22,4 @@ export const SignalHubStoreEnv = z
     signalhubStoreDbUseSSL: c.SH_DB_USE_SSL,
   }));
 
-export type SignalHubStoreEnv = z.infer<typeof SignalHubStoreEnv>;
+export type SignalHubStoreConfig = z.infer<typeof SignalHubStoreConfig>;

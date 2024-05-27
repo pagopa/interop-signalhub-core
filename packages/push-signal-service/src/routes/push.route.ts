@@ -7,7 +7,6 @@ import {
 } from "../services/signal.service.js";
 
 const s = initServer();
-// const signalService = signalServiceBuilder();
 
 export const router = (signalService: SignalService) => {
   const pushSignal: AppRouteImplementation<

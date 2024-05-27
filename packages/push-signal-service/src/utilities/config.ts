@@ -1,10 +1,11 @@
 import { z } from "zod";
-import { SignalHubStoreEnv } from "../config/db.js";
+import { SignalHubStoreConfig } from "../config/db.js";
+import { HTTPServerConfig } from "signalhub-commons";
 
-const SignalHubStoreConfig = SignalHubStoreEnv;
+const PushServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig);
 
-export type SignalHubStoreConfig = z.infer<typeof SignalHubStoreConfig>;
+export type PushServiceConfig = z.infer<typeof PushServiceConfig>;
 
-export const config: SignalHubStoreConfig = {
-  ...SignalHubStoreConfig.parse(process.env),
+export const config: PushServiceConfig = {
+  ...PushServiceConfig.parse(process.env),
 };

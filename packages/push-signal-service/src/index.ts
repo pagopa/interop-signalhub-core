@@ -1,8 +1,9 @@
 import { genericLogger } from "signalhub-commons";
 import app from "./app.js";
+import { config } from "./utilities/config.js";
 
-const port = process.env.PORT || 3000;
-
-app.listen(port, () => {
-  genericLogger.info(`push-signal-service: listening on ${port}`);
+app.listen(config.port, config.host, () => {
+  genericLogger.info(
+    `push-signal-service: listening on ${config.host}:${config.port}`
+  );
 });
