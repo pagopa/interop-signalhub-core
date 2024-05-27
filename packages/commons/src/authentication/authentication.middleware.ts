@@ -4,6 +4,7 @@ import { readSessionDataFromJwtToken, validateToken } from "./jwt.js";
 import { Logger, logger } from "../logging/index.js";
 import { Headers } from "../config/express.config.js";
 import {
+  genericInternalError,
   jwtDecodingError,
   jwtNotPresent,
   makeApiProblemBuilder,
@@ -107,10 +108,9 @@ export const authenticationMiddleware = async (
         }
       )
       .otherwise(() => {
-        throw missingHeader("ass");
+        throw genericInternalError;
       });
   } catch (error) {
-    console.log("error", error);
     const problem = makeApiProblem(
       error,
       (err) =>

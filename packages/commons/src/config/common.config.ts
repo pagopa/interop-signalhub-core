@@ -8,4 +8,15 @@ export const LoggerConfig = z
     logLevel: c.LOG_LEVEL,
   }));
 
+export const HTTPServerConfig = z
+  .object({
+    HOST: z.string(),
+    PORT: z.coerce.number().min(1001),
+  })
+  .transform((c) => ({
+    host: c.HOST,
+    port: c.PORT,
+  }));
+export type HTTPServerConfig = z.infer<typeof HTTPServerConfig>;
+
 export type LoggerConfig = z.infer<typeof LoggerConfig>;
