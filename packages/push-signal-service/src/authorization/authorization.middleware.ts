@@ -25,7 +25,6 @@ export const authorizationMiddleware = async (
     const producerId = await producerHasAgreementWithPushSignalEService(
       req.ctx.sessionData.purposeId
     );
-    // const signalService = signalServiceBuilder();
     const { eserviceId } = req.body;
 
     console.log("eserviceId", eserviceId);
