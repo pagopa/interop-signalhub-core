@@ -8,4 +8,15 @@ export const SignalEvent = z.object({
   signalId: z.number(),
 });
 
+export const Signal = z.object({
+  correlationId: z.string(),
+  signalId: z.number(),
+  signalType: z.string(),
+  objectId: z.string(),
+  eserviceId: z.string(),
+  objectType: z.string(),
+  tmstInsert: z.string().default(new Date().toISOString()),
+});
+
+export type Signal = z.infer<typeof Signal>;
 export type SignalEvent = z.infer<typeof SignalEvent>;
