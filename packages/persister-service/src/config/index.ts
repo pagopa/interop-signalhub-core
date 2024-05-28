@@ -1,32 +1,24 @@
 import { z } from "zod";
 import { HTTPServerConfig } from "signalhub-commons";
+import { PersisterServiceConfig } from "./db.js";
+import { SqsPersisterServiceConfig } from "./sqs.js";
 
-export const SqsPersisterServiceConfig = z
-  .object({
-    QUEUE_URL: z.string(),
-    REGION: z.string(),
-    QUEUE_ENDPOINT: z.string(),
-  })
-  .transform((c) => ({
-    queueUrl: c.QUEUE_URL,
-    region: c.REGION,
-    queueEndpoint: c.QUEUE_ENDPOINT,
-  }));
+const envConfig = HTTPServerConfig.and(SqsPersisterServiceConfig).and(
+  PersisterServiceConfig
+);
 
-const parsedConfigFromEnv = SqsPersisterServiceConfig.safeParse(process.env);
+const parsedFromEnv = envConfig.safeParse(process.env);
 
-if (!parsedConfigFromEnv.success) {
-  const invalidEnvVars = parsedConfigFromEnv.error.issues.flatMap(
+if (!parsedFromEnv.success) {
+  const invalidEnvVars = parsedFromEnv.error.issues.flatMap(
     (issue) => issue.path
   );
   console.error("Invalid or missing env vars: " + invalidEnvVars.join(", "));
   process.exit(1);
 }
 
-const PeristerServiceConfig = HTTPServerConfig.and(SqsPersisterServiceConfig);
+export type EnvConfig = z.infer<typeof envConfig>;
 
-export type PeristerServiceConfig = z.infer<typeof PeristerServiceConfig>;
-
-export const config: PeristerServiceConfig = {
-  ...PeristerServiceConfig.parse(process.env),
+export const config: EnvConfig = {
+  ...envConfig.parse(process.env),
 };
