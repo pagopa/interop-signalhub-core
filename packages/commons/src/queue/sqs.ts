@@ -29,6 +29,7 @@ const processExit = async (exitStatusCode: number = 1): Promise<void> => {
 
 export const instantiateClient = (config: SQSClientConfig): SQSClient => {
   const sqsClient = new SQSClient({
+    endpoint: config.endpoint,
     region: config.region,
   });
   return sqsClient;
@@ -41,32 +42,43 @@ const processQueue = async (
 ): Promise<void> => {
   const command = new ReceiveMessageCommand({
     QueueUrl: config.queueUrl,
-    WaitTimeSeconds: config.consumerPollingTimeout,
+    WaitTimeSeconds: 10,
     MaxNumberOfMessages: 10,
   });
 
   let keepProcessingQueue: boolean = true;
 
-  do {
-    const { Messages } = await sqsClient.send(command);
+  try {
+    do {
+      const { Messages } = await sqsClient.send(command);
 
-    if (config.runUntilQueueIsEmpty && (!Messages || Messages?.length === 0)) {
-      keepProcessingQueue = false;
-    }
+      if (
+        config.runUntilQueueIsEmpty &&
+        (!Messages || Messages?.length === 0)
+      ) {
+        keepProcessingQueue = false;
+      }
 
-    if (Messages?.length) {
-      for (const message of Messages) {
-        if (!message.ReceiptHandle) {
-          throw new Error(
-            `ReceiptHandle not found in Message: ${JSON.stringify(message)}`
+      if (Messages?.length) {
+        for (const message of Messages) {
+          if (!message.ReceiptHandle) {
+            throw new Error(
+              `ReceiptHandle not found in Message: ${JSON.stringify(message)}`
+            );
+          }
+
+          await consumerHandler(message);
+          await deleteMessage(
+            sqsClient,
+            config.queueUrl,
+            message.ReceiptHandle
           );
         }
-
-        await consumerHandler(message);
-        await deleteMessage(sqsClient, config.queueUrl, message.ReceiptHandle);
       }
-    }
-  } while (keepProcessingQueue);
+    } while (keepProcessingQueue);
+  } catch (error) {
+    console.log("Errore:", error);
+  }
 };
 
 export const runConsumer = async (

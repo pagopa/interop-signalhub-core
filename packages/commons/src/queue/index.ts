@@ -1,1 +1,1 @@
-export * from "./sqs.js";
+export * as SQS from "./sqs.js";
