@@ -1,3 +1,4 @@
+import { SignalEvent } from "../models/domain/models.js";
 // import { config } from "../config/index.js";
 // import { DB, createDbInstance } from "../repositories/db.js";
 
@@ -13,9 +14,9 @@
 
 export function storeSignalServiceBuilder() {
   return {
-    async storeSignal(message: string) {
+    async storeSignal(signalEvent: SignalEvent) {
       try {
-        console.log("Store signal", message);
+        console.log("Store signal", signalEvent);
       } catch (error) {
         console.error(error);
       }
