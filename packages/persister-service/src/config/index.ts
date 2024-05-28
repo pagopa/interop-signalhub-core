@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { HTTPServerConfig } from "signalhub-commons";
-import { PersisterServiceConfig } from "./db.js";
+import { PersisterServiceStoreConfig } from "./db.js";
 import { SqsPersisterServiceConfig } from "./sqs.js";
 
 const envConfig = HTTPServerConfig.and(SqsPersisterServiceConfig).and(
-  PersisterServiceConfig
+  PersisterServiceStoreConfig
 );
 
 const parsedFromEnv = envConfig.safeParse(process.env);

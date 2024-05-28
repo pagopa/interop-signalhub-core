@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const PersisterServiceConfig = z
+export const PersisterServiceStoreConfig = z
   .object({
     SH_DB_HOST: z.string(),
     SH_DB_NAME: z.string(),
@@ -22,4 +22,6 @@ export const PersisterServiceConfig = z
     signalhubStoreDbUseSSL: c.SH_DB_USE_SSL,
   }));
 
-export type PersisterServiceConfig = z.infer<typeof PersisterServiceConfig>;
+export type PersisterServiceConfig = z.infer<
+  typeof PersisterServiceStoreConfig
+>;
