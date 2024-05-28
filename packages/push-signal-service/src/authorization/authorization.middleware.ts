@@ -16,7 +16,7 @@ export const authorizationMiddleware = async (
     serviceName: req.ctx.serviceName,
     correlationId: req.ctx.correlationId,
   });
-  if (process.env.SKIP_AUTH_VERIFICATION === true) {
+  if (process.env.SKIP_AUTH_VERIFICATION) {
     loggerInstance.info("Authorization SKIP");
     return next();
   }
