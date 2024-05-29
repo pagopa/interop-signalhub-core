@@ -1,5 +1,4 @@
-import { SQS, logger } from "signalhub-commons";
-import { SignalEvent } from "./models/domain/models.js";
+import { SQS, SignalMessage, logger } from "signalhub-commons";
 import { storeSignalServiceBuilder } from "./services/storeSignal.service.js";
 
 const storeSignalService = storeSignalServiceBuilder();
@@ -8,9 +7,10 @@ const loggerInstance = logger({});
 export function processMessage(): (message: SQS.Message) => Promise<void> {
   return async (message: SQS.Message): Promise<void> => {
     try {
-      console.log("message processed:", JSON.parse(message.Body!));
-
-      const signalEvent = SignalEvent.safeParse(JSON.parse(message.Body!));
+      const signalEvent = SignalMessage.safeParse(JSON.parse(message.Body!));
+      loggerInstance.info(
+        `Message from queue: ${JSON.stringify(signalEvent.data, null, 2)}`
+      );
 
       if (!signalEvent.success) {
         const invalidSignalEventVars = signalEvent.error.issues.flatMap(

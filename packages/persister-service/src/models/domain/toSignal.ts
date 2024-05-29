@@ -1,16 +1,12 @@
-import { Signal, SignalEvent } from "./models.js";
+import { Signal, SignalMessage } from "signalhub-commons";
 
-export function toSignal(
-  signalEvent: SignalEvent,
-  correlationId: string
-): Signal {
+export function toSignal(signalEvent: SignalMessage): Signal {
   return {
-    correlationId,
+    correlationId: signalEvent.correlationId,
     signalId: signalEvent.signalId,
     signalType: signalEvent.signalType,
     objectId: signalEvent.objectId,
     eserviceId: signalEvent.eserviceId,
     objectType: signalEvent.objectType,
-    tmstInsert: new Date().toISOString(),
   };
 }

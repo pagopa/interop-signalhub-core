@@ -1,9 +1,11 @@
-import { SignalEvent } from "../models/domain/models.js";
 import { config } from "../config/index.js";
 import { DB, createDbInstance } from "../repositories/db.js";
 import { toSignal } from "../models/domain/toSignal.js";
 import { signalRepository } from "../repositories/signal.repository.js";
-import { logger } from "signalhub-commons";
+import { logger, SignalMessage, Signal } from "signalhub-commons";
+import { ErrorType, getErrorReason } from "../error.js";
+import { deadSignalRepository } from "../repositories/deadSignal.repository.js";
+import { DeadSignal } from "../models/domain/model.js";
 
 const loggerInstance = logger({});
 const db: DB = createDbInstance({
@@ -16,18 +18,44 @@ const db: DB = createDbInstance({
   useSSL: config.signalhubStoreDbUseSSL,
 });
 
+const signalRepositoryInstance = signalRepository(db);
+const deadSignalRepositoryInstance = deadSignalRepository(db);
+
 export function storeSignalServiceBuilder() {
   return {
-    async storeSignal(signalEvent: SignalEvent) {
+    async storeSignal(signalEvent: SignalMessage) {
       try {
-        const signalrepository = signalRepository(db);
+        const signal = toSignal(signalEvent);
 
-        const signal = toSignal(signalEvent, "correlation-id-to-replace");
-        const id = await signalrepository.insertSignal(signal);
+        const signalRecordId = await signalRepositoryInstance.getSignalById(
+          signalEvent.signalId,
+          signalEvent.eserviceId
+        );
+
+        /* it means that signal is already present on db */
+        if (signalRecordId !== null) {
+          loggerInstance.info(`SignalId: ${signal.signalId} already exists`);
+          this.storeDeadSignal(signal, ErrorType.DUPLICATE_SIGNAL_ERROR);
+          return;
+        }
+        loggerInstance.info(
+          `Signal with id: ${signalEvent.signalId} not found on DB`
+        );
+
+        const id = await signalRepositoryInstance.insertSignal(signal);
         loggerInstance.info(`Signal with id: ${id} has been inserted on DB`);
       } catch (error) {
         console.error(error);
       }
+    },
+
+    async storeDeadSignal(signal: Signal, errorType: ErrorType) {
+      const deadSignal: DeadSignal = {
+        ...signal,
+        errorReason: getErrorReason(errorType),
+      };
+
+      await deadSignalRepositoryInstance.insertDeadSignal(deadSignal);
     },
   };
 }
