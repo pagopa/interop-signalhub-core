@@ -21,7 +21,7 @@ createExpressEndpoints(contract, routes, app, {
   globalMiddleware: [
     contextMiddleware,
     authenticationMiddleware,
-    (req, res, next) => authorizationMiddleware(req, res, next, signalService),
+    authorizationMiddleware(signalService),
   ],
 });
 
