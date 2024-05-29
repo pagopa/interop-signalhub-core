@@ -8,7 +8,6 @@ const makeApiProblem = makeApiProblemBuilder({});
 
 export const authorizationMiddleware = (signalService: SignalService) => {
   return async (req: Request, response: Response, next: NextFunction) => {
-    console.log("here I am");
     const loggerInstance = logger({
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
