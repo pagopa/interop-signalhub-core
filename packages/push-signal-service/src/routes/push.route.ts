@@ -1,12 +1,19 @@
 import { AppRouteImplementation, initServer } from "@ts-rest/express";
 import { contract } from "../contract/contract.js";
-import { logger, SQS } from "signalhub-commons";
+import { logger, Problem, SignalRequest } from "signalhub-commons";
+import { match } from "ts-pattern";
 import { SignalService } from "../services/signal.service.js";
-import { config } from "../utilities/config.js";
+import { makeApiProblem } from "../model/domain/errors.js";
+import signalRequestToSignalMessage from "../model/domain/toSignalMessage.js";
+import signalMessageToQuequeMessage from "../model/domain/toJson.js";
+import { QuequeService } from "../services/queque.service.js";
 
 const s = initServer();
 
-export const router = (signalService: SignalService) => {
+export const router = (
+  signalService: SignalService,
+  quequeService: QuequeService
+) => {
   const pushSignal: AppRouteImplementation<
     typeof contract.pushSignal
   > = async ({ body, req }) => {
@@ -14,23 +21,20 @@ export const router = (signalService: SignalService) => {
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
     });
+    loggerInstance.info("pushController BEGIN");
     try {
       const { signalId, eserviceId } = body;
-
-      loggerInstance.info("pushController BEGIN");
-      const signalPresent = await signalService.signalIdAlreadyExists(
+      await signalService.signalAlreadyExists(
         signalId,
         eserviceId,
         loggerInstance
       );
-      loggerInstance.info(
-        `pushController signalId [${signalId}] with e-service [${eserviceId}] is present? ${JSON.stringify(signalPresent)}`
+      const signalMessage = signalRequestToSignalMessage(
+        body as SignalRequest,
+        req.ctx.correlationId
       );
-      const sqsClient: SQS.SQSClient = SQS.instantiateClient({
-        region: config.region,
-        endpoint: config.queueEndpoint,
-      });
-      SQS.sendMessage(sqsClient, config.queueUrl, JSON.stringify(body));
+      const queueMessage = signalMessageToQuequeMessage(signalMessage);
+      await quequeService.send(queueMessage, loggerInstance);
 
       return {
         status: 200,
@@ -39,11 +43,18 @@ export const router = (signalService: SignalService) => {
         },
       };
     } catch (error) {
+      const problem: Problem = makeApiProblem(
+        error,
+        (err) =>
+          match(err.code)
+            .with("signalDuplicate", () => 400)
+            .otherwise(() => 500),
+        loggerInstance,
+        req.ctx.correlationId
+      );
       return {
-        status: 500,
-        body: {
-          error: "error" + JSON.stringify(error),
-        },
+        status: 400,
+        body: problem,
       };
     }
   };

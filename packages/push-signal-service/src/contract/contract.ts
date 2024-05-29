@@ -1,12 +1,5 @@
 import { initContract } from "@ts-rest/core";
-import {
-  ApiError,
-  CommonErrorCodes,
-  operationForbidden,
-  unauthorizedError,
-  SignalSchema,
-  SignalPushResponse,
-} from "signalhub-commons";
+import { SignalSchema, SignalPushResponse, Problem } from "signalhub-commons";
 import { z } from "zod";
 
 const c = initContract();
@@ -19,10 +12,11 @@ export const contract = c.router(
       path: "/push-signal",
       responses: {
         200: SignalPushResponse,
-        400: c.type<ApiError<CommonErrorCodes>>(),
-        401: c.type<typeof unauthorizedError>(),
-        403: c.type<typeof operationForbidden>(),
-        429: c.type<ApiError<CommonErrorCodes>>(),
+        400: c.type<Problem>(), // common error
+        401: c.type<Problem>(), // unauthorizedError
+        403: c.type<Problem>(), // operationForbidden
+        429: c.type<Problem>(), // common errors
+        500: c.type<Problem>(), // generic error
       },
       body: SignalSchema,
     },

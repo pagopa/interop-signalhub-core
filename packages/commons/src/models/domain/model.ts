@@ -22,6 +22,6 @@ export const SignalMessage = z.object({
 export const SignalPushResponse = SignalSchema.pick({ signalId: true });
 
 export const Signal = SignalMessage;
-
+export type SignalRequest = z.infer<typeof SignalSchema>;
 export type SignalMessage = z.infer<typeof SignalMessage>;
 export type Signal = z.infer<typeof Signal>;

@@ -3,6 +3,7 @@ import { DB, createDbInstance } from "../repositories/db.js";
 import { signalRepository } from "../repositories/signal.repository.js";
 import { config } from "../utilities/config.js";
 import { eserviceRepository } from "../repositories/eservice.repository.js";
+import { signalIdDuplicatedForEserviceId } from "../model/domain/errors.js";
 
 const db: DB = createDbInstance({
   username: config.signalhubStoreDbUsername,
@@ -16,18 +17,21 @@ const db: DB = createDbInstance({
 
 export function signalServiceBuilder() {
   return {
-    async signalIdAlreadyExists(
+    async signalAlreadyExists(
       signalId: number,
       eserviceId: string,
       logger: Logger
-    ): Promise<boolean> {
-      logger.info("SignalHubService::signalAlreadyExists()");
-      const signalrepository = signalRepository(db);
-      const signalIdPresent = await signalrepository.findBy(
+    ): Promise<void> {
+      logger.debug(
+        `SignalService::signalAlreadyExists signald: ${signalId}, eserviceId: ${eserviceId}`
+      );
+      const signalIdPresent = await signalRepository(db).findBy(
         signalId,
         eserviceId
       );
-      return signalIdPresent !== null;
+      if (signalIdPresent !== null) {
+        throw signalIdDuplicatedForEserviceId(signalId, eserviceId);
+      }
     },
     async isOwned(
       producerId: string,

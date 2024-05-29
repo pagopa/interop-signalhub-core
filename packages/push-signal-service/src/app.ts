@@ -6,6 +6,7 @@ import { authorizationMiddleware } from "./authorization/authorization.middlewar
 import { signalServiceBuilder } from "./services/signal.service.js";
 import { router } from "./routes/push.route.js";
 import { setupSwaggerRoute } from "./routes/swagger.route.js";
+import { QuequeServiceBuilder } from "./services/queque.service.js";
 import "./config/env.js";
 
 const app: Express = express();
@@ -13,9 +14,10 @@ app.use(express.json());
 setupSwaggerRoute(app);
 
 const signalService = signalServiceBuilder();
+const quequeService = QuequeServiceBuilder();
 
 const tsServer = initServer();
-const routes = tsServer.router(contract, router(signalService));
+const routes = tsServer.router(contract, router(signalService, quequeService));
 
 createExpressEndpoints(contract, routes, app, {
   globalMiddleware: [
