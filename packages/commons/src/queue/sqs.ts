@@ -96,6 +96,7 @@ export const runConsumer = async (
         config.queueUrl
       }. Details: ${serializeError(e)}`
     );
+
     await processExit();
   }
 

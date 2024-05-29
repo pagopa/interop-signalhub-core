@@ -32,20 +32,21 @@ export function storeSignalServiceBuilder() {
           signalEvent.eserviceId
         );
 
+        console.log("signalRecordId", signalRecordId);
         /* it means that signal is already present on db */
         if (signalRecordId !== null) {
           loggerInstance.info(`SignalId: ${signal.signalId} already exists`);
           this.storeDeadSignal(signal, ErrorType.DUPLICATE_SIGNAL_ERROR);
-          return;
+        } else {
+          loggerInstance.info(
+            `Signal with id: ${signalEvent.signalId} not found on DB`
+          );
+          const id = await signalRepositoryInstance.insertSignal(signal);
+          loggerInstance.info(`Signal with id: ${id} has been inserted on DB`);
         }
-        loggerInstance.info(
-          `Signal with id: ${signalEvent.signalId} not found on DB`
-        );
-
-        const id = await signalRepositoryInstance.insertSignal(signal);
-        loggerInstance.info(`Signal with id: ${id} has been inserted on DB`);
       } catch (error) {
-        console.error(error);
+        loggerInstance.error(error);
+        throw error;
       }
     },
 

@@ -20,10 +20,11 @@ export function processMessage(): (message: SQS.Message) => Promise<void> {
           "Invalid Signal event: " + invalidSignalEventVars.join(", ")
         );
       } else {
-        storeSignalService.storeSignal(signalEvent.data);
+        await storeSignalService.storeSignal(signalEvent.data);
       }
     } catch (error) {
       loggerInstance.error(error);
+      throw error;
     }
   };
 }
