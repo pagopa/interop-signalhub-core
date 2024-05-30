@@ -24,6 +24,7 @@ export function processMessage(): (message: SQS.Message) => Promise<void> {
       }
     } catch (error) {
       loggerInstance.error(error);
+
       throw error;
     }
   };

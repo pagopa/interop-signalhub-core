@@ -1,5 +1,6 @@
-import { Signal, genericInternalError } from "signalhub-commons";
+import { Signal } from "signalhub-commons";
 import { DB } from "./db.js";
+import { databaseError } from "../models/domain/errors.js";
 
 export interface ISignalRepository {
   insertSignal: (signal: Signal) => Promise<number | null>;
@@ -25,7 +26,7 @@ export const signalRepository = (db: DB): ISignalRepository => ({
         (rec) => rec.id
       );
     } catch (err) {
-      throw genericInternalError(`Error: ${err}`);
+      throw databaseError();
     }
   },
 
@@ -39,7 +40,7 @@ export const signalRepository = (db: DB): ISignalRepository => ({
         [eserviceId, signalId]
       );
     } catch (error) {
-      throw genericInternalError(`Error findBySignalIdAndEServiceId: ${error}`);
+      throw databaseError();
     }
   },
 });
