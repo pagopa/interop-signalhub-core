@@ -1,30 +1,29 @@
 import { Request, Response, NextFunction } from "express";
 import { logger, makeApiProblemBuilder } from "signalhub-commons";
 import { match } from "ts-pattern";
-import { producerHasAgreementWithPushSignalEService } from "./authorization.utils.js";
-import { SignalService } from "../services/signal.service.js";
+import { StoreService } from "../services/store.service.js";
 
 const makeApiProblem = makeApiProblemBuilder({});
 
-export const authorizationMiddleware = (signalService: SignalService) => {
+export const authorizationMiddleware = (storeService: StoreService) => {
   return async (req: Request, response: Response, next: NextFunction) => {
     const loggerInstance = logger({
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
     });
     if (process.env.SKIP_AUTH_VERIFICATION) {
-      loggerInstance.info("Authorization SKIP");
+      loggerInstance.debug("Authorization SKIP");
       return next();
     }
     try {
       loggerInstance.info("Authorization BEGIN");
-      const producerId = await producerHasAgreementWithPushSignalEService(
-        req.ctx.sessionData.purposeId
-      );
       const { eserviceId } = req.body;
-
-      await signalService.isOwned(producerId, eserviceId, loggerInstance);
-      loggerInstance.info("Authorization END");
+      await storeService.canProducerDepositSignal(
+        req.ctx.sessionData.purposeId,
+        eserviceId,
+        loggerInstance
+      );
+      loggerInstance.debug("Authorization END");
       next();
     } catch (error) {
       const problem = makeApiProblem(

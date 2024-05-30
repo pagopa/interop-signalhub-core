@@ -2,16 +2,16 @@ import { AppRouteImplementation, initServer } from "@ts-rest/express";
 import { contract } from "../contract/contract.js";
 import { logger, Problem, SignalRequest } from "signalhub-commons";
 import { match } from "ts-pattern";
-import { SignalService } from "../services/signal.service.js";
+import { StoreService } from "../services/store.service.js";
 import { makeApiProblem } from "../model/domain/errors.js";
-import signalRequestToSignalMessage from "../model/domain/toSignalMessage.js";
-import signalMessageToQuequeMessage from "../model/domain/toJson.js";
 import { QuequeService } from "../services/queque.service.js";
+import { DomainService } from "../services/domain.service.js";
 
 const s = initServer();
 
-export const router = (
-  signalService: SignalService,
+export const pushRoutes = (
+  domainService: DomainService,
+  storeService: StoreService,
   quequeService: QuequeService
 ) => {
   const pushSignal: AppRouteImplementation<
@@ -24,18 +24,17 @@ export const router = (
     loggerInstance.info("pushController BEGIN");
     try {
       const { signalId, eserviceId } = body;
-      await signalService.signalAlreadyExists(
+      await storeService.verifySignalDuplicated(
         signalId,
         eserviceId,
         loggerInstance
       );
-      const signalMessage = signalRequestToSignalMessage(
+      const message = domainService.signalToMessage(
         body as SignalRequest,
-        req.ctx.correlationId
+        req.ctx.correlationId,
+        loggerInstance
       );
-      const queueMessage = signalMessageToQuequeMessage(signalMessage);
-      await quequeService.send(queueMessage, loggerInstance);
-
+      await quequeService.send(message, loggerInstance);
       return {
         status: 200,
         body: {
@@ -43,19 +42,30 @@ export const router = (
         },
       };
     } catch (error) {
+      // error sqs, error serialization message
       const problem: Problem = makeApiProblem(
         error,
         (err) =>
           match(err.code)
             .with("signalDuplicate", () => 400)
+            .with("signalNotSended", () => 400)
+            .with("genericError", () => 500)
             .otherwise(() => 500),
         loggerInstance,
         req.ctx.correlationId
       );
-      return {
-        status: 400,
-        body: problem,
-      };
+      switch (problem.status) {
+        case 400:
+          return {
+            status: 400,
+            body: problem,
+          };
+        default:
+          return {
+            status: 500,
+            body: problem,
+          };
+      }
     }
   };
 

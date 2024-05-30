@@ -52,12 +52,6 @@ paths:
                   - signalId
         '400':
           description: '400'
-        '401':
-          description: '401'
-        '403':
-          description: '403'
-        '429':
-          description: '429'
         '500':
           description: '500'
 info:
