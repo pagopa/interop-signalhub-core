@@ -1,4 +1,4 @@
-import { genericInternalError } from "signalhub-commons";
+import { genericError } from "signalhub-commons";
 import { DB } from "./db.js";
 
 export interface IEserviceRepository {
@@ -20,8 +20,8 @@ export const eserviceRepository = (db: DB): IEserviceRepository => ({
         "SELECT eservice_id FROM eservice WHERE producer_id = $1 AND eservice_id = $2 AND state = $3",
         [producerId, eserviceId, state]
       );
-    } catch (error) {
-      throw genericInternalError(`Error findBy: ${error}`);
+    } catch (error: any) {
+      throw genericError(`Error eserviceRepository::findBy ${error.code}`);
     }
   },
 });

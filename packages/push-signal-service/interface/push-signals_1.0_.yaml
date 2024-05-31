@@ -56,8 +56,8 @@ paths:
           description: '401'
         '403':
           description: '403'
-        '429':
-          description: '429'
+        '500':
+          description: '500'
 info:
   title: Push signal Service API
   version: '1.0'
