@@ -1,4 +1,4 @@
-import { genericInternalError } from "signalhub-commons";
+import { genericError } from "signalhub-commons";
 import { DB } from "./db.js";
 import fs from "fs";
 import { Agreement } from "../model/domain/models.js";
@@ -14,8 +14,8 @@ export const agreementRepository = (_db: DB): IAgreementRepository => ({
         Buffer.from(fs.readFileSync("./src/data/data.json")).toString()
       );
       return agreement[purposeId] as Agreement;
-    } catch (error) {
-      throw genericInternalError(`Error findAgreementBy: ${error}`);
+    } catch (error: any) {
+      throw genericError(`Error agreementRepository::findBy ${error.code}`);
     }
   },
 });

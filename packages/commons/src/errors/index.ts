@@ -82,7 +82,7 @@ const makeProblemLogString = (
   originalError: unknown
 ): string => {
   const errorsString = problem.errors.map((e) => e.detail).join(" - ");
-  return `- title: ${problem.title} - detail: ${problem.detail} - errors: ${errorsString} - original error: ${originalError}`;
+  return `ERROR - title: ${problem.title} - detail: ${problem.detail} - errors: ${errorsString} - original error: ${originalError}`;
 };
 
 export function makeApiProblemBuilder<T extends string>(errors: {

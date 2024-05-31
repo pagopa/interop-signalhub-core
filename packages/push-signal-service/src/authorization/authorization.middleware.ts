@@ -11,10 +11,6 @@ export const authorizationMiddleware = (storeService: StoreService) => {
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
     });
-    if (process.env.SKIP_AUTH_VERIFICATION) {
-      loggerInstance.debug("Authorization SKIP");
-      return next();
-    }
     try {
       loggerInstance.info("Authorization BEGIN");
       const { eserviceId } = req.body;

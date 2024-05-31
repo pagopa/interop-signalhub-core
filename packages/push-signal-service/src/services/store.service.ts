@@ -40,14 +40,17 @@ export function storeServiceBuilder() {
       eserviceId: string,
       logger: Logger
     ): Promise<void> {
+      logger.info(
+        `StoreService::producerIsEserviceOwner eserviceId: ${eserviceId} producerId: ${producerId}`
+      );
       const state = "PUBLISHED";
       const eserviceOwned = await eserviceRepository(db).findBy(
         producerId,
         eserviceId,
         state
       );
-      logger.info(
-        `StoreService::producerIsEserviceOwner eserviceId: ${eserviceId} producerId: ${producerId} - eserviceOwned: ${eserviceOwned}`
+      logger.debug(
+        `StoreService::producerIsEserviceOwner eserviceOwned: ${eserviceOwned}`
       );
       if (eserviceOwned) {
         return;
@@ -62,6 +65,9 @@ export function storeServiceBuilder() {
         `StoreService::getAgreementWithDepositSignalBy purposeId: ${purposeId}`
       );
       const agreement = await agreementRepository(db).findBy(purposeId);
+      logger.debug(
+        `StoreService::getAgreementWithDepositSignalBy agreement: ${JSON.stringify(agreement)}`
+      );
       if (agreement) {
         return agreement;
       }
