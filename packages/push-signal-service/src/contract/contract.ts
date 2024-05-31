@@ -12,8 +12,10 @@ export const contract = c.router(
       path: "/push-signal",
       responses: {
         200: SignalPushResponse,
-        400: c.type<Problem>(), // common error
-        500: c.type<Problem>(), // generic error
+        400: c.type<Problem>(),
+        401: c.type<Problem>(),
+        403: c.type<Problem>(),
+        500: c.type<Problem>(),
       },
       body: SignalSchema,
     },
