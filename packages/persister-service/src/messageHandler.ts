@@ -1,12 +1,11 @@
-import { SQS, SignalMessage, logger } from "signalhub-commons";
+import { SQS, logger } from "signalhub-commons";
 import { storeSignalServiceBuilder } from "./services/storeSignal.service.js";
 import {
   NotRecoverableMessageError,
   RecoverableMessageError,
-  notRecoverableMessageError,
 } from "./models/domain/errors.js";
 import { P, match } from "ts-pattern";
-import { DeadSignal } from "./models/domain/model.js";
+import { fromQueueToSignal as parseQueueMessageToSignal } from "./models/domain/utils.js";
 
 const storeSignalService = storeSignalServiceBuilder();
 const loggerInstance = logger({});
@@ -14,21 +13,9 @@ const loggerInstance = logger({});
 export function processMessage(): (message: SQS.Message) => Promise<void> {
   return async (message: SQS.Message): Promise<void> => {
     try {
-      const parsedMessage = JSON.parse(message.Body!);
-      let signalEvent = SignalMessage.safeParse(parsedMessage);
+      const signalEvent = parseQueueMessageToSignal(message, loggerInstance);
 
-      loggerInstance.info(
-        `Message from queue: ${JSON.stringify(parsedMessage, null, 2)}`
-      );
-
-      if (!signalEvent.success) {
-        throw notRecoverableMessageError(
-          "parsingError",
-          parsedMessage as DeadSignal
-        );
-      } else {
-        await storeSignalService.storeSignal(signalEvent.data);
-      }
+      await storeSignalService.storeSignal(signalEvent);
     } catch (error) {
       return match<unknown>(error)
         .with(P.instanceOf(NotRecoverableMessageError), async (error) => {
@@ -39,9 +26,6 @@ export function processMessage(): (message: SQS.Message) => Promise<void> {
         })
 
         .with(P.instanceOf(RecoverableMessageError), async (error) => {
-          loggerInstance.info(
-            `Generated error with code: ${error.code} message will remain on queue`
-          );
           throw error;
         })
 

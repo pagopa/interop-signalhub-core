@@ -74,7 +74,7 @@ const processQueue = async (
               message.ReceiptHandle
             );
           } catch (error) {
-            loggerInstance.error("message is not handled and remains on queue");
+            loggerInstance.info(`Generated error message will remain on queue`);
           }
         }
       }
