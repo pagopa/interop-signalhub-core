@@ -80,7 +80,7 @@ const processQueue = async (
       }
     } while (keepProcessingQueue);
   } catch (error) {
-    console.log("Errore on queue", error);
+    loggerInstance.error(`Errore on queue ${error}`);
   }
 };
 
