@@ -42,7 +42,6 @@ export const pushRoutes = (
         },
       };
     } catch (error) {
-      // error sqs, error serialization message
       const problem: Problem = makeApiProblem(
         error,
         (err) =>
