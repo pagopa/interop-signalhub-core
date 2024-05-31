@@ -22,7 +22,7 @@ export function processMessage(): (message: SQS.Message) => Promise<void> {
           loggerInstance.info(
             `Not recoverable message saved it on DEAD_SIGNAL with error: ${error.code}`
           );
-          await storeSignalService.storeDeadSignal(error.signal, error.code);
+          await storeSignalService.storeDeadSignal(error.signal);
         })
 
         .with(P.instanceOf(RecoverableMessageError), async (error) => {

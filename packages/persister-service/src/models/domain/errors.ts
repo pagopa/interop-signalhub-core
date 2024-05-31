@@ -1,3 +1,4 @@
+import { Signal } from "signalhub-commons";
 import { DeadSignal } from "./model.js";
 
 export class PersisterServiceError<T> extends Error {
@@ -81,12 +82,15 @@ export function recoverableMessageError(
 }
 export function notRecoverableMessageError(
   errorCode: NotRecoverableMessageErrorCodes,
-  deadSignal: DeadSignal
+  signal: Signal
 ): NotRecoverableMessageError {
   return new NotRecoverableMessageError({
     detail: getErrorReason(errorCode),
     code: errorCode,
     title: "Not recoverable error",
-    signal: deadSignal,
+    signal: {
+      ...signal,
+      errorReason: getErrorReason(errorCode),
+    },
   });
 }
