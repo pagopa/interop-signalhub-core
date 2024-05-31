@@ -1,6 +1,6 @@
 import { genericLogger } from "signalhub-commons";
 import app from "./app.js";
-import { config } from "./utilities/config.js";
+import { config } from "./config/config.js";
 
 app.listen(config.port, config.host, () => {
   genericLogger.info(

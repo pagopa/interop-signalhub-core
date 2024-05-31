@@ -1,7 +1,7 @@
 import { Logger, operationForbidden } from "signalhub-commons";
 import { DB, createDbInstance } from "../repositories/db.js";
 import { signalRepository } from "../repositories/signal.repository.js";
-import { config } from "../utilities/config.js";
+import { config } from "../config/config.js";
 import { eserviceRepository } from "../repositories/eservice.repository.js";
 import { signalIdDuplicatedForEserviceId } from "../model/domain/errors.js";
 import { agreementRepository } from "../repositories/agreement.repository.js";

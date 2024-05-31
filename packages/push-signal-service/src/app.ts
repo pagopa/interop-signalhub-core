@@ -8,6 +8,7 @@ import { storeServiceBuilder } from "./services/store.service.js";
 import { setupSwaggerRoute } from "./routes/swagger.route.js";
 import { quequeServiceBuilder } from "./services/queque.service.js";
 import { domainServiceBuilder } from "./services/domain.service.js";
+import { validationErrorHandler } from "./validation/validation.js";
 import "./config/env.js";
 
 const app: Express = express();
@@ -30,6 +31,7 @@ createExpressEndpoints(contract, routes, app, {
     authenticationMiddleware,
     authorizationMiddleware(storeService),
   ],
+  requestValidationErrorHandler: validationErrorHandler(),
 });
 
 export default app;

@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { SignalHubStoreConfig } from "../config/db.js";
-import { SqsPersisterServiceConfig } from "../config/sqs.js";
+import { SignalHubStoreConfig } from "./db.js";
+import { SqsPersisterServiceConfig } from "./sqs.js";
 import { HTTPServerConfig } from "signalhub-commons";
 
 const PushServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig).and(
