@@ -1,16 +1,92 @@
-import { ApiError, makeApiProblemBuilder } from "signalhub-commons";
+import { DeadSignal } from "./model.js";
 
-export const errorCodes = {
-  dbError: "0001",
+export class PersisterServiceError<T> extends Error {
+  public code: T;
+  public title: string;
+  public detail: string;
+
+  constructor({
+    code,
+    title,
+    detail,
+  }: {
+    code: T;
+    title: string;
+    detail: string;
+    correlationId?: string;
+  }) {
+    super(detail);
+    this.code = code;
+    this.title = title;
+    this.detail = detail;
+  }
+}
+export class NotRecoverableMessageError extends PersisterServiceError<NotRecoverableMessageErrorCodes> {
+  public signal: DeadSignal;
+  constructor({
+    code,
+    title,
+    detail,
+    signal,
+  }: {
+    code: NotRecoverableMessageErrorCodes;
+    title: string;
+    detail: string;
+    signal: DeadSignal;
+  }) {
+    super({ code, title, detail });
+    this.signal = signal;
+  }
+}
+
+export class RecoverableMessageError extends PersisterServiceError<RecoverableMessageErrorCodes> {}
+
+export const recoverableMessageErrorCode = {
+  dbConnection: "0001",
+};
+export const notRecoverableMessageErrorCodes = {
+  duplicateSignal: "0002",
+  parsingError: "0010",
+  genericError: "0011",
 };
 
-export const makeProblem = makeApiProblemBuilder(errorCodes);
-export type ErrorCodes = keyof typeof errorCodes;
+export function getErrorReason(type: ErrorCodes): string {
+  return errorDetails.get(type)!;
+}
 
-export function databaseError(): ApiError<ErrorCodes> {
-  return new ApiError({
-    detail: "Database error",
-    code: "dbError",
-    title: "Database error",
+export type NotRecoverableMessageErrorCodes =
+  keyof typeof notRecoverableMessageErrorCodes;
+
+export type RecoverableMessageErrorCodes =
+  keyof typeof recoverableMessageErrorCode;
+
+export type ErrorCodes =
+  | NotRecoverableMessageErrorCodes
+  | RecoverableMessageErrorCodes;
+
+const errorDetails = new Map<ErrorCodes, string>([
+  ["duplicateSignal", "The signal is already saved on database"],
+  ["parsingError", "The signal could not be parsed"],
+  ["genericError", "Generic error"],
+]);
+
+export function recoverableMessageError(
+  errorCode: RecoverableMessageErrorCodes
+): RecoverableMessageError {
+  return new RecoverableMessageError({
+    detail: getErrorReason(errorCode),
+    code: errorCode,
+    title: "Recoverable message error",
+  });
+}
+export function notRecoverableMessageError(
+  errorCode: NotRecoverableMessageErrorCodes,
+  deadSignal: DeadSignal
+): NotRecoverableMessageError {
+  return new NotRecoverableMessageError({
+    detail: getErrorReason(errorCode),
+    code: errorCode,
+    title: "Not recoverable error",
+    signal: deadSignal,
   });
 }

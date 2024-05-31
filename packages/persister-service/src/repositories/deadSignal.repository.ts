@@ -1,6 +1,6 @@
-import { genericInternalError } from "signalhub-commons";
 import { DB } from "./db.js";
 import { DeadSignal } from "../models/domain/model.js";
+import { recoverableMessageError } from "../models/domain/errors.js";
 
 export interface IDeadSignalRepository {
   insertDeadSignal: (deadSignal: DeadSignal) => Promise<number | null>;
@@ -23,7 +23,7 @@ export const deadSignalRepository = (db: DB): IDeadSignalRepository => ({
         (rec) => rec.id
       );
     } catch (error) {
-      throw genericInternalError(`Error: ${error}`);
+      throw recoverableMessageError("dbConnection");
     }
   },
 });

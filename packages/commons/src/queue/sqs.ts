@@ -66,18 +66,21 @@ const processQueue = async (
               `ReceiptHandle not found in Message: ${JSON.stringify(message)}`
             );
           }
-
-          await consumerHandler(message);
-          await deleteMessage(
-            sqsClient,
-            config.queueUrl,
-            message.ReceiptHandle
-          );
+          try {
+            await consumerHandler(message);
+            await deleteMessage(
+              sqsClient,
+              config.queueUrl,
+              message.ReceiptHandle
+            );
+          } catch (error) {
+            loggerInstance.error("message is not handled and remains on queue");
+          }
         }
       }
     } while (keepProcessingQueue);
   } catch (error) {
-    console.log("Errore:", error);
+    console.log("Errore on queue", error);
   }
 };
 
@@ -135,6 +138,7 @@ export const deleteMessage = async (
     ReceiptHandle: receiptHandle,
   });
 
+  loggerInstance.info("Delete message from queue");
   await sqsClient.send(deleteCommand);
 };
 
