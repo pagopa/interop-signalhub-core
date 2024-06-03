@@ -1,8 +1,7 @@
 import { config } from "../config/index.js";
-import { DB, createDbInstance } from "../repositories/db.js";
 import { toSignal } from "../models/domain/toSignal.js";
 import { signalRepository } from "../repositories/signal.repository.js";
-import { logger, SignalMessage } from "signalhub-commons";
+import { createDbInstance, DB, logger, SignalMessage } from "signalhub-commons";
 import { deadSignalRepository } from "../repositories/deadSignal.repository.js";
 import { DeadSignal } from "../models/domain/model.js";
 import {

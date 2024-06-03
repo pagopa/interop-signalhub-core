@@ -1,5 +1,4 @@
-import { Signal } from "signalhub-commons";
-import { DB } from "./db.js";
+import { Signal, DB } from "signalhub-commons";
 
 export interface ISignalRepository {
   insertSignal: (signal: Signal) => Promise<number | null>;
