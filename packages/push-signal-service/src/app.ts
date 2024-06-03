@@ -4,20 +4,16 @@ import { authenticationMiddleware, contextMiddleware } from "signalhub-commons";
 import { contract } from "./contract/contract.js";
 import { authorizationMiddleware } from "./authorization/authorization.middleware.js";
 import { pushRoutes } from "./routes/push.route.js";
-import { storeServiceBuilder } from "./services/store.service.js";
 import { setupSwaggerRoute } from "./routes/swagger.route.js";
-import { quequeServiceBuilder } from "./services/queque.service.js";
-import { domainServiceBuilder } from "./services/domain.service.js";
 import { validationErrorHandler } from "./validation/validation.js";
+import { serviceBuilder } from "./services/service.builder.js";
 import "./config/env.js";
 
 const app: Express = express();
 app.use(express.json());
 setupSwaggerRoute(app);
 
-const storeService = storeServiceBuilder();
-const quequeService = quequeServiceBuilder();
-const domainService = domainServiceBuilder();
+const { domainService, storeService, quequeService } = serviceBuilder();
 
 const tsServer = initServer();
 const routes = tsServer.router(

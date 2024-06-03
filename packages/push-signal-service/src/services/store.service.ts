@@ -1,27 +1,12 @@
-import {
-  DB,
-  Logger,
-  createDbInstance,
-  operationForbidden,
-} from "signalhub-commons";
+import { DB, Logger, operationForbidden } from "signalhub-commons";
 import { signalRepository } from "../repositories/signal.repository.js";
-import { config } from "../config/config.js";
+
 import { eserviceRepository } from "../repositories/eservice.repository.js";
 import { signalIdDuplicatedForEserviceId } from "../model/domain/errors.js";
 import { agreementRepository } from "../repositories/agreement.repository.js";
 import { Agreement } from "../model/domain/models.js";
 
-const db: DB = createDbInstance({
-  username: config.signalhubStoreDbUsername,
-  password: config.signalhubStoreDbPassword,
-  host: config.signalhubStoreDbHost,
-  port: config.signalhubStoreDbPort,
-  database: config.signalhubStoreDbName,
-  schema: config.signalhubStoreDbSchema,
-  useSSL: config.signalhubStoreDbUseSSL,
-});
-
-export function storeServiceBuilder() {
+export function storeServiceBuilder(db: DB) {
   return {
     async verifySignalDuplicated(
       signalId: number,
