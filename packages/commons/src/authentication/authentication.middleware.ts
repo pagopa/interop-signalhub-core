@@ -2,7 +2,7 @@ import { Response, Request, NextFunction } from "express";
 import { P, match } from "ts-pattern";
 import { readSessionDataFromJwtToken, validateToken } from "./jwt.js";
 import { Logger, logger } from "../logging/index.js";
-import { Headers } from "../config/express.config.js";
+import { Headers } from "../models/index.js";
 import {
   genericInternalError,
   jwtDecodingError,

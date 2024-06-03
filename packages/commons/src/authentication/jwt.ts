@@ -2,7 +2,7 @@ import jwt, { JwtHeader, JwtPayload, SigningKeyCallback } from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
 import { Logger } from "../logging/index.js";
 import { invalidClaim, jwtDecodingError } from "../errors/index.js";
-import { SessionData, AuthToken } from "./authentication.data.js";
+import { SessionData, AuthToken } from "../models/index.js";
 
 export const getKey =
   (
