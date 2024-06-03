@@ -1,0 +1,33 @@
+{
+  "name": "signalhub-commons-test",
+  "version": "1.0.0",
+  "private": true,
+  "description": "common test utilities",
+  "main": "dist",
+  "type": "module",
+  "scripts": {
+    "test": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@anatine/zod-mock": "3.13.4",
+    "@pagopa/eslint-config": "3.0.0",
+    "@testcontainers/postgresql": "10.2.2",
+    "@types/dotenv-flow": "3.3.3",
+    "@types/jsonwebtoken": "9.0.6",
+    "@types/uuid": "9.0.8",
+    "@zodios/core": "10.9.6",
+    "dotenv-flow": "3.3.0",
+    "jsonwebtoken": "9.0.2",
+    "signalhub-commons": "workspace:*",
+    "pg-promise": "11.5.0",
+    "testcontainers": "10.2.2",
+    "ts-pattern": "5.0.6",
+    "typescript": "5.1.3",
+    "uuid": "9.0.1",
+    "vitest": "1.5.2",
+    "zod": "3.22.3"
+  }
+}
