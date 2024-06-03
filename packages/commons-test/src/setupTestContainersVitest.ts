@@ -3,8 +3,7 @@
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/immutable-data */
 
-import { SignalHubStoreConfig } from "signalhub-commons";
-
+import { DB, SignalHubStoreConfig, createDbInstance } from "signalhub-commons";
 /**
  * This function is a setup for vitest that initializes the postgres
  * database and returns their instances along with a cleanup function.
@@ -40,13 +39,13 @@ export function setupTestContainersVitest(
 export function setupTestContainersVitest(
   signalHubStoreConfig?: SignalHubStoreConfig
 ): {
-  postgresDB: DB;
+  postgresDB?: DB;
   cleanup: () => Promise<void>;
 } {
   let postgresDB: DB | undefined;
 
   if (signalHubStoreConfig) {
-    postgresDB = initDB({
+    postgresDB = createDbInstance({
       username: signalHubStoreConfig.signalhubStoreDbUsername,
       password: signalHubStoreConfig.signalhubStoreDbPassword,
       host: signalHubStoreConfig.signalhubStoreDbHost,
@@ -62,6 +61,8 @@ export function setupTestContainersVitest(
 
     cleanup: async (): Promise<void> => {
       await postgresDB?.none("TRUNCATE SIGNAL;");
+
+      // Add other cleanup function
     },
   };
 }

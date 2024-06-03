@@ -1,3 +1,4 @@
+import type {} from "vitest";
 import { config as dotenv } from "dotenv-flow";
 import type { GlobalSetupContext } from "vitest/node";
 import {
