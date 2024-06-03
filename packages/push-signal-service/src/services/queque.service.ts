@@ -14,6 +14,7 @@ export function quequeServiceBuilder() {
         await SQS.sendMessage(sqsClient, config.queueUrl, message);
         logger.debug(`QuequeService::send message: ${message}`);
       } catch (error: any) {
+        logger.error(`QuequeService::send ERROR: ${error}`);
         const { requestId } = error.$metadata;
         throw signalNotSendedToQueque(requestId, error.code);
       }
