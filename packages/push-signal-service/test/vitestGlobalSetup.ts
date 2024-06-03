@@ -1,3 +1,3 @@
-import { setupTestContainersVitestGlobal } from "signalhub-commons-test/src/setupTestContainersVitestGlobal";
+import { setupTestContainersVitestGlobal } from "signalhub-commons-test";
 
 export default setupTestContainersVitestGlobal();
