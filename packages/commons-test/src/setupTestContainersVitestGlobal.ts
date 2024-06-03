@@ -27,12 +27,15 @@ export function setupTestContainersVitestGlobal() {
   dotenv();
   const signalHubStoreConfig = SignalHubStoreConfig.safeParse(process.env);
 
+  console.log("CONFIG", signalHubStoreConfig);
+
   return async function ({
     provide,
   }: GlobalSetupContext): Promise<() => Promise<void>> {
     let startedPostgreSqlContainer: StartedTestContainer | undefined;
 
     if (signalHubStoreConfig.success) {
+      console.log("SUCCE");
       startedPostgreSqlContainer = await postgreSQLContainer(
         signalHubStoreConfig.data
       ).start();
