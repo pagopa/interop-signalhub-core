@@ -10,7 +10,9 @@ export const contextMiddleware = async (
   req.ctx = {
     serviceName: "push",
     correlationId: uuidv4(),
+    sessionData: { purposeId: "" },
   };
+
   const loggerInstance = logger({
     serviceName: req.ctx.serviceName,
     correlationId: req.ctx.correlationId,
