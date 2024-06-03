@@ -5,3 +5,4 @@ export * from "./logging/index.js";
 export * from "./context/index.js";
 export * from "./queue/index.js";
 export * from "./models/index.js";
+export * from "./repositories/index.js";
