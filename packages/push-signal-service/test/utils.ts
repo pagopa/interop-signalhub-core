@@ -9,4 +9,4 @@ export const { cleanup, postgresDB } = setupTestContainersVitest(
 
 afterEach(cleanup);
 
-export const storeService = storeServiceBuilder();
+export const storeService = storeServiceBuilder(postgresDB);

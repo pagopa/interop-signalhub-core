@@ -35,7 +35,6 @@ export function setupTestContainersVitestGlobal() {
     let startedPostgreSqlContainer: StartedTestContainer | undefined;
 
     if (signalHubStoreConfig.success) {
-      console.log("SUCCE");
       startedPostgreSqlContainer = await postgreSQLContainer(
         signalHubStoreConfig.data
       ).start();

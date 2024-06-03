@@ -23,12 +23,7 @@ import { DB, SignalHubStoreConfig, createDbInstance } from "signalhub-commons";
  * afterEach(cleanup);
  * ```
  */
-//   export function setupTestContainersVitest(
-//     readModelDbConfig?: ReadModelDbConfig
-//   ): {
-//     readModelRepository: ReadModelRepository;
-//     cleanup: () => Promise<void>;
-//   };
+
 export function setupTestContainersVitest(
   signalHubStoreConfig?: SignalHubStoreConfig
 ): {
@@ -61,7 +56,6 @@ export function setupTestContainersVitest(
 
     cleanup: async (): Promise<void> => {
       await postgresDB?.none("TRUNCATE SIGNAL;");
-
       // Add other cleanup function
     },
   };
