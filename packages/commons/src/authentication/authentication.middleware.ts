@@ -11,7 +11,7 @@ import {
   missingBearer,
   missingHeader,
 } from "../errors/index.js";
-import { JWTConfig, jwtConfig } from "../index.js";
+import { JWTConfig, jwtConfig } from "../config/index.js";
 
 const makeApiProblem = makeApiProblemBuilder({});
 const config = jwtConfig();

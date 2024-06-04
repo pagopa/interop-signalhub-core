@@ -7,6 +7,7 @@ import {
   Message,
   SQSClientConfig,
   SendMessageCommandInput,
+  GetQueueUrlCommand,
 } from "@aws-sdk/client-sqs";
 import { logger } from "../logging/index.js";
 import { QuequeConsumerConfig } from "../config/queque.consumer.js";
@@ -114,23 +115,33 @@ export const runConsumer = async (
   );
 };
 
+export const getQueueUrl = async (
+  sqsClient: SQSClient,
+  queueName: string
+): Promise<string> => {
+  const queueUrlCommand = {
+    QueueName: queueName,
+  };
+  try {
+    const command = new GetQueueUrlCommand(queueUrlCommand);
+    const response = await sqsClient.send(command);
+    return response.QueueUrl!;
+  } catch (error) {
+    console.log(error);
+  }
+  return "";
+};
+
 export const sendMessage = async (
   sqsClient: SQSClient,
   queueUrl: string,
-  messageBody: string,
-  messageGroupId?: string
+  messageBody: string
 ): Promise<void> => {
   const messageCommandInput: SendMessageCommandInput = {
     QueueUrl: queueUrl,
     MessageBody: messageBody,
   };
-
-  if (messageGroupId) {
-    messageCommandInput.MessageGroupId = messageGroupId;
-  }
-
   const command = new SendMessageCommand(messageCommandInput);
-
   await sqsClient.send(command);
 };
 
