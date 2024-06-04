@@ -1,11 +1,10 @@
 import { z } from "zod";
 import { SignalHubStoreConfig } from "./db.js";
-import { SqsPersisterServiceConfig } from "./sqs.js";
+import { QuequeConfig } from "./queque.js";
 import { HTTPServerConfig } from "signalhub-commons";
 
-const PushServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig).and(
-  SqsPersisterServiceConfig
-);
+const PushServiceConfig =
+  HTTPServerConfig.and(SignalHubStoreConfig).and(QuequeConfig);
 
 export type PushServiceConfig = z.infer<typeof PushServiceConfig>;
 

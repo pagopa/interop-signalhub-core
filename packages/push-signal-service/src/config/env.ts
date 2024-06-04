@@ -4,9 +4,6 @@ export const Env = z.object({
   PORT: z.coerce.number(),
   WELL_KNOWN_URL: z.coerce.string(),
   ACCEPTED_AUDIENCE: z.coerce.string(),
-  SKIP_AUTH_VERIFICATION: z
-    .enum(["true", "false"])
-    .transform((value) => value === "true"),
 });
 
 const parsedEnv = Env.safeParse(process.env);

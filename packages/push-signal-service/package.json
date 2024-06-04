@@ -10,7 +10,7 @@
     "lint": "eslint . --ext .ts,.tsx",
     "lint:autofix": "eslint . --ext .ts,.tsx --fix",
     "build": "tsc",
-    "test": "vitest"
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "",
