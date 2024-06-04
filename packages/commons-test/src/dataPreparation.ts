@@ -6,10 +6,7 @@ async function setupEserviceTable(db: DB) {
   let count = 0;
   for (const producer of allProducers) {
     const { id, eservices } = producer;
-    for (const eservice of eservices.filter(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (e: any) => !("skip_insert" in e)
-    )) {
+    for (const eservice of eservices) {
       const query = {
         text: "INSERT INTO eservice (eservice_id, producer_id, descriptor_id, event_id, state) values ($1, $2, $3, $4, $5)",
         values: [eservice.id, id, eservice.descriptor, ++count, eservice.state],

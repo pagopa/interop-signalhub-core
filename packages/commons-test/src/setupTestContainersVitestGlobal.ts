@@ -60,6 +60,7 @@ export function setupTestContainersVitestGlobal() {
     }
 
     return async (): Promise<void> => {
+      console.info("Stopping test containers");
       await startedPostgreSqlContainer?.stop();
     };
   };

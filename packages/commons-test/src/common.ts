@@ -4,7 +4,7 @@ import path from "path";
 function getActors() {
   const catalogInteropData = JSON.parse(
     Buffer.from(
-      fs.readFileSync(path.resolve(__dirname, "../data/data.json"))
+      fs.readFileSync(path.resolve(__dirname, "../__mocks__/data.json"))
     ).toString()
   );
 
@@ -19,6 +19,8 @@ function getActors() {
     eserviceProducer.eservices[0].id;
   const purposeIdDifferentFromEservicePushSignals =
     signalProducer.agreements[1].purpose;
+
+  const authorizedPurposeId = signalProducer.agreements[0].purpose;
   return {
     signalProducer,
     signalConsumer,
@@ -29,6 +31,7 @@ function getActors() {
     eserviceIdNotPublished,
     eserviceIdPublishedByAnotherOrganization,
     purposeIdDifferentFromEservicePushSignals,
+    authorizedPurposeId,
   };
 }
 
@@ -42,4 +45,5 @@ export const {
   eserviceIdNotPublished,
   eserviceIdPublishedByAnotherOrganization,
   purposeIdDifferentFromEservicePushSignals,
+  authorizedPurposeId,
 } = getActors();
