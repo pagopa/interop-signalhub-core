@@ -1,9 +1,8 @@
 import { genericLogger, operationForbidden } from "signalhub-commons";
-import { beforeAll, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { postgresDB, storeService } from "./utils";
 import {
   authorizedPurposeId,
-  dataPreparation,
   eserviceIdNotPublished,
   eserviceIdPushSignals,
   writeSignal,
@@ -11,10 +10,7 @@ import {
 import { signalIdDuplicatedForEserviceId } from "../src/model/domain/errors";
 
 describe("Store service", () => {
-  beforeAll(async () => {
-    await dataPreparation(postgresDB);
-  });
-  describe("verifySignalDuplicated", () => {
+  describe("verifySignalDuplicateds", () => {
     it("If signal not exist on db should not throw an error", async () => {
       const signalId = 1;
       const eserviceId = "test-eservice-id";
@@ -66,7 +62,7 @@ describe("Store service", () => {
         )
       ).rejects.toThrowError(operationForbidden);
     });
-    it("Should producer able to deposit signal if he is the owner of the e-service", async () => {
+    it("Should producer able to deposit signal if he is the owner of the e-services", async () => {
       const purposeId = authorizedPurposeId;
       const eserviceId = eserviceIdPushSignals;
 

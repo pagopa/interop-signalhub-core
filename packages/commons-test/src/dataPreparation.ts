@@ -20,3 +20,8 @@ export const dataPreparation = async (db: DB) => {
   console.info(`\n*** SIGNALHUB DATA PREPARATION  ***\n`);
   await setupEserviceTable(db);
 };
+
+export const dataPreparationCleanup = async (db: DB) => {
+  console.info("\n*** SIGNALHUB DATA PREPARATION CLEANUP ***\n");
+  await db.none("truncate eservice;");
+};
