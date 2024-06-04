@@ -27,8 +27,6 @@ export function setupTestContainersVitestGlobal() {
   dotenv();
   const signalHubStoreConfig = SignalHubStoreConfig.safeParse(process.env);
 
-  console.log("CONFIG", signalHubStoreConfig);
-
   return async function ({
     provide,
   }: GlobalSetupContext): Promise<() => Promise<void>> {
