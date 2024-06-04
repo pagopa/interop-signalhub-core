@@ -1,21 +1,28 @@
-import { TypeOf, z } from "zod";
+import { z } from "zod";
+import {
+  HTTPServerConfig,
+  SignalHubStoreConfig,
+  QuequeConfig,
+  AwsConfig,
+} from "signalhub-commons";
 
-export const Env = z.object({
-  PORT: z.coerce.number(),
-  WELL_KNOWN_URL: z.coerce.string(),
-  ACCEPTED_AUDIENCE: z.coerce.string(),
-});
+const PushServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
+  .and(QuequeConfig)
+  .and(AwsConfig);
 
-const parsedEnv = Env.safeParse(process.env);
+export type PushServiceConfig = z.infer<typeof PushServiceConfig>;
 
-if (!parsedEnv.success) {
-  const invalidEnvVars = parsedEnv.error.issues.flatMap((issue) => issue.path);
-  console.error("Invalid or missing env vars: " + invalidEnvVars.join(", "));
+const parsedFromEnv = PushServiceConfig.safeParse(process.env);
+if (!parsedFromEnv.success) {
+  const invalidEnvVars = parsedFromEnv.error.issues.flatMap(
+    (issue) => issue.path
+  );
+  console.error(
+    "Invalid or missing env vars: Push Service  " + invalidEnvVars.join(", ")
+  );
   process.exit(1);
 }
 
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv extends TypeOf<typeof Env> {}
-  }
-}
+export const config: PushServiceConfig = {
+  ...parsedFromEnv.data,
+};

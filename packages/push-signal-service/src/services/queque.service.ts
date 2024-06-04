@@ -1,5 +1,5 @@
 import { Logger, SQS } from "signalhub-commons";
-import { config } from "../config/config.js";
+import { config } from "../config/env.js";
 import { signalNotSendedToQueque } from "../model/domain/errors.js";
 
 export function quequeServiceBuilder(sqsClient: SQS.SQSClient) {

@@ -3,6 +3,7 @@ import jwksClient from "jwks-rsa";
 import { Logger } from "../logging/index.js";
 import { invalidClaim, jwtDecodingError } from "../errors/index.js";
 import { SessionData, AuthToken } from "../models/index.js";
+import { JWTConfig } from "../config/jwt.config.js";
 
 export const getKey =
   (
@@ -38,10 +39,11 @@ export const readSessionDataFromJwtToken = (jwtToken: string): SessionData => {
 
 export const validateToken = (
   token: string,
+  config: JWTConfig,
   logger: Logger
 ): Promise<{ success: boolean; err: jwt.JsonWebTokenError | null }> => {
   const client = jwksClient({
-    jwksUri: process.env.WELL_KNOWN_URL as string,
+    jwksUri: config.wellKnownUrl,
   });
 
   return new Promise((resolve, _reject) => {
@@ -49,7 +51,7 @@ export const validateToken = (
       token,
       getKey(client),
       {
-        audience: process.env.ACCEPTED_AUDIENCE as string,
+        audience: config.acceptedAudience,
       },
       function (err, _decoded) {
         if (err) {

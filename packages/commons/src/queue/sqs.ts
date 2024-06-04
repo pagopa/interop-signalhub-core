@@ -8,8 +8,8 @@ import {
   SQSClientConfig,
   SendMessageCommandInput,
 } from "@aws-sdk/client-sqs";
-import { logger } from "../index.js";
-import { ConsumerConfig } from "../config/sqsConsumer.config.js";
+import { logger } from "../logging/index.js";
+import { QuequeConsumerConfig } from "../config/queque.consumer.js";
 
 const loggerInstance = logger({});
 
@@ -37,7 +37,10 @@ export const instantiateClient = (config: SQSClientConfig): SQSClient => {
 
 const processQueue = async (
   sqsClient: SQSClient,
-  config: { queueUrl: string; runUntilQueueIsEmpty?: boolean } & ConsumerConfig,
+  config: {
+    queueUrl: string;
+    runUntilQueueIsEmpty?: boolean;
+  } & QuequeConsumerConfig,
   consumerHandler: (messagePayload: Message) => Promise<void>
 ): Promise<void> => {
   const command = new ReceiveMessageCommand({
@@ -86,7 +89,10 @@ const processQueue = async (
 
 export const runConsumer = async (
   sqsClient: SQSClient,
-  config: { queueUrl: string; runUntilQueueIsEmpty?: boolean } & ConsumerConfig,
+  config: {
+    queueUrl: string;
+    runUntilQueueIsEmpty?: boolean;
+  } & QuequeConsumerConfig,
   consumerHandler: (messagePayload: Message) => Promise<void>
 ): Promise<void> => {
   loggerInstance.info(`Consumer processing on Queue: ${config.queueUrl}`);

@@ -7,7 +7,6 @@ import { pushRoutes } from "./routes/push.route.js";
 import { setupSwaggerRoute } from "./routes/swagger.route.js";
 import { validationErrorHandler } from "./validation/validation.js";
 import { serviceBuilder } from "./services/service.builder.js";
-import "./config/env.js";
 
 const app: Express = express();
 app.use(express.json());

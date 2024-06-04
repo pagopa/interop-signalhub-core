@@ -11,8 +11,10 @@ import {
   missingBearer,
   missingHeader,
 } from "../errors/index.js";
+import { JWTConfig, jwtConfig } from "../index.js";
 
 const makeApiProblem = makeApiProblemBuilder({});
+const config = jwtConfig();
 
 export const authenticationMiddleware = async (
   req: Request,
@@ -21,6 +23,7 @@ export const authenticationMiddleware = async (
 ) => {
   const validateTokenAndAddSessionDataToContext = async (
     authHeader: string,
+    config: JWTConfig,
     logger: Logger
   ): Promise<void> => {
     if (!authHeader) {
@@ -40,7 +43,7 @@ export const authenticationMiddleware = async (
     }
 
     const jwtToken = authorizationHeader[1];
-    const validationResult = await validateToken(jwtToken, logger);
+    const validationResult = await validateToken(jwtToken, config, logger);
 
     if (!validationResult.success) {
       throw jwtDecodingError(validationResult.err);
@@ -53,11 +56,6 @@ export const authenticationMiddleware = async (
     serviceName: req.ctx?.serviceName,
     correlationId: req.ctx?.correlationId,
   });
-
-  if (process.env.SKIP_AUTH_VERIFICATION === "true") {
-    loggerInstance.info("Authentication SKIP");
-    return next();
-  }
 
   try {
     loggerInstance.info("Authentication BEGIN");
@@ -75,6 +73,7 @@ export const authenticationMiddleware = async (
         async (headers) => {
           await validateTokenAndAddSessionDataToContext(
             headers.authorization,
+            config,
             loggerInstance
           );
           loggerInstance.info("Authentication END");
