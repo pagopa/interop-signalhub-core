@@ -1,0 +1,26 @@
+{
+  "name": "signalhub-interop-client",
+  "version": "1.0.0",
+  "description": "PagoPA Signal-hub interop communication client",
+  "author": "",
+  "license": "ISC",
+  "main": "dist",
+  "type": "module",
+  "scripts": {
+    "generate-model": "node --loader ts-node/esm ./src/scripts/generate-model.ts",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "dependencies": {
+    "axios": "^1.6.8",
+    "swagger-typescript-api": "^13.0.5",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "@types/uuid": "^9.0.8",
+    "eslint": "^9.3.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}
