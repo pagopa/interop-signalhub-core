@@ -3,15 +3,26 @@ import { config as dotenv } from "dotenv-flow";
 import type { GlobalSetupContext } from "vitest/node";
 import {
   TEST_POSTGRES_DB_PORT,
+  TEST_SQS_PORT,
   postgreSQLContainer,
+  sqsContainer,
 } from "./containerTestUtils.js";
-import { SignalHubStoreConfig } from "signalhub-commons";
+import {
+  QuequeConfig,
+  SignalHubStoreConfig,
+  AwsConfig,
+} from "signalhub-commons";
 import { StartedTestContainer } from "testcontainers";
+import { z } from "zod";
+
+const SqsConfig = QuequeConfig.and(AwsConfig);
+
+export type SqsConfig = z.infer<typeof SqsConfig>;
 
 declare module "vitest" {
   export interface ProvidedContext {
     signalHubStoreConfig: SignalHubStoreConfig;
-    // Add SQS config
+    sqsConfig: SqsConfig;
   }
 }
 
@@ -26,11 +37,16 @@ declare module "vitest" {
 export function setupTestContainersVitestGlobal() {
   dotenv();
   const signalHubStoreConfig = SignalHubStoreConfig.safeParse(process.env);
+<<<<<<< NTRP-146_adding_container_aws_sqs
+  const sqsConfig = SqsConfig.safeParse(process.env);
+=======
+>>>>>>> NTRP-145_push-signals_test
 
   return async function ({
     provide,
   }: GlobalSetupContext): Promise<() => Promise<void>> {
     let startedPostgreSqlContainer: StartedTestContainer | undefined;
+    let startedSqContainer: StartedTestContainer | undefined;
 
     if (signalHubStoreConfig.success) {
       startedPostgreSqlContainer = await postgreSQLContainer(
@@ -59,9 +75,30 @@ export function setupTestContainersVitestGlobal() {
       provide("signalHubStoreConfig", signalHubStoreConfig.data);
     }
 
+    if (sqsConfig.success) {
+      startedSqContainer = await sqsContainer(sqsConfig.data).start();
+      startedSqContainer.exec([
+        "aws",
+        "sqs",
+        "create-queue",
+        "--queue-name",
+        `${sqsConfig.data.queueName}`,
+        "--endpoint-url",
+        `${sqsConfig.data.queueEndpoint}`,
+      ]);
+
+      sqsConfig.data.queuePort =
+        startedSqContainer?.getMappedPort(TEST_SQS_PORT);
+
+      sqsConfig.data.queueEndpoint = `http://localhost:${sqsConfig.data.queuePort}`;
+
+      provide("sqsConfig", sqsConfig.data);
+    }
+
     return async (): Promise<void> => {
       console.info("Stopping test containers");
       await startedPostgreSqlContainer?.stop();
+      await startedSqContainer?.stop();
     };
   };
 }

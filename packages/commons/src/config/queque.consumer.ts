@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const ConsumerConfig = z
+export const QuequeConsumerConfig = z
   .object({
     CONSUMER_POLLING_TIMEOUT_IN_SECONDS: z.coerce.number().min(1),
   })
@@ -8,7 +8,4 @@ export const ConsumerConfig = z
     consumerPollingTimeout: c.CONSUMER_POLLING_TIMEOUT_IN_SECONDS,
   }));
 
-export type ConsumerConfig = z.infer<typeof ConsumerConfig>;
-
-export const consumerConfig: () => ConsumerConfig = () =>
-  ConsumerConfig.parse(process.env);
+export type QuequeConsumerConfig = z.infer<typeof QuequeConsumerConfig>;

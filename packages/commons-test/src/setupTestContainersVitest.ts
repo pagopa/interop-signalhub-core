@@ -3,7 +3,13 @@
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/immutable-data */
 
-import { DB, SignalHubStoreConfig, createDbInstance } from "signalhub-commons";
+import {
+  DB,
+  SQS,
+  SignalHubStoreConfig,
+  createDbInstance,
+} from "signalhub-commons";
+import { SqsConfig } from "./index.js";
 /**
  * This function is a setup for vitest that initializes the postgres
  * database and returns their instances along with a cleanup function.
@@ -25,19 +31,24 @@ import { DB, SignalHubStoreConfig, createDbInstance } from "signalhub-commons";
  */
 
 export function setupTestContainersVitest(
-  signalHubStoreConfig?: SignalHubStoreConfig
+  signalHubStoreConfig?: SignalHubStoreConfig,
+  sqsConfig?: SqsConfig
 ): {
   postgresDB: DB;
+  sqsClient: SQS.SQSClient;
   cleanup: () => Promise<void>;
 };
 
 export function setupTestContainersVitest(
-  signalHubStoreConfig?: SignalHubStoreConfig
+  signalHubStoreConfig?: SignalHubStoreConfig,
+  sqsConfig?: SqsConfig
 ): {
   postgresDB?: DB;
+  sqsClient?: SQS.SQSClient;
   cleanup: () => Promise<void>;
 } {
   let postgresDB: DB | undefined;
+  let sqsClient: SQS.SQSClient | undefined;
 
   if (signalHubStoreConfig) {
     postgresDB = createDbInstance({
@@ -51,12 +62,20 @@ export function setupTestContainersVitest(
     });
   }
 
+  if (sqsConfig) {
+    sqsClient = SQS.instantiateClient({
+      region: sqsConfig.awsRegion,
+      endpoint: sqsConfig.queueEndpoint,
+    });
+    console.log("sqsConfig", sqsConfig);
+  }
+
   return {
     postgresDB,
-
+    sqsClient,
     cleanup: async (): Promise<void> => {
       await postgresDB?.none("TRUNCATE SIGNAL;");
-      // Add other cleanup function
+      // TODO: clean queque messages
     },
   };
 }

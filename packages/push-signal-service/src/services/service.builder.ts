@@ -1,4 +1,4 @@
-import { config } from "../config/config.js";
+import { config } from "../config/env.js";
 import { storeServiceBuilder, StoreService } from "./store.service.js";
 import { quequeServiceBuilder, QuequeService } from "./queque.service.js";
 import { domainServiceBuilder, DomainService } from "./domain.service.js";
@@ -20,7 +20,7 @@ export function serviceBuilder(): {
   const storeService = storeServiceBuilder(db);
 
   const sqsClient: SQS.SQSClient = SQS.instantiateClient({
-    region: config.region,
+    region: config.awsRegion,
     endpoint: config.queueEndpoint,
   });
   const quequeService = quequeServiceBuilder(sqsClient);
