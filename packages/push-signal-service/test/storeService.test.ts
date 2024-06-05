@@ -9,7 +9,7 @@ import {
 } from "signalhub-commons-test";
 import { signalIdDuplicatedForEserviceId } from "../src/model/domain/errors";
 
-describe.skip("Store service", () => {
+describe("Store service", () => {
   describe("verifySignalDuplicateds", () => {
     it("If signal not exist on db should not throw an error", async () => {
       const signalId = 1;

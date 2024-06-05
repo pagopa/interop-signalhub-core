@@ -67,7 +67,6 @@ export function setupTestContainersVitest(
       region: sqsConfig.awsRegion,
       endpoint: sqsConfig.queueEndpoint,
     });
-    console.log("sqsConfig", sqsConfig);
   }
 
   return {
