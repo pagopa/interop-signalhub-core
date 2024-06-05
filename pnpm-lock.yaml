@@ -141,6 +141,9 @@ importers:
       signalhub-commons:
         specifier: workspace:*
         version: link:../commons
+      signalhub-commons-test:
+        specifier: workspace:*
+        version: link:../commons-test
       ts-pattern:
         specifier: ^5.1.1
         version: 5.1.1
@@ -166,6 +169,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.4.5
+      vitest:
+        specifier: ^1.6.0
+        version: 1.6.0(@types/node@20.12.12)
 
   packages/push-signal-service:
     dependencies:
