@@ -20,6 +20,7 @@ export function storeServiceBuilder(db: DB) {
         signalId,
         eserviceId
       );
+
       if (signalIsDuplicated(signalIdPresent)) {
         throw signalIdDuplicatedForEserviceId(signalId, eserviceId);
       }
@@ -41,6 +42,7 @@ export function storeServiceBuilder(db: DB) {
       logger.debug(
         `StoreService::producerIsEserviceOwner eserviceOwned: ${eserviceOwned}`
       );
+
       if (eserviceOwned) {
         return;
       }

@@ -1,15 +1,78 @@
-import { genericLogger } from "signalhub-commons";
-import { describe, it } from "vitest";
-import { storeService } from "./utils";
+import { genericLogger, operationForbidden } from "signalhub-commons";
+import { describe, expect, it } from "vitest";
+import { postgresDB, storeService } from "./utils";
+import {
+  authorizedPurposeId,
+  eserviceIdNotPublished,
+  eserviceIdPushSignals,
+  writeSignal,
+} from "signalhub-commons-test";
+import { signalIdDuplicatedForEserviceId } from "../src/model/domain/errors";
 
 describe("Store service", () => {
-  it("verifySignalDuplicated", async () => {
-    const signalId = 123;
-    const eserviceId = "123";
-    await storeService.verifySignalDuplicated(
-      signalId,
-      eserviceId,
-      genericLogger
-    );
+  describe("verifySignalDuplicateds", () => {
+    it("If signal not exist on db should not throw an error", async () => {
+      const signalId = 1;
+      const eserviceId = "test-eservice-id";
+      await expect(
+        storeService.verifySignalDuplicated(signalId, eserviceId, genericLogger)
+      ).resolves.not.toThrow();
+    });
+    it("If signal already exist on db should throw a signalIdDuplicatedForEserviceId error", async () => {
+      const signalId = 1;
+      const eserviceId = "test-eservice-id";
+
+      await writeSignal(
+        {
+          signalId,
+          eserviceId,
+        },
+        postgresDB
+      );
+
+      await expect(
+        storeService.verifySignalDuplicated(signalId, eserviceId, genericLogger)
+      ).rejects.toThrowError(
+        signalIdDuplicatedForEserviceId(signalId, eserviceId)
+      );
+    });
+  });
+
+  describe("canProducerDepositSignal", () => {
+    it("Should producer not be able to deposit signal because he has a valid agreement but e-service is not PUBLISHED", async () => {
+      const purposeId = authorizedPurposeId;
+      const eserviceId = eserviceIdNotPublished; // Suspended
+      await expect(
+        storeService.canProducerDepositSignal(
+          purposeId,
+          eserviceId,
+          genericLogger
+        )
+      ).rejects.toThrowError(operationForbidden);
+    });
+
+    it("Should producer not be able to deposit signal if he is not the owner of the e-service", async () => {
+      const purposeId = "fake-purpose-id";
+      const eserviceId = eserviceIdPushSignals;
+      await expect(
+        storeService.canProducerDepositSignal(
+          purposeId,
+          eserviceId,
+          genericLogger
+        )
+      ).rejects.toThrowError(operationForbidden);
+    });
+    it("Should producer able to deposit signal if he is the owner of the e-services", async () => {
+      const purposeId = authorizedPurposeId;
+      const eserviceId = eserviceIdPushSignals;
+
+      await expect(
+        storeService.canProducerDepositSignal(
+          purposeId,
+          eserviceId,
+          genericLogger
+        )
+      ).resolves.not.toThrow();
+    });
   });
 });

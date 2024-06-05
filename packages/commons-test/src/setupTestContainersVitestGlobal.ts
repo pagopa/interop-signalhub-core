@@ -37,7 +37,10 @@ declare module "vitest" {
 export function setupTestContainersVitestGlobal() {
   dotenv();
   const signalHubStoreConfig = SignalHubStoreConfig.safeParse(process.env);
+<<<<<<< NTRP-146_adding_container_aws_sqs
   const sqsConfig = SqsConfig.safeParse(process.env);
+=======
+>>>>>>> NTRP-145_push-signals_test
 
   return async function ({
     provide,
@@ -93,6 +96,7 @@ export function setupTestContainersVitestGlobal() {
     }
 
     return async (): Promise<void> => {
+      console.info("Stopping test containers");
       await startedPostgreSqlContainer?.stop();
       await startedSqContainer?.stop();
     };
