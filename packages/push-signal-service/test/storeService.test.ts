@@ -10,7 +10,7 @@ import {
 import { signalIdDuplicatedForEserviceId } from "../src/model/domain/errors";
 
 describe("Store service", () => {
-  describe("verifySignalDuplicateds", () => {
+  describe("verifySignalDuplicated", () => {
     it("If signal not exist on db should not throw an error", async () => {
       const signalId = 1;
       const eserviceId = "test-eservice-id";
