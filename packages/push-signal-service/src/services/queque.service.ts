@@ -10,13 +10,12 @@ export function quequeServiceBuilder(sqsClient: SQS.SQSClient) {
       queueUrl: string = config.queueUrl
     ): Promise<void> {
       try {
-        // const queueUrl = await SQS.getQueueUrl(sqsClient, config.queueName);
         await SQS.sendMessage(sqsClient, queueUrl, message);
         logger.debug(`QuequeService::send message: ${message}`);
       } catch (error: any) {
         logger.error(`QuequeService::send ERROR: ${error}`);
         const { requestId } = error.$metadata;
-        throw signalNotSendedToQueque(requestId, error.code);
+        throw signalNotSendedToQueque(requestId, error);
       }
     },
   };
