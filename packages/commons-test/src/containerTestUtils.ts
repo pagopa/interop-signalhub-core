@@ -25,12 +25,15 @@ export const postgreSQLContainer = (
     ])
     .withExposedPorts(TEST_POSTGRES_DB_PORT);
 
-export const sqsContainer = (config: SqsConfig): GenericContainer =>
+export const sqsContainer = (_config: SqsConfig): GenericContainer =>
   new GenericContainer(TEST_SQS_IMAGE)
+    .withCopyFilesToContainer([
+      {
+        source: "aws.config.local",
+        target: "/root/.aws/credentials",
+      },
+    ])
     .withEnvironment({
-      AWS_ACCESS_KEY_ID: "AWS-DUMMY-ID",
-      AWS_SECRET_ACCESS_KEY: "AWS-DUMMY",
-      AWS_DEFAULT_REGION: config.awsRegion,
       SERVICES: "sqs",
     })
     .withExposedPorts(TEST_SQS_PORT);
