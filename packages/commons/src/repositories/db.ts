@@ -4,7 +4,7 @@ import {
   IClient,
   IConnectionParameters,
 } from "pg-promise/typescript/pg-subset.js";
-import { logger } from "signalhub-commons";
+import { logger } from "../logging/index.js";
 
 export type DB = IDatabase<unknown>;
 

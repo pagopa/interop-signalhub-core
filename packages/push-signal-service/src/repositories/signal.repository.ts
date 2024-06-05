@@ -1,5 +1,4 @@
-import { genericInternalError } from "signalhub-commons";
-import { DB } from "./db.js";
+import { genericInternalError, DB } from "signalhub-commons";
 
 export interface ISignalRepository {
   findBy: (signalId: number, eserviceId: string) => Promise<number | null>;

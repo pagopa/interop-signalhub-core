@@ -1,5 +1,4 @@
-import { genericError } from "signalhub-commons";
-import { DB } from "./db.js";
+import { genericError, DB } from "signalhub-commons";
 
 export interface IEserviceRepository {
   findBy: (

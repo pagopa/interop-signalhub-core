@@ -1,0 +1,109 @@
+{
+  "PROVIDER": {
+    "organization": {
+      "id": "69e2865e-65ab-4e48-a638-2037a9ee2ee7",
+      "name": "PagoPA",
+      "eservices": [
+        {
+          "name": "push",
+          "id": "9bce1bb3-b779-4813-aafe-b1c93bc65a83",
+          "descriptor": "-",
+          "state": "PUBLISHED"
+        },
+        {
+          "name": "pull",
+          "id": "9d1ea147-7750-4aec-98f1-9daeab07f294",
+          "descriptor": "-",
+          "state": "PUBLISHED"
+        }
+      ]
+    }
+  },
+  "PRODUCERS": [
+    {
+      "organization": {
+        "id": "0e9e2dab-2e93-4f24-ba59-38d9f11198ca",
+        "name": "AGID",
+        "eservices": [
+          {
+            "name": "domicili_digitali",
+            "id": "31b4e4e6-855d-42fa-9705-28bc7f8545ff",
+            "descriptor": "4d24ad97-4b0e-446a-8161-4f66fa6b6cf1",
+            "state": "PUBLISHED"
+          },
+          {
+            "name": "domicili_digitali_secondario",
+            "id": "a023c23b-7662-4971-994e-0eb9adabc728",
+            "descriptor": "74d2cfb3-6bff-48ee-9724-14fd0857e59c",
+            "state": "PUBLISHED"
+          },
+          {
+            "name": "e-service non pubblicato",
+            "id": "1dc2108b-2c5e-4057-a2ae-6ce7aeb96551",
+            "descriptor": "13bebc85-9d37-4df3-9989-87c1d59f7e27",
+            "state": "SUSPENDED"
+          }
+        ],
+        "agreements": [
+          {
+            "name": "push",
+            "id": "e46269be-7a81-4d34-8b33-3f30ac982f1a",
+            "eservice": "9bce1bb3-b779-4813-aafe-b1c93bc65a83",
+            "purpose": "881ba6a2-c31b-4613-939f-c9122d555fd7",
+            "state": "ACTIVE"
+          },
+          {
+            "name": "E-service test (fake-push), versione 1",
+            "id": "364cdf60-b12a-4c16-a0e1-a80464f121f2",
+            "eservice": "518dfe92-e0cc-47a2-b1c4-02ede0d3497a",
+            "purpose": "49389d39-2819-468a-aa1c-cabc6c686a05",
+            "state": "ACTIVE",
+            "skip_insert": true
+          }
+        ]
+      }
+    },
+    {
+      "organization": {
+        "id": "4316f715-4250-4ca6-976f-f70c3133d0de",
+        "name": "INPS",
+        "eservices": [
+          {
+            "name": "cassetto_fiscale",
+            "id": "4a127c23c-7662-4974-994e-0eb9adabc999",
+            "descriptor": "2342dfb3-6bff-48ee-9724-14fd0858w62f",
+            "state": "PUBLISHED"
+          }
+        ],
+        "agreements": []
+      }
+    }
+  ],
+  "CONSUMERS": [
+    {
+      "organization": {
+        "id": "e79a24cd-8edc-441e-ae8d-e87c3aea0059",
+        "name": "Comune di Milano",
+        "eservices": [],
+        "agreements": [
+          {
+            "name": "domicili_digitali",
+            "id": "5f829ad2-8f09-4c4f-9ae9-6307dd96834f",
+            "eservice": "31b4e4e6-855d-42fa-9705-28bc7f8545ff",
+            "descriptor": "4d24ad97-4b0e-446a-8161-4f66fa6b6cf1",
+            "purpose": "-",
+            "state": "ACTIVE"
+          },
+          {
+            "name": "pull",
+            "id": "9d1ea147-7750-4aec-98f1-9daeab07f294",
+            "eservice": "9d1ea147-7750-4aec-98f1-9daeab07f294",
+            "descriptor": "-",
+            "purpose": "881ba6a2-c31b-4613-939f-c9122d555fd7",
+            "state": "ACTIVE"
+          }
+        ]
+      }
+    }
+  ]
+}

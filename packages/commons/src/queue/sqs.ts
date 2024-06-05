@@ -7,9 +7,10 @@ import {
   Message,
   SQSClientConfig,
   SendMessageCommandInput,
+  GetQueueUrlCommand,
 } from "@aws-sdk/client-sqs";
-import { logger } from "../index.js";
-import { ConsumerConfig } from "../config/sqsConsumer.config.js";
+import { logger } from "../logging/index.js";
+import { QuequeConsumerConfig } from "../config/queque.consumer.js";
 
 const loggerInstance = logger({});
 
@@ -37,7 +38,10 @@ export const instantiateClient = (config: SQSClientConfig): SQSClient => {
 
 const processQueue = async (
   sqsClient: SQSClient,
-  config: { queueUrl: string; runUntilQueueIsEmpty?: boolean } & ConsumerConfig,
+  config: {
+    queueUrl: string;
+    runUntilQueueIsEmpty?: boolean;
+  } & QuequeConsumerConfig,
   consumerHandler: (messagePayload: Message) => Promise<void>
 ): Promise<void> => {
   const command = new ReceiveMessageCommand({
@@ -86,7 +90,10 @@ const processQueue = async (
 
 export const runConsumer = async (
   sqsClient: SQSClient,
-  config: { queueUrl: string; runUntilQueueIsEmpty?: boolean } & ConsumerConfig,
+  config: {
+    queueUrl: string;
+    runUntilQueueIsEmpty?: boolean;
+  } & QuequeConsumerConfig,
   consumerHandler: (messagePayload: Message) => Promise<void>
 ): Promise<void> => {
   loggerInstance.info(`Consumer processing on Queue: ${config.queueUrl}`);
@@ -108,23 +115,33 @@ export const runConsumer = async (
   );
 };
 
+export const getQueueUrl = async (
+  sqsClient: SQSClient,
+  queueName: string
+): Promise<string> => {
+  const queueUrlCommand = {
+    QueueName: queueName,
+  };
+  try {
+    const command = new GetQueueUrlCommand(queueUrlCommand);
+    const response = await sqsClient.send(command);
+    return response.QueueUrl!;
+  } catch (error) {
+    console.log(error);
+  }
+  return "";
+};
+
 export const sendMessage = async (
   sqsClient: SQSClient,
   queueUrl: string,
-  messageBody: string,
-  messageGroupId?: string
+  messageBody: string
 ): Promise<void> => {
   const messageCommandInput: SendMessageCommandInput = {
     QueueUrl: queueUrl,
     MessageBody: messageBody,
   };
-
-  if (messageGroupId) {
-    messageCommandInput.MessageGroupId = messageGroupId;
-  }
-
   const command = new SendMessageCommand(messageCommandInput);
-
   await sqsClient.send(command);
 };
 

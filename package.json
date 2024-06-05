@@ -7,7 +7,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "start:push-signals": "turbo start --filter push-signal-service",
     "start:persister": "turbo start --filter persister-service",
-    "build": "turbo build"
+    "build": "turbo build",
+    "test": "turbo test --filter push-signal-service"
   },
   "devDependencies": {
     "@tsconfig/node-lts": "^20.1.3",

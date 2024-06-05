@@ -1,9 +1,9 @@
 import { SQS } from "signalhub-commons";
-import { config } from "./config/index.js";
+import { config } from "./config/env.js";
 import { processMessage } from "./messageHandler.js";
 
 const sqsClient: SQS.SQSClient = SQS.instantiateClient({
-  region: config.region,
+  region: config.awsRegion,
   endpoint: config.queueEndpoint,
 });
 

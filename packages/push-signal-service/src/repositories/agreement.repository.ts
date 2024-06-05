@@ -1,5 +1,4 @@
-import { genericError } from "signalhub-commons";
-import { DB } from "./db.js";
+import { DB, genericError } from "signalhub-commons";
 import fs from "fs";
 import { Agreement } from "../model/domain/models.js";
 
