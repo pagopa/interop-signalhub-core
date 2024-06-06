@@ -11,6 +11,7 @@ export const InteropClientConfig = z
     URL_AUTH_TOKEN: z.string(),
     GRANT_TYPE: z.string(),
     CLIENT_ID: z.string(),
+    GATEWAY_URL: z.string(),
   })
   .transform((c) => ({
     keyId: c.KEY_ID,
@@ -22,6 +23,7 @@ export const InteropClientConfig = z
     urlAuthToken: c.URL_AUTH_TOKEN,
     grantType: c.GRANT_TYPE,
     clientId: c.CLIENT_ID,
+    gatewayUrl: c.GATEWAY_URL,
   }));
 
 export type InteropClientConfig = z.infer<typeof InteropClientConfig>;
