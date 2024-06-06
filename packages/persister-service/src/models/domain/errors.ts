@@ -22,6 +22,21 @@ export class PersisterServiceError<T> extends Error {
     this.detail = detail;
   }
 }
+
+export class NotRecoverableGenericMessageError extends PersisterServiceError<NotRecoverableMessageErrorCodes> {
+  constructor({
+    code,
+    title,
+    detail,
+  }: {
+    code: NotRecoverableMessageErrorCodes;
+    title: string;
+    detail: string;
+  }) {
+    super({ code, title, detail });
+  }
+}
+
 export class NotRecoverableMessageError extends PersisterServiceError<NotRecoverableMessageErrorCodes> {
   public signal: DeadSignal;
   constructor({
@@ -92,5 +107,15 @@ export function notRecoverableMessageError(
       ...signal,
       errorReason: getErrorReason(errorCode),
     },
+  });
+}
+
+export function notRecoverableGenericMessageError(
+  errorCode: NotRecoverableMessageErrorCodes
+): NotRecoverableGenericMessageError {
+  return new NotRecoverableGenericMessageError({
+    detail: getErrorReason(errorCode),
+    code: errorCode,
+    title: "Not recoverable error",
   });
 }

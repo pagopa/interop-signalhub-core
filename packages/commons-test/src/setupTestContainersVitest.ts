@@ -40,6 +40,13 @@ export function setupTestContainersVitest(
 };
 
 export function setupTestContainersVitest(
+  signalHubStoreConfig?: SignalHubStoreConfig
+): {
+  postgresDB: DB;
+  cleanup: () => Promise<void>;
+};
+
+export function setupTestContainersVitest(
   signalHubStoreConfig?: SignalHubStoreConfig,
   sqsConfig?: SqsConfig
 ): {
