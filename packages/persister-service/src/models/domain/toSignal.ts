@@ -1,12 +1,12 @@
 import { Signal, SignalMessage } from "signalhub-commons";
 
-export function toSignal(signalEvent: SignalMessage): Signal {
+export function toSignal(signalMessage: SignalMessage): Signal {
   return {
-    correlationId: signalEvent.correlationId,
-    signalId: signalEvent.signalId,
-    signalType: signalEvent.signalType,
-    objectId: signalEvent.objectId,
-    eserviceId: signalEvent.eserviceId,
-    objectType: signalEvent.objectType,
+    correlationId: signalMessage.correlationId,
+    signalId: signalMessage.signalId,
+    signalType: signalMessage.signalType,
+    objectId: signalMessage.objectId,
+    eserviceId: signalMessage.eserviceId,
+    objectType: signalMessage.objectType,
   };
 }

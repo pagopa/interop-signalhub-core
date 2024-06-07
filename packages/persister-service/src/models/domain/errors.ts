@@ -87,6 +87,7 @@ export type ErrorCodes =
 const errorDetails = new Map<ErrorCodes, string>([
   ["duplicateSignal", "The signal is already saved on database"],
   ["parsingError", "The signal could not be parsed"],
+  ["dbConnection", "Database connection error"],
   ["genericError", "Generic error"],
 ]);
 

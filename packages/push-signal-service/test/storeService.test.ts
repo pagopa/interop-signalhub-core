@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { postgresDB, storeService } from "./utils";
 import {
   authorizedPurposeId,
+  createSignal,
   eserviceIdNotPublished,
   eserviceIdPushSignals,
   writeSignal,
@@ -21,14 +22,8 @@ describe("Store service", () => {
     it("If signal already exist on db should throw a signalIdDuplicatedForEserviceId error", async () => {
       const signalId = 1;
       const eserviceId = "test-eservice-id";
-
-      await writeSignal(
-        {
-          signalId,
-          eserviceId,
-        },
-        postgresDB
-      );
+      const signal = createSignal({ signalId, eserviceId });
+      await writeSignal(signal, postgresDB);
 
       await expect(
         storeService.verifySignalDuplicated(signalId, eserviceId, genericLogger)

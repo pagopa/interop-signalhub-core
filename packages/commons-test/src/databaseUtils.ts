@@ -1,7 +1,6 @@
 import { DB, Signal, SignalRequest } from "signalhub-commons";
 
-export async function writeSignal(partialSignal: Partial<Signal>, db: DB) {
-  const signal = createSignal(partialSignal);
+export async function writeSignal(signal: Partial<Signal>, db: DB) {
   try {
     return await db.oneOrNone(
       "INSERT INTO SIGNAL(correlation_id, signal_id,object_id,eservice_id, object_type, signal_type) VALUES($1, $2, $3, $4, $5, $6) RETURNING id",
@@ -22,12 +21,8 @@ export async function writeSignal(partialSignal: Partial<Signal>, db: DB) {
 
 export const createSignal = (partialSignal?: Partial<Signal>): Signal => {
   return {
-    signalId: Math.random(),
-    eserviceId: "eservice-id-test",
-    objectId: "object-id-test",
-    objectType: "object-type-test",
-    correlationId: `correlation-id-test-${Math.random()}`,
-    signalType: "CREATE",
+    ...createSignalRequest(),
+    correlationId: `correlation-id-test-${getRandomInt()}`,
 
     ...partialSignal,
   };
@@ -37,7 +32,7 @@ export const createSignalRequest = (
   partialSignal?: Partial<SignalRequest>
 ): SignalRequest => {
   return {
-    signalId: Math.random(),
+    signalId: getRandomInt(),
     eserviceId: "eservice-id-test",
     objectId: "object-id-test",
     objectType: "object-type-test",
@@ -46,3 +41,5 @@ export const createSignalRequest = (
     ...partialSignal,
   };
 };
+
+const getRandomInt = () => Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);

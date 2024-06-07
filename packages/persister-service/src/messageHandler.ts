@@ -1,4 +1,4 @@
-import { SQS, logger } from "signalhub-commons";
+import { DB, SQS, createDbInstance, logger } from "signalhub-commons";
 import { storeSignalServiceBuilder } from "./services/storeSignal.service.js";
 import {
   NotRecoverableGenericMessageError,
@@ -7,16 +7,27 @@ import {
 } from "./models/domain/errors.js";
 import { P, match } from "ts-pattern";
 import { parseQueueMessageToSignal } from "./models/domain/utils.js";
+import { config } from "./config/env.js";
 
-const storeSignalService = storeSignalServiceBuilder();
+const db: DB = createDbInstance({
+  username: config.signalhubStoreDbUsername,
+  password: config.signalhubStoreDbPassword,
+  host: config.signalhubStoreDbHost,
+  port: config.signalhubStoreDbPort,
+  database: config.signalhubStoreDbName,
+  schema: config.signalhubStoreDbSchema,
+  useSSL: config.signalhubStoreDbUseSSL,
+});
+
+const storeSignalService = storeSignalServiceBuilder(db);
 const loggerInstance = logger({});
 
 export function processMessage(): (message: SQS.Message) => Promise<void> {
   return async (message: SQS.Message): Promise<void> => {
     try {
-      const signalEvent = parseQueueMessageToSignal(message, loggerInstance);
+      const signalMessage = parseQueueMessageToSignal(message, loggerInstance);
 
-      await storeSignalService.storeSignal(signalEvent);
+      await storeSignalService.storeSignal(signalMessage);
     } catch (error) {
       return match<unknown>(error)
         .with(
