@@ -5,6 +5,7 @@ import {
 } from "../src/models/domain/errors.js";
 import { parseQueueMessageToSignal } from "../src/models/domain/utils.js";
 import { genericLogger } from "signalhub-commons";
+import { createSignal } from "signalhub-commons-test";
 
 describe("Message parser", () => {
   it("should throw an error if message is not a Signal", () => {
@@ -15,23 +16,18 @@ describe("Message parser", () => {
       parseQueueMessageToSignal(malformedNotASignalQueueMessage, genericLogger)
     ).toThrowError(
       notRecoverableGenericMessageError(
-        "parsingError",
+        "notValidJsonError",
         malformedNotASignalQueueMessage.Body
       )
     );
   });
 
   it("should throw an error if message is malformed Signal (wrong signalId)", () => {
-    const malformedSignalQueueMessage = `
-    {
-      "signalId": "WRONG! WRONG! WRONG!",
-      "eserviceId": "eservice-id-test",
-      "objectId": "object-id-test",
-      "objectType": "object-type-test",
-      "correlationId": "correlation-id-test-1",
-      "signalType": "CREATE"
-    }
-    `;
+    const malformedSignal = {
+      ...createSignal(),
+      signalId: "WRONG!",
+    };
+    const malformedSignalQueueMessage = JSON.stringify(malformedSignal);
     expect(() =>
       parseQueueMessageToSignal(
         {
@@ -47,16 +43,11 @@ describe("Message parser", () => {
     );
   });
   it("should throw an error if message is malformed Signal (signalId as string) ", () => {
-    const malformedSignalQueueMessage = `
-    {
-      "signalId": "1",
-      "eserviceId": "eservice-id-test",
-      "objectId": "object-id-test",
-      "objectType": "object-type-test",
-      "correlationId": "correlation-id-test-1",
-      "signalType": "CREATE"
-    }
-    `;
+    const malformedSignal = {
+      ...createSignal(),
+      signalId: "1",
+    };
+    const malformedSignalQueueMessage = JSON.stringify(malformedSignal);
     expect(() =>
       parseQueueMessageToSignal(
         {
@@ -72,15 +63,9 @@ describe("Message parser", () => {
     );
   });
   it("should throw an error if message is malformed Signal (no  attribute eserviceId)", () => {
-    const malformedSignalQueueMessage = `
-    {
-      "signalId": "1",
-      "objectId": "object-id-test",
-      "objectType": "object-type-test",
-      "correlationId": "correlation-id-test-1",
-      "signalType": "CREATE"
-    }
-    `;
+    const { eserviceId, ...malformedSignal } = createSignal();
+    const malformedSignalQueueMessage = JSON.stringify(malformedSignal);
+
     expect(() =>
       parseQueueMessageToSignal(
         {
@@ -95,18 +80,12 @@ describe("Message parser", () => {
       )
     );
   });
-  it("should throw an error if message is malformed Signal (adding  arbitrary attribute)", () => {
-    const malformedSignalQueueMessage = `
-    {
-      "signalId": "1",
-      "eserviceId": "eservice-id-test",
-      "objectId": "object-id-test",
-      "objectType": "object-type-test",
-      "correlationId": "correlation-id-test-1",
-      "signalType": "CREATE",
-      "arbitrary": "no way!"
-    }
-    `;
+  it("should parse message even if message contains an arbitrary attribute)", () => {
+    const malformedSignal = {
+      ...createSignal(),
+      arbitrary: "no way!",
+    };
+    const malformedSignalQueueMessage = JSON.stringify(malformedSignal);
     expect(() =>
       parseQueueMessageToSignal(
         {
@@ -114,25 +93,11 @@ describe("Message parser", () => {
         },
         genericLogger
       )
-    ).toThrowError(
-      notRecoverableMessageError(
-        "parsingError",
-        JSON.parse(malformedSignalQueueMessage)
-      )
-    );
+    ).not.toThrowError();
   });
 
   it("should parse message to correct type Signal", () => {
-    const correctSignalQueueMessage = `
-    {
-      "signalId": 1,
-      "eserviceId": "eservice-id-test",
-      "objectId": "object-id-test",
-      "objectType": "object-type-test",
-      "correlationId": "correlation-id-test-1",
-      "signalType": "CREATE"
-    }
-    `;
+    const correctSignalQueueMessage = JSON.stringify(createSignal());
     expect(
       parseQueueMessageToSignal(
         {

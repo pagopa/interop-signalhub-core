@@ -68,6 +68,7 @@ export const notRecoverableMessageErrorCodes = {
   duplicateSignal: "0002",
   parsingError: "0010",
   genericError: "0011",
+  notValidJsonError: "0012",
 };
 
 export function getErrorReason(type: ErrorCodes): string {
@@ -87,6 +88,7 @@ export type ErrorCodes =
 const errorDetails = new Map<ErrorCodes, string>([
   ["duplicateSignal", "The signal is already saved on database"],
   ["parsingError", "The signal could not be parsed"],
+  ["notValidJsonError", "The message is not a signal, not valid JSON"],
   ["dbConnection", "Database connection error"],
   ["genericError", "Generic error"],
 ]);

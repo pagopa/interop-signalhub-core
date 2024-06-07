@@ -12,7 +12,10 @@ export function parseQueueMessageToSignal(
   try {
     parsedMessage = JSON.parse(queueMessage.Body!);
   } catch (error) {
-    throw notRecoverableGenericMessageError("parsingError", queueMessage.Body);
+    throw notRecoverableGenericMessageError(
+      "notValidJsonError",
+      queueMessage.Body
+    );
   }
   let signalEvent = SignalMessage.safeParse(parsedMessage);
   loggerInstance.info(
