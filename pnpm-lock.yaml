@@ -239,6 +239,9 @@ importers:
       signalhub-commons-test:
         specifier: workspace:*
         version: link:../commons-test
+      signalhub-interop-client:
+        specifier: workspace:*
+        version: link:../interop-client
       swagger-ui-express:
         specifier: ^5.0.0
         version: 5.0.0(express@4.19.2)

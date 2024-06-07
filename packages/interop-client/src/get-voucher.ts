@@ -6,7 +6,7 @@ export async function obtainVoucher(
   assertion: string
 ): Promise<string> {
   const urlAuth: string = config.urlAuthToken;
-  const formData = new FormData();
+  const formData = new URLSearchParams();
 
   const assertionType =
     "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
@@ -16,14 +16,16 @@ export async function obtainVoucher(
   formData.append("client_assertion", assertion);
   formData.append("client_assertion_type", assertionType);
 
-  try {
-    const response: AxiosResponse<{ access_token: string }> = await axios.post(
-      urlAuth,
-      formData
-    );
+  const response: AxiosResponse<{ access_token: string }> = await axios.post(
+    urlAuth,
+    formData,
+    {
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+        accept: "application/json",
+      },
+    }
+  );
 
-    return response.data.access_token;
-  } catch (error: unknown) {
-    throw error;
-  }
+  return response.data.access_token;
 }

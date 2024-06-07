@@ -6,6 +6,9 @@
   "license": "ISC",
   "main": "dist",
   "type": "module",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "scripts": {
     "generate-model": "node --loader ts-node/esm ./src/scripts/generate-model.ts",
     "build": "tsc"

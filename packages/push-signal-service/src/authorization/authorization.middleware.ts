@@ -1,7 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { logger, makeApiProblemBuilder } from "signalhub-commons";
+import {
+  logger,
+  makeApiProblemBuilder,
+  operationForbidden,
+} from "signalhub-commons";
 import { match } from "ts-pattern";
 import { StoreService } from "../services/store.service.js";
+import { hasUserAnAgreement } from "signalhub-interop-client";
 
 const makeApiProblem = makeApiProblemBuilder({});
 
@@ -13,6 +18,13 @@ export const authorizationMiddleware = (storeService: StoreService) => {
     });
     try {
       loggerInstance.info("Authorization BEGIN");
+
+      const agreement = await hasUserAnAgreement(req.ctx.sessionData.purposeId);
+
+      if (!agreement) {
+        throw operationForbidden;
+      }
+
       const { eserviceId } = req.body;
       await storeService.canProducerDepositSignal(
         req.ctx.sessionData.purposeId,

@@ -4,10 +4,11 @@ import { obtainVoucher } from "./get-voucher.js";
 import { getAgreementByPurposeId } from "./getAgreementByPurposeId.js";
 
 export const hasUserAnAgreement = async (purposeId: string) => {
-  // Define client assertion
-  const clientAssertion = await generateClientAssertion(config);
-  // Retrieve voucher
-  const voucher = await obtainVoucher(config, clientAssertion);
-
-  await getAgreementByPurposeId(purposeId, voucher);
+  try {
+    const clientAssertion = await generateClientAssertion(config);
+    const voucher = await obtainVoucher(config, clientAssertion);
+    return await getAgreementByPurposeId(purposeId, voucher);
+  } catch (error) {
+    throw error;
+  }
 };
