@@ -4,23 +4,23 @@ import {
   notRecoverableMessageError,
 } from "./errors.js";
 
-export function fromQueueToSignal(
+export function parseQueueMessageToSignal(
   queueMessage: SQS.Message,
   loggerInstance: Logger
 ) {
+  let parsedMessage;
   try {
-    const parsedMessage = JSON.parse(queueMessage.Body!);
-    let signalEvent = SignalMessage.safeParse(parsedMessage);
-
-    loggerInstance.info(
-      `Message from queue: ${JSON.stringify(parsedMessage, null, 2)}`
-    );
-
-    if (!signalEvent.success) {
-      throw notRecoverableMessageError("parsingError", parsedMessage);
-    }
-    return signalEvent.data;
+    parsedMessage = JSON.parse(queueMessage.Body!);
   } catch (error) {
-    throw notRecoverableGenericMessageError("parsingError");
+    throw notRecoverableGenericMessageError("parsingError", queueMessage.Body);
   }
+  let signalEvent = SignalMessage.safeParse(parsedMessage);
+  loggerInstance.info(
+    `Message from queue: ${JSON.stringify(parsedMessage, null, 2)}`
+  );
+
+  if (!signalEvent.success) {
+    throw notRecoverableMessageError("parsingError", parsedMessage);
+  }
+  return signalEvent.data;
 }
