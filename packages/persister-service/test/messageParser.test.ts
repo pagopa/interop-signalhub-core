@@ -80,7 +80,7 @@ describe("Message parser", () => {
       )
     );
   });
-  it("should parse message even if message contains an arbitrary attribute)", () => {
+  it("should parse message even if message contains an arbitrary attribute", () => {
     const malformedSignal = {
       ...createSignal(),
       arbitrary: "no way!",
