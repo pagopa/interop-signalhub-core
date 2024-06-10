@@ -1,13 +1,23 @@
 import { Logger, SQS, SignalMessage } from "signalhub-commons";
-import { notRecoverableMessageError } from "./errors.js";
+import {
+  notRecoverableGenericMessageError,
+  notRecoverableMessageError,
+} from "./errors.js";
 
-export function fromQueueToSignal(
+export function parseQueueMessageToSignal(
   queueMessage: SQS.Message,
   loggerInstance: Logger
 ) {
-  const parsedMessage = JSON.parse(queueMessage.Body!);
+  let parsedMessage;
+  try {
+    parsedMessage = JSON.parse(queueMessage.Body!);
+  } catch (error) {
+    throw notRecoverableGenericMessageError(
+      "notValidJsonError",
+      queueMessage.Body
+    );
+  }
   let signalEvent = SignalMessage.safeParse(parsedMessage);
-
   loggerInstance.info(
     `Message from queue: ${JSON.stringify(parsedMessage, null, 2)}`
   );
@@ -15,6 +25,5 @@ export function fromQueueToSignal(
   if (!signalEvent.success) {
     throw notRecoverableMessageError("parsingError", parsedMessage);
   }
-
   return signalEvent.data;
 }

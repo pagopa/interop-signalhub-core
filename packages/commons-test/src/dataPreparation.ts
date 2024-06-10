@@ -1,4 +1,4 @@
-import { DB } from "signalhub-commons";
+import { DB, SQS } from "signalhub-commons";
 import { signalProducer, eserviceProducer } from "./common.js";
 
 async function setupEserviceTable(db: DB) {
@@ -24,4 +24,14 @@ export const dataPreparation = async (db: DB) => {
 export const dataPreparationCleanup = async (db: DB) => {
   console.info("\n*** SIGNALHUB DATA PREPARATION CLEANUP ***\n");
   await db.none("truncate eservice;");
+};
+
+export const deleteAllSqsMessages = async (
+  sqsClient: SQS.SQSClient,
+  queueUrl: string
+) => {
+  console.info(
+    "\n*** SIGNALHUB DATA PREPARATION DELETE ALL QUEUE MESSAGES ***\n"
+  );
+  await SQS.deleteBatchMessages(sqsClient, queueUrl);
 };

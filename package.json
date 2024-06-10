@@ -8,7 +8,9 @@
     "start:push-signals": "turbo start --filter push-signal-service",
     "start:persister": "turbo start --filter persister-service",
     "build": "turbo build",
-    "test": "turbo test --filter push-signal-service"
+    "test": "turbo test",
+    "test:push": "turbo test --filter push-signal-service",
+    "test:persister": "turbo test --filter persister-service"
   },
   "devDependencies": {
     "@tsconfig/node-lts": "^20.1.3",

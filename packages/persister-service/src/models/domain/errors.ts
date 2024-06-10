@@ -22,6 +22,25 @@ export class PersisterServiceError<T> extends Error {
     this.detail = detail;
   }
 }
+
+export class NotRecoverableGenericMessageError extends PersisterServiceError<NotRecoverableMessageErrorCodes> {
+  public signal: any; // can be anything: case of object different from Signal
+  constructor({
+    code,
+    title,
+    detail,
+    signal,
+  }: {
+    code: NotRecoverableMessageErrorCodes;
+    title: string;
+    detail: string;
+    signal: any;
+  }) {
+    super({ code, title, detail });
+    this.signal = signal;
+  }
+}
+
 export class NotRecoverableMessageError extends PersisterServiceError<NotRecoverableMessageErrorCodes> {
   public signal: DeadSignal;
   constructor({
@@ -49,6 +68,7 @@ export const notRecoverableMessageErrorCodes = {
   duplicateSignal: "0002",
   parsingError: "0010",
   genericError: "0011",
+  notValidJsonError: "0012",
 };
 
 export function getErrorReason(type: ErrorCodes): string {
@@ -68,6 +88,8 @@ export type ErrorCodes =
 const errorDetails = new Map<ErrorCodes, string>([
   ["duplicateSignal", "The signal is already saved on database"],
   ["parsingError", "The signal could not be parsed"],
+  ["notValidJsonError", "The message is not a signal, not valid JSON"],
+  ["dbConnection", "Database connection error"],
   ["genericError", "Generic error"],
 ]);
 
@@ -92,5 +114,17 @@ export function notRecoverableMessageError(
       ...signal,
       errorReason: getErrorReason(errorCode),
     },
+  });
+}
+
+export function notRecoverableGenericMessageError(
+  errorCode: NotRecoverableMessageErrorCodes,
+  signal: any
+): NotRecoverableGenericMessageError {
+  return new NotRecoverableGenericMessageError({
+    detail: getErrorReason(errorCode),
+    code: errorCode,
+    title: "Not recoverable error",
+    signal,
   });
 }

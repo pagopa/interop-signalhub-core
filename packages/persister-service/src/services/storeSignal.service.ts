@@ -1,7 +1,6 @@
-import { config } from "../config/env.js";
 import { toSignal } from "../models/domain/toSignal.js";
 import { signalRepository } from "../repositories/signal.repository.js";
-import { createDbInstance, DB, logger, SignalMessage } from "signalhub-commons";
+import { DB, logger, SignalMessage } from "signalhub-commons";
 import { deadSignalRepository } from "../repositories/deadSignal.repository.js";
 import { DeadSignal } from "../models/domain/model.js";
 import {
@@ -11,28 +10,17 @@ import {
 } from "../models/domain/errors.js";
 
 const loggerInstance = logger({});
-const db: DB = createDbInstance({
-  username: config.signalhubStoreDbUsername,
-  password: config.signalhubStoreDbPassword,
-  host: config.signalhubStoreDbHost,
-  port: config.signalhubStoreDbPort,
-  database: config.signalhubStoreDbName,
-  schema: config.signalhubStoreDbSchema,
-  useSSL: config.signalhubStoreDbUseSSL,
-});
 
-const signalRepositoryInstance = signalRepository(db);
-const deadSignalRepositoryInstance = deadSignalRepository(db);
-
-export function storeSignalServiceBuilder() {
+export function storeSignalServiceBuilder(db: DB) {
   return {
-    async storeSignal(signalEvent: SignalMessage) {
+    async storeSignal(signalMessage: SignalMessage) {
       try {
-        const signal = toSignal(signalEvent);
+        const signalRepositoryInstance = signalRepository(db);
+        const signal = toSignal(signalMessage);
 
         const signalRecordId = await signalRepositoryInstance.getSignalById(
-          signalEvent.signalId,
-          signalEvent.eserviceId
+          signalMessage.signalId,
+          signalMessage.eserviceId
         );
 
         /* it means that signal is already present on db */
@@ -41,7 +29,7 @@ export function storeSignalServiceBuilder() {
           throw notRecoverableMessageError("duplicateSignal", signal);
         } else {
           loggerInstance.info(
-            `Signal with signalId: ${signalEvent.signalId} not found on DB`
+            `Signal with signalId: ${signalMessage.signalId} not found on DB`
           );
           const id = await signalRepositoryInstance.insertSignal(signal);
           loggerInstance.info(`Signal with id: ${id} has been inserted on DB`);
@@ -58,7 +46,9 @@ export function storeSignalServiceBuilder() {
     },
 
     async storeDeadSignal(deadSignal: DeadSignal) {
-      await deadSignalRepositoryInstance.insertDeadSignal(deadSignal);
+      await deadSignalRepository(db).insertDeadSignal(deadSignal);
     },
   };
 }
+
+export type StoreSignalService = ReturnType<typeof storeSignalServiceBuilder>;

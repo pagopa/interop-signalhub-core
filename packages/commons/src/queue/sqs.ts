@@ -8,6 +8,7 @@ import {
   SQSClientConfig,
   SendMessageCommandInput,
   GetQueueUrlCommand,
+  DeleteMessageBatchCommand,
 } from "@aws-sdk/client-sqs";
 import { logger } from "../logging/index.js";
 import { QuequeConsumerConfig } from "../config/queque.consumer.js";
@@ -157,6 +158,46 @@ export const deleteMessage = async (
 
   loggerInstance.info("Delete message from queue");
   await sqsClient.send(deleteCommand);
+};
+
+export const deleteBatchMessages = async (
+  sqsClient: SQSClient,
+  queueUrl: string
+) => {
+  const receiveMessage = (queueUrl: string) =>
+    sqsClient.send(
+      new ReceiveMessageCommand({
+        MaxNumberOfMessages: 10,
+        WaitTimeSeconds: 10,
+        QueueUrl: queueUrl,
+      })
+    );
+
+  const { Messages } = await receiveMessage(queueUrl);
+
+  if (!Messages) {
+    return;
+  }
+
+  if (Messages.length === 1) {
+    // console.log(Messages[0].Body);
+    await sqsClient.send(
+      new DeleteMessageCommand({
+        QueueUrl: queueUrl,
+        ReceiptHandle: Messages[0].ReceiptHandle,
+      })
+    );
+  } else {
+    await sqsClient.send(
+      new DeleteMessageBatchCommand({
+        QueueUrl: queueUrl,
+        Entries: Messages.map((message) => ({
+          Id: message.MessageId,
+          ReceiptHandle: message.ReceiptHandle,
+        })),
+      })
+    );
+  }
 };
 
 export { SQSClient, SQSClientConfig, Message };
