@@ -48,6 +48,11 @@ export const SignalSchema = z.object({
   objectType: z.string(),
 });
 
+export const PaginationSignalSchema = z.object({
+  signals: z.array(SignalSchema),
+  lastSignalId: z.number(),
+});
+
 export const SignalMessage = z.object({
   correlationId: z.string(),
   signalType: SignalType,
@@ -99,6 +104,7 @@ export const SMessageSchema = z.object({
 });
 
 export const SignalPushResponse = SignalSchema.pick({ signalId: true });
+export const SignalPullResponse = PaginationSignalSchema;
 
 export const Signal = SignalMessage;
 export type SignalRequest = z.infer<typeof SignalSchema>;
