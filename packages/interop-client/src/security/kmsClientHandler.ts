@@ -6,7 +6,7 @@ import {
   SignRequest,
   SigningAlgorithmSpec,
 } from "@aws-sdk/client-kms";
-import { config } from "../config/interop-client.config.js";
+import { config } from "../config/env.js";
 import { randomUUID } from "crypto";
 
 export const kmsClientBuilder = () => {

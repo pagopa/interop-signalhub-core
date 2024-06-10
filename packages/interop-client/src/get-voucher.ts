@@ -1,5 +1,5 @@
 // import axios, { AxiosResponse } from "axios";
-import { InteropClientConfig } from "./config/interop-client.config.js";
+import { InteropClientConfig } from "./config/env.js";
 
 export async function obtainVoucher(
   config: InteropClientConfig,
