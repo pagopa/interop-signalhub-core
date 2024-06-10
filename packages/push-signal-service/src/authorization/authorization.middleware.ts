@@ -27,7 +27,7 @@ export const authorizationMiddleware = (
       );
 
       if (!agreement) {
-        loggerInstance.error("Agreement not found");
+        loggerInstance.error(`Authorization middleware:: Agreement not found`);
         throw operationForbidden;
       }
 
