@@ -12,7 +12,8 @@ const app: Express = express();
 app.use(express.json());
 setupSwaggerRoute(app);
 
-const { domainService, storeService, quequeService } = serviceBuilder();
+const { domainService, storeService, quequeService, interopClientService } =
+  serviceBuilder();
 
 const tsServer = initServer();
 const routes = tsServer.router(
@@ -24,7 +25,7 @@ createExpressEndpoints(contract, routes, app, {
   globalMiddleware: [
     contextMiddleware,
     authenticationMiddleware,
-    authorizationMiddleware(storeService),
+    authorizationMiddleware(storeService, interopClientService),
   ],
   requestValidationErrorHandler: validationErrorHandler(),
 });

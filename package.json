@@ -5,6 +5,7 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "start": "turbo start",
     "start:push-signals": "turbo start --filter push-signal-service",
     "start:persister": "turbo start --filter persister-service",
     "build": "turbo build",

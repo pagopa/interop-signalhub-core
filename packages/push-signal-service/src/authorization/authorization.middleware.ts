@@ -6,11 +6,14 @@ import {
 } from "signalhub-commons";
 import { match } from "ts-pattern";
 import { StoreService } from "../services/store.service.js";
-import { getAgreementByPurpose } from "signalhub-interop-client";
+import { InteropClientService } from "../services/interopClient.service.js";
 
 const makeApiProblem = makeApiProblemBuilder({});
 
-export const authorizationMiddleware = (storeService: StoreService) => {
+export const authorizationMiddleware = (
+  storeService: StoreService,
+  interopClientservice: InteropClientService
+) => {
   return async (req: Request, response: Response, next: NextFunction) => {
     const loggerInstance = logger({
       serviceName: req.ctx.serviceName,
@@ -19,11 +22,12 @@ export const authorizationMiddleware = (storeService: StoreService) => {
     try {
       loggerInstance.info("Authorization BEGIN");
 
-      const agreement = await getAgreementByPurpose(
+      const agreement = await interopClientservice.getAgreementByPurposeId(
         req.ctx.sessionData.purposeId
       );
 
       if (!agreement) {
+        loggerInstance.error("Agreement not found");
         throw operationForbidden;
       }
 

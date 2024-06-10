@@ -3,10 +3,15 @@ import { storeServiceBuilder, StoreService } from "./store.service.js";
 import { quequeServiceBuilder, QuequeService } from "./queque.service.js";
 import { domainServiceBuilder, DomainService } from "./domain.service.js";
 import { DB, SQS, createDbInstance } from "signalhub-commons";
+import {
+  InteropClientService,
+  interopClientServiceBuilder,
+} from "./interopClient.service.js";
 export function serviceBuilder(): {
   storeService: StoreService;
   quequeService: QuequeService;
   domainService: DomainService;
+  interopClientService: InteropClientService;
 } {
   const db: DB = createDbInstance({
     username: config.signalhubStoreDbUsername,
@@ -25,10 +30,12 @@ export function serviceBuilder(): {
   });
   const quequeService = quequeServiceBuilder(sqsClient);
   const domainService = domainServiceBuilder();
+  const interopClientService = interopClientServiceBuilder();
 
   return {
     storeService,
     quequeService,
     domainService,
+    interopClientService,
   };
 }
