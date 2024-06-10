@@ -1,4 +1,4 @@
-import { kmsClientBuilder } from "./security/kmsClientHandler.js";
+import { kmsClientBuilder } from "../security/kmsClientHandler.js";
 
 export async function getClientAssertion() {
   const kmsClient = kmsClientBuilder();

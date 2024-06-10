@@ -4,7 +4,7 @@ import { generateApi } from "swagger-typescript-api";
 const openApiSpecificationFileUrl =
   "https://raw.githubusercontent.com/pagopa/interop-be-api-gateway/1.0.x/src/main/resources/interface-specification.yml";
 
-const apiFolderPath = path.resolve("./src/api");
+const apiFolderPath = path.resolve("./src/models");
 
 generateApi({
   name: "gateway.models.ts",
