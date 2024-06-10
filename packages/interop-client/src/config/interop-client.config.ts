@@ -12,6 +12,8 @@ export const InteropClientConfig = z
     GRANT_TYPE: z.string(),
     CLIENT_ID: z.string(),
     GATEWAY_URL: z.string(),
+    EXPIRES_IN_SEC: z.coerce.number(),
+    KMS_KEY_ID: z.string(),
   })
   .transform((c) => ({
     keyId: c.KEY_ID,
@@ -24,6 +26,8 @@ export const InteropClientConfig = z
     grantType: c.GRANT_TYPE,
     clientId: c.CLIENT_ID,
     gatewayUrl: c.GATEWAY_URL,
+    expiresInSec: c.EXPIRES_IN_SEC,
+    kmsKeyId: c.KMS_KEY_ID,
   }));
 
 export type InteropClientConfig = z.infer<typeof InteropClientConfig>;
