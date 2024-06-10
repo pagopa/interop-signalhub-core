@@ -7,8 +7,15 @@ import {
   SigningAlgorithmSpec,
 } from "@aws-sdk/client-kms";
 import { config } from "../config/env.js";
-import { randomUUID } from "crypto";
-
+import { v4 as uuidv4 } from "uuid";
+type Claims = {
+  sub: string;
+  iss: string;
+  exp: number;
+  iat: number;
+  aud: string;
+  jti: string;
+};
 export const kmsClientBuilder = () => {
   const configuration: KMSClientConfig = {
     region: config.kmsRegion,
@@ -67,13 +74,13 @@ function createPayload(): string {
   const currentTimeInSeconds = Math.floor(Date.now() / 1000);
   const expiresIn = currentTimeInSeconds + expiresInSec;
 
-  const claims = {
+  const claims: Claims = {
     sub: subject,
     iss: issuer,
     exp: expiresIn,
     iat: currentTimeInSeconds,
     aud: audience,
-    jti: randomUUID(),
+    jti: uuidv4(),
   };
 
   return removePadding(Buffer.from(JSON.stringify(claims)).toString("base64"));
