@@ -1,7 +1,6 @@
 import {
   KMSClient,
   KMSClientConfig,
-  // KMSClientConfig,
   SignCommand,
   SignCommandOutput,
   SignRequest,
@@ -12,12 +11,12 @@ import { randomUUID } from "crypto";
 
 export const kmsClientBuilder = () => {
   const configuration: KMSClientConfig = {
-    region: "eu-south-1",
+    region: config.kmsRegion,
   };
   const kms: KMSClient = new KMSClient(configuration);
 
   return {
-    async buildJWT(_jwtSignAlgorithm: string): Promise<string> {
+    async buildJWT(): Promise<string> {
       const token = createToken();
       const signRequest: SignRequest = {
         KeyId: config.kmsKeyId,
@@ -50,14 +49,16 @@ function createToken(): string {
 }
 
 function createHeader(): string {
-  const obj = {
+  const headerObj = {
+    kid: config.keyId,
     typ: "at+jwt",
     use: "sig",
-    kid: config.keyId,
     alg: "RS256",
   };
 
-  return removePadding(Buffer.from(JSON.stringify(obj)).toString("base64"));
+  return removePadding(
+    Buffer.from(JSON.stringify(headerObj)).toString("base64")
+  );
 }
 
 function createPayload(): string {
