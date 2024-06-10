@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createSignal } from "signalhub-commons-test";
-import { processMessageHandler } from "./utils.js";
+import { processMessageHandler, wrongStoreSignalService } from "./utils.js";
+import { recoverableMessageError } from "../src/models/domain/errors.js";
 
 describe("Message handler", () => {
   it("should process a valid message and store it", async () => {
@@ -18,14 +19,29 @@ describe("Message handler", () => {
       processMessageHandler(malformedNotASignalQueueMessage)
     ).resolves.not.toThrow();
   });
-  it("should NOT throw an  error if message is a malformed Signal (NotRecoverableMessageError)", async () => {
+  it("should NOT throw an error ((NotRecoverableMessageError)) if message is a malformed Signal, with wrong signalType", async () => {
     const malformedSignal = {
       ...createSignal(),
-      signalId: "WRONG!",
+      signalType: "CREATEX",
     };
     const queueMessage = {
       Body: JSON.stringify(malformedSignal),
     };
     await expect(processMessageHandler(queueMessage)).resolves.not.toThrow();
+  });
+  it("should NOT throw an error (NotRecoverableMessageError) if message is a malformed Signal, with empty eserviceId", async () => {
+    const malformedSignal = {
+      ...createSignal(),
+      eserviceId: "",
+    };
+    const queueMessage = {
+      Body: JSON.stringify(malformedSignal),
+    };
+    await expect(processMessageHandler(queueMessage)).resolves.not.toThrow();
+  });
+  it("should throw a RecoverableMessageError for a temporary db error", async () => {
+    await expect(
+      wrongStoreSignalService.storeSignal(createSignal())
+    ).rejects.toThrowError(recoverableMessageError("dbConnection"));
   });
 });
