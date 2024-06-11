@@ -24,7 +24,7 @@ export class PersisterServiceError<T> extends Error {
 }
 
 export class NotRecoverableGenericMessageError extends PersisterServiceError<NotRecoverableMessageErrorCodes> {
-  public signal: any;
+  public signal: any; // can be anything: case of object different from Signal
   constructor({
     code,
     title,
