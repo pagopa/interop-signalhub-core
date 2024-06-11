@@ -1,7 +1,7 @@
 openapi: 3.0.2
 paths:
   /pull-signal:
-    post:
+    get:
       summary: Pull Signal
       tags: []
       parameters:
@@ -10,37 +10,9 @@ paths:
           required: true
           schema:
             type: string
-      requestBody:
-        description: Body
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                signalType:
-                  type: string
-                  enum:
-                    - CREATE
-                    - UPDATE
-                    - DELETE
-                    - SEEDUPDATE
-                objectId:
-                  type: string
-                eserviceId:
-                  type: string
-                signalId:
-                  type: number
-                objectType:
-                  type: string
-              required:
-                - signalType
-                - objectId
-                - eserviceId
-                - signalId
-                - objectType
       responses:
-        "200":
-          description: "200"
+        '200':
+          description: '200'
           content:
             application/json:
               schema:
@@ -50,14 +22,14 @@ paths:
                     type: number
                 required:
                   - signalId
-        "400":
-          description: "400"
-        "401":
-          description: "401"
-        "403":
-          description: "403"
-        "500":
-          description: "500"
+        '400':
+          description: '400'
+        '401':
+          description: '401'
+        '403':
+          description: '403'
+        '500':
+          description: '500'
 info:
   title: Pull signal Service API
-  version: "1.0"
+  version: '1.0'

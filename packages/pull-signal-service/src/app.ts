@@ -8,21 +8,21 @@ import { setupSwaggerRoute } from "./routes/swagger.route.js";
 import { validationErrorHandler } from "./validation/validation.js";
 import { serviceBuilder } from "./services/service.builder.js";
 
-const app: Express = express();
-app.use(express.json());
-setupSwaggerRoute(app);
-
+// services
 const { storeService } = serviceBuilder();
 
+// express
+const app: Express = express();
+app.use(contextMiddleware("pull"));
+app.use(authenticationMiddleware);
+app.use(authorizationMiddleware(storeService));
+setupSwaggerRoute(app);
+
+// ts-rest
 const tsServer = initServer();
 const routes = tsServer.router(contract, pullRoutes(storeService));
 
 createExpressEndpoints(contract, routes, app, {
-  globalMiddleware: [
-    contextMiddleware,
-    authenticationMiddleware,
-    authorizationMiddleware(storeService),
-  ],
   requestValidationErrorHandler: validationErrorHandler(),
 });
 

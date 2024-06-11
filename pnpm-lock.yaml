@@ -209,7 +209,6 @@ importers:
       vitest:
         specifier: ^1.6.0
         version: 1.6.0(@types/node@20.12.12)
-<<<<<<< HEAD
 
   packages/pull-signal-service:
     dependencies:
@@ -286,8 +285,6 @@ importers:
       vitest:
         specifier: ^1.6.0
         version: 1.6.0(@types/node@20.12.12)
-=======
->>>>>>> main
 
   packages/push-signal-service:
     dependencies:
