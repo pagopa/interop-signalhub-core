@@ -7,22 +7,18 @@ import { makeApiProblem } from "../model/domain/errors.js";
 
 const s = initServer();
 
-export const pullRoutes = (storeService: StoreService) => {
+export const pullRoutes = (_storeService: StoreService) => {
   const pullSignal: AppRouteImplementation<
     typeof contract.pullSignal
-  > = async ({ body, req }) => {
+  > = async ({ req }) => {
     const loggerInstance = logger({
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
     });
-    loggerInstance.info("pullController BEGIN");
+    loggerInstance.info("pushController BEGIN");
     try {
-      const { signalId, eserviceId } = body;
-      await storeService.verifySignalDuplicated(
-        signalId,
-        eserviceId,
-        loggerInstance
-      );
+      const signalId = 1;
+
       return {
         status: 200,
         body: {
@@ -57,6 +53,6 @@ export const pullRoutes = (storeService: StoreService) => {
   };
 
   return s.router(contract, {
-    pullSignal,
+    pullSignal: pullSignal,
   });
 };
