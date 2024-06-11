@@ -300,9 +300,9 @@ importers:
       pg-promise:
         specifier: ^11.8.0
         version: 11.8.0
-      signalhub-commons-test:
+      signalhub-commons:
         specifier: workspace:*
-        version: link:../commons-test
+        version: link:../commons
       signalhub-interop-client:
         specifier: workspace:*
         version: link:../interop-client

@@ -8,6 +8,7 @@
     "start": "turbo start",
     "start:push-signals": "turbo start --filter push-signal-service",
     "start:persister": "turbo start --filter persister-service",
+    "start:updater": "turbo start --filter signalhub-updater-service",
     "build": "turbo build",
     "test": "turbo test",
     "test:push": "turbo test --filter push-signal-service",

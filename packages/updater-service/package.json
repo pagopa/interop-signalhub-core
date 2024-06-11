@@ -17,7 +17,7 @@
     "axios": "^1.6.8",
     "dotenv-flow": "^4.1.0",
     "pg-promise": "^11.8.0",
-    "signalhub-commons-test": "workspace:*",
+    "signalhub-commons": "workspace:*",
     "signalhub-interop-client": "workspace:*",
     "zod": "^3.23.8"
   },

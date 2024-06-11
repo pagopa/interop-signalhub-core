@@ -1,5 +1,5 @@
-function helloWorld() {
-  console.log("Hello World");
-}
+import { updaterBuilder } from "./updater.js";
 
-helloWorld();
+const task = await updaterBuilder();
+
+task.executeTask();
