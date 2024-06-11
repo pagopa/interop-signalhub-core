@@ -1,4 +1,4 @@
-import { DB, Signal, SignalRequest } from "signalhub-commons";
+import { DB, Signal, SignalPayload } from "signalhub-commons";
 
 export async function writeSignal(signal: Partial<Signal>, db: DB) {
   try {
@@ -21,16 +21,16 @@ export async function writeSignal(signal: Partial<Signal>, db: DB) {
 
 export const createSignal = (partialSignal?: Partial<Signal>): Signal => {
   return {
-    ...createSignalRequest(),
+    ...createSignalPayload(),
     correlationId: `correlation-id-test-${getRandomInt()}`,
 
     ...partialSignal,
   };
 };
 
-export const createSignalRequest = (
-  partialSignal?: Partial<SignalRequest>
-): SignalRequest => {
+export const createSignalPayload = (
+  partialSignal?: Partial<SignalPayload>
+): SignalPayload => {
   return {
     signalId: getRandomInt(),
     eserviceId: "eservice-id-test",

@@ -1,20 +1,20 @@
-import { Logger, SignalMessageSchema, SignalRequest } from "signalhub-commons";
+import { Logger, SignalMessageSchema, SignalPayload } from "signalhub-commons";
 import { SignalMessage } from "signalhub-commons";
 import fastJson from "fast-json-stringify";
 
 export function domainServiceBuilder() {
   return {
     signalToMessage(
-      signalRequest: SignalRequest,
+      signalPayload: SignalPayload,
       correlationId: string,
       logger: Logger
     ): string {
       logger.debug(
-        `DomainService::signalToMessage signalId: ${signalRequest.signalId}, correlationId: ${correlationId}`
+        `DomainService::signalToMessage signalId: ${signalPayload.signalId}, correlationId: ${correlationId}`
       );
       return toJson(
         SignalMessageSchema,
-        toSignalMessage(signalRequest, correlationId)
+        toSignalMessage(signalPayload, correlationId)
       );
     },
   };
@@ -23,14 +23,17 @@ export function domainServiceBuilder() {
 export type DomainService = ReturnType<typeof domainServiceBuilder>;
 
 const toSignalMessage = (
-  signalRequest: SignalRequest,
+  signalPayload: SignalPayload,
   correlationId: string
 ): SignalMessage => {
   return {
-    ...signalRequest,
+    ...signalPayload,
     correlationId,
   };
 };
-const toJson = (signalSchema: object, signalMessage: SignalMessage): string => {
-  return fastJson(signalSchema)(signalMessage);
+const toJson = (
+  signalPayload: object,
+  signalMessage: SignalMessage
+): string => {
+  return fastJson(signalPayload)(signalMessage);
 };

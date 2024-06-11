@@ -1,6 +1,6 @@
 import { AppRouteImplementation, initServer } from "@ts-rest/express";
 import { contract } from "../contract/contract.js";
-import { logger, Problem } from "signalhub-commons";
+import { logger, Problem, SignalPayload } from "signalhub-commons";
 import { match } from "ts-pattern";
 import { StoreService } from "../services/store.service.js";
 import { makeApiProblem } from "../model/domain/errors.js";
@@ -17,12 +17,19 @@ export const pullRoutes = (_storeService: StoreService) => {
     });
     loggerInstance.info("pushController BEGIN");
     try {
-      const signalId = 1;
+      const signal: SignalPayload = {
+        signalId: 1,
+        eserviceId: "eservice-id-test",
+        objectId: "object-id-test",
+        objectType: "object-type-test",
+        signalType: "CREATE",
+      };
 
       return {
         status: 200,
         body: {
-          signalId,
+          signals: [signal],
+          lastSignalId: 1,
         },
       };
     } catch (error) {

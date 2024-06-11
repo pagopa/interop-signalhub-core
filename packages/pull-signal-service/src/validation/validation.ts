@@ -1,12 +1,16 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { RequestValidationError } from "@ts-rest/express";
 import { ZodError } from "zod";
 import { requestValidationError } from "../model/domain/errors.js";
+import { ServerInferRequest } from "@ts-rest/core";
+import { contract } from "../contract/contract.js";
+
+type PullRequest = ServerInferRequest<typeof contract.pullSignal>;
 
 export const validationErrorHandler = () => {
   return async (
     err: RequestValidationError,
-    _req: Request,
+    _req: PullRequest,
     res: Response,
     _next: NextFunction
   ) => {

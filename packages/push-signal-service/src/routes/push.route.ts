@@ -1,6 +1,6 @@
 import { AppRouteImplementation, initServer } from "@ts-rest/express";
 import { contract } from "../contract/contract.js";
-import { logger, Problem, SignalRequest } from "signalhub-commons";
+import { logger, Problem, SignalPayload } from "signalhub-commons";
 import { match } from "ts-pattern";
 import { StoreService } from "../services/store.service.js";
 import { makeApiProblem } from "../model/domain/errors.js";
@@ -30,7 +30,7 @@ export const pushRoutes = (
         loggerInstance
       );
       const message = domainService.signalToMessage(
-        body as SignalRequest,
+        body as SignalPayload,
         req.ctx.correlationId,
         loggerInstance
       );

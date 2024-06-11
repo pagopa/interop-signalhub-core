@@ -17,13 +17,13 @@ export function parseQueueMessageToSignal(
       queueMessage.Body
     );
   }
-  let signalEvent = SignalMessage.safeParse(parsedMessage);
+  let signalMessage = SignalMessage.safeParse(parsedMessage);
   loggerInstance.info(
     `Message from queue: ${JSON.stringify(parsedMessage, null, 2)}`
   );
 
-  if (!signalEvent.success) {
+  if (!signalMessage.success) {
     throw notRecoverableMessageError("parsingError", parsedMessage);
   }
-  return signalEvent.data;
+  return signalMessage.data;
 }
