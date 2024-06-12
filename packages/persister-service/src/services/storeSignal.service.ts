@@ -1,6 +1,6 @@
+import { DB, logger, SignalMessage } from "signalhub-commons";
 import { toSignal } from "../models/domain/toSignal.js";
 import { signalRepository } from "../repositories/signal.repository.js";
-import { DB, logger, SignalMessage } from "signalhub-commons";
 import { deadSignalRepository } from "../repositories/deadSignal.repository.js";
 import { DeadSignal } from "../models/domain/model.js";
 import {

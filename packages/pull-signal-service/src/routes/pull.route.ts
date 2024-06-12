@@ -1,6 +1,6 @@
 import { AppRouteImplementation, initServer } from "@ts-rest/express";
 import { contract } from "../contract/contract.js";
-import { logger, Problem, SignalPayload } from "signalhub-commons";
+import { logger, Problem, SignalResponse } from "signalhub-commons";
 import { match } from "ts-pattern";
 import { StoreService } from "../services/store.service.js";
 import { makeApiProblem } from "../model/domain/errors.js";
@@ -26,23 +26,27 @@ export const pullRoutes = (
       )}, query: ${JSON.stringify(req.query)}`
     );
     try {
-      await consumerAuthorization(
+      const { eserviceId } = req.params;
+      const { purposeId } = req.ctx.sessionData;
+      const { signalId, size } = req.query;
+      const consumerId = await consumerAuthorization(
         storeService,
         interopClientService,
         loggerInstance
-      ).verify(req.ctx.sessionData.purposeId, req.params.eserviceId);
-      const signal: SignalPayload = {
-        signalId: 1,
-        eserviceId: "eservice-id-test",
-        objectId: "object-id-test",
-        objectType: "object-type-test",
-        signalType: "CREATE",
-      };
+      ).verifyAndGetConsumerId(purposeId, eserviceId);
+
+      const { signals, toSignalId } = await storeService.pullSignal(
+        signalId,
+        consumerId,
+        eserviceId,
+        size,
+        loggerInstance
+      );
       return {
         status: 200,
         body: {
-          signals: [signal],
-          lastSignalId: 1,
+          signals: signals as SignalResponse[],
+          lastSignalId: toSignalId,
         },
       };
     } catch (error) {

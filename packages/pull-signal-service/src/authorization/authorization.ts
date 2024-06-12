@@ -8,7 +8,7 @@ export const consumerAuthorization = (
   logger: Logger
 ) => {
   return {
-    async verify(purposeId: string, eserviceId: string) {
+    async verifyAndGetConsumerId(purposeId: string, eserviceId: string) {
       logger.debug(`consumerAuthorization BEGIN`);
       const response = await interopClientService.getAgreementByPurposeId(
         purposeId
@@ -25,6 +25,7 @@ export const consumerAuthorization = (
         logger
       );
       logger.debug(`consumerAuthorization END`);
+      return consumerId;
     },
   };
 };
