@@ -31,7 +31,7 @@ describe("Queue service", () => {
   it("should throw a signalNotSendedToQueque error for a non existent queue", async () => {
     const wrongQueueUrl = "wrong-url";
     const response = expect(
-      await quequeService.send("", genericLogger, wrongQueueUrl)
+      quequeService.send("", genericLogger, wrongQueueUrl)
     ).rejects;
     void response.toBeInstanceOf(ApiError<ErrorCodes>);
     void response.toMatchObject({

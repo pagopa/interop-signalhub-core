@@ -9,7 +9,7 @@ import { postgresDB, sqsClient } from "./utils.js";
 
 beforeAll(async () => {
   await dataPreparation(postgresDB);
-  await deleteAllSqsMessages(sqsClient, config.queueUrl);
+  void deleteAllSqsMessages(sqsClient, config.queueUrl);
 });
 
 afterAll(async () => {
