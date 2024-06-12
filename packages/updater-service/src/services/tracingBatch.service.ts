@@ -16,7 +16,7 @@ export function tracingBatchServiceBuilder(db: DB) {
             applicationType
           );
 
-        if (tracingBatchEntityList.length <= 0) {
+        if (!tracingBatchEntityList || tracingBatchEntityList.length <= 0) {
           return 0;
         }
 

@@ -4,9 +4,14 @@ import {
   tracingBatchServiceBuilder,
 } from "./tracingBatch.service.js";
 import { config } from "../config/env.js";
+import {
+  InteropClientService,
+  interopClientServiceBuilder,
+} from "./interopClient.service.js";
 
 export function serviceBuilder(): {
   tracingBatchService: TracingBatchService;
+  interopClientService: InteropClientService;
 } {
   const db: DB = createDbInstance({
     username: config.signalhubStoreDbUsername,
@@ -19,6 +24,7 @@ export function serviceBuilder(): {
   });
 
   const tracingBatchService = tracingBatchServiceBuilder(db);
+  const interopClientService = interopClientServiceBuilder();
 
-  return { tracingBatchService };
+  return { tracingBatchService, interopClientService };
 }
