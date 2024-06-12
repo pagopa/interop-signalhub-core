@@ -18,7 +18,7 @@ export const updaterBuilder = async () => {
         "Scheduler updater started at " + new Date().toString()
       );
 
-      const lasEventId = 1; // Todo Retrieve From tracingBatchService
+      const lasEventId = 1;
       const response = await getAgreementsEventsFromId(voucher, lasEventId);
       console.log("response events", response);
     },

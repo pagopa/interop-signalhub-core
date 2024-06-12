@@ -2,6 +2,7 @@ import { DB, genericInternalError } from "signalhub-commons";
 import { ApplicationType } from "../utils/index.js";
 import { tracingBatchRepository } from "../repositories/tracingBatch.repository.js";
 import { TracingBatchStateEnum } from "../models/domain/model.js";
+import { config } from "../config/env.js";
 
 export function tracingBatchServiceBuilder(db: DB) {
   const tracingBatchRepositoryInstance = tracingBatchRepository(db);
@@ -23,8 +24,7 @@ export function tracingBatchServiceBuilder(db: DB) {
           return tracingBatchEntityList[0].last_event_id;
         }
 
-        //TODO: Change "1" with env variable
-        if (tracingBatchEntityList.length > 1) {
+        if (tracingBatchEntityList.length > config.attemptEvent) {
           return (
             tracingBatchEntityList[tracingBatchEntityList.length - 1]
               .last_event_id + 1
