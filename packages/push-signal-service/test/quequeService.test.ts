@@ -1,7 +1,7 @@
 import { ApiError, genericLogger } from "signalhub-commons";
 import { describe, expect, it } from "vitest";
-import { quequeService } from "./utils";
-import { ErrorCodes } from "../src/model/domain/errors";
+import { quequeService } from "./utils.js";
+import { ErrorCodes } from "../src/model/domain/errors.js";
 
 describe("Queue service", () => {
   it("should send some generic dummy message", async () => {

@@ -9,7 +9,10 @@
     "build": "tsc",
     "test": "vitest",
     "format:check": "prettier --check src test",
-    "format:write": "prettier --write src test"
+    "format:write": "prettier --write src test",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:autofix": "eslint . --ext .ts,.tsx --fix",
+    "check": "tsc --project tsconfig.check.json"
   },
   "keywords": [],
   "author": "",

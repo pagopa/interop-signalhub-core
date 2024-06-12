@@ -3,9 +3,9 @@ import {
   dataPreparationCleanup,
   deleteAllSqsMessages,
 } from "signalhub-commons-test";
-import { postgresDB, sqsClient } from "./utils";
+import { postgresDB, sqsClient } from "./utils.js";
 import { afterAll, beforeAll } from "vitest";
-import { config } from "../src/config/env";
+import { config } from "../src/config/env.js";
 
 beforeAll(() => {
   dataPreparation(postgresDB);

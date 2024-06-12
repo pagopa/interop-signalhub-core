@@ -13,7 +13,10 @@
     "generate-model": "node --loader ts-node/esm ./src/scripts/generate-model.ts",
     "build": "tsc",
     "format:check": "prettier --check src",
-    "format:write": "prettier --write src"
+    "format:write": "prettier --write src",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:autofix": "eslint . --ext .ts,.tsx --fix",
+    "check": "tsc --project tsconfig.check.json"
   },
   "keywords": [],
   "dependencies": {

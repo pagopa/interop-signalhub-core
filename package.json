@@ -10,6 +10,7 @@
     "test:persister": "turbo test --filter persister-service",
     "build": "turbo build",
     "lint": "turbo lint",
+    "lint:autofix": "turbo lint:autofix",
     "format:check": "turbo format:check",
     "format:write": "turbo format:write",
     "check": "turbo check",

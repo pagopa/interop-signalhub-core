@@ -12,7 +12,8 @@
     "build": "tsc",
     "test": "vitest",
     "format:check": "prettier --check src test",
-    "format:write": "prettier --write src test"
+    "format:write": "prettier --write src test",
+    "check": "tsc --project tsconfig.check.json"
   },
   "keywords": [],
   "author": "",

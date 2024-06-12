@@ -9,7 +9,7 @@ import {
   postgresDB,
   storeSignalService,
   wrongStoreSignalService,
-} from "./utils";
+} from "./utils.js";
 
 describe("Signal Store Service", () => {
   it("should throw an unrecoverable error if signal already exist on db", async () => {
