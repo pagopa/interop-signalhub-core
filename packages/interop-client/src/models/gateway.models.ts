@@ -1160,7 +1160,7 @@ export type RequestParams = Omit<
 export interface ApiConfig<SecurityDataType = unknown>
   extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
   securityWorker?: (
-    securityData: SecurityDataType | null,
+    securityData: SecurityDataType | null
   ) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
   secure?: boolean;
   format?: ResponseType;
@@ -1201,7 +1201,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
   protected mergeRequestParams(
     params1: AxiosRequestConfig,
-    params2?: AxiosRequestConfig,
+    params2?: AxiosRequestConfig
   ): AxiosRequestConfig {
     const method = params1.method || (params2 && params2.method);
 
@@ -1239,7 +1239,7 @@ export class HttpClient<SecurityDataType = unknown> {
         const isFileType = formItem instanceof Blob || formItem instanceof File;
         formData.append(
           key,
-          isFileType ? formItem : this.stringifyFormItem(formItem),
+          isFileType ? formItem : this.stringifyFormItem(formItem)
         );
       }
 
@@ -1308,7 +1308,7 @@ export class HttpClient<SecurityDataType = unknown> {
  * exposes the API for interacting with interoperability features
  */
 export class Api<
-  SecurityDataType extends unknown,
+  SecurityDataType extends unknown
 > extends HttpClient<SecurityDataType> {
   agreements = {
     /**
@@ -1452,7 +1452,7 @@ export class Api<
      */
     createCertifiedAttribute: (
       data: AttributeSeed,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Attribute, Problem>({
         path: `/attributes`,
@@ -1569,7 +1569,7 @@ export class Api<
     getEServiceDescriptor: (
       eserviceId: string,
       descriptorId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<EServiceDescriptor, Problem>({
         path: `/eservices/${eserviceId}/descriptors/${descriptorId}`,
@@ -1610,7 +1610,7 @@ export class Api<
       origin: string,
       externalId: string,
       code: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, Problem>({
         path: `/organizations/origin/${origin}/externalId/${externalId}/attributes/${code}`,
@@ -1631,7 +1631,7 @@ export class Api<
       origin: string,
       externalId: string,
       code: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, Problem>({
         path: `/organizations/origin/${origin}/externalId/${externalId}/attributes/${code}`,
@@ -1650,7 +1650,7 @@ export class Api<
      */
     getOrganizationEServices: (
       { origin, externalId, ...query }: GetOrganizationEServicesParams,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<EServices, Problem>({
         path: `/organizations/origin/${origin}/externalId/${externalId}/eservices`,
@@ -1673,7 +1673,7 @@ export class Api<
      */
     getEventsFromId: (
       query: GetEventsFromIdParams,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Events, Problem>({
         path: `/events`,
@@ -1695,7 +1695,7 @@ export class Api<
      */
     getEservicesEventsFromId: (
       query: GetEservicesEventsFromIdParams,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Events, Problem>({
         path: `/events/eservices`,
@@ -1717,7 +1717,7 @@ export class Api<
      */
     getKeysEventsFromId: (
       query: GetKeysEventsFromIdParams,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Events, Problem>({
         path: `/events/keys`,
@@ -1739,7 +1739,7 @@ export class Api<
      */
     getAgreementsEventsFromId: (
       query: GetAgreementsEventsFromIdParams,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<Events, Problem>({
         path: `/events/agreements`,
