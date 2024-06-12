@@ -22,18 +22,19 @@ export const authorizationMiddleware = (
     try {
       loggerInstance.info("Authorization BEGIN");
 
-      const agreement = await interopClientservice.getAgreementByPurposeId(
+      const response = await interopClientservice.getAgreementByPurposeId(
         req.ctx.sessionData.purposeId
       );
+      const agreement = response.data;
 
       if (!agreement) {
         loggerInstance.error(`Authorization middleware:: Agreement not found`);
         throw operationForbidden;
       }
-
+      const { consumerId: producerId } = agreement;
       const { eserviceId } = req.body;
       await storeService.canProducerDepositSignal(
-        req.ctx.sessionData.purposeId,
+        producerId,
         eserviceId,
         loggerInstance
       );

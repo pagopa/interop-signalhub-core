@@ -15,7 +15,7 @@ export const pullRoutes = (_storeService: StoreService) => {
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
     });
-    loggerInstance.info("pushController BEGIN");
+    loggerInstance.info(`pullController BEGIN ${req}, ${req.query}`);
     try {
       const signal: SignalPayload = {
         signalId: 1,

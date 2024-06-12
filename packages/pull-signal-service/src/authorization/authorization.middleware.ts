@@ -1,25 +1,42 @@
 import { Request, Response, NextFunction } from "express";
-import { logger, makeApiProblemBuilder } from "signalhub-commons";
+import {
+  logger,
+  makeApiProblemBuilder,
+  operationForbidden,
+} from "signalhub-commons";
 import { match } from "ts-pattern";
 import { StoreService } from "../services/store.service.js";
+import { InteropClientService } from "../services/interopClient.service.js";
 
 const makeApiProblem = makeApiProblemBuilder({});
 
-export const authorizationMiddleware = (storeService: StoreService) => {
+export const authorizationMiddleware = (
+  storeService: StoreService,
+  interopClientservice: InteropClientService
+) => {
   return async (req: Request, response: Response, next: NextFunction) => {
     const loggerInstance = logger({
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
     });
     try {
-      loggerInstance.info("Authorization BEGIN");
-      const { eserviceId } = req.body;
-      await storeService.canProducerDepositSignal(
-        req.ctx.sessionData.purposeId,
+      loggerInstance.info(`Authorization BEGIN ${req.params}`);
+      const response = await interopClientservice.getAgreementByPurposeId(
+        req.ctx.sessionData.purposeId
+      );
+      const agreement = response.data;
+
+      if (!agreement) {
+        loggerInstance.error(`Authorization middleware:: Agreement not found`);
+        throw operationForbidden;
+      }
+      const { consumerId } = agreement;
+      const { eserviceId } = req.params;
+      await storeService.canConsumerRecoverSignal(
+        consumerId,
         eserviceId,
         loggerInstance
       );
-      loggerInstance.debug("Authorization END");
       next();
     } catch (error) {
       const problem = makeApiProblem(

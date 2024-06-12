@@ -9,13 +9,13 @@ import { validationErrorHandler } from "./validation/validation.js";
 import { serviceBuilder } from "./services/service.builder.js";
 
 // services
-const { storeService } = serviceBuilder();
+const { storeService, interopClientService } = serviceBuilder();
 
 // express
 const app: Express = express();
 app.use(contextMiddleware("pull"));
 app.use(authenticationMiddleware);
-app.use(authorizationMiddleware(storeService));
+app.use(authorizationMiddleware(storeService, interopClientService));
 setupSwaggerRoute(app);
 
 // ts-rest
