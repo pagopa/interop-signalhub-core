@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
+import { createSignal, writeSignal } from "signalhub-commons-test";
 import {
   notRecoverableMessageError,
   recoverableMessageError,
 } from "../src/models/domain/errors.js";
 
-import { createSignal, writeSignal } from "signalhub-commons-test";
 import {
   postgresDB,
   storeSignalService,

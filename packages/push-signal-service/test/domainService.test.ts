@@ -1,6 +1,6 @@
-import { createSignalRequest } from "./../../commons-test/src/databaseUtils.js";
 import { genericLogger } from "signalhub-commons";
 import { describe, expect, expectTypeOf, it } from "vitest";
+import { createSignalRequest } from "./../../commons-test/src/databaseUtils.js";
 import { domainService } from "./utils.js";
 
 describe("Domain Service", () => {

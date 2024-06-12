@@ -1,7 +1,7 @@
 import { ApiError, genericLogger } from "signalhub-commons";
 import { describe, expect, it } from "vitest";
-import { quequeService } from "./utils.js";
 import { ErrorCodes } from "../src/model/domain/errors.js";
+import { quequeService } from "./utils.js";
 
 describe("Queue service", () => {
   it("should send some generic dummy message", async () => {
@@ -31,10 +31,10 @@ describe("Queue service", () => {
   it("should throw a signalNotSendedToQueque error for a non existent queue", async () => {
     const wrongQueueUrl = "wrong-url";
     const response = expect(
-      quequeService.send("", genericLogger, wrongQueueUrl)
+      await quequeService.send("", genericLogger, wrongQueueUrl)
     ).rejects;
-    response.toBeInstanceOf(ApiError<ErrorCodes>);
-    response.toMatchObject({
+    void response.toBeInstanceOf(ApiError<ErrorCodes>);
+    void response.toMatchObject({
       code: "signalNotSended",
     });
   });

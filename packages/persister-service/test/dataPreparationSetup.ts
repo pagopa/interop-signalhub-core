@@ -1,14 +1,14 @@
+import { afterAll, beforeAll } from "vitest";
 import {
   dataPreparation,
   dataPreparationCleanup,
 } from "signalhub-commons-test";
 import { postgresDB } from "./utils.js";
-import { afterAll, beforeAll } from "vitest";
 
-beforeAll(() => {
-  dataPreparation(postgresDB);
+beforeAll(async () => {
+  await dataPreparation(postgresDB);
 });
 
-afterAll(() => {
-  dataPreparationCleanup(postgresDB);
+afterAll(async () => {
+  await dataPreparationCleanup(postgresDB);
 });

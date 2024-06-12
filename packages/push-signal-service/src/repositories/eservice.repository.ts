@@ -19,8 +19,8 @@ export const eserviceRepository = (db: DB): IEserviceRepository => ({
         "SELECT eservice_id FROM eservice WHERE producer_id = $1 AND eservice_id = $2 AND state = $3",
         [producerId, eserviceId, state]
       );
-    } catch (error: any) {
-      throw genericError(`Error eserviceRepository::findBy ${error.code}`);
+    } catch (error: unknown) {
+      throw genericError(`Error eserviceRepository::findBy ${error}`);
     }
   },
 });
