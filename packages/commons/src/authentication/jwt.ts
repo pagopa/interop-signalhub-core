@@ -7,7 +7,7 @@ import { JWTConfig } from "../config/jwt.config.js";
 
 export const getKey =
   (
-    client: jwksClient.JwksClient
+    client: jwksClient.JwksClient,
   ): ((header: JwtHeader, callback: SigningKeyCallback) => void) =>
   (header, callback) => {
     client.getSigningKey(header.kid, function (err, key) {
@@ -40,7 +40,7 @@ export const readSessionDataFromJwtToken = (jwtToken: string): SessionData => {
 export const validateToken = (
   token: string,
   config: JWTConfig,
-  logger: Logger
+  logger: Logger,
 ): Promise<{ success: boolean; err: jwt.JsonWebTokenError | null }> => {
   const client = jwksClient({
     jwksUri: config.wellKnownUrl,
@@ -65,7 +65,7 @@ export const validateToken = (
           success: true,
           err: null,
         });
-      }
+      },
     );
   });
 };

@@ -16,7 +16,7 @@ export async function getVoucher(assertion: string): Promise<string> {
 
     const { data }: AxiosResponse<{ access_token: string }> = await axios.post(
       urlAuth,
-      formData
+      formData,
     );
 
     return data.access_token;

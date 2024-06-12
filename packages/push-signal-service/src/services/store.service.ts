@@ -57,7 +57,9 @@ export function storeServiceBuilder(db: DB) {
       );
       const agreement = await agreementRepository(db).findBy(purposeId);
       logger.debug(
-        `StoreService::getAgreementWithDepositSignalBy agreement: ${JSON.stringify(agreement)}`
+        `StoreService::getAgreementWithDepositSignalBy agreement: ${JSON.stringify(
+          agreement
+        )}`
       );
       if (agreement) {
         return agreement;

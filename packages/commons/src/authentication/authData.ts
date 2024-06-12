@@ -23,7 +23,7 @@ export const AuthToken = StandardJWTClaims.merge(
     purposeId: z.string().uuid(),
     client_id: z.string().uuid(),
     sub: z.string(),
-  })
+  }),
 );
 export type AuthToken = z.infer<typeof AuthToken>;
 

@@ -10,7 +10,7 @@ export const getAgreementByPurpose = async (purposeId: string) => {
 
     return await apiClient.purposes.getAgreementByPurpose(
       purposeId,
-      getAuthorizationHeader(voucher)
+      getAuthorizationHeader(voucher),
     );
   } catch (error) {
     throw error;

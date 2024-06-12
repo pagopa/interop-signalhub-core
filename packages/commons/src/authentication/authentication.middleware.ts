@@ -19,12 +19,12 @@ const config = jwtConfig();
 export const authenticationMiddleware = async (
   req: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const validateTokenAndAddSessionDataToContext = async (
     authHeader: string,
     config: JWTConfig,
-    logger: Logger
+    logger: Logger,
   ): Promise<void> => {
     if (!authHeader) {
       throw jwtNotPresent;
@@ -37,7 +37,7 @@ export const authenticationMiddleware = async (
       authorizationHeader[0] !== "Bearer"
     ) {
       logger.warn(
-        `No authentication has been provided for this call ${req.method} ${req.url}`
+        `No authentication has been provided for this call ${req.method} ${req.url}`,
       );
       throw missingBearer;
     }
@@ -74,11 +74,11 @@ export const authenticationMiddleware = async (
           await validateTokenAndAddSessionDataToContext(
             headers.authorization,
             config,
-            loggerInstance
+            loggerInstance,
           );
           loggerInstance.info("Authentication END");
           next();
-        }
+        },
       )
       .with(
         {
@@ -87,11 +87,11 @@ export const authenticationMiddleware = async (
         },
         () => {
           loggerInstance.warn(
-            `No authentication has been provided for this call ${req.method} ${req.url}`
+            `No authentication has been provided for this call ${req.method} ${req.url}`,
           );
 
           throw jwtNotPresent;
-        }
+        },
       )
       .with(
         {
@@ -100,11 +100,11 @@ export const authenticationMiddleware = async (
         },
         () => {
           loggerInstance.warn(
-            `No authentication has been provided for this call ${req.method} ${req.url}`
+            `No authentication has been provided for this call ${req.method} ${req.url}`,
           );
 
           throw missingHeader("jwtNotPresent");
-        }
+        },
       )
       .otherwise(() => {
         throw genericInternalError;
@@ -122,7 +122,7 @@ export const authenticationMiddleware = async (
           .with("missingHeader", () => 400)
           .otherwise(() => 500),
       loggerInstance,
-      req.ctx.correlationId
+      req.ctx.correlationId,
     );
 
     return response.status(problem.status).json(problem).end();

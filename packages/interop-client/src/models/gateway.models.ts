@@ -138,7 +138,11 @@ export interface EServiceAttributeValue {
 }
 
 /** EService State */
-export type EServiceDescriptorState = "PUBLISHED" | "DEPRECATED" | "SUSPENDED" | "ARCHIVED";
+export type EServiceDescriptorState =
+  | "PUBLISHED"
+  | "DEPRECATED"
+  | "SUSPENDED"
+  | "ARCHIVED";
 
 /** eservice descriptors list model */
 export interface EServiceDescriptors {
@@ -231,7 +235,13 @@ export interface Organization {
 export type Origin = string;
 
 /** Purpose State */
-export type PurposeState = "ACTIVE" | "DRAFT" | "SUSPENDED" | "WAITING_FOR_APPROVAL" | "ARCHIVED" | "REJECTED";
+export type PurposeState =
+  | "ACTIVE"
+  | "DRAFT"
+  | "SUSPENDED"
+  | "WAITING_FOR_APPROVAL"
+  | "ARCHIVED"
+  | "REJECTED";
 
 export interface Purpose {
   /** @format uuid */
@@ -1115,12 +1125,19 @@ export namespace Status {
   }
 }
 
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
+import type {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  HeadersDefaults,
+  ResponseType,
+} from "axios";
 import axios from "axios";
 
 export type QueryParamsType = Record<string | number, any>;
 
-export interface FullRequestParams extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
+export interface FullRequestParams
+  extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
   /** set parameter to `true` for call `securityWorker` for this request */
   secure?: boolean;
   /** request path */
@@ -1135,9 +1152,13 @@ export interface FullRequestParams extends Omit<AxiosRequestConfig, "data" | "pa
   body?: unknown;
 }
 
-export type RequestParams = Omit<FullRequestParams, "body" | "method" | "query" | "path">;
+export type RequestParams = Omit<
+  FullRequestParams,
+  "body" | "method" | "query" | "path"
+>;
 
-export interface ApiConfig<SecurityDataType = unknown> extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
+export interface ApiConfig<SecurityDataType = unknown>
+  extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
   securityWorker?: (
     securityData: SecurityDataType | null,
   ) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
@@ -1159,8 +1180,16 @@ export class HttpClient<SecurityDataType = unknown> {
   private secure?: boolean;
   private format?: ResponseType;
 
-  constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
-    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "{{baseUrl}}/{{version}}" });
+  constructor({
+    securityWorker,
+    secure,
+    format,
+    ...axiosConfig
+  }: ApiConfig<SecurityDataType> = {}) {
+    this.instance = axios.create({
+      ...axiosConfig,
+      baseURL: axiosConfig.baseURL || "{{baseUrl}}/{{version}}",
+    });
     this.secure = secure;
     this.format = format;
     this.securityWorker = securityWorker;
@@ -1170,7 +1199,10 @@ export class HttpClient<SecurityDataType = unknown> {
     this.securityData = data;
   };
 
-  protected mergeRequestParams(params1: AxiosRequestConfig, params2?: AxiosRequestConfig): AxiosRequestConfig {
+  protected mergeRequestParams(
+    params1: AxiosRequestConfig,
+    params2?: AxiosRequestConfig,
+  ): AxiosRequestConfig {
     const method = params1.method || (params2 && params2.method);
 
     return {
@@ -1178,7 +1210,11 @@ export class HttpClient<SecurityDataType = unknown> {
       ...params1,
       ...(params2 || {}),
       headers: {
-        ...((method && this.instance.defaults.headers[method.toLowerCase() as keyof HeadersDefaults]) || {}),
+        ...((method &&
+          this.instance.defaults.headers[
+            method.toLowerCase() as keyof HeadersDefaults
+          ]) ||
+          {}),
         ...(params1.headers || {}),
         ...((params2 && params2.headers) || {}),
       },
@@ -1196,11 +1232,15 @@ export class HttpClient<SecurityDataType = unknown> {
   protected createFormData(input: Record<string, unknown>): FormData {
     return Object.keys(input || {}).reduce((formData, key) => {
       const property = input[key];
-      const propertyContent: any[] = property instanceof Array ? property : [property];
+      const propertyContent: any[] =
+        property instanceof Array ? property : [property];
 
       for (const formItem of propertyContent) {
         const isFileType = formItem instanceof Blob || formItem instanceof File;
-        formData.append(key, isFileType ? formItem : this.stringifyFormItem(formItem));
+        formData.append(
+          key,
+          isFileType ? formItem : this.stringifyFormItem(formItem),
+        );
       }
 
       return formData;
@@ -1224,11 +1264,21 @@ export class HttpClient<SecurityDataType = unknown> {
     const requestParams = this.mergeRequestParams(params, secureParams);
     const responseFormat = format || this.format || undefined;
 
-    if (type === ContentType.FormData && body && body !== null && typeof body === "object") {
+    if (
+      type === ContentType.FormData &&
+      body &&
+      body !== null &&
+      typeof body === "object"
+    ) {
       body = this.createFormData(body as Record<string, unknown>);
     }
 
-    if (type === ContentType.Text && body && body !== null && typeof body !== "string") {
+    if (
+      type === ContentType.Text &&
+      body &&
+      body !== null &&
+      typeof body !== "string"
+    ) {
       body = JSON.stringify(body);
     }
 
@@ -1236,7 +1286,9 @@ export class HttpClient<SecurityDataType = unknown> {
       ...requestParams,
       headers: {
         ...(requestParams.headers || {}),
-        ...(type && type !== ContentType.FormData ? { "Content-Type": type } : {}),
+        ...(type && type !== ContentType.FormData
+          ? { "Content-Type": type }
+          : {}),
       },
       params: query,
       responseType: responseFormat,
@@ -1255,7 +1307,9 @@ export class HttpClient<SecurityDataType = unknown> {
  *
  * exposes the API for interacting with interoperability features
  */
-export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+export class Api<
+  SecurityDataType extends unknown,
+> extends HttpClient<SecurityDataType> {
   agreements = {
     /**
      * @description Retrieve an agreement using an agreement identifier
@@ -1396,7 +1450,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/attributes
      * @secure
      */
-    createCertifiedAttribute: (data: AttributeSeed, params: RequestParams = {}) =>
+    createCertifiedAttribute: (
+      data: AttributeSeed,
+      params: RequestParams = {},
+    ) =>
       this.request<Attribute, Problem>({
         path: `/attributes`,
         method: "POST",
@@ -1509,7 +1566,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/eservices/{eserviceId}/descriptors/{descriptorId}
      * @secure
      */
-    getEServiceDescriptor: (eserviceId: string, descriptorId: string, params: RequestParams = {}) =>
+    getEServiceDescriptor: (
+      eserviceId: string,
+      descriptorId: string,
+      params: RequestParams = {},
+    ) =>
       this.request<EServiceDescriptor, Problem>({
         path: `/eservices/${eserviceId}/descriptors/${descriptorId}`,
         method: "GET",
@@ -1545,7 +1606,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/organizations/origin/{origin}/externalId/{externalId}/attributes/{code}
      * @secure
      */
-    upsertTenant: (origin: string, externalId: string, code: string, params: RequestParams = {}) =>
+    upsertTenant: (
+      origin: string,
+      externalId: string,
+      code: string,
+      params: RequestParams = {},
+    ) =>
       this.request<void, Problem>({
         path: `/organizations/origin/${origin}/externalId/${externalId}/attributes/${code}`,
         method: "POST",
@@ -1561,7 +1627,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request DELETE:/organizations/origin/{origin}/externalId/{externalId}/attributes/{code}
      * @secure
      */
-    revokeTenantAttribute: (origin: string, externalId: string, code: string, params: RequestParams = {}) =>
+    revokeTenantAttribute: (
+      origin: string,
+      externalId: string,
+      code: string,
+      params: RequestParams = {},
+    ) =>
       this.request<void, Problem>({
         path: `/organizations/origin/${origin}/externalId/${externalId}/attributes/${code}`,
         method: "DELETE",
@@ -1600,7 +1671,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/events
      * @secure
      */
-    getEventsFromId: (query: GetEventsFromIdParams, params: RequestParams = {}) =>
+    getEventsFromId: (
+      query: GetEventsFromIdParams,
+      params: RequestParams = {},
+    ) =>
       this.request<Events, Problem>({
         path: `/events`,
         method: "GET",
@@ -1619,7 +1693,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/events/eservices
      * @secure
      */
-    getEservicesEventsFromId: (query: GetEservicesEventsFromIdParams, params: RequestParams = {}) =>
+    getEservicesEventsFromId: (
+      query: GetEservicesEventsFromIdParams,
+      params: RequestParams = {},
+    ) =>
       this.request<Events, Problem>({
         path: `/events/eservices`,
         method: "GET",
@@ -1638,7 +1715,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/events/keys
      * @secure
      */
-    getKeysEventsFromId: (query: GetKeysEventsFromIdParams, params: RequestParams = {}) =>
+    getKeysEventsFromId: (
+      query: GetKeysEventsFromIdParams,
+      params: RequestParams = {},
+    ) =>
       this.request<Events, Problem>({
         path: `/events/keys`,
         method: "GET",
@@ -1657,7 +1737,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/events/agreements
      * @secure
      */
-    getAgreementsEventsFromId: (query: GetAgreementsEventsFromIdParams, params: RequestParams = {}) =>
+    getAgreementsEventsFromId: (
+      query: GetAgreementsEventsFromIdParams,
+      params: RequestParams = {},
+    ) =>
       this.request<Events, Problem>({
         path: `/events/agreements`,
         method: "GET",

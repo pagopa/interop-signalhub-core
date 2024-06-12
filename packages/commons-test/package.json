@@ -6,7 +6,9 @@
   "main": "dist",
   "type": "module",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "format:check": "prettier --check src",
+    "format:write": "prettier --write src"
   },
   "keywords": [],
   "author": "",

@@ -43,7 +43,7 @@ const processQueue = async (
     queueUrl: string;
     runUntilQueueIsEmpty?: boolean;
   } & QuequeConsumerConfig,
-  consumerHandler: (messagePayload: Message) => Promise<void>
+  consumerHandler: (messagePayload: Message) => Promise<void>,
 ): Promise<void> => {
   const command = new ReceiveMessageCommand({
     QueueUrl: config.queueUrl,
@@ -68,7 +68,7 @@ const processQueue = async (
         for (const message of Messages) {
           if (!message.ReceiptHandle) {
             throw new Error(
-              `ReceiptHandle not found in Message: ${JSON.stringify(message)}`
+              `ReceiptHandle not found in Message: ${JSON.stringify(message)}`,
             );
           }
           try {
@@ -76,7 +76,7 @@ const processQueue = async (
             await deleteMessage(
               sqsClient,
               config.queueUrl,
-              message.ReceiptHandle
+              message.ReceiptHandle,
             );
           } catch (error) {
             loggerInstance.info(`Generated error message will remain on queue`);
@@ -95,7 +95,7 @@ export const runConsumer = async (
     queueUrl: string;
     runUntilQueueIsEmpty?: boolean;
   } & QuequeConsumerConfig,
-  consumerHandler: (messagePayload: Message) => Promise<void>
+  consumerHandler: (messagePayload: Message) => Promise<void>,
 ): Promise<void> => {
   loggerInstance.info(`Consumer processing on Queue: ${config.queueUrl}`);
 
@@ -105,20 +105,20 @@ export const runConsumer = async (
     loggerInstance.error(
       `Generic error occurs processing Queue: ${
         config.queueUrl
-      }. Details: ${serializeError(e)}`
+      }. Details: ${serializeError(e)}`,
     );
 
     await processExit();
   }
 
   loggerInstance.info(
-    `Queue processing Completed for Queue: ${config.queueUrl}`
+    `Queue processing Completed for Queue: ${config.queueUrl}`,
   );
 };
 
 export const getQueueUrl = async (
   sqsClient: SQSClient,
-  queueName: string
+  queueName: string,
 ): Promise<string> => {
   const queueUrlCommand = {
     QueueName: queueName,
@@ -136,7 +136,7 @@ export const getQueueUrl = async (
 export const sendMessage = async (
   sqsClient: SQSClient,
   queueUrl: string,
-  messageBody: string
+  messageBody: string,
 ): Promise<void> => {
   const messageCommandInput: SendMessageCommandInput = {
     QueueUrl: queueUrl,
@@ -149,7 +149,7 @@ export const sendMessage = async (
 export const deleteMessage = async (
   sqsClient: SQSClient,
   queueUrl: string,
-  receiptHandle: string
+  receiptHandle: string,
 ): Promise<void> => {
   const deleteCommand = new DeleteMessageCommand({
     QueueUrl: queueUrl,
@@ -162,7 +162,7 @@ export const deleteMessage = async (
 
 export const deleteBatchMessages = async (
   sqsClient: SQSClient,
-  queueUrl: string
+  queueUrl: string,
 ) => {
   const receiveMessage = (queueUrl: string) =>
     sqsClient.send(
@@ -170,7 +170,7 @@ export const deleteBatchMessages = async (
         MaxNumberOfMessages: 10,
         WaitTimeSeconds: 10,
         QueueUrl: queueUrl,
-      })
+      }),
     );
 
   const { Messages } = await receiveMessage(queueUrl);
@@ -185,7 +185,7 @@ export const deleteBatchMessages = async (
       new DeleteMessageCommand({
         QueueUrl: queueUrl,
         ReceiptHandle: Messages[0].ReceiptHandle,
-      })
+      }),
     );
   } else {
     await sqsClient.send(
@@ -195,7 +195,7 @@ export const deleteBatchMessages = async (
           Id: message.MessageId,
           ReceiptHandle: message.ReceiptHandle,
         })),
-      })
+      }),
     );
   }
 };

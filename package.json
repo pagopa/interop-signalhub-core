@@ -2,16 +2,18 @@
   "name": "interop-signalhub-core",
   "private": true,
   "scripts": {
-    "dev": "turbo dev",
-    "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "start": "turbo start",
     "start:push-signals": "turbo start --filter push-signal-service",
     "start:persister": "turbo start --filter persister-service",
-    "build": "turbo build",
     "test": "turbo test",
     "test:push": "turbo test --filter push-signal-service",
-    "test:persister": "turbo test --filter persister-service"
+    "test:persister": "turbo test --filter persister-service",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "format:check": "turbo format:check",
+    "format:write": "turbo format:write",
+    "check": "turbo check",
+    "dev": "turbo dev"
   },
   "devDependencies": {
     "@tsconfig/node-lts": "^20.1.3",

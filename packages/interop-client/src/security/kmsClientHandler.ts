@@ -64,7 +64,7 @@ function createHeader(): string {
   };
 
   return removePadding(
-    Buffer.from(JSON.stringify(headerObj)).toString("base64")
+    Buffer.from(JSON.stringify(headerObj)).toString("base64"),
   );
 }
 

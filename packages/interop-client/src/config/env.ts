@@ -42,11 +42,11 @@ export const InteropClientConfig =
 const parsedFromEnv = InteropClientConfig.safeParse(process.env);
 if (!parsedFromEnv.success) {
   const invalidEnvVars = parsedFromEnv.error.issues.flatMap(
-    (issue) => issue.path
+    (issue) => issue.path,
   );
   console.error(
     "Invalid or missing env vars on Interop-client package: " +
-      invalidEnvVars.join(", ")
+      invalidEnvVars.join(", "),
   );
   process.exit(1);
 }
