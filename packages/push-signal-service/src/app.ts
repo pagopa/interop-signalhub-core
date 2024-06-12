@@ -8,6 +8,8 @@ import { setupSwaggerRoute } from "./routes/swagger.route.js";
 import { validationErrorHandler } from "./validation/validation.js";
 import { serviceBuilder } from "./services/service.builder.js";
 
+const serviceName = "push-signal";
+
 // services
 const { domainService, storeService, quequeService, interopClientService } =
   serviceBuilder();
@@ -15,10 +17,12 @@ const { domainService, storeService, quequeService, interopClientService } =
 // express
 const app: Express = express();
 app.use(express.json());
-app.use(contextMiddleware("push"));
+app.use(contextMiddleware(serviceName));
 app.use(authenticationMiddleware);
 app.use(authorizationMiddleware(storeService, interopClientService));
 setupSwaggerRoute(app);
+// Disable the "X-Powered-By: Express" HTTP header for security reasons: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#recommendation_16
+app.disable("x-powered-by");
 
 // ts-rest
 const tsServer = initServer();

@@ -4,10 +4,15 @@ import { logger, Problem, SignalPayload } from "signalhub-commons";
 import { match } from "ts-pattern";
 import { StoreService } from "../services/store.service.js";
 import { makeApiProblem } from "../model/domain/errors.js";
+import { InteropClientService } from "../services/interopClient.service.js";
+import { consumerAuthorization } from "../authorization/authorization.js";
 
 const s = initServer();
 
-export const pullRoutes = (_storeService: StoreService) => {
+export const pullRoutes = (
+  storeService: StoreService,
+  interopClientService: InteropClientService
+) => {
   const pullSignal: AppRouteImplementation<
     typeof contract.pullSignal
   > = async ({ req }) => {
@@ -15,8 +20,17 @@ export const pullRoutes = (_storeService: StoreService) => {
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
     });
-    loggerInstance.info(`pullController BEGIN ${req}, ${req.query}`);
+    loggerInstance.info(
+      `pullController BEGIN with params: ${JSON.stringify(
+        req.params
+      )}, query: ${JSON.stringify(req.query)}`
+    );
     try {
+      await consumerAuthorization(
+        storeService,
+        interopClientService,
+        loggerInstance
+      ).verify(req.ctx.sessionData.purposeId, req.params.eserviceId);
       const signal: SignalPayload = {
         signalId: 1,
         eserviceId: "eservice-id-test",
@@ -24,7 +38,6 @@ export const pullRoutes = (_storeService: StoreService) => {
         objectType: "object-type-test",
         signalType: "CREATE",
       };
-
       return {
         status: 200,
         body: {
@@ -37,17 +50,22 @@ export const pullRoutes = (_storeService: StoreService) => {
         error,
         (err) =>
           match(err.code)
-            .with("signalDuplicate", () => 400)
-            .with("signalNotSended", () => 400)
+            .with("unauthorizedError", () => 401)
+            .with("operationForbidden", () => 403)
             .with("genericError", () => 500)
             .otherwise(() => 500),
         loggerInstance,
         req.ctx.correlationId
       );
       switch (problem.status) {
-        case 400:
+        case 401:
           return {
-            status: 400,
+            status: 401,
+            body: problem,
+          };
+        case 403:
+          return {
+            status: 403,
             body: problem,
           };
         default:

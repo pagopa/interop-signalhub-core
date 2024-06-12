@@ -17,13 +17,18 @@ paths:
             type: string
         - name: signalId
           in: query
-          required: true
           schema:
-            type: string
+            default: 0
+            type: number
+            minimum: 0
+            nullable: true
         - name: size
           in: query
           schema:
-            type: string
+            default: 0
+            type: number
+            minimum: 0
+            nullable: true
       responses:
         '200':
           description: '200'

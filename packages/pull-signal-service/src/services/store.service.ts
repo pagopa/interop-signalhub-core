@@ -18,7 +18,9 @@ export function storeServiceBuilder(db: DB) {
         state
       );
       logger.debug(
-        `StoreService::signalConsumerIsEserviceConsumer eserviceConsumed: ${eserviceConsumed}`
+        `StoreService::signalConsumerIsEserviceConsumer eserviceConsumed: ${JSON.stringify(
+          eserviceConsumed
+        )}`
       );
 
       if (eserviceConsumed) {

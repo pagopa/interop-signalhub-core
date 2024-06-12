@@ -20,7 +20,7 @@ export const authorizationMiddleware = (
       correlationId: req.ctx.correlationId,
     });
     try {
-      loggerInstance.info(`Authorization BEGIN ${req.params}`);
+      loggerInstance.info(`Authorization BEGIN ${JSON.stringify(req.params)}`);
       const response = await interopClientservice.getAgreementByPurposeId(
         req.ctx.sessionData.purposeId
       );

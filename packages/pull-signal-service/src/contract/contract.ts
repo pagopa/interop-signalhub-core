@@ -9,7 +9,14 @@ export const contract = c.router(
     pullSignal: {
       summary: "Pull Signal",
       method: "GET",
-      path: "/pull-signal/{eserviceId}",
+      path: "/pull-signal/:eserviceId",
+      pathParams: z.object({
+        eserviceId: z.string(),
+      }),
+      query: z.object({
+        signalId: z.coerce.number().min(0).default(0),
+        size: z.coerce.number().min(0).optional().default(0),
+      }),
       responses: {
         200: SignalPullResponse,
         206: SignalPullResponse,
@@ -18,10 +25,6 @@ export const contract = c.router(
         403: Problem,
         500: Problem,
       },
-      query: z.object({
-        signalId: z.string().transform(Number),
-        size: z.string().transform(Number).optional(),
-      }),
     },
   },
   {
