@@ -13,6 +13,7 @@ if (!parsedFromEnv.success) {
   const invalidEnvVars = parsedFromEnv.error.issues.flatMap(
     (issue) => issue.path
   );
+  // eslint-disable-next-line no-console
   console.error(
     "Invalid or missing env vars: Persister Service  " +
       invalidEnvVars.join(", ")

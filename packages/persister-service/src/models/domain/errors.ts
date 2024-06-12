@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import { Signal } from "signalhub-commons";
 import { DeadSignal } from "./model.js";
 
@@ -24,7 +25,7 @@ export class PersisterServiceError<T> extends Error {
 }
 
 export class NotRecoverableGenericMessageError extends PersisterServiceError<NotRecoverableMessageErrorCodes> {
-  public signal: any; // can be anything: case of object different from Signal
+  public signal: unknown; // can be anything: case of object different from Signal
   constructor({
     code,
     title,
@@ -34,7 +35,7 @@ export class NotRecoverableGenericMessageError extends PersisterServiceError<Not
     code: NotRecoverableMessageErrorCodes;
     title: string;
     detail: string;
-    signal: any;
+    signal: unknown;
   }) {
     super({ code, title, detail });
     this.signal = signal;
@@ -72,6 +73,7 @@ export const notRecoverableMessageErrorCodes = {
 };
 
 export function getErrorReason(type: ErrorCodes): string {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return errorDetails.get(type)!;
 }
 
@@ -119,7 +121,7 @@ export function notRecoverableMessageError(
 
 export function notRecoverableGenericMessageError(
   errorCode: NotRecoverableMessageErrorCodes,
-  signal: any
+  signal: unknown
 ): NotRecoverableGenericMessageError {
   return new NotRecoverableGenericMessageError({
     detail: getErrorReason(errorCode),

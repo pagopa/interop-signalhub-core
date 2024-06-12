@@ -6,8 +6,8 @@ import {
   SignRequest,
   SigningAlgorithmSpec,
 } from "@aws-sdk/client-kms";
-import { config } from "../config/env.js";
 import { v4 as uuidv4 } from "uuid";
+import { config } from "../config/env.js";
 type Claims = {
   sub: string;
   iss: string;
@@ -16,7 +16,7 @@ type Claims = {
   aud: string;
   jti: string;
 };
-export const kmsClientBuilder = () => {
+export const kmsClientBuilder = (): { buildJWT: () => Promise<string> } => {
   const configuration: KMSClientConfig = {
     region: config.kmsRegion,
   };
@@ -39,7 +39,9 @@ export const kmsClientBuilder = () => {
         throw Error("JWT Signature failed. Empty signature returned");
       }
 
-      return `${token}.${removePadding(Buffer.from(result.Signature).toString("base64"))}`;
+      return `${token}.${removePadding(
+        Buffer.from(result.Signature).toString("base64")
+      )}`;
     },
   };
 };
@@ -64,7 +66,7 @@ function createHeader(): string {
   };
 
   return removePadding(
-    Buffer.from(JSON.stringify(headerObj)).toString("base64"),
+    Buffer.from(JSON.stringify(headerObj)).toString("base64")
   );
 }
 

@@ -15,7 +15,7 @@ export const AuthToken = StandardJWTClaims.merge(
     purposeId: z.string().uuid(),
     client_id: z.string().uuid(),
     sub: z.string(),
-  }),
+  })
 );
 export type AuthToken = z.infer<typeof AuthToken>;
 
@@ -94,7 +94,7 @@ export const SignalMessageSchema = {
 export const SMessageSchema = z.object({
   value: z.preprocess(
     (v) => (v != null ? JSON.parse(v.toString()) : null),
-    SignalMessage,
+    SignalMessage
   ),
 });
 

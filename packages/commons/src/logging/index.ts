@@ -30,7 +30,7 @@ const logFormat = (
     eventType,
     eventVersion,
     streamId,
-  }: LoggerMetadata,
+  }: LoggerMetadata
 ) => {
   const serviceLogPart = serviceName ? `[${serviceName}]` : undefined;
   const userLogPart = userId ? `[UID=${userId}]` : undefined;
@@ -70,7 +70,7 @@ export const customFormat = () =>
       .toString()
       .split("\n")
       .map((line: string) =>
-        logFormat(line, timestamp, level, meta.loggerMetadata),
+        logFormat(line, timestamp, level, meta.loggerMetadata)
       );
     return lines.join("\n");
   });
@@ -87,7 +87,7 @@ const getLogger = () =>
       winston.format.timestamp(),
       winston.format.json(),
       winston.format.errors({ stack: true }),
-      customFormat(),
+      customFormat()
     ),
     silent: process.env.NODE_ENV === "test",
   });
@@ -113,6 +113,6 @@ export const genericLogger = logger({});
 if (!parsedLoggerConfig.success) {
   // eslint-disable-next-line no-console
   console.log(
-    `No LOG_LEVEL env var: defaulting log level to "${config.logLevel}"`,
+    `No LOG_LEVEL env var: defaulting log level to "${config.logLevel}"`
   );
 }

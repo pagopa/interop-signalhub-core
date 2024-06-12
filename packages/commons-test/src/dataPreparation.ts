@@ -1,8 +1,9 @@
 import { DB, SQS } from "signalhub-commons";
 import { signalProducer, eserviceProducer } from "./common.js";
 
-async function setupEserviceTable(db: DB) {
+async function setupEserviceTable(db: DB): Promise<void> {
   const allProducers = [signalProducer, eserviceProducer];
+  // eslint-disable-next-line functional/no-let
   let count = 0;
   for (const producer of allProducers) {
     const { id, eservices } = producer;
@@ -16,12 +17,14 @@ async function setupEserviceTable(db: DB) {
   }
 }
 
-export const dataPreparation = async (db: DB) => {
+export const dataPreparation = async (db: DB): Promise<void> => {
+  // eslint-disable-next-line no-console
   console.info(`\n*** SIGNALHUB DATA PREPARATION  ***\n`);
   await setupEserviceTable(db);
 };
 
-export const dataPreparationCleanup = async (db: DB) => {
+export const dataPreparationCleanup = async (db: DB): Promise<void> => {
+  // eslint-disable-next-line no-console
   console.info("\n*** SIGNALHUB DATA PREPARATION CLEANUP ***\n");
   await db.none("truncate eservice;");
 };
@@ -29,7 +32,8 @@ export const dataPreparationCleanup = async (db: DB) => {
 export const deleteAllSqsMessages = async (
   sqsClient: SQS.SQSClient,
   queueUrl: string
-) => {
+): Promise<void> => {
+  // eslint-disable-next-line no-console
   console.info(
     "\n*** SIGNALHUB DATA PREPARATION DELETE ALL QUEUE MESSAGES ***\n"
   );

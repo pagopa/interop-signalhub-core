@@ -1,6 +1,5 @@
 import { Response, Request, NextFunction } from "express";
 import { P, match } from "ts-pattern";
-import { readSessionDataFromJwtToken, validateToken } from "./jwt.js";
 import { Logger, logger } from "../logging/index.js";
 import { Headers } from "../models/index.js";
 import {
@@ -12,6 +11,7 @@ import {
   missingHeader,
 } from "../errors/index.js";
 import { JWTConfig, jwtConfig } from "../config/index.js";
+import { readSessionDataFromJwtToken, validateToken } from "./jwt.js";
 
 const makeApiProblem = makeApiProblemBuilder({});
 const config = jwtConfig();
@@ -19,12 +19,12 @@ const config = jwtConfig();
 export const authenticationMiddleware = async (
   req: Request,
   response: Response,
-  next: NextFunction,
-) => {
+  next: NextFunction
+): Promise<void | Response> => {
   const validateTokenAndAddSessionDataToContext = async (
     authHeader: string,
     config: JWTConfig,
-    logger: Logger,
+    logger: Logger
   ): Promise<void> => {
     if (!authHeader) {
       throw jwtNotPresent;
@@ -37,7 +37,7 @@ export const authenticationMiddleware = async (
       authorizationHeader[0] !== "Bearer"
     ) {
       logger.warn(
-        `No authentication has been provided for this call ${req.method} ${req.url}`,
+        `No authentication has been provided for this call ${req.method} ${req.url}`
       );
       throw missingBearer;
     }
@@ -49,6 +49,7 @@ export const authenticationMiddleware = async (
       throw jwtDecodingError(validationResult.err);
     }
 
+    // eslint-disable-next-line functional/immutable-data
     req.ctx.sessionData = readSessionDataFromJwtToken(jwtToken);
   };
 
@@ -74,11 +75,11 @@ export const authenticationMiddleware = async (
           await validateTokenAndAddSessionDataToContext(
             headers.authorization,
             config,
-            loggerInstance,
+            loggerInstance
           );
           loggerInstance.info("Authentication END");
           next();
-        },
+        }
       )
       .with(
         {
@@ -87,11 +88,11 @@ export const authenticationMiddleware = async (
         },
         () => {
           loggerInstance.warn(
-            `No authentication has been provided for this call ${req.method} ${req.url}`,
+            `No authentication has been provided for this call ${req.method} ${req.url}`
           );
 
           throw jwtNotPresent;
-        },
+        }
       )
       .with(
         {
@@ -100,11 +101,11 @@ export const authenticationMiddleware = async (
         },
         () => {
           loggerInstance.warn(
-            `No authentication has been provided for this call ${req.method} ${req.url}`,
+            `No authentication has been provided for this call ${req.method} ${req.url}`
           );
 
           throw missingHeader("jwtNotPresent");
-        },
+        }
       )
       .otherwise(() => {
         throw genericInternalError;
@@ -114,15 +115,13 @@ export const authenticationMiddleware = async (
       error,
       (err) =>
         match(err.code)
-          .with("unauthorizedError", () => {
-            return 401;
-          })
+          .with("unauthorizedError", () => 401)
           .with("jwtDecodingError", () => 401)
           .with("operationForbidden", () => 403)
           .with("missingHeader", () => 400)
           .otherwise(() => 500),
       loggerInstance,
-      req.ctx.correlationId,
+      req.ctx.correlationId
     );
 
     return response.status(problem.status).json(problem).end();

@@ -30,7 +30,7 @@ export function createDbInstance({
   });
 
   const conData = new ConnectionString(
-    `postgresql://${username}:${password}@${host}:${port}/${database}`,
+    `postgresql://${username}:${password}@${host}:${port}/${database}`
   );
 
   const dbConfig: IConnectionParameters<IClient> = {
@@ -45,6 +45,5 @@ export function createDbInstance({
   const loggerInstance = logger({});
   loggerInstance.info("initDB");
   // createding a Database instance
-  const db = pgp(dbConfig);
-  return db;
+  return pgp(dbConfig);
 }
