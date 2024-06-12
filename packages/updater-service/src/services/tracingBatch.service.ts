@@ -21,17 +21,17 @@ export function tracingBatchServiceBuilder(db: DB) {
         }
 
         if (tracingBatchEntityList[0].state == TracingBatchStateEnum.ENDED) {
-          return tracingBatchEntityList[0].last_event_id;
+          return parseInt(tracingBatchEntityList[0].last_event_id);
         }
 
         if (tracingBatchEntityList.length > config.attemptEvent) {
-          return (
+          return parseInt(
             tracingBatchEntityList[tracingBatchEntityList.length - 1]
               .last_event_id + 1
           );
         }
 
-        return tracingBatchEntityList[0].last_event_id;
+        return parseInt(tracingBatchEntityList[0].last_event_id);
       } catch (error) {
         throw genericInternalError(
           `Error getLastEventIdByTracingBatchAndType:" ${error} `
@@ -40,3 +40,5 @@ export function tracingBatchServiceBuilder(db: DB) {
     },
   };
 }
+
+export type TracingBatchService = ReturnType<typeof tracingBatchServiceBuilder>;

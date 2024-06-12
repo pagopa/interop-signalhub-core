@@ -1,5 +1,8 @@
+import { serviceBuilder } from "./services/service.builder.js";
 import { updaterBuilder } from "./updater.js";
 
-const task = await updaterBuilder();
+const { tracingBatchService } = serviceBuilder();
+
+const task = await updaterBuilder(tracingBatchService);
 
 task.executeTask();
