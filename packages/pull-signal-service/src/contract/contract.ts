@@ -7,7 +7,9 @@ const c = initContract();
 export const contract = c.router(
   {
     pullSignal: {
-      summary: "Pull Signal",
+      summary: "Get a list of signals",
+      description:
+        "Retrieve a list o signals on a specific eservice starting from signalId",
       method: "GET",
       path: "/pull-signal/:eserviceId",
       pathParams: z.object({

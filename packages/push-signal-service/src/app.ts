@@ -2,7 +2,6 @@ import express, { Express } from "express";
 import { initServer, createExpressEndpoints } from "@ts-rest/express";
 import { authenticationMiddleware, contextMiddleware } from "signalhub-commons";
 import { contract } from "./contract/contract.js";
-import { authorizationMiddleware } from "./authorization/authorization.middleware.js";
 import { pushRoutes } from "./routes/push.route.js";
 import { setupSwaggerRoute } from "./routes/swagger.route.js";
 import { validationErrorHandler } from "./validation/validation.js";
@@ -19,7 +18,6 @@ const app: Express = express();
 app.use(express.json());
 app.use(contextMiddleware(serviceName));
 app.use(authenticationMiddleware);
-app.use(authorizationMiddleware(storeService, interopClientService));
 setupSwaggerRoute(app);
 // Disable the "X-Powered-By: Express" HTTP header for security reasons: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#recommendation_16
 app.disable("x-powered-by");
@@ -28,7 +26,7 @@ app.disable("x-powered-by");
 const tsServer = initServer();
 const routes = tsServer.router(
   contract,
-  pushRoutes(domainService, storeService, quequeService)
+  pushRoutes(domainService, storeService, quequeService, interopClientService)
 );
 
 createExpressEndpoints(contract, routes, app, {

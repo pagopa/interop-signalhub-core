@@ -2,7 +2,8 @@ openapi: 3.0.2
 paths:
   /pull-signal/{eserviceId}:
     get:
-      summary: Pull Signal
+      description: Retrieve a list o signals on a specific eservice starting from signalId
+      summary: Get a list of signals
       tags: []
       parameters:
         - name: eserviceId

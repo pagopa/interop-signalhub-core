@@ -8,6 +8,11 @@ export const contract = c.router(
   {
     pushSignal: {
       summary: "Push Signal",
+      description: "Insert a signal",
+      metadata: {
+        auth: true,
+        role: "user",
+      } as const,
       method: "POST",
       path: "/push-signal",
       responses: {

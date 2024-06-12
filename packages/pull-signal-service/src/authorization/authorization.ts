@@ -9,6 +9,7 @@ export const consumerAuthorization = (
 ) => {
   return {
     async verify(purposeId: string, eserviceId: string) {
+      logger.debug(`consumerAuthorization BEGIN`);
       const response = await interopClientService.getAgreementByPurposeId(
         purposeId
       );
@@ -23,6 +24,7 @@ export const consumerAuthorization = (
         eserviceId,
         logger
       );
+      logger.debug(`consumerAuthorization END`);
     },
   };
 };
