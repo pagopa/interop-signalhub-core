@@ -1,8 +1,7 @@
 import { DB, genericInternalError } from "signalhub-commons";
-import { ApplicationType } from "../utils/index.js";
 import { tracingBatchRepository } from "../repositories/tracingBatch.repository.js";
 import { TracingBatchStateEnum } from "../models/domain/model.js";
-import { config } from "../config/env.js";
+import { ApplicationType, config } from "../config/env.js";
 
 export function tracingBatchServiceBuilder(db: DB) {
   const tracingBatchRepositoryInstance = tracingBatchRepository(db);

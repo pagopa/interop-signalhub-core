@@ -1,6 +1,6 @@
 import { DB, genericInternalError } from "signalhub-commons";
 import { TracingBatchEntity } from "../models/domain/model.js";
-import { ApplicationType } from "../utils/index.js";
+import { ApplicationType } from "../config/env.js";
 
 export interface ITracingBatchRepository {
   findLatestByType(
