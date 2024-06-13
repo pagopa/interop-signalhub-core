@@ -1,6 +1,6 @@
 import { DB, Logger } from "signalhub-commons";
 import {
-  AgreementDto,
+  AgreementEventDto,
   ConsumerEserviceEntity,
 } from "../models/domain/model.js";
 import { consumerEserviceRepository } from "../repositories/consumerEservice.repository.js";
@@ -19,17 +19,16 @@ export function consumerServiceBuilder(
   ): ConsumerEserviceEntity => consumerEservice;
 
   return {
-    async updateConsumer(agreementDto: AgreementDto): Promise<void> {
+    async updateConsumer(agreementDto: AgreementEventDto): Promise<void> {
       logger.info(
         `Retrieving detail for agreement with id: ${agreementDto.agreementId} and eventId ${agreementDto.eventId}`
       );
 
       // Get detail from interop agreement already converted to consumer_eservice entity
-      const detailAgreement =
-        await interopClientService.getConsumerEservice(
-          agreementDto.agreementId,
-          agreementDto.eventId
-        );
+      const detailAgreement = await interopClientService.getConsumerEservice(
+        agreementDto.agreementId,
+        agreementDto.eventId
+      );
 
       logger.info(
         `Retrieved detail for agreement with id: ${detailAgreement.agreementId} with state ${detailAgreement.state}`
@@ -53,8 +52,7 @@ export function consumerServiceBuilder(
         entity.state = detailAgreement.state;
       }
 
-      
-      if(detailAgreement.state === "ACTIVE")
+      // if(detailAgreement.state === "ACTIVE")
 
       // Update state of agreement on DB
       // consumerEserviceRepositoryInstance.updateConsumerEservice(

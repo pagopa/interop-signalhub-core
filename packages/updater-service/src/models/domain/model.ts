@@ -38,6 +38,12 @@ export enum TracingBatchStateEnum {
   ENDED_WITH_ERROR = "ENDED_WITH_ERROR",
 }
 
-export interface AgreementDto extends Event {
+export interface AgreementEventDto extends Event {
   agreementId: string;
+  descriptorId: string;
+}
+
+export interface EserviceEventDto extends Event {
+  eserviceId: string;
+  descriptorId: string;
 }

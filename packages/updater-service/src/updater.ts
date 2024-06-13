@@ -5,7 +5,7 @@ import { TracingBatchService } from "./services/tracingBatch.service.js";
 import { InteropClientService } from "./services/interopClient.service.js";
 import { ApplicationType, config } from "./config/env.js";
 import { ConsumerService } from "./services/consumer.service.js";
-import { AgreementDto } from "./models/domain/model.js";
+import { AgreementEventDto } from "./models/domain/model.js";
 
 const loggerInstance = logger({
   serviceName: "updater-service",
@@ -32,7 +32,7 @@ export const updaterBuilder = async (
     for (const event of events) {
       if (applicationType === "AGREEMENT") {
         // Update Consumer
-        await consumerService.updateConsumer(event as AgreementDto);
+        await consumerService.updateConsumer(event as AgreementEventDto);
       } else {
         // TODO
       }

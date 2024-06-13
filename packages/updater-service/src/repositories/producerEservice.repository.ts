@@ -13,7 +13,15 @@ export interface IProducerServiceRepository {
     eserviceId: string,
     producerId: string,
     descriptorId: string,
-    eventId: number
+    eventId: number,
+    state: string
+  ): Promise<number | null>;
+
+  updateEservice(
+    eServiceId: string,
+    descriptorId: string,
+    eventId: number,
+    state: string
   ): Promise<number | null>;
 }
 export const producerEserviceRepository = (
@@ -40,15 +48,32 @@ export const producerEserviceRepository = (
     eserviceId: string,
     producerId: string,
     descriptorId: string,
-    eventId: number
+    eventId: number,
+    state: string
   ): Promise<number | null> {
     try {
       return (await db.oneOrNone(
-        "INSERT INTO eservice(eservice_id, producer_id, descriptor_id, event_id) VALUES($1, $2, $3, $4) RETURNING eservice_id",
-        [eserviceId, producerId, descriptorId, eventId]
+        "INSERT INTO eservice(eservice_id, producer_id, descriptor_id, event_id,state) VALUES($1, $2, $3, $4, $5) RETURNING eservice_id",
+        [eserviceId, producerId, descriptorId, eventId, state]
       )) as number;
     } catch (error) {
       throw genericInternalError(`Error insertEservice:" ${error} `);
+    }
+  },
+
+  async updateEservice(
+    eserviceId: string,
+    descriptorId: string,
+    eventId: number,
+    state: string
+  ): Promise<number | null> {
+    try {
+      return (await db.oneOrNone(
+        "UPDATE eservice SET state = $3 WHERE eservice.eservice_id = $1 AND eservice.descriptor_id = $2",
+        [eserviceId, descriptorId, state]
+      )) as number;
+    } catch (error) {
+      throw genericInternalError(`Error updateEservice:" ${error} `);
     }
   },
 });

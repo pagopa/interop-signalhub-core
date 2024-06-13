@@ -3,6 +3,10 @@ import {
   getAgreement,
   getAgreementsEventsFromId,
   Event,
+  getEservice,
+  EService,
+  EServiceDescriptor,
+  getEServiceDescriptor,
 } from "signalhub-interop-client";
 import { ConsumerEserviceEntity } from "../models/domain/model.js";
 import { toConsumerEservice } from "../models/domain/toConsumerEservice.js";
@@ -39,6 +43,24 @@ export function interopClientServiceBuilder(
       const { data: agreement } = await getAgreement(voucher, agreementId);
 
       return toConsumerEservice(agreement, eventId);
+    },
+
+    async getEservice(eserviceId: string): Promise<EService> {
+      const { data: eservice } = await getEservice(eserviceId, voucher);
+      return eservice;
+    },
+
+    async getEserviceDescriptor(
+      eServiceId: string,
+      descriptorId: string
+    ): Promise<EServiceDescriptor> {
+      const { data: eServiceDetail } = await getEServiceDescriptor(
+        eServiceId,
+        descriptorId,
+        voucher
+      );
+
+      return eServiceDetail;
     },
   };
 }
