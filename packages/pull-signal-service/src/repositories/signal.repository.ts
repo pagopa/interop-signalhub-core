@@ -3,23 +3,40 @@ import { genericInternalError, DB } from "signalhub-commons";
 export interface ISignalRepository {
   getByEservice: (
     eserviceId: string,
-    fromSignalId: number,
-    toSignalIs: number
+    signalId: number,
+    limit: number
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => Promise<any[] | null>;
+  getNextSignalId: (
+    eserviceId: string,
+    signalId: number
+  ) => Promise<number | null>;
 }
 
 export const signalRepository = (db: DB): ISignalRepository => ({
   async getByEservice(
     eserviceId: string,
-    fromSignalId: number,
-    toSignalId: number
+    signalId: number,
+    limit: number
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any[] | null> {
     try {
       return await db.any(
-        "SELECT * FROM signal WHERE eservice_id = $1 AND signal_id >= $2 order by signal_id asc limit $3",
-        [eserviceId, fromSignalId, toSignalId]
+        "SELECT signal_id, object_id, eservice_id, object_type, signal_type FROM signal WHERE eservice_id = $1 AND signal_id > $2 order by signal_id asc limit $3",
+        [eserviceId, signalId, limit]
+      );
+    } catch (error) {
+      throw genericInternalError(`Error get: ${error}`);
+    }
+  },
+  async getNextSignalId(
+    eserviceId: string,
+    signalId: number
+  ): Promise<number | null> {
+    try {
+      return await db.oneOrNone(
+        "SELECT signal_id FROM signal WHERE eservice_id = $1 AND signal_id > $2 limit 1",
+        [eserviceId, signalId]
       );
     } catch (error) {
       throw genericInternalError(`Error get: ${error}`);

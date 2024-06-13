@@ -6,24 +6,26 @@ import { signalRepository } from "../repositories/signal.repository.js";
 export function storeServiceBuilder(db: DB) {
   return {
     async pullSignal(
-      signalId: number,
-      consumerId: string,
       eserviceId: string,
-      size: number,
+      signalId: number,
+      limit: number,
       logger: Logger
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ): Promise<{ signals: any[] | null; toSignalId: number }> {
+    ): Promise<{ signals: any[] | null; lastSignalId: number | null }> {
       logger.debug(
-        `StoreService::pullSignal signald: ${signalId}, eserviceId: ${eserviceId} consumerId: ${consumerId} size: ${size}`
+        `StoreService::pullSignal eserviceId: ${eserviceId}, signalId:   ${signalId}, limit: ${limit}`
       );
-      const fromSignalId = 0;
-      const toSignalId = size;
       const signals = await signalRepository(db).getByEservice(
         eserviceId,
-        fromSignalId,
-        toSignalId
+        signalId,
+        limit
       );
-      return { signals, toSignalId };
+      const nextSignalId = signalId + limit;
+      const lastSignalId = await signalRepository(db).getNextSignalId(
+        eserviceId,
+        nextSignalId
+      );
+      return { signals, lastSignalId };
     },
     async canConsumerRecoverSignal(
       consumerId: string,

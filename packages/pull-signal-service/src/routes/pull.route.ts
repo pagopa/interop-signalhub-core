@@ -30,16 +30,19 @@ export const pullRoutes = (
       const { eserviceId } = req.params;
       const { purposeId } = req.ctx.sessionData;
       const { signalId, size } = req.query;
-      const consumerId = await consumerAuthorization(
+      await consumerAuthorization(
         storeService,
         interopClientService,
         loggerInstance
-      ).verifyAndGetConsumerId(purposeId, eserviceId);
-
-      const { signals, toSignalId } = await storeService.pullSignal(
-        signalId,
-        consumerId,
+      ).verify(purposeId, eserviceId);
+      loggerInstance.info(
+        `pullController get signals: signalId ${signalId}, size: ${size}`
+      );
+      // size
+      // count signals for http status (200 vs 206)
+      const { signals, lastSignalId } = await storeService.pullSignal(
         eserviceId,
+        signalId,
         size,
         loggerInstance
       );
@@ -47,7 +50,7 @@ export const pullRoutes = (
         status: 200,
         body: {
           signals: signals as SignalResponse[],
-          lastSignalId: toSignalId,
+          lastSignalId: lastSignalId as number,
         },
       };
     } catch (error) {
