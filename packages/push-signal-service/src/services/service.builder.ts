@@ -1,8 +1,8 @@
+import { DB, SQS, createDbInstance } from "signalhub-commons";
 import { config } from "../config/env.js";
 import { storeServiceBuilder, StoreService } from "./store.service.js";
 import { quequeServiceBuilder, QuequeService } from "./queque.service.js";
 import { domainServiceBuilder, DomainService } from "./domain.service.js";
-import { DB, SQS, createDbInstance } from "signalhub-commons";
 import {
   InteropClientService,
   interopClientServiceBuilder,

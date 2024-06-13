@@ -58,7 +58,7 @@ export const validateToken = (
           logger.warn(`Token verification failed: ${err}`);
           resolve({
             success: false,
-            err: err,
+            err,
           });
         }
         return resolve({

@@ -11,7 +11,12 @@
   },
   "scripts": {
     "generate-model": "node --loader ts-node/esm ./src/scripts/generate-model.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "format:check": "prettier --check src",
+    "format:write": "prettier --write src",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:autofix": "eslint . --ext .ts,.tsx --fix",
+    "check": "tsc --project tsconfig.check.json"
   },
   "keywords": [],
   "dependencies": {
@@ -25,7 +30,6 @@
   "devDependencies": {
     "@types/node": "^20.11.24",
     "@types/uuid": "^9.0.8",
-    "eslint": "^9.3.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   }

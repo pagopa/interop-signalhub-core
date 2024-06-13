@@ -3,8 +3,10 @@ import { RequestValidationError } from "@ts-rest/express";
 import { ZodError } from "zod";
 import { requestValidationError } from "../model/domain/errors.js";
 
-export const validationErrorHandler = () => {
-  return async (
+export const validationErrorHandler =
+  () =>
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  async (
     err: RequestValidationError,
     _req: Request,
     res: Response,
@@ -14,4 +16,3 @@ export const validationErrorHandler = () => {
     const errorsString = error.issues.map((e) => e.message).join(" - ");
     return res.status(400).json(requestValidationError(errorsString));
   };
-};

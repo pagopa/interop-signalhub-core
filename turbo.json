@@ -7,12 +7,14 @@
       "cache": false,
       "dependsOn": ["^build"]
     },
-
     "test": {
       "dependsOn": ["build"]
     },
-
     "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist"]
+    },
+    "check": {
       "dependsOn": ["^build"],
       "outputs": ["dist"]
     },
@@ -23,6 +25,8 @@
     "lint:autofix": {
       "dependsOn": ["^build"],
       "outputs": ["dist"]
-    }
+    },
+    "format:check": {},
+    "format:write": {}
   }
 }

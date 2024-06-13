@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
+import { genericLogger } from "signalhub-commons";
+import { createSignal } from "signalhub-commons-test";
 import {
   notRecoverableGenericMessageError,
   notRecoverableMessageError,
 } from "../src/models/domain/errors.js";
 import { parseQueueMessageToSignal } from "../src/models/domain/utils.js";
-import { genericLogger } from "signalhub-commons";
-import { createSignal } from "signalhub-commons-test";
 
 describe("Message parser", () => {
   it("should throw an error if message is not a Signal", () => {
@@ -48,6 +48,7 @@ describe("Message parser", () => {
       signalId: "1",
     };
     const malformedSignalQueueMessage = JSON.stringify(malformedSignal);
+    // eslint-disable-next-line sonarjs/no-identical-functions
     expect(() =>
       parseQueueMessageToSignal(
         {
@@ -63,9 +64,11 @@ describe("Message parser", () => {
     );
   });
   it("should throw an error if message is malformed Signal (no  attribute eserviceId)", () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { eserviceId, ...malformedSignal } = createSignal();
     const malformedSignalQueueMessage = JSON.stringify(malformedSignal);
 
+    // eslint-disable-next-line sonarjs/no-identical-functions
     expect(() =>
       parseQueueMessageToSignal(
         {
@@ -86,6 +89,7 @@ describe("Message parser", () => {
       arbitrary: "no way!",
     };
     const malformedSignalQueueMessage = JSON.stringify(malformedSignal);
+    // eslint-disable-next-line sonarjs/no-identical-functions
     expect(() =>
       parseQueueMessageToSignal(
         {

@@ -45,6 +45,5 @@ export function createDbInstance({
   const loggerInstance = logger({});
   loggerInstance.info("initDB");
   // createding a Database instance
-  const db = pgp(dbConfig);
-  return db;
+  return pgp(dbConfig);
 }

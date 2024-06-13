@@ -2,8 +2,8 @@ import { setupTestContainersVitest } from "signalhub-commons-test";
 import { afterEach, inject } from "vitest";
 
 import { quequeServiceBuilder } from "../src/services/queque.service.js";
-import { storeServiceBuilder } from "../src/services/store.service";
-import { domainServiceBuilder } from "../src/services/domain.service";
+import { storeServiceBuilder } from "../src/services/store.service.js";
+import { domainServiceBuilder } from "../src/services/domain.service.js";
 
 export const { cleanup, postgresDB, sqsClient } = setupTestContainersVitest(
   inject("signalHubStoreConfig"),

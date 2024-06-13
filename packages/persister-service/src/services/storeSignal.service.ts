@@ -1,6 +1,6 @@
+import { DB, logger, SignalMessage } from "signalhub-commons";
 import { toSignal } from "../models/domain/toSignal.js";
 import { signalRepository } from "../repositories/signal.repository.js";
-import { DB, logger, SignalMessage } from "signalhub-commons";
 import { deadSignalRepository } from "../repositories/deadSignal.repository.js";
 import { DeadSignal } from "../models/domain/model.js";
 import {
@@ -11,9 +11,10 @@ import {
 
 const loggerInstance = logger({});
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function storeSignalServiceBuilder(db: DB) {
   return {
-    async storeSignal(signalMessage: SignalMessage) {
+    async storeSignal(signalMessage: SignalMessage): Promise<void> {
       try {
         const signalRepositoryInstance = signalRepository(db);
         const signal = toSignal(signalMessage);
@@ -45,7 +46,7 @@ export function storeSignalServiceBuilder(db: DB) {
       }
     },
 
-    async storeDeadSignal(deadSignal: DeadSignal) {
+    async storeDeadSignal(deadSignal: DeadSignal): Promise<void> {
       await deadSignalRepository(db).insertDeadSignal(deadSignal);
     },
   };

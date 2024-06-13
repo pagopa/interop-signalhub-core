@@ -1,12 +1,11 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable functional/immutable-data */
+/* eslint-disable functional/no-let */
+
 import type {} from "vitest";
 import { config as dotenv } from "dotenv-flow";
 import type { GlobalSetupContext } from "vitest/node";
-import {
-  TEST_POSTGRES_DB_PORT,
-  TEST_SQS_PORT,
-  postgreSQLContainer,
-  sqsContainer,
-} from "./containerTestUtils.js";
 import {
   QuequeConfig,
   SignalHubStoreConfig,
@@ -14,6 +13,12 @@ import {
 } from "signalhub-commons";
 import { StartedTestContainer } from "testcontainers";
 import { z } from "zod";
+import {
+  TEST_POSTGRES_DB_PORT,
+  TEST_SQS_PORT,
+  postgreSQLContainer,
+  sqsContainer,
+} from "./containerTestUtils.js";
 
 const SqsConfig = QuequeConfig.and(AwsConfig);
 
@@ -74,7 +79,7 @@ export function setupTestContainersVitestGlobal() {
 
     if (sqsConfig.success) {
       startedSqContainer = await sqsContainer(sqsConfig.data).start();
-      startedSqContainer.exec([
+      await startedSqContainer.exec([
         "aws",
         "sqs",
         "create-queue",
@@ -93,6 +98,7 @@ export function setupTestContainersVitestGlobal() {
     }
 
     return async (): Promise<void> => {
+      // eslint-disable-next-line no-console
       console.info("Stopping test containers");
       await startedPostgreSqlContainer?.stop();
       await startedSqContainer?.stop();

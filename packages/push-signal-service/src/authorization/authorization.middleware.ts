@@ -10,11 +10,13 @@ import { InteropClientService } from "../services/interopClient.service.js";
 
 const makeApiProblem = makeApiProblemBuilder({});
 
-export const authorizationMiddleware = (
-  storeService: StoreService,
-  interopClientservice: InteropClientService
-) => {
-  return async (req: Request, response: Response, next: NextFunction) => {
+export const authorizationMiddleware =
+  (storeService: StoreService, interopClientservice: InteropClientService) =>
+  async (
+    req: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<void> => {
     const loggerInstance = logger({
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
@@ -53,4 +55,3 @@ export const authorizationMiddleware = (
       response.status(problem.status).json(problem).end();
     }
   };
-};
