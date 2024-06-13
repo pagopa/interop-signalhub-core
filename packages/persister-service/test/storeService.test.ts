@@ -1,15 +1,15 @@
 import { describe, expect, it } from "vitest";
+import { createSignal, writeSignal } from "signalhub-commons-test";
 import {
   notRecoverableMessageError,
   recoverableMessageError,
 } from "../src/models/domain/errors.js";
 
-import { createSignal, writeSignal } from "signalhub-commons-test";
 import {
   postgresDB,
   storeSignalService,
   wrongStoreSignalService,
-} from "./utils";
+} from "./utils.js";
 
 describe("Signal Store Service", () => {
   it("should throw an unrecoverable error if signal already exist on db", async () => {

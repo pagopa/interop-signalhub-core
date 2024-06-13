@@ -1,6 +1,5 @@
 import { Response, Request, NextFunction } from "express";
 import { P, match } from "ts-pattern";
-import { readSessionDataFromJwtToken, validateToken } from "./jwt.js";
 import { Logger, logger } from "../logging/index.js";
 import { Headers } from "../models/index.js";
 import {
@@ -12,6 +11,7 @@ import {
   missingHeader,
 } from "../errors/index.js";
 import { JWTConfig, jwtConfig } from "../config/index.js";
+import { readSessionDataFromJwtToken, validateToken } from "./jwt.js";
 
 const makeApiProblem = makeApiProblemBuilder({});
 const config = jwtConfig();
@@ -20,7 +20,7 @@ export const authenticationMiddleware = async (
   req: Request,
   response: Response,
   next: NextFunction
-) => {
+): Promise<void | Response> => {
   const validateTokenAndAddSessionDataToContext = async (
     authHeader: string,
     config: JWTConfig,
@@ -49,6 +49,7 @@ export const authenticationMiddleware = async (
       throw jwtDecodingError(validationResult.err);
     }
 
+    // eslint-disable-next-line functional/immutable-data
     req.ctx.sessionData = readSessionDataFromJwtToken(jwtToken);
   };
 
@@ -114,9 +115,7 @@ export const authenticationMiddleware = async (
       error,
       (err) =>
         match(err.code)
-          .with("unauthorizedError", () => {
-            return 401;
-          })
+          .with("unauthorizedError", () => 401)
           .with("jwtDecodingError", () => 401)
           .with("operationForbidden", () => 403)
           .with("missingHeader", () => 400)

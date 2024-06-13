@@ -1,7 +1,7 @@
-import { setupTestContainersVitest } from "signalhub-commons-test";
 import { afterEach, inject } from "vitest";
-import { storeSignalServiceBuilder } from "../src/services/storeSignal.service.js";
 import { DB, createDbInstance } from "signalhub-commons";
+import { setupTestContainersVitest } from "signalhub-commons-test";
+import { storeSignalServiceBuilder } from "../src/services/storeSignal.service.js";
 import { processMessage } from "../src/messageHandler.js";
 
 export const { cleanup, postgresDB } = setupTestContainersVitest(

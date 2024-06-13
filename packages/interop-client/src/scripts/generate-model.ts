@@ -16,4 +16,5 @@ generateApi({
   extractRequestParams: true,
   extractRequestBody: true,
   generateRouteTypes: true,
+  // eslint-disable-next-line no-console
 }).catch((e) => console.error(e));

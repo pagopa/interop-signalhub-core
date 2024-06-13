@@ -9,6 +9,7 @@ import {
   SendMessageCommandInput,
   GetQueueUrlCommand,
   DeleteMessageBatchCommand,
+  ReceiveMessageCommandOutput,
 } from "@aws-sdk/client-sqs";
 import { logger } from "../logging/index.js";
 import { QuequeConsumerConfig } from "../config/queque.consumer.js";
@@ -29,13 +30,11 @@ const processExit = async (exitStatusCode: number = 1): Promise<void> => {
   process.exit(exitStatusCode);
 };
 
-export const instantiateClient = (config: SQSClientConfig): SQSClient => {
-  const sqsClient = new SQSClient({
+export const instantiateClient = (config: SQSClientConfig): SQSClient =>
+  new SQSClient({
     endpoint: config.endpoint,
     region: config.region,
   });
-  return sqsClient;
-};
 
 const processQueue = async (
   sqsClient: SQSClient,
@@ -51,6 +50,7 @@ const processQueue = async (
     MaxNumberOfMessages: 10,
   });
 
+  // eslint-disable-next-line functional/no-let
   let keepProcessingQueue: boolean = true;
 
   try {
@@ -119,16 +119,16 @@ export const runConsumer = async (
 export const getQueueUrl = async (
   sqsClient: SQSClient,
   queueName: string
-): Promise<string> => {
+): Promise<string | undefined> => {
   const queueUrlCommand = {
     QueueName: queueName,
   };
   try {
     const command = new GetQueueUrlCommand(queueUrlCommand);
     const response = await sqsClient.send(command);
-    return response.QueueUrl!;
+    return response.QueueUrl;
   } catch (error) {
-    console.log(error);
+    // TODO: handle error
   }
   return "";
 };
@@ -163,8 +163,10 @@ export const deleteMessage = async (
 export const deleteBatchMessages = async (
   sqsClient: SQSClient,
   queueUrl: string
-) => {
-  const receiveMessage = (queueUrl: string) =>
+): Promise<void> => {
+  const receiveMessage = (
+    queueUrl: string
+  ): Promise<ReceiveMessageCommandOutput> =>
     sqsClient.send(
       new ReceiveMessageCommand({
         MaxNumberOfMessages: 10,

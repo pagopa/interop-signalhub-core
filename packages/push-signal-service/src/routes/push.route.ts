@@ -1,7 +1,7 @@
 import { AppRouteImplementation, initServer } from "@ts-rest/express";
-import { contract } from "../contract/contract.js";
-import { logger, Problem, SignalRequest } from "signalhub-commons";
+import { logger, Problem } from "signalhub-commons";
 import { match } from "ts-pattern";
+import { contract } from "../contract/contract.js";
 import { StoreService } from "../services/store.service.js";
 import { makeApiProblem } from "../model/domain/errors.js";
 import { QuequeService } from "../services/queque.service.js";
@@ -9,6 +9,7 @@ import { DomainService } from "../services/domain.service.js";
 
 const s = initServer();
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const pushRoutes = (
   domainService: DomainService,
   storeService: StoreService,
@@ -30,7 +31,7 @@ export const pushRoutes = (
         loggerInstance
       );
       const message = domainService.signalToMessage(
-        body as SignalRequest,
+        body,
         req.ctx.correlationId,
         loggerInstance
       );
@@ -53,6 +54,7 @@ export const pushRoutes = (
         loggerInstance,
         req.ctx.correlationId
       );
+      // eslint-disable-next-line sonarjs/no-small-switch
       switch (problem.status) {
         case 400:
           return {

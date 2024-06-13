@@ -7,7 +7,12 @@
   "scripts": {
     "start": "node --watch --loader ts-node/esm -r 'dotenv-flow/config'  ./src/index.ts",
     "build": "tsc",
-    "test": "vitest"
+    "test": "vitest",
+    "format:check": "prettier --check src test",
+    "format:write": "prettier --write src test",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:autofix": "eslint . --ext .ts,.tsx --fix",
+    "check": "tsc --project tsconfig.check.json"
   },
   "keywords": [],
   "author": "",
@@ -27,7 +32,6 @@
     "@pagopa/eslint-config": "^3.0.0",
     "@types/express": "^4.17.21",
     "@types/node": "^20.11.24",
-    "eslint": "^9.3.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
     "vitest": "^1.6.0"

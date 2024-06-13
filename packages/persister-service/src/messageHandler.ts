@@ -1,11 +1,11 @@
 import { SQS, logger } from "signalhub-commons";
+import { P, match } from "ts-pattern";
 import { StoreSignalService } from "./services/storeSignal.service.js";
 import {
   NotRecoverableGenericMessageError,
   NotRecoverableMessageError,
   RecoverableMessageError,
 } from "./models/domain/errors.js";
-import { P, match } from "ts-pattern";
 import { parseQueueMessageToSignal } from "./models/domain/utils.js";
 
 const loggerInstance = logger({});

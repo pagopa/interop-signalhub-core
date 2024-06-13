@@ -6,7 +6,12 @@
   "main": "dist",
   "type": "module",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "format:check": "prettier --check src",
+    "format:write": "prettier --write src",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:autofix": "eslint . --ext .ts,.tsx --fix",
+    "check": "tsc --project tsconfig.check.json"
   },
   "keywords": [],
   "author": "",
