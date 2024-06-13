@@ -10,7 +10,10 @@
     "lint": "eslint . --ext .ts,.tsx",
     "lint:autofix": "eslint . --ext .ts,.tsx --fix",
     "build": "tsc",
-    "test": "vitest"
+    "test": "vitest",
+    "format:check": "prettier --check src test",
+    "format:write": "prettier --write src test",
+    "check": "tsc --project tsconfig.check.json"
   },
   "keywords": [],
   "author": "",
@@ -39,7 +42,6 @@
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.11.24",
     "@types/swagger-ui-express": "^4.1.6",
-    "eslint": "^9.3.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
     "vitest": "^1.6.0"

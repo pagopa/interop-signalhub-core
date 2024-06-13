@@ -4,6 +4,7 @@ import { signalRepository } from "../repositories/signal.repository.js";
 import { eserviceRepository } from "../repositories/eservice.repository.js";
 import { signalIdDuplicatedForEserviceId } from "../model/domain/errors.js";
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function storeServiceBuilder(db: DB) {
   return {
     async verifySignalDuplicated(
@@ -27,7 +28,7 @@ export function storeServiceBuilder(db: DB) {
       producerId: string,
       eserviceId: string,
       logger: Logger
-    ) {
+    ): Promise<void> {
       logger.info(
         `StoreService::canProducerDepositSignal eserviceId: ${eserviceId} producerId: ${producerId}`
       );
@@ -49,7 +50,7 @@ export function storeServiceBuilder(db: DB) {
   };
 }
 
-const signalIsDuplicated = (signalIdPresent: number | null) =>
+const signalIsDuplicated = (signalIdPresent: number | null): boolean =>
   signalIdPresent !== null;
 
 export type StoreService = ReturnType<typeof storeServiceBuilder>;

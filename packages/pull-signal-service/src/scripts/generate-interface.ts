@@ -1,5 +1,5 @@
-import { generateOpenApi } from "@ts-rest/open-api";
 import { writeFileSync } from "fs";
+import { generateOpenApi } from "@ts-rest/open-api";
 import * as yaml from "js-yaml";
 import { contract } from "../contract/contract.js";
 

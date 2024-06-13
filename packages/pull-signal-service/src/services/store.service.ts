@@ -2,6 +2,7 @@ import { DB, Logger, operationForbidden } from "signalhub-commons";
 import { consumerEserviceRepository } from "../repositories/consumerEservice.repository.js";
 import { signalRepository } from "../repositories/signal.repository.js";
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function storeServiceBuilder(db: DB) {
   return {
     async pullSignal(
@@ -10,6 +11,7 @@ export function storeServiceBuilder(db: DB) {
       eserviceId: string,
       size: number,
       logger: Logger
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ): Promise<{ signals: any[] | null; toSignalId: number }> {
       logger.debug(
         `StoreService::pullSignal signald: ${signalId}, eserviceId: ${eserviceId} consumerId: ${consumerId} size: ${size}`
@@ -27,7 +29,7 @@ export function storeServiceBuilder(db: DB) {
       consumerId: string,
       eserviceId: string,
       logger: Logger
-    ) {
+    ): Promise<void> {
       logger.info(
         `StoreService::canProducerRecoverSignal consumerId: ${consumerId} eserviceId: ${eserviceId}`
       );

@@ -7,17 +7,21 @@ import {
 export function parseQueueMessageToSignal(
   queueMessage: SQS.Message,
   loggerInstance: Logger
-) {
+): SignalMessage {
+  // eslint-disable-next-line functional/no-let
   let parsedMessage;
   try {
-    parsedMessage = JSON.parse(queueMessage.Body!);
+    if (!queueMessage.Body) {
+      throw notRecoverableGenericMessageError("parsingError", queueMessage);
+    }
+    parsedMessage = JSON.parse(queueMessage.Body);
   } catch (error) {
     throw notRecoverableGenericMessageError(
       "notValidJsonError",
       queueMessage.Body
     );
   }
-  let signalMessage = SignalMessage.safeParse(parsedMessage);
+  const signalMessage = SignalMessage.safeParse(parsedMessage);
   loggerInstance.info(
     `Message from queue: ${JSON.stringify(parsedMessage, null, 2)}`
   );

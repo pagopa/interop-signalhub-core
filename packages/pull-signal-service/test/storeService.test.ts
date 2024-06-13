@@ -1,6 +1,5 @@
 import { genericLogger, operationForbidden } from "signalhub-commons";
 import { describe, expect, it } from "vitest";
-import { postgresDB, storeService } from "./utils";
 import {
   authorizedPurposeId,
   createSignal,
@@ -9,6 +8,7 @@ import {
   writeSignal,
 } from "signalhub-commons-test";
 import { signalIdDuplicatedForEserviceId } from "../src/model/domain/errors";
+import { postgresDB, storeService } from "./utils";
 
 describe("Store service", () => {
   describe("verifySignalDuplicated", () => {

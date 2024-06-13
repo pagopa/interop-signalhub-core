@@ -2,6 +2,7 @@ import { Logger, SQS } from "signalhub-commons";
 import { signalNotSendedToQueque } from "../model/domain/errors.js";
 import { config } from "../config/env.js";
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function quequeServiceBuilder(sqsClient: SQS.SQSClient) {
   return {
     async send(
@@ -12,6 +13,7 @@ export function quequeServiceBuilder(sqsClient: SQS.SQSClient) {
       try {
         await SQS.sendMessage(sqsClient, queueUrl, message);
         logger.debug(`QuequeService::send message: ${message}`);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         logger.error(`QuequeService::send ERROR: ${error}`);
         const { requestId } = error.$metadata;

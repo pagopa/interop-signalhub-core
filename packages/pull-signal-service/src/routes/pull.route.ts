@@ -1,7 +1,7 @@
 import { AppRouteImplementation, initServer } from "@ts-rest/express";
-import { contract } from "../contract/contract.js";
 import { logger, Problem, SignalResponse } from "signalhub-commons";
 import { match } from "ts-pattern";
+import { contract } from "../contract/contract.js";
 import { StoreService } from "../services/store.service.js";
 import { makeApiProblem } from "../model/domain/errors.js";
 import { InteropClientService } from "../services/interopClient.service.js";
@@ -9,6 +9,7 @@ import { consumerAuthorization } from "../authorization/authorization.js";
 
 const s = initServer();
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const pullRoutes = (
   storeService: StoreService,
   interopClientService: InteropClientService
@@ -82,6 +83,6 @@ export const pullRoutes = (
   };
 
   return s.router(contract, {
-    pullSignal: pullSignal,
+    pullSignal,
   });
 };

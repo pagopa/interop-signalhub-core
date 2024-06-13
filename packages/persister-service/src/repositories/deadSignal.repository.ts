@@ -1,6 +1,6 @@
+import { DB } from "signalhub-commons";
 import { DeadSignal } from "../models/domain/model.js";
 import { recoverableMessageError } from "../models/domain/errors.js";
-import { DB } from "signalhub-commons";
 
 export interface IDeadSignalRepository {
   insertDeadSignal: (deadSignal: DeadSignal) => Promise<number | null>;

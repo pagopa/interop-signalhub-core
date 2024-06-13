@@ -1,8 +1,7 @@
-import { createSignalPayload } from "./../../commons-test/src/databaseUtils";
 import { genericLogger } from "signalhub-commons";
+import { createSignalPayload } from "signalhub-commons-test";
 import { describe, expect, expectTypeOf, it } from "vitest";
-import { domainService } from "./utils";
-
+import { domainService } from "./utils.js";
 describe("Domain Service", () => {
   it("should get a Message (string) from a Signal object", async () => {
     const signal = createSignalPayload();

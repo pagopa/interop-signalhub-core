@@ -2,7 +2,14 @@ import { Logger, SignalMessageSchema, SignalPayload } from "signalhub-commons";
 import { SignalMessage } from "signalhub-commons";
 import fastJson from "fast-json-stringify";
 
-export function domainServiceBuilder() {
+export function domainServiceBuilder(): {
+  // eslint-disable-next-line functional/no-method-signature
+  signalToMessage(
+    signalRequest: SignalPayload,
+    correlationId: string,
+    logger: Logger
+  ): string;
+} {
   return {
     signalToMessage(
       signalPayload: SignalPayload,
@@ -25,15 +32,9 @@ export type DomainService = ReturnType<typeof domainServiceBuilder>;
 const toSignalMessage = (
   signalPayload: SignalPayload,
   correlationId: string
-): SignalMessage => {
-  return {
-    ...signalPayload,
-    correlationId,
-  };
-};
-const toJson = (
-  signalPayload: object,
-  signalMessage: SignalMessage
-): string => {
-  return fastJson(signalPayload)(signalMessage);
-};
+): SignalMessage => ({
+  ...signalPayload,
+  correlationId,
+});
+const toJson = (signalPayload: object, signalMessage: SignalMessage): string =>
+  fastJson(signalPayload)(signalMessage);

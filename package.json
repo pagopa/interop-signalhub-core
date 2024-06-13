@@ -2,25 +2,30 @@
   "name": "interop-signalhub-core",
   "private": true,
   "scripts": {
-    "dev": "turbo dev",
-    "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "start": "turbo start",
     "start:push-signals": "turbo start --filter push-signal-service",
     "start:pull-signals": "turbo start --filter pull-signal-service",
     "start:persister": "turbo start --filter persister-service",
-    "build": "turbo build",
     "test": "turbo test",
     "test:push": "turbo test --filter push-signal-service",
-    "test:persister": "turbo test --filter persister-service"
+    "test:persister": "turbo test --filter persister-service",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "lint:autofix": "turbo lint:autofix",
+    "format:check": "turbo format:check",
+    "format:write": "turbo format:write",
+    "check": "turbo check",
+    "dev": "turbo dev",
+    "prune-dist": "find . -name 'dist' -type d -exec rm -rf {} +",
+    "prune-modules": "find . -name 'node_modules' -type d -exec rm -rf {} +"
   },
   "devDependencies": {
     "@tsconfig/node-lts": "^20.1.3",
-    "prettier": "^3.2.5",
-    "turbo": "latest"
+    "turbo": "latest",
+    "eslint": "8.57.0"
   },
   "packageManager": "pnpm@8.9.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   }
 }

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createSignal } from "signalhub-commons-test";
-import { processMessageHandler, wrongStoreSignalService } from "./utils.js";
 import { recoverableMessageError } from "../src/models/domain/errors.js";
+import { processMessageHandler, wrongStoreSignalService } from "./utils.js";
 
 describe("Message handler", () => {
   it("should process a valid message and store it", async () => {

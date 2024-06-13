@@ -5,6 +5,7 @@ export interface ISignalRepository {
     eserviceId: string,
     fromSignalId: number,
     toSignalIs: number
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => Promise<any[] | null>;
 }
 
@@ -13,6 +14,7 @@ export const signalRepository = (db: DB): ISignalRepository => ({
     eserviceId: string,
     fromSignalId: number,
     toSignalId: number
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any[] | null> {
     try {
       return await db.any(

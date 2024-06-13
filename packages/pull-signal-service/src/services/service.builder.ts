@@ -1,10 +1,10 @@
+import { DB, createDbInstance } from "signalhub-commons";
 import { config } from "../config/env.js";
 import {
   InteropClientService,
   interopClientServiceBuilder,
 } from "./interopClient.service.js";
 import { storeServiceBuilder, StoreService } from "./store.service.js";
-import { DB, createDbInstance } from "signalhub-commons";
 export function serviceBuilder(): {
   storeService: StoreService;
   interopClientService: InteropClientService;
