@@ -6,7 +6,8 @@ node_modules
 .pnp.js
 
 # Local env files
-.env
+# In this way .env file will be pushed!
+.env.*.local
 .env.local
 .env.development.local
 .env.test.local
@@ -26,7 +27,6 @@ coverage
 out/
 build
 dist
-
 
 # Debug
 npm-debug.log*
