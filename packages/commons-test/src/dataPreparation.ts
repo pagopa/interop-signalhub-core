@@ -18,14 +18,12 @@ async function setupEserviceTable(db: DB): Promise<void> {
 }
 
 export const dataPreparation = async (db: DB): Promise<void> => {
-  // eslint-disable-next-line no-console
-  console.info(`\n*** SIGNALHUB DATA PREPARATION  ***\n`);
+  // console.info(`\n*** SIGNALHUB DATA PREPARATION  ***\n`);
   await setupEserviceTable(db);
 };
 
 export const dataPreparationCleanup = async (db: DB): Promise<void> => {
-  // eslint-disable-next-line no-console
-  console.info("\n*** SIGNALHUB DATA PREPARATION CLEANUP ***\n");
+  // console.info("\n*** SIGNALHUB DATA PREPARATION CLEANUP ***\n");
   await db.none("truncate eservice;");
 };
 
@@ -33,9 +31,8 @@ export const deleteAllSqsMessages = async (
   sqsClient: SQS.SQSClient,
   queueUrl: string
 ): Promise<void> => {
-  // eslint-disable-next-line no-console
-  console.info(
-    "\n*** SIGNALHUB DATA PREPARATION DELETE ALL QUEUE MESSAGES ***\n"
-  );
+  // console.info(
+  //   "\n*** SIGNALHUB DATA PREPARATION DELETE ALL QUEUE MESSAGES ***\n"
+  // );
   await SQS.deleteBatchMessages(sqsClient, queueUrl);
 };
