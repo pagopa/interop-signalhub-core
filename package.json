@@ -8,6 +8,7 @@
     "start:persister": "turbo start --filter persister-service",
     "test": "turbo test",
     "test:push": "turbo test --filter push-signal-service",
+    "test:pull": "turbo test --filter pull-signal-service",
     "test:persister": "turbo test --filter persister-service",
     "build": "turbo build",
     "lint": "turbo lint",
