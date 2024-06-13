@@ -10,6 +10,7 @@ import {
   interopClientServiceBuilder,
 } from "./interopClient.service.js";
 import { ConsumerService, consumerServiceBuilder } from "./consumer.service.js";
+import { producerServiceBuilder } from "./producerService.service.js";
 
 export async function serviceBuilder(): Promise<{
   tracingBatchService: TracingBatchService;
@@ -38,9 +39,16 @@ export async function serviceBuilder(): Promise<{
     loggerInstance
   );
 
+  const producerService = producerServiceBuilder(
+    db,
+    interopClientService,
+    loggerInstance
+  );
+
   const consumerService = consumerServiceBuilder(
     db,
     interopClientService,
+    producerService,
     loggerInstance
   );
 

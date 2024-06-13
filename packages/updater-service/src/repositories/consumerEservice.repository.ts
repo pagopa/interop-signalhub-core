@@ -9,12 +9,12 @@ export interface IConsumerEserviceRepository {
     descriptorId: string
   ): Promise<ConsumerEserviceEntity | null>;
 
-  //   updateConsumerEservice(
-  //     eserviceId: string,
-  //     consumerId: string,
-  //     descriptorId: string,
-  //     state: string
-  //   ): Promise<void>;
+  updateConsumerEservice(
+    eserviceId: string,
+    consumerId: string,
+    descriptorId: string,
+    state: string
+  ): Promise<number | null>;
 }
 
 export const consumerEserviceRepository = (
@@ -31,5 +31,15 @@ export const consumerEserviceRepository = (
     );
   },
 
-  //   async updateConsumerEservice(eserviceId, consumerId, descriptorId, state) {},
+  async updateConsumerEservice(
+    eserviceId: string,
+    consumerId: string,
+    descriptorId: string,
+    state: string
+  ): Promise<number | null> {
+    return await db.none(
+      "update CONSUMER_ESERVICE consumer set consumer.state = $1 where consumer.eservice_id = $2 AND consumer.consumer_id = $3  AND consumer.descriptor_id = $4",
+      [state, eserviceId, consumerId, descriptorId]
+    );
+  },
 });

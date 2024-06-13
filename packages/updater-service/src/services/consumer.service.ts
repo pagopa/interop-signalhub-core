@@ -5,11 +5,13 @@ import {
 } from "../models/domain/model.js";
 import { consumerEserviceRepository } from "../repositories/consumerEservice.repository.js";
 import { InteropClientService } from "./interopClient.service.js";
+import { ProducerService } from "./producerService.service.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function consumerServiceBuilder(
   db: DB,
   interopClientService: InteropClientService,
+  producerService: ProducerService,
   logger: Logger
 ) {
   const consumerEserviceRepositoryInstance = consumerEserviceRepository(db);
@@ -19,22 +21,22 @@ export function consumerServiceBuilder(
   ): ConsumerEserviceEntity => consumerEservice;
 
   return {
-    async updateConsumer(agreementDto: AgreementEventDto): Promise<void> {
+    async updateConsumer(agreementEventDto: AgreementEventDto): Promise<void> {
       logger.info(
-        `Retrieving detail for agreement with id: ${agreementDto.agreementId} and eventId ${agreementDto.eventId}`
+        `Retrieving detail for agreement with id: ${agreementEventDto.agreementId} and eventId ${agreementEventDto.eventId}`
       );
 
       // Get detail from interop agreement already converted to consumer_eservice entity
       const detailAgreement = await interopClientService.getConsumerEservice(
-        agreementDto.agreementId,
-        agreementDto.eventId
+        agreementEventDto.agreementId,
+        agreementEventDto.eventId
       );
 
       logger.info(
         `Retrieved detail for agreement with id: ${detailAgreement.agreementId} with state ${detailAgreement.state}`
       );
 
-      // Check if on signalhub consumer_eservice is present on db
+      /** Check on DB if eservice is already present */
       // eslint-disable-next-line @typescript-eslint/no-unused-vars, functional/no-let
       let entity =
         await consumerEserviceRepositoryInstance.findByEserviceIdAndConsumerIdAndDescriptorId(
@@ -52,15 +54,22 @@ export function consumerServiceBuilder(
         entity.state = detailAgreement.state;
       }
 
-      // if(detailAgreement.state === "ACTIVE")
+      if (detailAgreement.state === "ACTIVE") {
+        await producerService.checkAndUpdate(
+          detailAgreement.eserviceId,
+          detailAgreement.producerId,
+          detailAgreement.descriptorId,
+          detailAgreement.eventId
+        );
+      }
 
       // Update state of agreement on DB
-      // consumerEserviceRepositoryInstance.updateConsumerEservice(
-      //   entity.eserviceId,
-      //   entity.producerId,
-      //   entity.descriptorId,
-      //   consumerEserviceEntity.state
-      // );
+      await consumerEserviceRepositoryInstance.updateConsumerEservice(
+        entity.eserviceId,
+        entity.producerId,
+        entity.descriptorId,
+        detailAgreement.state
+      );
     },
   };
 }

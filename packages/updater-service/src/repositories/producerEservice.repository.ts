@@ -69,8 +69,8 @@ export const producerEserviceRepository = (
   ): Promise<number | null> {
     try {
       return (await db.oneOrNone(
-        "UPDATE eservice SET state = $3 WHERE eservice.eservice_id = $1 AND eservice.descriptor_id = $2",
-        [eserviceId, descriptorId, state]
+        "UPDATE eservice SET state = $1, event_id = $2 WHERE eservice.eservice_id = $3 AND eservice.descriptor_id = $4",
+        [state, eventId, eserviceId, descriptorId]
       )) as number;
     } catch (error) {
       throw genericInternalError(`Error updateEservice:" ${error} `);

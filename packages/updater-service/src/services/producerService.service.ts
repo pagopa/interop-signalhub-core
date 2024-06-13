@@ -12,13 +12,13 @@ export function producerServiceBuilder(
   const producerEserviceRepositoryInstance = producerEserviceRepository(db);
 
   return {
-    async updateEservice(eServiceEvent: EserviceEventDto): Promise<unknown> {
+    async updateEservice(eServiceEvent: EserviceEventDto): Promise<void> {
       logger.info(
-        `Retrieving E-service from Event with id: ${eServiceEvent.eserviceId}:: eventId: ${eServiceEvent.eventId}`
+        `Retrieving E-service from Event with id: ${eServiceEvent.eServiceId}:: eventId: ${eServiceEvent.eventId}`
       );
 
       const eService = await interopClientService.getEservice(
-        eServiceEvent.eserviceId
+        eServiceEvent.eServiceId
       );
 
       logger.info(`Retrieved E-service with eServiceId: ${eService.id}" `);
@@ -69,7 +69,7 @@ export function producerServiceBuilder(
       eServiceId: string,
       producerId: string,
       descriptorId: string,
-      _eventId: number
+      eventId: number
     ): Promise<void> {
       logger.info(`Check and update Eservice with EserviceId:  ${eServiceId} `);
 
@@ -89,12 +89,20 @@ export function producerServiceBuilder(
         `Eservice with eserviceId: ${eServiceId} doesn't exist, creating new one`
       );
 
-      // await producerEserviceRepositoryInstance.insertEservice(
-      //   eServiceId,
-      //   producerId,
-      //   descriptorId,
-      //   eventId
-      // );
+      /** If not exist we create an object as EserviceEventDto */
+
+      const eServiceEvent: EserviceEventDto = {
+        eServiceId,
+        descriptorId,
+        eventId,
+        eventType: "",
+        objectType: "",
+        objectId: undefined,
+      };
+
+      await this.updateEservice(eServiceEvent);
     },
   };
 }
+
+export type ProducerService = ReturnType<typeof producerServiceBuilder>;

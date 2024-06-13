@@ -44,6 +44,6 @@ export interface AgreementEventDto extends Event {
 }
 
 export interface EserviceEventDto extends Event {
-  eserviceId: string;
+  eServiceId: string;
   descriptorId: string;
 }
