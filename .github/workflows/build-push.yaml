@@ -49,9 +49,11 @@ jobs:
         with:
           images: ${{ steps.login-ecr.outputs.registry }}/signalhub-be-${{ matrix.image_name }}
           flavor: |
-            latest=true
+            latest=false
             prefix=
             suffix=
+          tags: |
+            type=raw,value=1.x-latest
 
       - name: (tag) Docker metadata
         id: meta_tag
