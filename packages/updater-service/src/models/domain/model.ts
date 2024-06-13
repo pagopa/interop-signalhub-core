@@ -9,6 +9,17 @@ export const TracingBatchEntity = z.object({
   tmst_created: z.string(),
 });
 
+export const ProducerEserviceEntity = z.object({
+  eventId: z.number(),
+  eserviceId: z.string(),
+  producerId: z.string(),
+  agreementId: z.string(),
+  descriptorId: z.string(),
+  state: z.string(),
+  tmstInsert: z.string(),
+  tmstLastEdit: z.string(),
+});
+
 export const ConsumerEserviceEntity = z.object({
   eventId: z.number(),
   eserviceId: z.string(),
@@ -18,6 +29,7 @@ export const ConsumerEserviceEntity = z.object({
   state: z.string(),
 });
 
+export type ProducerEserviceEntity = z.infer<typeof ProducerEserviceEntity>;
 export type ConsumerEserviceEntity = z.infer<typeof ConsumerEserviceEntity>;
 export type TracingBatchEntity = z.infer<typeof TracingBatchEntity>;
 
