@@ -2,16 +2,18 @@ import { Logger, genericInternalError } from "signalhub-commons";
 import {
   getAgreement,
   getAgreementsEventsFromId,
+  Event,
 } from "signalhub-interop-client";
 import { ConsumerEserviceEntity } from "../models/domain/model.js";
 import { toConsumerEservice } from "../models/domain/toConsumerEservice.js";
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function interopClientServiceBuilder(
   voucher: string,
   loggerInstance: Logger
 ) {
   return {
-    async getAgreementsEvents(lastEventId: number) {
+    async getAgreementsEvents(lastEventId: number): Promise<Event[]> {
       try {
         loggerInstance.info(`Retrieving Agremeent events from ${lastEventId}`);
         const response = await getAgreementsEventsFromId(voucher, lastEventId);
@@ -36,8 +38,7 @@ export function interopClientServiceBuilder(
     ): Promise<ConsumerEserviceEntity> {
       const { data: agreement } = await getAgreement(voucher, agreementId);
 
-      const consumerEserviceEntity = toConsumerEservice(agreement, eventId);
-      return consumerEserviceEntity;
+      return toConsumerEservice(agreement, eventId);
     },
   };
 }

@@ -11,34 +11,36 @@ const loggerInstance = logger({
   serviceName: "updater-service",
 });
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const updaterBuilder = async (
   tracingBatchService: TracingBatchService,
   interopClientService: InteropClientService,
   consumerService: ConsumerService
 ) => {
-  const updateAgreementFromLastEventId = async (lastEventId: number) => {
+  const updateAgreementFromLastEventId = async (
+    lastEventId: number
+  ): Promise<void> => {
     const events = await interopClientService.getAgreementsEvents(lastEventId);
 
-    updateEvents(events, config.applicationType);
+    await updateEvents(events, config.applicationType);
   };
 
   const updateEvents = async (
     events: Event[],
     applicationType: ApplicationType
-  ) => {
+  ): Promise<void> => {
     for (const event of events) {
-      console.log("Event:", event);
       if (applicationType === "AGREEMENT") {
-        //Update Consumer
-        consumerService.updateConsumer(event as AgreementDto);
+        // Update Consumer
+        await consumerService.updateConsumer(event as AgreementDto);
       } else {
-        //TODO
+        // TODO
       }
     }
   };
 
   return {
-    async executeTask() {
+    async executeTask(): Promise<void> {
       loggerInstance.info(
         "Scheduler updater started at " + new Date().toString()
       );
@@ -48,7 +50,7 @@ export const updaterBuilder = async (
           "AGREEMENT"
         );
 
-      updateAgreementFromLastEventId(lastEventId);
+      await updateAgreementFromLastEventId(lastEventId);
     },
   };
 };

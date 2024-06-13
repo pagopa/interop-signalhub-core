@@ -10,4 +10,4 @@ const task = await updaterBuilder(
   consumerService
 );
 
-task.executeTask();
+await task.executeTask();
