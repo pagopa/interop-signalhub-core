@@ -57,7 +57,7 @@ export type SignalResponse = z.infer<typeof SignalSchema>;
 export const SignalPushResponse = SignalSchema.pick({ signalId: true });
 export const SignalPullResponse = z.object({
   signals: z.array(SignalResponse),
-  lastSignalId: z.number(),
+  lastSignalId: z.number().nullish(),
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -38,17 +38,19 @@ export const pullRoutes = (
       loggerInstance.info(
         `pullController get signals: signalId ${signalId}, size: ${size}`
       );
-      const { signals, lastSignalId } = await storeService.pullSignal(
-        eserviceId,
-        signalId,
-        size,
-        loggerInstance
-      );
+      const { signals, nextSignalId, lastSignalId } =
+        await storeService.pullSignal(
+          eserviceId,
+          signalId,
+          size,
+          loggerInstance
+        );
+      const status = nextSignalId ? 206 : 200;
       return {
-        status: 200,
+        status,
         body: {
           signals,
-          lastSignalId: lastSignalId as number,
+          lastSignalId,
         },
       };
     } catch (error) {

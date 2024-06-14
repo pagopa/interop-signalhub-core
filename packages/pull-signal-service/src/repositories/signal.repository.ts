@@ -8,7 +8,7 @@ export interface ISignalRepository {
   ) => Promise<SignalRecord[] | null>;
   getNextSignalId: (
     eserviceId: string,
-    signalId: number
+    signalId: number | null
   ) => Promise<number | null>;
 }
 
@@ -29,12 +29,18 @@ export const signalRepository = (db: DB): ISignalRepository => ({
   },
   async getNextSignalId(
     eserviceId: string,
-    signalId: number
+    lastReadSignalId: number | null
   ): Promise<number | null> {
+    if (!lastReadSignalId) {
+      return null;
+    }
     try {
       return await db.oneOrNone<number>(
-        "SELECT signal_id FROM signal WHERE eservice_id = $1 AND signal_id > $2 limit 1",
-        [eserviceId, signalId]
+        "SELECT signal_id FROM signal WHERE eservice_id = $1 AND signal_id > $2 order by signal_id asc limit 1",
+        [eserviceId, lastReadSignalId],
+        // leave this rule disabled
+        // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+        (item) => item && item.signal_id
       );
     } catch (error) {
       throw genericInternalError(`Error get: ${error}`);

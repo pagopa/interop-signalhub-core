@@ -66,9 +66,9 @@ paths:
                         - objectType
                   lastSignalId:
                     type: number
+                    nullable: true
                 required:
                   - signals
-                  - lastSignalId
         '206':
           description: '206'
           content:
@@ -104,9 +104,9 @@ paths:
                         - objectType
                   lastSignalId:
                     type: number
+                    nullable: true
                 required:
                   - signals
-                  - lastSignalId
         '400':
           description: '400'
           content:
