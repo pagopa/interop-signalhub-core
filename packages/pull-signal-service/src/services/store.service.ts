@@ -20,11 +20,10 @@ export function storeServiceBuilder(db: DB) {
         signalId,
         limit
       );
-      const nextSignalId = signalId + limit;
-      const lastSignalId = await signalRepository(db).getNextSignalId(
-        eserviceId,
-        nextSignalId
-      );
+      const nextSignalId = Number(signalId) + Number(limit);
+      const { signal_id: lastSignalId } = await signalRepository(
+        db
+      ).getNextSignalId(eserviceId, nextSignalId);
       return { signals, lastSignalId };
     },
     async canConsumerRecoverSignal(

@@ -10,7 +10,8 @@ export interface ISignalRepository {
   getNextSignalId: (
     eserviceId: string,
     signalId: number
-  ) => Promise<number | null>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ) => Promise<any | null>;
 }
 
 export const signalRepository = (db: DB): ISignalRepository => ({
@@ -32,7 +33,8 @@ export const signalRepository = (db: DB): ISignalRepository => ({
   async getNextSignalId(
     eserviceId: string,
     signalId: number
-  ): Promise<number | null> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ): Promise<any | null> {
     try {
       return await db.oneOrNone(
         "SELECT signal_id FROM signal WHERE eservice_id = $1 AND signal_id > $2 limit 1",
