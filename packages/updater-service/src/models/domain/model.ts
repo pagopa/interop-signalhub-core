@@ -1,4 +1,3 @@
-import { Event } from "signalhub-interop-client";
 import { z } from "zod";
 
 export const TracingBatchEntity = z.object({
@@ -38,12 +37,17 @@ export enum TracingBatchStateEnum {
   ENDED_WITH_ERROR = "ENDED_WITH_ERROR",
 }
 
-export interface AgreementEventDto extends Event {
-  agreementId: string;
-  descriptorId: string;
+interface EventDto {
+  eventId: number;
+  objectType: string;
+  eventType: string;
 }
 
-export interface EserviceEventDto extends Event {
+export interface AgreementEventDto extends EventDto {
+  agreementId: string;
+}
+
+export interface EserviceEventDto extends EventDto {
   eServiceId: string;
   descriptorId: string;
 }

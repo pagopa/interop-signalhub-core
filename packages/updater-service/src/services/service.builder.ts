@@ -10,12 +10,16 @@ import {
   interopClientServiceBuilder,
 } from "./interopClient.service.js";
 import { ConsumerService, consumerServiceBuilder } from "./consumer.service.js";
-import { producerServiceBuilder } from "./producerService.service.js";
+import {
+  ProducerService,
+  producerServiceBuilder,
+} from "./producerService.service.js";
 
 export async function serviceBuilder(): Promise<{
   tracingBatchService: TracingBatchService;
   interopClientService: InteropClientService;
   consumerService: ConsumerService;
+  producerService: ProducerService;
 }> {
   const loggerInstance = logger({
     serviceName: "updater-service",
@@ -52,5 +56,10 @@ export async function serviceBuilder(): Promise<{
     loggerInstance
   );
 
-  return { tracingBatchService, interopClientService, consumerService };
+  return {
+    tracingBatchService,
+    interopClientService,
+    consumerService,
+    producerService,
+  };
 }

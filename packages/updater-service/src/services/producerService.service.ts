@@ -38,7 +38,7 @@ export function producerServiceBuilder(
         await producerEserviceRepositoryInstance.findByEserviceIdAndProducerIdAndDescriptorId(
           eService.id, // get from GetEservice
           eService.producer.id, // get from GetEservice
-          eServiceEvent.descriptorId // get from getEserviceDescriptor
+          eServiceEvent.descriptorId // get from event Eservice
         );
 
       if (!entity) {
@@ -97,7 +97,6 @@ export function producerServiceBuilder(
         eventId,
         eventType: "",
         objectType: "",
-        objectId: undefined,
       };
 
       await this.updateEservice(eServiceEvent);

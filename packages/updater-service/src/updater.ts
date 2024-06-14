@@ -5,7 +5,9 @@ import { TracingBatchService } from "./services/tracingBatch.service.js";
 import { InteropClientService } from "./services/interopClient.service.js";
 import { ApplicationType, config } from "./config/env.js";
 import { ConsumerService } from "./services/consumer.service.js";
-import { AgreementEventDto } from "./models/domain/model.js";
+import { ProducerService } from "./services/producerService.service.js";
+import { toAgreementEvent } from "./models/domain/toAgreementEvent.js";
+import { toEserviceEvent } from "./models/domain/toEserviceEvent.js";
 
 const loggerInstance = logger({
   serviceName: "updater-service",
@@ -15,7 +17,8 @@ const loggerInstance = logger({
 export const updaterBuilder = async (
   tracingBatchService: TracingBatchService,
   interopClientService: InteropClientService,
-  consumerService: ConsumerService
+  consumerService: ConsumerService,
+  producerService: ProducerService
 ) => {
   const updateAgreementFromLastEventId = async (
     lastEventId: number
@@ -30,11 +33,18 @@ export const updaterBuilder = async (
     applicationType: ApplicationType
   ): Promise<void> => {
     for (const event of events) {
-      if (applicationType === "AGREEMENT") {
-        // Update Consumer
-        await consumerService.updateConsumer(event as AgreementEventDto);
-      } else {
-        // TODO
+      try {
+        if (applicationType === "AGREEMENT") {
+          // Update Consumer
+
+          const agreementEvent = toAgreementEvent(event);
+          await consumerService.updateConsumer(agreementEvent);
+        } else {
+          const eServiceEvent = toEserviceEvent(event);
+          await producerService.updateEservice(eServiceEvent);
+        }
+      } catch (error) {
+        console.error(error);
       }
     }
   };
@@ -47,7 +57,7 @@ export const updaterBuilder = async (
 
       const lastEventId =
         await tracingBatchService.getLastEventIdByTracingBatchAndType(
-          "AGREEMENT"
+          config.applicationType
         );
 
       await updateAgreementFromLastEventId(lastEventId);

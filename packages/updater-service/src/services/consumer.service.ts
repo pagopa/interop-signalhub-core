@@ -22,6 +22,7 @@ export function consumerServiceBuilder(
 
   return {
     async updateConsumer(agreementEventDto: AgreementEventDto): Promise<void> {
+      console.log("AGREEMENT", agreementEventDto);
       logger.info(
         `Retrieving detail for agreement with id: ${agreementEventDto.agreementId} and eventId ${agreementEventDto.eventId}`
       );
