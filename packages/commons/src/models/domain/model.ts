@@ -60,13 +60,8 @@ export const SignalPullResponse = z.object({
   lastSignalId: z.number(),
 });
 
-export const SignalMessage = z.object({
+export const SignalMessage = SignalSchema.extend({
   correlationId: z.string(),
-  signalType: SignalType,
-  objectId: z.string(),
-  eserviceId: z.string(),
-  signalId: z.number(),
-  objectType: z.string(),
 });
 
 export const SignalMessageSchema = {
