@@ -2,20 +2,18 @@ import express, { Express } from "express";
 import { initServer, createExpressEndpoints } from "@ts-rest/express";
 import { authenticationMiddleware, contextMiddleware } from "signalhub-commons";
 import { contract } from "./contract/contract.js";
-import { pushRoutes } from "./routes/push.route.js";
+import { pullRoutes } from "./routes/pull.route.js";
 import { setupSwaggerRoute } from "./routes/swagger.route.js";
 import { validationErrorHandler } from "./validation/validation.js";
 import { serviceBuilder } from "./services/service.builder.js";
 
-const serviceName = "push-signal";
+const serviceName = "pull-signal";
 
 // services
-const { domainService, storeService, quequeService, interopClientService } =
-  serviceBuilder();
+const { storeService, interopClientService } = serviceBuilder();
 
 // express
 const app: Express = express();
-app.use(express.json());
 app.use(contextMiddleware(serviceName));
 app.use(authenticationMiddleware);
 setupSwaggerRoute(app);
@@ -26,7 +24,7 @@ app.disable("x-powered-by");
 const tsServer = initServer();
 const routes = tsServer.router(
   contract,
-  pushRoutes(domainService, storeService, quequeService, interopClientService)
+  pullRoutes(storeService, interopClientService)
 );
 
 createExpressEndpoints(contract, routes, app, {

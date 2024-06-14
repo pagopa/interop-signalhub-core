@@ -1,54 +1,56 @@
 import { AppRouteImplementation, initServer } from "@ts-rest/express";
-import { logger, Problem, SignalPayload } from "signalhub-commons";
+import { logger, Problem, SignalResponse } from "signalhub-commons";
 import { match } from "ts-pattern";
 import { contract } from "../contract/contract.js";
 import { StoreService } from "../services/store.service.js";
 import { makeApiProblem } from "../model/domain/errors.js";
-import { QuequeService } from "../services/queque.service.js";
-import { DomainService } from "../services/domain.service.js";
-import { producerAuthorization } from "../authorization/authorization.js";
 import { InteropClientService } from "../services/interopClient.service.js";
+import { consumerAuthorization } from "../authorization/authorization.js";
 
 const s = initServer();
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const pushRoutes = (
-  domainService: DomainService,
+export const pullRoutes = (
   storeService: StoreService,
-  quequeService: QuequeService,
   interopClientService: InteropClientService
 ) => {
-  const pushSignal: AppRouteImplementation<
-    typeof contract.pushSignal
-  > = async ({ body, req }) => {
+  const pullSignal: AppRouteImplementation<
+    typeof contract.pullSignal
+  > = async ({ req }) => {
     const loggerInstance = logger({
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
     });
-    loggerInstance.info("pushController BEGIN");
+    loggerInstance.info(
+      `pullController BEGIN with params: ${JSON.stringify(
+        req.params
+      )}, query: ${JSON.stringify(req.query)}`
+    );
     try {
-      const { signalId, eserviceId } = body;
-      await producerAuthorization(
+      const { eserviceId } = req.params;
+      const { purposeId } = req.ctx.sessionData;
+      const { signalId, size } = req.query;
+      await consumerAuthorization(
         storeService,
         interopClientService,
         loggerInstance
-      ).verify(req.ctx.sessionData.purposeId, eserviceId);
-
-      await storeService.verifySignalDuplicated(
-        signalId,
+      ).verify(purposeId, eserviceId);
+      loggerInstance.info(
+        `pullController get signals: signalId ${signalId}, size: ${size}`
+      );
+      // size
+      // count signals for http status (200 vs 206)
+      const { signals, lastSignalId } = await storeService.pullSignal(
         eserviceId,
+        signalId,
+        size,
         loggerInstance
       );
-      const message = domainService.signalToMessage(
-        body as SignalPayload,
-        req.ctx.correlationId,
-        loggerInstance
-      );
-      await quequeService.send(message, loggerInstance);
       return {
         status: 200,
         body: {
-          signalId,
+          signals: signals as SignalResponse[],
+          lastSignalId: lastSignalId as number,
         },
       };
     } catch (error) {
@@ -56,8 +58,6 @@ export const pushRoutes = (
         error,
         (err) =>
           match(err.code)
-            .with("signalDuplicate", () => 400)
-            .with("signalNotSended", () => 400)
             .with("unauthorizedError", () => 401)
             .with("operationForbidden", () => 403)
             .with("genericError", () => 500)
@@ -65,13 +65,7 @@ export const pushRoutes = (
         loggerInstance,
         req.ctx.correlationId
       );
-      // eslint-disable-next-line sonarjs/no-small-switch
       switch (problem.status) {
-        case 400:
-          return {
-            status: 400,
-            body: problem,
-          };
         case 401:
           return {
             status: 401,
@@ -92,6 +86,6 @@ export const pushRoutes = (
   };
 
   return s.router(contract, {
-    pushSignal,
+    pullSignal,
   });
 };

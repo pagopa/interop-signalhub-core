@@ -21,8 +21,6 @@ export const contextMiddleware =
       correlationId: req.ctx.correlationId,
     });
     loggerInstance.info("Context init");
-    loggerInstance.info(
-      `request ${req.method} ${req.url} ${JSON.stringify(req.body)}`
-    );
+    loggerInstance.info(`request ${req.method} ${req.url}`);
     next();
   };

@@ -1,44 +1,35 @@
 openapi: 3.0.2
 paths:
-  /push-signal:
-    post:
-      description: Insert a signal
-      summary: Push Signal
+  /pull-signal/{eserviceId}:
+    get:
+      description: Retrieve a list o signals on a specific eservice starting from signalId
+      summary: Get a list of signals
       tags: []
       parameters:
+        - name: eserviceId
+          in: path
+          required: true
+          schema:
+            type: string
         - name: authorization
           in: header
           required: true
           schema:
             type: string
-      requestBody:
-        description: Body
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                signalType:
-                  type: string
-                  enum:
-                    - CREATE
-                    - UPDATE
-                    - DELETE
-                    - SEEDUPDATE
-                objectId:
-                  type: string
-                eserviceId:
-                  type: string
-                signalId:
-                  type: number
-                objectType:
-                  type: string
-              required:
-                - signalType
-                - objectId
-                - eserviceId
-                - signalId
-                - objectType
+        - name: signalId
+          in: query
+          schema:
+            default: 0
+            type: number
+            minimum: 0
+            nullable: true
+        - name: size
+          in: query
+          schema:
+            default: 10
+            type: number
+            minimum: 1
+            maximum: 100
       responses:
         '200':
           description: '200'
@@ -47,10 +38,75 @@ paths:
               schema:
                 type: object
                 properties:
-                  signalId:
+                  signals:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        signalType:
+                          type: string
+                          enum:
+                            - CREATE
+                            - UPDATE
+                            - DELETE
+                            - SEEDUPDATE
+                        objectId:
+                          type: string
+                        eserviceId:
+                          type: string
+                        signalId:
+                          type: number
+                        objectType:
+                          type: string
+                      required:
+                        - signalType
+                        - objectId
+                        - eserviceId
+                        - signalId
+                        - objectType
+                  lastSignalId:
                     type: number
                 required:
-                  - signalId
+                  - signals
+                  - lastSignalId
+        '206':
+          description: '206'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  signals:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        signalType:
+                          type: string
+                          enum:
+                            - CREATE
+                            - UPDATE
+                            - DELETE
+                            - SEEDUPDATE
+                        objectId:
+                          type: string
+                        eserviceId:
+                          type: string
+                        signalId:
+                          type: number
+                        objectType:
+                          type: string
+                      required:
+                        - signalType
+                        - objectId
+                        - eserviceId
+                        - signalId
+                        - objectType
+                  lastSignalId:
+                    type: number
+                required:
+                  - signals
+                  - lastSignalId
         '400':
           description: '400'
           content:
@@ -204,5 +260,5 @@ paths:
                   - errors
                   - toString
 info:
-  title: Push signal Service API
+  title: Pull signal Service API
   version: '1.0'

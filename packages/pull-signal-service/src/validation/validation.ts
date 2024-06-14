@@ -4,14 +4,14 @@ import { ServerInferRequest } from "@ts-rest/core";
 import { requestValidationError } from "../model/domain/errors.js";
 import { contract } from "../contract/contract.js";
 
-type PushRequest = ServerInferRequest<typeof contract.pushSignal>;
+type PullRequest = ServerInferRequest<typeof contract.pullSignal>;
 
 export const validationErrorHandler =
   () =>
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   async (
     err: RequestValidationError,
-    _req: PushRequest,
+    _req: PullRequest,
     res: Response,
     _next: NextFunction
   ) => {

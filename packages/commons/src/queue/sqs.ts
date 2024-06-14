@@ -182,7 +182,6 @@ export const deleteBatchMessages = async (
   }
 
   if (Messages.length === 1) {
-    // console.log(Messages[0].Body);
     await sqsClient.send(
       new DeleteMessageCommand({
         QueueUrl: queueUrl,
