@@ -60,6 +60,9 @@ export const SignalPullResponse = z.object({
   lastSignalId: z.number(),
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type SignalRecord = any;
+
 export const SignalMessage = SignalSchema.extend({
   correlationId: z.string(),
 });

@@ -1,5 +1,5 @@
 import { AppRouteImplementation, initServer } from "@ts-rest/express";
-import { logger, Problem, SignalResponse } from "signalhub-commons";
+import { logger, Problem } from "signalhub-commons";
 import { match } from "ts-pattern";
 import { contract } from "../contract/contract.js";
 import { StoreService } from "../services/store.service.js";
@@ -47,7 +47,7 @@ export const pullRoutes = (
       return {
         status: 200,
         body: {
-          signals: signals as SignalResponse[],
+          signals,
           lastSignalId: lastSignalId as number,
         },
       };

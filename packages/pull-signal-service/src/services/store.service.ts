@@ -1,6 +1,13 @@
-import { DB, Logger, operationForbidden } from "signalhub-commons";
+import {
+  DB,
+  Logger,
+  SignalResponse,
+  operationForbidden,
+} from "signalhub-commons";
 import { consumerEserviceRepository } from "../repositories/consumerEservice.repository.js";
 import { signalRepository } from "../repositories/signal.repository.js";
+import { toSignalResponse } from "../model/domain/toSignalResponse.js";
+import { add } from "./utils.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function storeServiceBuilder(db: DB) {
@@ -10,20 +17,23 @@ export function storeServiceBuilder(db: DB) {
       signalId: number,
       limit: number,
       logger: Logger
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ): Promise<{ signals: any[] | null; lastSignalId: number | null }> {
+    ): Promise<{ signals: SignalResponse[]; lastSignalId: number | null }> {
       logger.debug(
         `StoreService::pullSignal eserviceId: ${eserviceId}, signalId:   ${signalId}, limit: ${limit}`
       );
-      const signals = await signalRepository(db).getByEservice(
+      const records = await signalRepository(db).getByEservice(
         eserviceId,
         signalId,
         limit
       );
-      const nextSignalId = Number(signalId) + Number(limit);
-      const { signal_id: lastSignalId } = await signalRepository(
-        db
-      ).getNextSignalId(eserviceId, nextSignalId);
+      const signals: SignalResponse[] = (records || []).map((record) =>
+        toSignalResponse(record)
+      );
+      const nextSignalId = add(signalId, limit);
+      const lastSignalId = await signalRepository(db).getNextSignalId(
+        eserviceId,
+        nextSignalId
+      );
       return { signals, lastSignalId };
     },
     async canConsumerRecoverSignal(
