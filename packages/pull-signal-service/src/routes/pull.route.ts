@@ -38,8 +38,6 @@ export const pullRoutes = (
       loggerInstance.info(
         `pullController get signals: signalId ${signalId}, size: ${size}`
       );
-      // size
-      // count signals for http status (200 vs 206)
       const { signals, lastSignalId } = await storeService.pullSignal(
         eserviceId,
         signalId,
