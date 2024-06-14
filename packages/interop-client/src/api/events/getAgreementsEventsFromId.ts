@@ -5,12 +5,13 @@ import { Events } from "../../index.js";
 
 export const getAgreementsEventsFromId = async (
   voucher: string,
-  lastEventId: number
+  lastEventId: number,
+  limit: number
 ): AxiosPromise<Events> =>
   await apiClient.events.getAgreementsEventsFromId(
     {
       lastEventId,
-      limit: 500,
+      limit,
     },
     getAuthorizationHeader(voucher)
   );

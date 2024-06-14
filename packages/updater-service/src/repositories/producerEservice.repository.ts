@@ -1,13 +1,14 @@
 /* eslint-disable functional/no-method-signature */
 import { DB, genericInternalError } from "signalhub-commons";
 import { ProducerEserviceEntity } from "../models/domain/model.js";
+import { toProducerEserviceEntity } from "../models/domain/toProducerEserviceEntity.js";
 
 export interface IProducerServiceRepository {
   findByEserviceIdAndProducerIdAndDescriptorId(
     eserviceId: string,
     producerId: string,
     descriptorId: string
-  ): Promise<ProducerEserviceEntity>;
+  ): Promise<ProducerEserviceEntity | null>;
 
   insertEservice(
     eserviceId: string,
@@ -31,12 +32,18 @@ export const producerEserviceRepository = (
     eserviceId: string,
     producerId: string,
     descriptorId: string
-  ): Promise<ProducerEserviceEntity> {
+  ): Promise<ProducerEserviceEntity | null> {
     try {
-      return (await db.oneOrNone(
-        "SELECT eservice FROM  eservice WHERE eservice.eservice_id = $1 AND eservice.producer_id = $2 AND eservice.descriptor_id = $3",
+      const result = await db.oneOrNone(
+        "SELECT * FROM  eservice WHERE eservice.eservice_id = $1 AND eservice.producer_id = $2 AND eservice.descriptor_id = $3",
         [eserviceId, producerId, descriptorId]
-      )) as ProducerEserviceEntity;
+      );
+
+      if (!result) {
+        return null;
+      }
+
+      return toProducerEserviceEntity(result);
     } catch (error) {
       throw genericInternalError(
         `Error findByEserviceIdAndProducerIdAndDescriptorId:" ${error} `

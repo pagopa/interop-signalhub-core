@@ -56,7 +56,9 @@ export function producerServiceBuilder(
         return;
       }
 
-      logger.info(`Eservice already exist with state ${entity.state}`);
+      logger.info(
+        `Eservice  with ${entity.eserviceId} already exist with state ${entity.state}`
+      );
       await producerEserviceRepositoryInstance.updateEservice(
         entity.eserviceId,
         entity.descriptorId,
@@ -71,7 +73,9 @@ export function producerServiceBuilder(
       descriptorId: string,
       eventId: number
     ): Promise<void> {
-      logger.info(`Check and update Eservice with EserviceId:  ${eServiceId} `);
+      logger.info(
+        `starting from agreement check if Eservice is already present on DB with eServiceId: ${eServiceId} `
+      );
 
       const entity =
         await producerEserviceRepositoryInstance.findByEserviceIdAndProducerIdAndDescriptorId(
@@ -81,7 +85,9 @@ export function producerServiceBuilder(
         );
 
       if (entity) {
-        logger.info(`Eservice already exist with state ${entity.state}`);
+        logger.info(
+          `Eservice with eServiceId: ${entity.eserviceId} already exist on Eservice table`
+        );
         return;
       }
 

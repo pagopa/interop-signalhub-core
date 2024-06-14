@@ -1,4 +1,5 @@
 import { Logger, genericInternalError } from "signalhub-commons";
+import { AxiosError } from "axios";
 import {
   getAgreement,
   getAgreementsEventsFromId,
@@ -10,6 +11,7 @@ import {
 } from "signalhub-interop-client";
 import { ConsumerEserviceEntity } from "../models/domain/model.js";
 import { toConsumerEservice } from "../models/domain/toConsumerEservice.js";
+import { config } from "../config/env.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function interopClientServiceBuilder(
@@ -19,8 +21,14 @@ export function interopClientServiceBuilder(
   return {
     async getAgreementsEvents(lastEventId: number): Promise<Event[]> {
       try {
-        loggerInstance.info(`Retrieving Agremeent events from ${lastEventId}`);
-        const response = await getAgreementsEventsFromId(voucher, lastEventId);
+        loggerInstance.info(
+          `Retrieving Agremeent events from eventId: ${lastEventId}`
+        );
+        const response = await getAgreementsEventsFromId(
+          voucher,
+          lastEventId,
+          config.eventsLimit as number
+        );
         const events = response.data.events;
 
         if (!events) {
@@ -39,14 +47,24 @@ export function interopClientServiceBuilder(
     async getConsumerEservice(
       agreementId: string,
       eventId: number
-    ): Promise<ConsumerEserviceEntity> {
-      const { data: agreement } = await getAgreement(voucher, agreementId);
+    ): Promise<ConsumerEserviceEntity | null> {
+      try {
+        const { data: agreement } = await getAgreement(voucher, agreementId);
+        return toConsumerEservice(agreement, eventId);
+      } catch (error) {
+        if (error instanceof AxiosError && error.response?.status === 404) {
+          loggerInstance.info(
+            `Agreement with agrementId ${agreementId} not found`
+          );
+          return null;
+        }
 
-      return toConsumerEservice(agreement, eventId);
+        throw genericInternalError("Generic internal error on getAgreement");
+      }
     },
 
     async getEservice(eserviceId: string): Promise<EService> {
-      const { data: eservice } = await getEservice(eserviceId, voucher);
+      const { data: eservice } = await getEservice(voucher, eserviceId);
       return eservice;
     },
 
@@ -55,9 +73,9 @@ export function interopClientServiceBuilder(
       descriptorId: string
     ): Promise<EServiceDescriptor> {
       const { data: eServiceDetail } = await getEServiceDescriptor(
+        voucher,
         eServiceId,
-        descriptorId,
-        voucher
+        descriptorId
       );
 
       return eServiceDetail;

@@ -3,10 +3,12 @@ import { z } from "zod";
 
 const UpdaterConfig = z
   .object({
-    APPLICATION_TYPE: z.enum(["AGREEMENT", "ESERVICES"]),
+    APPLICATION_TYPE: z.enum(["AGREEMENT", "ESERVICE"]),
     ATTEMPT_EVENT: z.coerce.number(),
+    EVENTS_LIMIT: z.coerce.number().default(50).optional(),
   })
   .transform((c) => ({
+    eventsLimit: c.EVENTS_LIMIT,
     applicationType: c.APPLICATION_TYPE,
     attemptEvent: c.ATTEMPT_EVENT,
   }));

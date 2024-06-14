@@ -9,6 +9,15 @@ export interface IConsumerEserviceRepository {
     descriptorId: string
   ): Promise<ConsumerEserviceEntity | null>;
 
+  insertConsumerEservice(
+    agreementId: string,
+    eserviceId: string,
+    consumerId: string,
+    descriptorId: string,
+    eventId: number,
+    state: string
+  ): Promise<number | null>;
+
   updateConsumerEservice(
     eserviceId: string,
     consumerId: string,
@@ -31,14 +40,29 @@ export const consumerEserviceRepository = (
     );
   },
 
+  // eslint-disable-next-line max-params
+  async insertConsumerEservice(
+    agreementId: string,
+    eserviceId: string,
+    consumerId: string,
+    descriptorId: string,
+    eventId: number,
+    state: string
+  ): Promise<number | null> {
+    return await db.oneOrNone(
+      "INSERT INTO CONSUMER_ESERVICE(agreement_id,eservice_id, consumer_id, descriptor_id, event_id,state) VALUES($1, $2, $3, $4, $5,$6) RETURNING eservice_id",
+      [agreementId, eserviceId, consumerId, descriptorId, eventId, state]
+    );
+  },
+
   async updateConsumerEservice(
     eserviceId: string,
     consumerId: string,
     descriptorId: string,
     state: string
   ): Promise<number | null> {
-    return await db.none(
-      "update CONSUMER_ESERVICE consumer set consumer.state = $1 where consumer.eservice_id = $2 AND consumer.consumer_id = $3  AND consumer.descriptor_id = $4",
+    return await db.oneOrNone(
+      "update CONSUMER_ESERVICE set state = $1 where eservice_id = $2 AND consumer_id = $3  AND descriptor_id = $4",
       [state, eserviceId, consumerId, descriptorId]
     );
   },
