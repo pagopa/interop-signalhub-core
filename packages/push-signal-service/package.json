@@ -6,7 +6,7 @@
   "main": "dist",
   "scripts": {
     "start": "node --watch --loader ts-node/esm -r 'dotenv-flow/config'  ./src/index.ts",
-    "generate-spec": "mkdir -p interface && node --loader ts-node/esm -r 'dotenv-flow/config' ./src/scripts/generate-interface.ts",
+    "generate-spec": "mkdir -p interface && node --loader ts-node/esm -r 'dotenv-flow/config' ./src/openapi-script/generate-interface.ts",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:autofix": "eslint . --ext .ts,.tsx --fix",
     "build": "tsc",
