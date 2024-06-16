@@ -5,9 +5,11 @@ import {
   interopClientServiceBuilder,
 } from "./interopClient.service.js";
 import { storeServiceBuilder, StoreService } from "./store.service.js";
+import { SignalService, signalServiceBuilder } from "./signal.service.js";
 export function serviceBuilder(): {
   storeService: StoreService;
   interopClientService: InteropClientService;
+  signalService: SignalService;
 } {
   const db: DB = createDbInstance({
     username: config.signalhubStoreDbUsername,
@@ -18,11 +20,12 @@ export function serviceBuilder(): {
     schema: config.signalhubStoreDbSchema,
     useSSL: config.signalhubStoreDbUseSSL,
   });
+  const signalService = signalServiceBuilder(db);
   const storeService = storeServiceBuilder(db);
   const interopClientService = interopClientServiceBuilder();
-
   return {
     storeService,
     interopClientService,
+    signalService,
   };
 }
