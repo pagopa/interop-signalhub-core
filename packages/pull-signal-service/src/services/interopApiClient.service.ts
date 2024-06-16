@@ -1,11 +1,12 @@
 import { getAgreementByPurpose } from "signalhub-interop-client";
+import { Agreement } from "../model/domain/models.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function interopApiClientServiceBuilder() {
   return {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    async getAgreementByPurposeId(purposeId: string) {
-      return await getAgreementByPurpose(purposeId);
+    async getAgreementByPurposeId(purposeId: string): Promise<Agreement> {
+      const { data } = await getAgreementByPurpose(purposeId);
+      return data as unknown as Agreement;
     },
   };
 }

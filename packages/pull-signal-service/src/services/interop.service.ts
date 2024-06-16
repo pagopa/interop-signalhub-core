@@ -21,10 +21,9 @@ export function interopServiceBuilder(
       logger.debug(`InteropService::verifyAuthorization END`);
     },
     async consumerHasValidAgreement(purposeId: string): Promise<Agreement> {
-      const response = await interopApiClient.getAgreementByPurposeId(
+      const agreement = await interopApiClient.getAgreementByPurposeId(
         purposeId
       );
-      const agreement = response.data;
       if (!agreement) {
         throw operationForbidden;
       }
