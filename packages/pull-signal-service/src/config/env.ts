@@ -2,13 +2,11 @@ import { z } from "zod";
 import {
   HTTPServerConfig,
   SignalHubStoreConfig,
-  QuequeConfig,
   AwsConfig,
 } from "signalhub-commons";
 
-const PullServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
-  .and(QuequeConfig)
-  .and(AwsConfig);
+const PullServiceConfig =
+  HTTPServerConfig.and(SignalHubStoreConfig).and(AwsConfig);
 
 export type PullServiceConfig = z.infer<typeof PullServiceConfig>;
 
