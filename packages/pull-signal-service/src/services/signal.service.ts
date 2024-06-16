@@ -5,7 +5,7 @@ import { toSignalResponse } from "../model/domain/toSignalResponse.js";
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function signalServiceBuilder(db: DB) {
   return {
-    async recover(
+    async getSignal(
       eserviceId: string,
       signalId: number,
       limit: number,

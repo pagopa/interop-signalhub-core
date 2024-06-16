@@ -2,17 +2,16 @@ import { AppRouteImplementation, initServer } from "@ts-rest/express";
 import { logger, Problem } from "signalhub-commons";
 import { match } from "ts-pattern";
 import { contract } from "../contract/contract.js";
-import { StoreService } from "../services/store.service.js";
 import { makeApiProblem } from "../model/domain/errors.js";
-import { InteropClientService } from "../services/interopClient.service.js";
-import { consumerAuthorization } from "../authorization/authorization.js";
+import { SignalService } from "../services/signal.service.js";
+import { InteropService } from "../services/interop.service.js";
 
 const s = initServer();
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const pullRoutes = (
-  storeService: StoreService,
-  interopClientService: InteropClientService
+  signalService: SignalService,
+  interopService: InteropService
 ) => {
   const pullSignal: AppRouteImplementation<
     typeof contract.pullSignal
@@ -24,22 +23,23 @@ export const pullRoutes = (
     loggerInstance.info(
       `pullController BEGIN with params: ${JSON.stringify(
         req.params
-      )}, query: ${JSON.stringify(req.query)}`
+      )}, query: ${JSON.stringify(req.query)}, session: ${JSON.stringify(
+        req.ctx.sessionData
+      )}`
     );
     try {
       const { eserviceId } = req.params;
       const { purposeId } = req.ctx.sessionData;
       const { signalId, size } = req.query;
-      await consumerAuthorization(
-        storeService,
-        interopClientService,
+
+      await interopService.verifyAuthorization(
+        purposeId,
+        eserviceId,
         loggerInstance
-      ).verify(purposeId, eserviceId);
-      loggerInstance.info(
-        `pullController get signals: signalId ${signalId}, size: ${size}`
       );
+
       const { signals, nextSignalId, lastSignalId } =
-        await storeService.pullSignal(
+        await signalService.getSignal(
           eserviceId,
           signalId,
           size,
