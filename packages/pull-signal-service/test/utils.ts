@@ -3,7 +3,6 @@ import { afterEach, inject } from "vitest";
 import { signalServiceBuilder } from "../src/services/signal.service";
 import { interopServiceBuilder } from "../src/services/interop.service";
 import { InteropApiClientService } from "../src/services/interopApiClient.service";
-import { AgreementState } from "../src/model/domain/models";
 
 export const { cleanup, postgresDB, sqsClient } = setupTestContainersVitest(
   inject("signalHubStoreConfig"),
@@ -23,7 +22,7 @@ function fakeInteropApiClientServiceBuilder(): InteropApiClientService {
         purposeId: "fake-purpose-id",
         descriptorId: "fake-descriptor-id",
         producerId: "fake-producer-id",
-        state: "ACTIVE" as AgreementState,
+        state: "ACTIVE",
       };
       return Promise.resolve(agreement);
     },
