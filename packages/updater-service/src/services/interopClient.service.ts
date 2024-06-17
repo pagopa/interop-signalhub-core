@@ -12,6 +12,7 @@ import {
 import { ConsumerEserviceEntity } from "../models/domain/model.js";
 import { toConsumerEservice } from "../models/domain/toConsumerEservice.js";
 import { config } from "../config/env.js";
+import { emptyQueueEventsException } from "../models/domain/errors.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function interopClientServiceBuilder(
@@ -21,31 +22,27 @@ export function interopClientServiceBuilder(
   return {
     async getAgreementsEvents(
       lastId: number
-    ): Promise<{ events: Event[]; lastEventId?: number }> {
-      try {
-        loggerInstance.info(
-          `Retrieving Agremeent events from eventId: ${lastId}`
-        );
+    ): Promise<{ events: Event[]; lastEventIdResponse?: number }> {
+      loggerInstance.info(
+        `Retrieving Agremeent events from eventId: ${lastId}`
+      );
 
-        const response = await getAgreementsEventsFromId(
-          voucher,
-          lastId,
-          config.eventsLimit as number
-        );
+      const response = await getAgreementsEventsFromId(
+        voucher,
+        lastId,
+        config.eventsLimit as number
+      );
 
-        const { events, lastEventId } = response.data;
+      const { events, lastEventId } = response.data;
 
-        if (!events) {
-          loggerInstance.info("Events list is empty");
-          throw genericInternalError("events list is empty transformToError");
-        }
-
-        loggerInstance.info(`Total events retrieved: ${events.length}`);
-
-        return { events, lastEventId };
-      } catch (error) {
-        throw genericInternalError("transform to interopCommunicationError");
+      if (!events || (lastEventId && lastEventId > 700)) {
+        loggerInstance.info("Events list is empty");
+        throw emptyQueueEventsException();
       }
+
+      loggerInstance.info(`Total events retrieved: ${events.length}`);
+
+      return { events, lastEventIdResponse: lastEventId };
     },
 
     async getConsumerEservice(

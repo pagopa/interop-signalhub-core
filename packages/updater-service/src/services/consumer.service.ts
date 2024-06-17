@@ -21,7 +21,9 @@ export function consumerServiceBuilder(
   ): ConsumerEserviceEntity => consumerEservice;
 
   return {
-    async updateConsumer(agreementEventDto: AgreementEventDto): Promise<void> {
+    async updateConsumer(
+      agreementEventDto: AgreementEventDto
+    ): Promise<number> {
       logger.info(
         `Retrieving detail for agreement with id: ${agreementEventDto.agreementId} and eventId ${agreementEventDto.eventId}`
       );
@@ -78,6 +80,8 @@ export function consumerServiceBuilder(
           );
         }
       }
+
+      return agreementEventDto.eventId;
     },
   };
 }
