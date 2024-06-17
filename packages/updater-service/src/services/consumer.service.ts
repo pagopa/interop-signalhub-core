@@ -72,7 +72,7 @@ export function consumerServiceBuilder(
         }
 
         if (detailAgreement.state === "ACTIVE") {
-          await producerService.checkAndUpdate(
+          await producerService.checkEserviceTable(
             detailAgreement.eserviceId,
             detailAgreement.producerId,
             detailAgreement.descriptorId,

@@ -70,7 +70,7 @@ export function producerServiceBuilder(
       return eServiceEvent.eventId;
     },
 
-    async checkAndUpdate(
+    async checkEserviceTable(
       eServiceId: string,
       producerId: string,
       descriptorId: string,

@@ -94,10 +94,9 @@ export const updaterBuilder = async (
   return {
     async executeTask(): Promise<void> {
       loggerInstance.info(
-        `Scheduler updater with applicationType:
-          ${config.applicationType}
-           started at  
-          ${new Date().toString()}`
+        `Scheduler updater with applicationType:${
+          config.applicationType
+        }  started at   ${new Date().toString()}`
       );
 
       const lastEventId =
