@@ -40,6 +40,19 @@ export function tracingBatchServiceBuilder(db: DB) {
         );
       }
     },
+
+    async terminateTracingBatch(
+      tracingBatchState: TracingBatchStateEnum,
+      lastEventId: number,
+      applicationType: ApplicationType
+    ): Promise<number> {
+      await tracingBatchRepositoryInstance.insert(
+        tracingBatchState,
+        lastEventId,
+        applicationType
+      );
+      return lastEventId;
+    },
   };
 }
 

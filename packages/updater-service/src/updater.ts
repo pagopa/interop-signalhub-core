@@ -8,6 +8,7 @@ import { ConsumerService } from "./services/consumer.service.js";
 import { ProducerService } from "./services/producerService.service.js";
 import { toAgreementEvent } from "./models/domain/toAgreementEvent.js";
 import { toEserviceEvent } from "./models/domain/toEserviceEvent.js";
+import { TracingBatchStateEnum } from "./models/domain/model.js";
 
 const loggerInstance = logger({
   serviceName: "updater-service",
@@ -15,17 +16,40 @@ const loggerInstance = logger({
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const updaterBuilder = async (
-  _tracingBatchService: TracingBatchService,
+  tracingBatchService: TracingBatchService,
   interopClientService: InteropClientService,
   consumerService: ConsumerService,
   producerService: ProducerService
 ) => {
-  const updateAgreementFromLastEventId = async (
-    lastEventId: number
-  ): Promise<void> => {
-    const events = await interopClientService.getAgreementsEvents(lastEventId);
+  const updateAgrements = async (events: Event[]): Promise<void> => {
+    await updateEvents(events, "AGREEMENT");
+  };
 
-    await updateEvents(events, config.applicationType);
+  const updateAgreementsRecursive = async (lastId: number): Promise<void> => {
+    try {
+      const { events, lastEventId } =
+        await interopClientService.getAgreementsEvents(lastId);
+
+      await updateAgrements(events);
+
+      if (lastEventId && lastEventId < 1580) {
+        await updateAgreementsRecursive(lastEventId);
+      }
+
+      console.log("Chiudo esecuzione", lastId);
+
+      await tracingBatchService.terminateTracingBatch(
+        TracingBatchStateEnum.ENDED,
+        lastId,
+        config.applicationType
+      );
+    } catch (error) {
+      await tracingBatchService.terminateTracingBatch(
+        TracingBatchStateEnum.ENDED_WITH_ERROR,
+        lastId,
+        config.applicationType
+      );
+    }
   };
 
   const updateEvents = async (
@@ -46,7 +70,7 @@ export const updaterBuilder = async (
         }
       }
     } catch (error) {
-      console.error(error);
+      loggerInstance.error(error);
     }
   };
 
@@ -61,7 +85,7 @@ export const updaterBuilder = async (
       //     config.applicationType
       //   );
 
-      await updateAgreementFromLastEventId(1501);
+      await updateAgreementsRecursive(1501);
     },
   };
 };

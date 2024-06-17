@@ -19,17 +19,21 @@ export function interopClientServiceBuilder(
   loggerInstance: Logger
 ) {
   return {
-    async getAgreementsEvents(lastEventId: number): Promise<Event[]> {
+    async getAgreementsEvents(
+      lastId: number
+    ): Promise<{ events: Event[]; lastEventId?: number }> {
       try {
         loggerInstance.info(
-          `Retrieving Agremeent events from eventId: ${lastEventId}`
+          `Retrieving Agremeent events from eventId: ${lastId}`
         );
+
         const response = await getAgreementsEventsFromId(
           voucher,
-          lastEventId,
+          lastId,
           config.eventsLimit as number
         );
-        const events = response.data.events;
+
+        const { events, lastEventId } = response.data;
 
         if (!events) {
           loggerInstance.info("Events list is empty");
@@ -38,7 +42,7 @@ export function interopClientServiceBuilder(
 
         loggerInstance.info(`Total events retrieved: ${events.length}`);
 
-        return events;
+        return { events, lastEventId };
       } catch (error) {
         throw genericInternalError("transform to interopCommunicationError");
       }

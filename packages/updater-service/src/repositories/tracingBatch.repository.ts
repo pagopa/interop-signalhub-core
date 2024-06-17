@@ -1,12 +1,21 @@
+/* eslint-disable functional/no-method-signature */
 import { DB, genericInternalError } from "signalhub-commons";
-import { TracingBatchEntity } from "../models/domain/model.js";
+import {
+  TracingBatchEntity,
+  TracingBatchStateEnum,
+} from "../models/domain/model.js";
 import { ApplicationType } from "../config/env.js";
 
 export interface ITracingBatchRepository {
-  // eslint-disable-next-line functional/no-method-signature
   findLatestByType(
     applicationType: ApplicationType
   ): Promise<TracingBatchEntity[]>;
+
+  insert(
+    tracingBatchState: TracingBatchStateEnum,
+    lastEventId: number,
+    applicationType: ApplicationType
+  ): Promise<void>;
 }
 
 export const tracingBatchRepository = (db: DB): ITracingBatchRepository => ({
@@ -18,6 +27,19 @@ export const tracingBatchRepository = (db: DB): ITracingBatchRepository => ({
       )) as TracingBatchEntity[];
     } catch (error) {
       throw genericInternalError(`Error findLatestByType:" ${error} `);
+    }
+  },
+
+  async insert(tracingBatchState, lastEventId, applicationType): Promise<void> {
+    try {
+      await db.none(
+        "INSERT INTO TRACING_BATCH (last_event_id, state, type) VALUES ($1, $2, $3)",
+        [lastEventId, tracingBatchState, applicationType]
+      );
+    } catch (error) {
+      throw genericInternalError(
+        `Error insert tracing batch State:" ${error} `
+      );
     }
   },
 });
