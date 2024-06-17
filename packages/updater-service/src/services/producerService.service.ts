@@ -12,11 +12,12 @@ export function producerServiceBuilder(
   const producerEserviceRepositoryInstance = producerEserviceRepository(db);
 
   return {
-    async updateEservice(eServiceEvent: EserviceEventDto): Promise<void> {
+    async updateEservice(eServiceEvent: EserviceEventDto): Promise<number> {
       logger.info(
         `Retrieving E-service from Event with id: ${eServiceEvent.eServiceId}:: eventId: ${eServiceEvent.eventId}`
       );
 
+      // Get Eservice's detail
       const eService = await interopClientService.getEservice(
         eServiceEvent.eServiceId
       );
@@ -53,11 +54,11 @@ export function producerServiceBuilder(
           detailEservice.state
         );
 
-        return;
+        return eServiceEvent.eventId;
       }
 
       logger.info(
-        `Eservice  with ${entity.eserviceId} already exist with state ${entity.state}`
+        `Eservice with ${entity.eserviceId} already exist on DB with eventId: ${entity.eventId} `
       );
       await producerEserviceRepositoryInstance.updateEservice(
         entity.eserviceId,
@@ -65,6 +66,8 @@ export function producerServiceBuilder(
         eServiceEvent.eventId,
         detailEservice.state
       );
+
+      return eServiceEvent.eventId;
     },
 
     async checkAndUpdate(

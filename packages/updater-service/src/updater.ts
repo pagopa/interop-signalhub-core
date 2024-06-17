@@ -1,4 +1,4 @@
-import { Event } from "signalhub-interop-client";
+import { Event, Events } from "signalhub-interop-client";
 
 import { logger } from "signalhub-commons";
 import { TracingBatchService } from "./services/tracingBatch.service.js";
@@ -25,20 +25,27 @@ export const updaterBuilder = async (
   consumerService: ConsumerService,
   producerService: ProducerService
 ) => {
-  const updateAgrements = async (events: Event[]): Promise<number> =>
-    await updateEvents(events, "AGREEMENT");
+  const getEvents = async (
+    applicationType: ApplicationType,
+    lastEventId: number
+  ): Promise<Events> =>
+    applicationType === "AGREEMENT"
+      ? await interopClientService.getAgreementsEvents(lastEventId)
+      : await interopClientService.getEservicesEvents(lastEventId);
 
-  const updateAgreementsRecursive = async (lastId: number): Promise<void> => {
+  const recursiveUpdate = async (lastEventId: number): Promise<void> => {
     // eslint-disable-next-line functional/no-let
-    let lastEventIdUpdated = lastId;
+    let lastEventIdUpdated = lastEventId;
     try {
-      const { events, lastEventIdResponse } =
-        await interopClientService.getAgreementsEvents(lastEventIdUpdated);
+      const { events, lastEventId: lastEventIdResponse } = await getEvents(
+        config.applicationType,
+        lastEventIdUpdated
+      );
 
-      lastEventIdUpdated = await updateAgrements(events);
+      lastEventIdUpdated = await updateEvents(events, config.applicationType);
 
       if (lastEventIdResponse) {
-        await updateAgreementsRecursive(lastEventIdResponse);
+        await recursiveUpdate(lastEventIdResponse);
       }
     } catch (error) {
       if (error instanceof EmptyQueueEventsError) {
@@ -68,15 +75,12 @@ export const updaterBuilder = async (
       let lastEventId;
       for (const event of events) {
         if (applicationType === "AGREEMENT") {
-          // Update Consumer
-
           loggerInstance.info("\n");
           const agreementEvent = toAgreementEvent(event);
           lastEventId = await consumerService.updateConsumer(agreementEvent);
         } else {
           const eServiceEvent = toEserviceEvent(event);
-          await producerService.updateEservice(eServiceEvent);
-          lastEventId = -1; // TODO: WIP
+          lastEventId = await producerService.updateEservice(eServiceEvent);
         }
       }
 
@@ -90,7 +94,10 @@ export const updaterBuilder = async (
   return {
     async executeTask(): Promise<void> {
       loggerInstance.info(
-        "Scheduler updater started at " + new Date().toString()
+        `Scheduler updater with applicationType:
+          ${config.applicationType}
+           started at  
+          ${new Date().toString()}`
       );
 
       const lastEventId =
@@ -98,7 +105,7 @@ export const updaterBuilder = async (
           config.applicationType
         );
 
-      await updateAgreementsRecursive(lastEventId);
+      await recursiveUpdate(lastEventId);
     },
   };
 };

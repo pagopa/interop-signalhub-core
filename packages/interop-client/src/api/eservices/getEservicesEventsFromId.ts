@@ -1,16 +1,17 @@
 import { AxiosPromise } from "axios";
 import { apiClient } from "../../client.js";
 import { getAuthorizationHeader } from "../../utils/index.js";
-import { Events, GetEservicesEventsFromIdParams } from "../../index.js";
+import { Events } from "../../index.js";
 
-export const getEServicesEventsFromId = async (
+export const getEservicesEventsFromId = async (
   voucher: string,
-  params: GetEservicesEventsFromIdParams
+  lastEventId: number,
+  limit: number
 ): AxiosPromise<Events> =>
   await apiClient.events.getEservicesEventsFromId(
     {
-      lastEventId: params.lastEventId,
-      limit: params.limit,
+      lastEventId,
+      limit,
     },
     getAuthorizationHeader(voucher)
   );

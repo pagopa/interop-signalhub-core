@@ -3,11 +3,12 @@ import { AxiosError } from "axios";
 import {
   getAgreement,
   getAgreementsEventsFromId,
-  Event,
+  Events,
   getEservice,
   EService,
   EServiceDescriptor,
   getEServiceDescriptor,
+  getEServicesEventsFromId,
 } from "signalhub-interop-client";
 import { ConsumerEserviceEntity } from "../models/domain/model.js";
 import { toConsumerEservice } from "../models/domain/toConsumerEservice.js";
@@ -20,18 +21,15 @@ export function interopClientServiceBuilder(
   loggerInstance: Logger
 ) {
   return {
-    async getAgreementsEvents(
-      lastId: number
-    ): Promise<{ events: Event[]; lastEventIdResponse?: number }> {
+    async getEservicesEvents(lastId: number): Promise<Events> {
       loggerInstance.info(
-        `Retrieving Agremeent events from eventId: ${lastId}`
+        `Retrieving Eservices events from eventId: ${lastId}, limit: ${config.eventsLimit}`
       );
 
-      const response = await getAgreementsEventsFromId(
-        voucher,
-        lastId,
-        config.eventsLimit as number
-      );
+      const response = await getEServicesEventsFromId(voucher, {
+        lastEventId: lastId,
+        limit: config.eventsLimit,
+      });
 
       const { events, lastEventId } = response.data;
 
@@ -42,7 +40,28 @@ export function interopClientServiceBuilder(
 
       loggerInstance.info(`Total events retrieved: ${events.length}`);
 
-      return { events, lastEventIdResponse: lastEventId };
+      return { events, lastEventId };
+    },
+    async getAgreementsEvents(lastId: number): Promise<Events> {
+      loggerInstance.info(
+        `Retrieving Agremeent events from eventId: ${lastId}`
+      );
+
+      const response = await getAgreementsEventsFromId(voucher, {
+        lastEventId: lastId,
+        limit: config.eventsLimit,
+      });
+
+      const { events, lastEventId } = response.data;
+
+      if (!events || (lastEventId && lastEventId > 700)) {
+        loggerInstance.info("Events list is empty");
+        throw emptyQueueEventsException();
+      }
+
+      loggerInstance.info(`Total events retrieved: ${events.length}`);
+
+      return { events, lastEventId };
     },
 
     async getConsumerEservice(
