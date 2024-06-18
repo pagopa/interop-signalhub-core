@@ -35,7 +35,7 @@ export const producerEserviceRepository = (
   ): Promise<ProducerEserviceEntity | null> {
     try {
       const result = await db.oneOrNone(
-        "SELECT * FROM DEV_INTEROP.eservice WHERE eservice.eservice_id = $1 AND eservice.producer_id = $2 AND eservice.descriptor_id = $3",
+        "SELECT * FROM DEV_INTEROP.eservice e WHERE e.eservice_id = $1 AND e.producer_id = $2 AND e.descriptor_id = $3",
         [eserviceId, producerId, descriptorId]
       );
 

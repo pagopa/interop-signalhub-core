@@ -80,7 +80,7 @@ export function setupTestContainersVitest(
     postgresDB,
     sqsClient,
     cleanup: async (): Promise<void> => {
-      await postgresDB?.none("TRUNCATE SIGNAL;");
+      await postgresDB?.none("TRUNCATE DEV_INTEROP.SIGNAL;");
       // TODO: clean queque messages
     },
   };
