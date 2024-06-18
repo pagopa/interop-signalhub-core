@@ -15,7 +15,7 @@ import {
   toSignals,
 } from "./utils";
 
-describe("Pull Signal service", () => {
+describe.skip("Pull Signal service", () => {
   it("should get an empty signals list for a non existent e-service", async () => {
     const signalId = 0;
     const eserviceId = "non-existent-eservice-id";

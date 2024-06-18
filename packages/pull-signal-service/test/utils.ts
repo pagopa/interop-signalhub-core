@@ -30,7 +30,7 @@ function fakeInteropApiClientServiceBuilder(): InteropApiClientService {
   };
 }
 
-export const storeService = interopServiceBuilder(
+export const interopService = interopServiceBuilder(
   postgresDB,
   fakeInteropApiClientServiceBuilder()
 );
