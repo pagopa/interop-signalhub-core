@@ -1,15 +1,12 @@
-import { AxiosResponse } from "axios";
+import { AxiosPromise } from "axios";
 import { apiClient } from "../client.js";
-import { getClientAssertion } from "../auth/get-client-assertion.js";
-import { getVoucher } from "../auth/get-voucher.js";
-import { getAuthorizationHeader } from "../utils/index.js";
-import { Agreement } from "../models/gateway.models.js";
+import { getAccessToken, getAuthorizationHeader } from "../utils/index.js";
+import { Agreement } from "../index.js";
 
 export const getAgreementByPurpose = async (
   purposeId: string
-): Promise<AxiosResponse<Agreement, unknown>> => {
-  const clientAssertion = await getClientAssertion();
-  const voucher = await getVoucher(clientAssertion);
+): AxiosPromise<Agreement> => {
+  const voucher = await getAccessToken();
 
   return await apiClient.purposes.getAgreementByPurpose(
     purposeId,
