@@ -1,5 +1,6 @@
 import { setupTestContainersVitest } from "signalhub-commons-test";
 import { afterEach, inject } from "vitest";
+import { SignalMessage, SignalResponse } from "signalhub-commons";
 import { signalServiceBuilder } from "../src/services/signal.service";
 import { interopServiceBuilder } from "../src/services/interop.service";
 import { InteropApiClientService } from "../src/services/interopApiClient.service";
@@ -34,3 +35,16 @@ export const storeService = interopServiceBuilder(
   fakeInteropApiClientServiceBuilder()
 );
 export const signalService = signalServiceBuilder(postgresDB);
+
+export const toSignal = (signal: SignalMessage): SignalResponse => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { correlationId, ...expectedSignal } = signal;
+  return expectedSignal;
+};
+
+export const toSignals = (signals: SignalMessage[]): SignalResponse[] =>
+  signals.map(toSignal);
+
+export const sortSignalsBySignalId = (
+  signals: SignalResponse[]
+): SignalResponse[] => [...signals].sort((a, b) => a.signalId - b.signalId);
