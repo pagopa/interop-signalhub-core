@@ -14,7 +14,7 @@ export function producerServiceBuilder(
   return {
     async updateEservice(eServiceEvent: EserviceEventDto): Promise<number> {
       logger.info(
-        `Retrieving E-service from Event with eServiceId: ${eServiceEvent.eServiceId}:: eventId: ${eServiceEvent.eventId}`
+        `Retrieving E-service from Event with eServiceId: ${eServiceEvent.eServiceId}`
       );
 
       // Get Eservice's detail
@@ -31,7 +31,7 @@ export function producerServiceBuilder(
       );
 
       logger.info(
-        `Retrieved detail for e-service with descriptorId : ${detailEservice.id}`
+        `Retrieved detail for e-service with descriptorId: ${detailEservice.id}`
       );
 
       /** Check if in db this eservice already exist */
@@ -44,7 +44,7 @@ export function producerServiceBuilder(
 
       if (!entity) {
         logger.info(
-          `Eservice with eServiceId: ${eService.id} doesn't exist, creating new one`
+          `Eservice with eServiceId: ${eService.id} and ${eServiceEvent.descriptorId} doesn't exist, creating new one`
         );
         await producerEserviceRepositoryInstance.insertEservice(
           eService.id,
