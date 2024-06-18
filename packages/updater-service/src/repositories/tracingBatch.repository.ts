@@ -6,15 +6,15 @@ import {
 import { ApplicationType } from "../config/env.js";
 
 export interface ITracingBatchRepository {
-  findLatestByType(
+  findLatestByType: (
     applicationType: ApplicationType
-  ): Promise<TracingBatchEntity[]>;
+  ) => Promise<TracingBatchEntity[]>;
 
-  insert(
+  insert: (
     tracingBatchState: TracingBatchStateEnum,
     lastEventId: number,
     applicationType: ApplicationType
-  ): Promise<void>;
+  ) => Promise<void>;
 }
 
 export const tracingBatchRepository = (db: DB): ITracingBatchRepository => ({
