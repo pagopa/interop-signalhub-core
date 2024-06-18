@@ -1,4 +1,3 @@
-/* eslint-disable functional/no-method-signature */
 import { DB, genericInternalError } from "signalhub-commons";
 import {
   TracingBatchEntity,
