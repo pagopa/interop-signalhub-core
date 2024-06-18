@@ -10,7 +10,7 @@ import { serviceBuilder } from "./services/service.builder.js";
 const serviceName = "pull-signal";
 
 // services
-const { storeService, interopClientService } = serviceBuilder();
+const { signalService, interopService } = serviceBuilder();
 
 // express
 const app: Express = express();
@@ -24,7 +24,7 @@ app.disable("x-powered-by");
 const tsServer = initServer();
 const routes = tsServer.router(
   contract,
-  pullRoutes(storeService, interopClientService)
+  pullRoutes(signalService, interopService)
 );
 
 createExpressEndpoints(contract, routes, app, {

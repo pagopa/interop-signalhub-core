@@ -1,13 +1,11 @@
 import { DB, createDbInstance } from "signalhub-commons";
 import { config } from "../config/env.js";
-import {
-  InteropClientService,
-  interopClientServiceBuilder,
-} from "./interopClient.service.js";
-import { storeServiceBuilder, StoreService } from "./store.service.js";
+import { interopApiClientServiceBuilder } from "./interopApiClient.service.js";
+import { interopServiceBuilder, InteropService } from "./interop.service.js";
+import { SignalService, signalServiceBuilder } from "./signal.service.js";
 export function serviceBuilder(): {
-  storeService: StoreService;
-  interopClientService: InteropClientService;
+  signalService: SignalService;
+  interopService: InteropService;
 } {
   const db: DB = createDbInstance({
     username: config.signalhubStoreDbUsername,
@@ -18,11 +16,13 @@ export function serviceBuilder(): {
     schema: config.signalhubStoreDbSchema,
     useSSL: config.signalhubStoreDbUseSSL,
   });
-  const storeService = storeServiceBuilder(db);
-  const interopClientService = interopClientServiceBuilder();
-
+  const signalService = signalServiceBuilder(db);
+  const interopService = interopServiceBuilder(
+    db,
+    interopApiClientServiceBuilder()
+  );
   return {
-    storeService,
-    interopClientService,
+    signalService,
+    interopService,
   };
 }

@@ -57,16 +57,14 @@ export type SignalResponse = z.infer<typeof SignalSchema>;
 export const SignalPushResponse = SignalSchema.pick({ signalId: true });
 export const SignalPullResponse = z.object({
   signals: z.array(SignalResponse),
-  lastSignalId: z.number(),
+  lastSignalId: z.number().nullish(),
 });
 
-export const SignalMessage = z.object({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type SignalRecord = any;
+
+export const SignalMessage = SignalSchema.extend({
   correlationId: z.string(),
-  signalType: SignalType,
-  objectId: z.string(),
-  eserviceId: z.string(),
-  signalId: z.number(),
-  objectType: z.string(),
 });
 
 export const SignalMessageSchema = {
