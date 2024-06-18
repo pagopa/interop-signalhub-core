@@ -3,8 +3,8 @@ import { DB, Signal, SignalPayload } from "signalhub-commons";
 export async function writeSignal(
   signal: Partial<Signal>,
   db: DB
-): Promise<unknown> {
-  return await db.oneOrNone(
+): Promise<number | null> {
+  return await db.oneOrNone<number>(
     "INSERT INTO SIGNAL(correlation_id, signal_id,object_id,eservice_id, object_type, signal_type) VALUES($1, $2, $3, $4, $5, $6) RETURNING id",
     [
       signal.correlationId,
@@ -18,7 +18,7 @@ export async function writeSignal(
   );
 }
 
-export async function writeSignalsInBatch(
+export async function writeSignals(
   signals: Array<Partial<Signal>>,
   db: DB
 ): Promise<number[]> {

@@ -2,9 +2,8 @@ import { describe, expect, it } from "vitest";
 import { genericLogger } from "signalhub-commons";
 import {
   createSignal,
-  writeSignal,
   createMultipleSignals,
-  writeSignalsInBatch,
+  writeSignals,
   createMultipleOrderedSignals,
 } from "signalhub-commons-test";
 
@@ -44,8 +43,10 @@ describe("Pull Signal service", () => {
     expect(lastSignalId).toBeNull();
   });
   it("should get an empty signals list for a e-service different than requested", async () => {
-    const signalPushed = createSignal({ eserviceId: "an-eservice-id" });
-    await writeSignal(signalPushed, postgresDB);
+    await writeSignals(
+      [createSignal({ eserviceId: "an-eservice-id" })],
+      postgresDB
+    );
 
     const eserviceId = "another-eservice-id";
     const signalId = 0;
@@ -64,7 +65,7 @@ describe("Pull Signal service", () => {
     const signalId = 0;
     const size = 10;
     const signalPushed = createSignal({ eserviceId });
-    await writeSignal(signalPushed, postgresDB);
+    await writeSignals([signalPushed], postgresDB);
 
     const { signals } = await signalService.getSignal(
       eserviceId,
@@ -80,7 +81,7 @@ describe("Pull Signal service", () => {
     const signalId = 0;
     const size = 10;
     const signalPushed = createSignal({ eserviceId });
-    await writeSignal(signalPushed, postgresDB);
+    await writeSignals([signalPushed], postgresDB);
 
     const { lastSignalId } = await signalService.getSignal(
       eserviceId,
@@ -96,7 +97,7 @@ describe("Pull Signal service", () => {
     const signalId = 0;
     const size = 10;
     const batchSignals = createMultipleSignals(2, { eserviceId });
-    await writeSignalsInBatch(batchSignals, postgresDB);
+    await writeSignals(batchSignals, postgresDB);
 
     const { signals } = await signalService.getSignal(
       eserviceId,
@@ -114,7 +115,7 @@ describe("Pull Signal service", () => {
     const totalSignals = 5;
     const batchSignals = createMultipleSignals(totalSignals, { eserviceId });
 
-    await writeSignalsInBatch(batchSignals, postgresDB);
+    await writeSignals(batchSignals, postgresDB);
     const { lastSignalId } = await signalService.getSignal(
       eserviceId,
       signalId,
@@ -132,7 +133,7 @@ describe("Pull Signal service", () => {
     const size = 5;
     const totalSignals = 10;
     const batchSignals = createMultipleSignals(totalSignals, { eserviceId });
-    await writeSignalsInBatch(batchSignals, postgresDB);
+    await writeSignals(batchSignals, postgresDB);
 
     const { signals } = await signalService.getSignal(
       eserviceId,
@@ -151,7 +152,7 @@ describe("Pull Signal service", () => {
     const batchSignals = createMultipleOrderedSignals(totalSignals, {
       eserviceId,
     });
-    await writeSignalsInBatch(batchSignals, postgresDB);
+    await writeSignals(batchSignals, postgresDB);
 
     const { signals } = await signalService.getSignal(
       eserviceId,
@@ -170,7 +171,7 @@ describe("Pull Signal service", () => {
     const batchSignals = createMultipleOrderedSignals(totalSignals, {
       eserviceId,
     });
-    await writeSignalsInBatch(batchSignals, postgresDB);
+    await writeSignals(batchSignals, postgresDB);
 
     const { signals } = await signalService.getSignal(
       eserviceId,
