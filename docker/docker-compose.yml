@@ -1,0 +1,85 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:14
+    container_name: signal-hub-postgres
+    environment:
+      - POSTGRES_DB=signal-hub
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres/signalhub-store-init.sql:/docker-entrypoint-initdb.d/01-init.sql
+        # ONLY FOR PERSISTENT DATA
+        # - ./postgres/data:/var/lib/postgresql/data
+    # ONLY FOR PERSISTENT DATA
+    # user: 501:20
+    networks:
+      - develop-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "psql",
+          "-h",
+          "localhost",
+          "-p",
+          "5432",
+          "SELECT select 1+1 as result;",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Localstack to simulate AWS environment
+  localstack:
+    image: "localstack/localstack_3.2.0"
+    container_name: signal-hub-localstack
+    ports:
+      - "4566-4583:4566-4583"
+    environment:
+      - EDGE_PORT=4566
+      - SERVICES=sqs
+      - DATA_DIR=${TEMPDATADIR:-/tmp/localstack/data}
+      - DEBUG=1
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./localstack/aws-credentials:/root/.aws/credentials"
+    networks:
+      - develop-network
+
+  # ElasticMQ is a local SQS-compatible queue system, to replace AWS SQS in local development
+  elasticmq:
+    image: softwaremill/elasticmq-native:1.5.7
+    container_name: signal-hub-sqs
+    ports:
+      - 9324:9324
+      - 9325:9325
+    volumes:
+      - ./elasticmq/elasticmq.local.conf:/opt/elasticmq.conf
+    restart: always
+
+  # Mockserver to simulate Interop API m2m
+  mockserver:
+    image: mockserver/mockserver
+    ports:
+      - 1080:1080
+    container_name: signal-hub-mockserver
+    environment:
+      - MOCKSERVER_INITIALIZATION_JSON_PATH=/config/webhook.json
+      - MOCKSERVER_ENABLE_CORS_FOR_ALL_RESPONSES=true
+      - MOCKSERVER_CORS_ALLOW_ORIGIN="*"
+      - MOCKSERVER_CORS_ALLOW_METHODS="CONNECT, DELETE, GET, HEAD, OPTIONS, POST, PUT, PATCH, TRACE"
+      - MOCKSERVER_CORS_ALLOW_HEADERS="Allow, Content-Encoding, Content-Length, Content-Type, ETag, Expires, Last-Modified, Location, Server, Vary, Authorization"
+      - MOCKSERVER_CORS_ALLOW_CREDENTIALS="true"
+      - MOCKSERVER_CORS_MAX_AGE_IN_SECONDS="300" \
+    volumes:
+      - "./mockserver:/config"
+    networks:
+      - develop-network
+
+networks:
+  develop-network:
+    name: signal-hub-develop-network
+    driver: bridge

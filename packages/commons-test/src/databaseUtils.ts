@@ -3,9 +3,9 @@ import { DB, Signal, SignalPayload } from "signalhub-commons";
 export async function writeSignal(
   signal: Partial<Signal>,
   db: DB
-): Promise<number | null> {
-  return await db.oneOrNone<number>(
-    "INSERT INTO SIGNAL(correlation_id, signal_id,object_id,eservice_id, object_type, signal_type) VALUES($1, $2, $3, $4, $5, $6) RETURNING id",
+): Promise<unknown> {
+  return await db.oneOrNone(
+    "INSERT INTO DEV_SIGNALHUB.SIGNAL(correlation_id, signal_id,object_id,eservice_id, object_type, signal_type) VALUES($1, $2, $3, $4, $5, $6) RETURNING id",
     [
       signal.correlationId,
       signal.signalId,
@@ -27,7 +27,7 @@ export async function writeSignals(
     // eslint-disable-next-line functional/immutable-data
     ids.push(
       await db.oneOrNone(
-        "INSERT INTO SIGNAL(correlation_id, signal_id,object_id,eservice_id, object_type, signal_type) VALUES($1, $2, $3, $4, $5, $6) RETURNING id",
+        "INSERT INTO DEV_SIGNALHUB.SIGNAL(correlation_id, signal_id,object_id,eservice_id, object_type, signal_type) VALUES($1, $2, $3, $4, $5, $6) RETURNING id",
         [
           signal.correlationId,
           signal.signalId,
