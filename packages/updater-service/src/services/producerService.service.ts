@@ -14,7 +14,7 @@ export function producerServiceBuilder(
   return {
     async updateEservice(eServiceEvent: EserviceEventDto): Promise<number> {
       logger.info(
-        `Retrieving E-service from Event with id: ${eServiceEvent.eServiceId}:: eventId: ${eServiceEvent.eventId}`
+        `Retrieving E-service from Event with eServiceId: ${eServiceEvent.eServiceId}:: eventId: ${eServiceEvent.eventId}`
       );
 
       // Get Eservice's detail
@@ -22,7 +22,7 @@ export function producerServiceBuilder(
         eServiceEvent.eServiceId
       );
 
-      logger.info(`Retrieved E-service with eServiceId: ${eService.id}" `);
+      logger.info(`Retrieved E-service with eServiceId: ${eService.id}`);
 
       /** Need to getEserviceDescriptor detail in order to retrieve state information of the eservice */
       const detailEservice = await interopClientService.getEserviceDescriptor(
@@ -31,7 +31,7 @@ export function producerServiceBuilder(
       );
 
       logger.info(
-        `Retrieved detail for e-service with eServiceId : ${detailEservice.id}`
+        `Retrieved detail for e-service with descriptorId : ${detailEservice.id}`
       );
 
       /** Check if in db this eservice already exist */
@@ -57,9 +57,7 @@ export function producerServiceBuilder(
         return eServiceEvent.eventId;
       }
 
-      logger.info(
-        `Eservice with ${entity.eserviceId} already exist on DB with eventId: ${entity.eventId} `
-      );
+      logger.info(`Eservice with ${entity.eserviceId} already exist on DB`);
       await producerEserviceRepositoryInstance.updateEservice(
         entity.eserviceId,
         entity.descriptorId,

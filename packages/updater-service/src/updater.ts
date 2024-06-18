@@ -63,6 +63,8 @@ export const updaterBuilder = async (
           config.applicationType
         );
       }
+
+      process.exit(1);
     }
   };
 
@@ -74,8 +76,10 @@ export const updaterBuilder = async (
       // eslint-disable-next-line functional/no-let
       let lastEventId;
       for (const event of events) {
+        loggerInstance.info(
+          `\n ---- Event with eventId: ${event.eventId} ---- \n`
+        );
         if (applicationType === "AGREEMENT") {
-          loggerInstance.info("\n");
           const agreementEvent = toAgreementEvent(event);
           lastEventId = await consumerService.updateConsumer(agreementEvent);
         } else {
@@ -83,7 +87,6 @@ export const updaterBuilder = async (
           lastEventId = await producerService.updateEservice(eServiceEvent);
         }
       }
-
       return lastEventId as number;
     } catch (error) {
       loggerInstance.error(error);
@@ -94,9 +97,9 @@ export const updaterBuilder = async (
   return {
     async executeTask(): Promise<void> {
       loggerInstance.info(
-        `Scheduler updater with applicationType:${
+        `Scheduler updater with applicationType: ${
           config.applicationType
-        }  started at   ${new Date().toString()}`
+        }  started at: ${new Date().toString()}`
       );
 
       const lastEventId =

@@ -33,7 +33,7 @@ export function interopClientServiceBuilder(
 
       const { events, lastEventId } = response.data;
 
-      if (!events || (lastEventId && lastEventId > 700)) {
+      if (!events || events.length <= 0) {
         loggerInstance.info("Events list is empty");
         throw emptyQueueEventsException();
       }
@@ -54,7 +54,7 @@ export function interopClientServiceBuilder(
 
       const { events, lastEventId } = response.data;
 
-      if (!events || (lastEventId && lastEventId > 700)) {
+      if (!events || events.length <= 0) {
         loggerInstance.info("Events list is empty");
         throw emptyQueueEventsException();
       }
