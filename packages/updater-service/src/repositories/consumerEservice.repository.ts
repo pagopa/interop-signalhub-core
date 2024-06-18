@@ -35,7 +35,7 @@ export const consumerEserviceRepository = (
     descriptorId
   ): Promise<ConsumerEserviceEntity | null> {
     return await db.oneOrNone(
-      "select consumer from CONSUMER_ESERVICE consumer where consumer.eservice_id = $1 AND consumer.consumer_id = $2  AND consumer.descriptor_id = $3",
+      "select consumer from DEV_INTEROP.CONSUMER_ESERVICE consumer where consumer.eservice_id = $1 AND consumer.consumer_id = $2  AND consumer.descriptor_id = $3",
       [eserviceId, consumerId, descriptorId]
     );
   },
@@ -50,7 +50,7 @@ export const consumerEserviceRepository = (
     state: string
   ): Promise<number | null> {
     return await db.oneOrNone(
-      "INSERT INTO CONSUMER_ESERVICE(agreement_id,eservice_id, consumer_id, descriptor_id, event_id,state) VALUES($1, $2, $3, $4, $5,$6) RETURNING eservice_id",
+      "INSERT INTO DEV_INTEROP.CONSUMER_ESERVICE(agreement_id,eservice_id, consumer_id, descriptor_id, event_id,state) VALUES($1, $2, $3, $4, $5,$6) RETURNING eservice_id",
       [agreementId, eserviceId, consumerId, descriptorId, eventId, state]
     );
   },
@@ -62,7 +62,7 @@ export const consumerEserviceRepository = (
     state: string
   ): Promise<number | null> {
     return await db.oneOrNone(
-      "update CONSUMER_ESERVICE set state = $1 where eservice_id = $2 AND consumer_id = $3  AND descriptor_id = $4",
+      "update DEV_INTEROP.CONSUMER_ESERVICE set state = $1 where eservice_id = $2 AND consumer_id = $3  AND descriptor_id = $4",
       [state, eserviceId, consumerId, descriptorId]
     );
   },

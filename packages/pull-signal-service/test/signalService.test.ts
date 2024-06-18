@@ -59,6 +59,7 @@ describe("Pull Signal service", () => {
 
     expect(signals).toEqual([]);
   });
+
   it("should get only one signal for an e-service", async () => {
     const eserviceId = "existent-eservice-id";
     const signalId = 0;

@@ -19,7 +19,7 @@ export const postgreSQLContainer = (
     })
     .withCopyFilesToContainer([
       {
-        source: "../../docker/signalhub-store-init.sql",
+        source: "../../docker/postgres/signalhub-store-init.sql",
         target: "/docker-entrypoint-initdb.d/signalhub-store-init.sql",
       },
     ])
