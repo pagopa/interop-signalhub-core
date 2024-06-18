@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import { P, match } from "ts-pattern";
-import { ZodError } from "zod";
+import { ZodError, z } from "zod";
 // import { fromZodError } from "zod-validation-error";
 
 export class ApiError<T> extends Error {
@@ -57,15 +57,23 @@ export type ProblemError = {
   detail: string;
 };
 
-export type Problem = {
-  type: string;
-  status: number;
-  title: string;
-  correlationId?: string;
-  detail: string;
-  errors: ProblemError[];
-  toString: () => string;
-};
+// zod object
+
+export const Problem = z.object({
+  type: z.string(),
+  status: z.number(),
+  title: z.string(),
+  correlationId: z.string().nullish(),
+  detail: z.string(),
+  errors: z.array(
+    z.object({
+      code: z.string(),
+      detail: z.string(),
+    })
+  ),
+  toString: z.function(),
+});
+export type Problem = z.infer<typeof Problem>;
 
 export type MakeApiProblemFn<T extends string> = (
   error: unknown,

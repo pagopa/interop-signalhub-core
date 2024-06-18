@@ -21,13 +21,13 @@ export function parseQueueMessageToSignal(
       queueMessage.Body
     );
   }
-  const signalEvent = SignalMessage.safeParse(parsedMessage);
+  const signalMessage = SignalMessage.safeParse(parsedMessage);
   loggerInstance.info(
     `Message from queue: ${JSON.stringify(parsedMessage, null, 2)}`
   );
 
-  if (!signalEvent.success) {
+  if (!signalMessage.success) {
     throw notRecoverableMessageError("parsingError", parsedMessage);
   }
-  return signalEvent.data;
+  return signalMessage.data;
 }

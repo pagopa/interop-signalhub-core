@@ -1,5 +1,5 @@
 import { DB, SQS } from "signalhub-commons";
-import { signalProducer, eserviceProducer } from "./common.js";
+import { signalProducer, eserviceProducer, signalConsumer } from "./common.js";
 
 async function setupEserviceTable(db: DB): Promise<void> {
   const allProducers = [signalProducer, eserviceProducer];
@@ -16,26 +16,47 @@ async function setupEserviceTable(db: DB): Promise<void> {
     }
   }
 }
+async function setupConsumerEserviceTable(db: DB): Promise<void> {
+  const { id, agreements } = signalConsumer;
+  // eslint-disable-next-line functional/no-let
+  let count = 0;
+  for (const agreement of agreements.filter(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (e: any) => !("skip_insert" in e)
+  )) {
+    const query = {
+      text: "INSERT INTO consumer_eservice (agreement_id, eservice_id, consumer_id, descriptor_id, event_id, state) values ($1, $2, $3, $4, $5,$6)",
+      values: [
+        agreement.id,
+        agreement.eservice,
+        id,
+        agreement.descriptor,
+        ++count,
+        agreement.state,
+      ],
+    };
+    await db.oneOrNone(query);
+  }
+}
 
 export const dataPreparation = async (db: DB): Promise<void> => {
-  // eslint-disable-next-line no-console
-  console.info(`\n*** SIGNALHUB DATA PREPARATION  ***\n`);
+  // console.info(`\n*** SIGNALHUB DATA PREPARATION  ***\n`);
   await setupEserviceTable(db);
+  await setupConsumerEserviceTable(db);
 };
 
 export const dataPreparationCleanup = async (db: DB): Promise<void> => {
-  // eslint-disable-next-line no-console
-  console.info("\n*** SIGNALHUB DATA PREPARATION CLEANUP ***\n");
+  // console.info("\n*** SIGNALHUB DATA PREPARATION CLEANUP ***\n");
   await db.none("truncate eservice;");
+  await db.none("truncate consumer_eservice;");
 };
 
 export const deleteAllSqsMessages = async (
   sqsClient: SQS.SQSClient,
   queueUrl: string
 ): Promise<void> => {
-  // eslint-disable-next-line no-console
-  console.info(
-    "\n*** SIGNALHUB DATA PREPARATION DELETE ALL QUEUE MESSAGES ***\n"
-  );
+  // console.info(
+  //   "\n*** SIGNALHUB DATA PREPARATION DELETE ALL QUEUE MESSAGES ***\n"
+  // );
   await SQS.deleteBatchMessages(sqsClient, queueUrl);
 };

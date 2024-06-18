@@ -40,7 +40,7 @@ export type AppContext = z.infer<typeof AppContext>;
 
 export const SignalType = z.enum(["CREATE", "UPDATE", "DELETE", "SEEDUPDATE"]);
 
-export const SignalSchema = z.object({
+const SignalSchema = z.object({
   signalType: SignalType,
   objectId: z.string(),
   eserviceId: z.string(),
@@ -48,13 +48,23 @@ export const SignalSchema = z.object({
   objectType: z.string(),
 });
 
-export const SignalMessage = z.object({
+export const SignalPayload = SignalSchema;
+export type SignalPayload = z.infer<typeof SignalSchema>;
+
+export const SignalResponse = SignalSchema;
+export type SignalResponse = z.infer<typeof SignalSchema>;
+
+export const SignalPushResponse = SignalSchema.pick({ signalId: true });
+export const SignalPullResponse = z.object({
+  signals: z.array(SignalResponse),
+  lastSignalId: z.number().nullish(),
+});
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type SignalRecord = any;
+
+export const SignalMessage = SignalSchema.extend({
   correlationId: z.string(),
-  signalType: SignalType,
-  objectId: z.string(),
-  eserviceId: z.string(),
-  signalId: z.number(),
-  objectType: z.string(),
 });
 
 export const SignalMessageSchema = {
@@ -98,9 +108,6 @@ export const SMessageSchema = z.object({
   ),
 });
 
-export const SignalPushResponse = SignalSchema.pick({ signalId: true });
-
-export const Signal = SignalMessage;
-export type SignalRequest = z.infer<typeof SignalSchema>;
 export type SignalMessage = z.infer<typeof SignalMessage>;
+export const Signal = SignalMessage;
 export type Signal = z.infer<typeof Signal>;

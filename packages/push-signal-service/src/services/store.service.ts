@@ -3,8 +3,6 @@ import { signalRepository } from "../repositories/signal.repository.js";
 
 import { eserviceRepository } from "../repositories/eservice.repository.js";
 import { signalIdDuplicatedForEserviceId } from "../model/domain/errors.js";
-import { agreementRepository } from "../repositories/agreement.repository.js";
-import { Agreement } from "../model/domain/models.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function storeServiceBuilder(db: DB) {
@@ -26,13 +24,13 @@ export function storeServiceBuilder(db: DB) {
         throw signalIdDuplicatedForEserviceId(signalId, eserviceId);
       }
     },
-    async producerIsEserviceOwner(
+    async canProducerDepositSignal(
       producerId: string,
       eserviceId: string,
       logger: Logger
     ): Promise<void> {
       logger.info(
-        `StoreService::producerIsEserviceOwner eserviceId: ${eserviceId} producerId: ${producerId}`
+        `StoreService::canProducerDepositSignal eserviceId: ${eserviceId} producerId: ${producerId}`
       );
       const state = "PUBLISHED";
       const eserviceOwned = await eserviceRepository(db).findBy(
@@ -41,46 +39,13 @@ export function storeServiceBuilder(db: DB) {
         state
       );
       logger.debug(
-        `StoreService::producerIsEserviceOwner eserviceOwned: ${eserviceOwned}`
+        `StoreService::canProducerDepositSignal eserviceOwned: ${eserviceOwned}`
       );
 
       if (eserviceOwned) {
         return;
       }
       throw operationForbidden;
-    },
-    async getAgreementWithDepositSignalBy(
-      purposeId: string,
-      logger: Logger
-    ): Promise<Agreement> {
-      logger.info(
-        `StoreService::getAgreementWithDepositSignalBy purposeId: ${purposeId}`
-      );
-      const agreement = await agreementRepository(db).findBy(purposeId);
-      logger.debug(
-        `StoreService::getAgreementWithDepositSignalBy agreement: ${JSON.stringify(
-          agreement
-        )}`
-      );
-      if (agreement) {
-        return agreement;
-      }
-      throw operationForbidden;
-    },
-    async canProducerDepositSignal(
-      purposeId: string,
-      eserviceId: string,
-      logger: Logger
-    ): Promise<void> {
-      logger.info(
-        `StoreService::canProducerDepositSignal purposeId: ${purposeId} eserviceId: ${eserviceId}`
-      );
-      const agreement = await this.getAgreementWithDepositSignalBy(
-        purposeId,
-        logger
-      );
-      const { consumerId: producerId } = agreement;
-      await this.producerIsEserviceOwner(producerId, eserviceId, logger);
     },
   };
 }

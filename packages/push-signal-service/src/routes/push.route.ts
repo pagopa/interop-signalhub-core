@@ -1,11 +1,13 @@
 import { AppRouteImplementation, initServer } from "@ts-rest/express";
-import { logger, Problem } from "signalhub-commons";
+import { logger, Problem, SignalPayload } from "signalhub-commons";
 import { match } from "ts-pattern";
 import { contract } from "../contract/contract.js";
 import { StoreService } from "../services/store.service.js";
 import { makeApiProblem } from "../model/domain/errors.js";
 import { QuequeService } from "../services/queque.service.js";
 import { DomainService } from "../services/domain.service.js";
+import { producerAuthorization } from "../authorization/authorization.js";
+import { InteropClientService } from "../services/interopClient.service.js";
 
 const s = initServer();
 
@@ -13,7 +15,8 @@ const s = initServer();
 export const pushRoutes = (
   domainService: DomainService,
   storeService: StoreService,
-  quequeService: QuequeService
+  quequeService: QuequeService,
+  interopClientService: InteropClientService
 ) => {
   const pushSignal: AppRouteImplementation<
     typeof contract.pushSignal
@@ -25,13 +28,19 @@ export const pushRoutes = (
     loggerInstance.info("pushController BEGIN");
     try {
       const { signalId, eserviceId } = body;
+      await producerAuthorization(
+        storeService,
+        interopClientService,
+        loggerInstance
+      ).verify(req.ctx.sessionData.purposeId, eserviceId);
+
       await storeService.verifySignalDuplicated(
         signalId,
         eserviceId,
         loggerInstance
       );
       const message = domainService.signalToMessage(
-        body,
+        body as SignalPayload,
         req.ctx.correlationId,
         loggerInstance
       );
@@ -49,6 +58,8 @@ export const pushRoutes = (
           match(err.code)
             .with("signalDuplicate", () => 400)
             .with("signalNotSended", () => 400)
+            .with("unauthorizedError", () => 401)
+            .with("operationForbidden", () => 403)
             .with("genericError", () => 500)
             .otherwise(() => 500),
         loggerInstance,
@@ -59,6 +70,16 @@ export const pushRoutes = (
         case 400:
           return {
             status: 400,
+            body: problem,
+          };
+        case 401:
+          return {
+            status: 401,
+            body: problem,
+          };
+        case 403:
+          return {
+            status: 403,
             body: problem,
           };
         default:

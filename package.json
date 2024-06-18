@@ -4,10 +4,12 @@
   "scripts": {
     "start": "turbo start",
     "start:push-signals": "turbo start --filter push-signal-service",
+    "start:pull-signals": "turbo start --filter pull-signal-service",
     "start:persister": "turbo start --filter persister-service",
     "start:updater": "turbo start --filter signalhub-updater-service",
     "test": "turbo test",
     "test:push": "turbo test --filter push-signal-service",
+    "test:pull": "turbo test --filter pull-signal-service",
     "test:persister": "turbo test --filter persister-service",
     "build": "turbo build",
     "lint": "turbo lint",

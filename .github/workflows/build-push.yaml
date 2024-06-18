@@ -9,6 +9,7 @@ on:
     paths:
       - "packages/**"
       - "!packages/*/scripts/**"
+      - ".github/workflows/build-push.yaml"
 
 jobs:
   build_push_image:
@@ -26,6 +27,8 @@ jobs:
             dockerfile_path: packages/push-signal-service
           - image_name: signal-persister
             dockerfile_path: packages/persister-service
+          - image_name: pull-signal
+            dockerfile_path: packages/pull-signal-service
 
     steps:
       - name: Checkout repository
@@ -49,9 +52,11 @@ jobs:
         with:
           images: ${{ steps.login-ecr.outputs.registry }}/signalhub-be-${{ matrix.image_name }}
           flavor: |
-            latest=true
+            latest=false
             prefix=
             suffix=
+          tags: |
+            type=raw,value=1.x-latest
 
       - name: (tag) Docker metadata
         id: meta_tag
