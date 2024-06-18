@@ -10,7 +10,7 @@ export const deadSignalRepository = (db: DB): IDeadSignalRepository => ({
   async insertDeadSignal(deadSignal): Promise<number | null> {
     try {
       return await db.oneOrNone(
-        "INSERT INTO DEAD_SIGNAL (correlation_id, signal_id,object_id,eservice_id, object_type, signal_type,error_reason) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id",
+        "INSERT INTO DEV_SIGNALHUB.DEAD_SIGNAL (correlation_id, signal_id,object_id,eservice_id, object_type, signal_type,error_reason) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id",
         [
           deadSignal.correlationId,
           deadSignal.signalId,

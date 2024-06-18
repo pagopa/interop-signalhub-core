@@ -16,7 +16,7 @@ export const eserviceRepository = (db: DB): IEserviceRepository => ({
   ): Promise<string | null> {
     try {
       return await db.oneOrNone(
-        "SELECT eservice_id FROM eservice WHERE producer_id = $1 AND eservice_id = $2 AND state = $3",
+        "SELECT eservice_id FROM DEV_INTEROP.eservice WHERE producer_id = $1 AND eservice_id = $2 AND state = $3",
         [producerId, eserviceId, state]
       );
     } catch (error: unknown) {

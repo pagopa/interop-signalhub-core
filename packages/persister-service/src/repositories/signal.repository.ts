@@ -11,7 +11,7 @@ export interface ISignalRepository {
 export const signalRepository = (db: DB): ISignalRepository => ({
   async insertSignal(signal): Promise<number | null> {
     return await db.oneOrNone(
-      "INSERT INTO SIGNAL(correlation_id, signal_id,object_id,eservice_id, object_type, signal_type) VALUES($1, $2, $3, $4, $5, $6) RETURNING id",
+      "INSERT INTO DEV_SIGNALHUB.SIGNAL(correlation_id, signal_id,object_id,eservice_id, object_type, signal_type) VALUES($1, $2, $3, $4, $5, $6) RETURNING id",
       [
         signal.correlationId,
         signal.signalId,
@@ -29,7 +29,7 @@ export const signalRepository = (db: DB): ISignalRepository => ({
     eserviceId: string
   ): Promise<number | null> {
     return await db.oneOrNone(
-      "SELECT signal_id FROM signal WHERE eservice_id = $1 AND signal_id = $2",
+      "SELECT signal_id FROM DEV_SIGNALHUB.signal WHERE eservice_id = $1 AND signal_id = $2",
       [eserviceId, signalId]
     );
   },
