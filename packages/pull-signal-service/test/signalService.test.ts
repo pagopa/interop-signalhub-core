@@ -60,7 +60,7 @@ describe("Pull Signal service", () => {
     expect(signals).toEqual([]);
   });
   it("should get only one signal for an e-service", async () => {
-    const eserviceId = "existent-eservice-id";
+    const eserviceId = "an-eservice-id";
     const signalId = 0;
     const size = 10;
     const signalPushed = createSignal({ eserviceId });
@@ -76,7 +76,7 @@ describe("Pull Signal service", () => {
     expect(signals).toEqual([toSignal(signalPushed)]);
   });
   it("should get lastSignalId for one signal for an e-service", async () => {
-    const eserviceId = "existent-eservice-id";
+    const eserviceId = "an-eservice-id";
     const signalId = 0;
     const size = 10;
     const signalPushed = createSignal({ eserviceId });
@@ -92,7 +92,7 @@ describe("Pull Signal service", () => {
     expect(lastSignalId).toBe(signalPushed.signalId);
   });
   it("should get two signals for an e-service", async () => {
-    const eserviceId = "existent-eservice-id";
+    const eserviceId = "an-eservice-id";
     const signalId = 0;
     const size = 10;
     const batchSignals = createMultipleSignals(2, { eserviceId });
@@ -108,7 +108,7 @@ describe("Pull Signal service", () => {
     expect(signals).toEqual(sortSignalsBySignalId(toSignals(batchSignals)));
   });
   it("should get lastSignalId for the last of the signals for an e-service", async () => {
-    const eserviceId = "existent-eservice-id";
+    const eserviceId = "an-eservice-id";
     const signalId = 0;
     const size = 10;
     const totalSignals = 5;
@@ -127,7 +127,7 @@ describe("Pull Signal service", () => {
   });
 
   it("should get five signals for an e-service, starting from signalId one, when size is five, when total signals is ten", async () => {
-    const eserviceId = "existent-eservice-id";
+    const eserviceId = "an-eservice-id";
     const signalId = 0;
     const size = 5;
     const totalSignals = 10;
@@ -144,7 +144,7 @@ describe("Pull Signal service", () => {
     expect(signals).toHaveLength(size);
   });
   it("should get two signals for an e-service, starting from signalId ten, when total signal is twelve", async () => {
-    const eserviceId = "existent-eservice-id";
+    const eserviceId = "an-eservice-id";
     const signalId = 10;
     const size = 10;
     const totalSignals = 12;
@@ -163,7 +163,7 @@ describe("Pull Signal service", () => {
     expect(signals).toHaveLength(2);
   });
   it("should get ten signals for an e-service, starting from signalId ten, when total signal is twenty", async () => {
-    const eserviceId = "existent-eservice-id";
+    const eserviceId = "an-eservice-id";
     const signalId = 10;
     const size = 10;
     const totalSignals = 20;
