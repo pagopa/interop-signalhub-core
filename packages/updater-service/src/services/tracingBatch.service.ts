@@ -31,20 +31,20 @@ export function tracingBatchServiceBuilder(db: DB): ITracingBatchService {
         }
 
         if (tracingBatchEntityList[0].state === TracingBatchStateEnum.ENDED) {
-          return parseInt(tracingBatchEntityList[0].last_event_id, 10);
+          return parseInt(tracingBatchEntityList[0].lastEventId, 10);
         }
 
         if (tracingBatchEntityList.length > config.attemptEvent) {
           return (
             parseInt(
               tracingBatchEntityList[tracingBatchEntityList.length - 1]
-                .last_event_id,
+                .lastEventId,
               10
             ) + 1
           );
         }
 
-        return parseInt(tracingBatchEntityList[0].last_event_id, 10);
+        return parseInt(tracingBatchEntityList[0].lastEventId, 10);
       } catch (error) {
         throw genericInternalError(
           `Error getLastEventIdByTracingBatchAndType:" ${error} `

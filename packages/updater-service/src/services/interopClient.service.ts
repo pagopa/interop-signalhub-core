@@ -1,4 +1,8 @@
-import { Logger, genericInternalError } from "signalhub-commons";
+import {
+  ConsumerEserviceDto,
+  Logger,
+  genericInternalError,
+} from "signalhub-commons";
 import { AxiosError } from "axios";
 import {
   getAgreement,
@@ -10,7 +14,6 @@ import {
   getEServiceDescriptor,
   getEServicesEventsFromId,
 } from "signalhub-interop-client";
-import { ConsumerEserviceEntity } from "../models/domain/model.js";
 import { toConsumerEservice } from "../models/domain/toConsumerEservice.js";
 import { config } from "../config/env.js";
 import { emptyQueueEventsException } from "../models/domain/errors.js";
@@ -67,7 +70,7 @@ export function interopClientServiceBuilder(
     async getConsumerEservice(
       agreementId: string,
       eventId: number
-    ): Promise<ConsumerEserviceEntity | null> {
+    ): Promise<ConsumerEserviceDto | null> {
       try {
         const { data: agreement } = await getAgreement(voucher, agreementId);
         return toConsumerEservice(agreement, eventId);

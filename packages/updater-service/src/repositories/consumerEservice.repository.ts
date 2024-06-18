@@ -1,13 +1,16 @@
 /* eslint-disable functional/no-method-signature */
-import { DB } from "signalhub-commons";
-import { ConsumerEserviceEntity } from "../models/domain/model.js";
+import {
+  ConsumerEserviceDto,
+  DB,
+  toConsumerEserviceDto,
+} from "signalhub-commons";
 
 export interface IConsumerEserviceRepository {
   findByEserviceIdAndConsumerIdAndDescriptorId(
     eserviceId: string,
     consumerId: string,
     descriptorId: string
-  ): Promise<ConsumerEserviceEntity | null>;
+  ): Promise<ConsumerEserviceDto | null>;
 
   insertConsumerEservice(
     agreementId: string,
@@ -33,11 +36,13 @@ export const consumerEserviceRepository = (
     eserviceId,
     consumerId,
     descriptorId
-  ): Promise<ConsumerEserviceEntity | null> {
-    return await db.oneOrNone(
+  ): Promise<ConsumerEserviceDto | null> {
+    const response = await db.oneOrNone(
       "select consumer from CONSUMER_ESERVICE consumer where consumer.eservice_id = $1 AND consumer.consumer_id = $2  AND consumer.descriptor_id = $3",
       [eserviceId, consumerId, descriptorId]
     );
+
+    return toConsumerEserviceDto(response);
   },
 
   // eslint-disable-next-line max-params
