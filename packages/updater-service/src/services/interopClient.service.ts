@@ -86,9 +86,21 @@ export function interopClientServiceBuilder(
       }
     },
 
-    async getEservice(eserviceId: string): Promise<EService> {
-      const { data: eservice } = await getEservice(voucher, eserviceId);
-      return eservice;
+    async getEservice(eserviceId: string): Promise<EService | null> {
+      try {
+        const { data: eservice } = await getEservice(voucher, eserviceId);
+        return eservice;
+      } catch (error) {
+        if (error instanceof AxiosError && error.response?.status === 404) {
+          loggerInstance.info(
+            `Agreement with agrementId ${eserviceId} not found`
+          );
+          return null;
+        }
+
+        console.error(error);
+        throw genericInternalError("Generic internal error on getEservice ");
+      }
     },
 
     async getEserviceDescriptor(
