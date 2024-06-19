@@ -1,8 +1,8 @@
 import {
   DB,
-  TracingBatchDto,
+  TracingBatch,
   genericInternalError,
-  toTracingBatchDto,
+  toTracingBatch,
 } from "signalhub-commons";
 import { TracingBatchStateEnum } from "../models/domain/model.js";
 import { ApplicationType } from "../config/env.js";
@@ -10,7 +10,7 @@ import { ApplicationType } from "../config/env.js";
 export interface ITracingBatchRepository {
   findLatestByType: (
     applicationType: ApplicationType
-  ) => Promise<TracingBatchDto[]>;
+  ) => Promise<TracingBatch[]>;
 
   insert: (
     tracingBatchState: TracingBatchStateEnum,
@@ -20,14 +20,14 @@ export interface ITracingBatchRepository {
 }
 
 export const tracingBatchRepository = (db: DB): ITracingBatchRepository => ({
-  async findLatestByType(applicationType): Promise<TracingBatchDto[]> {
+  async findLatestByType(applicationType): Promise<TracingBatch[]> {
     try {
       const response = await db.manyOrNone(
         "SELECT * from TRACING_BATCH where last_event_id = (select MAX(t.last_event_id) from TRACING_BATCH t where t.type = $1) order by tmst_created desc",
         [applicationType]
       );
 
-      return response.map(toTracingBatchDto);
+      return response.map(toTracingBatch);
     } catch (error) {
       throw genericInternalError(`Error findLatestByType:" ${error} `);
     }

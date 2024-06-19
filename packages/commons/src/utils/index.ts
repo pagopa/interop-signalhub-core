@@ -1,1 +1,1 @@
-export * from "./Camelize.js";
+export * from "./SnakeCase.js";

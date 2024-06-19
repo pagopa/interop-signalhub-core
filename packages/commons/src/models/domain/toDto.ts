@@ -1,13 +1,15 @@
 import {
-  ProducerEserviceDto,
+  ProducerService,
   ProducerEserviceEntity,
-  TracingBatchDto,
+  TracingBatch,
   TracingBatchEntity,
+  ConsumerEservice,
+  ConsumerEserviceEntity,
 } from "../db.js";
 
-export const toProducerEserviceDto = (
+export const toProducerEservice = (
   producerEserviceEntity: ProducerEserviceEntity
-): ProducerEserviceDto => ({
+): ProducerService => ({
   eventId: producerEserviceEntity.event_id,
   eserviceId: producerEserviceEntity.eservice_id,
   producerId: producerEserviceEntity.producer_id,
@@ -18,9 +20,9 @@ export const toProducerEserviceDto = (
   tmstLastEdit: producerEserviceEntity.tmst_last_edit,
 });
 
-export const toConsumerEserviceDto = (
-  consumerEserviceEntity: ProducerEserviceEntity
-): ProducerEserviceDto => ({
+export const toConsumerEservice = (
+  consumerEserviceEntity: ConsumerEserviceEntity
+): ConsumerEservice => ({
   eventId: consumerEserviceEntity.event_id,
   eserviceId: consumerEserviceEntity.eservice_id,
   producerId: consumerEserviceEntity.producer_id,
@@ -31,9 +33,9 @@ export const toConsumerEserviceDto = (
   tmstLastEdit: consumerEserviceEntity.tmst_last_edit,
 });
 
-export const toTracingBatchDto = (
+export const toTracingBatch = (
   batchEntity: TracingBatchEntity
-): TracingBatchDto => ({
+): TracingBatch => ({
   batchId: batchEntity.batch_id,
   lastEventId: batchEntity.last_event_id,
   state: batchEntity.state,

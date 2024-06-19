@@ -1,42 +1,42 @@
 import { z } from "zod";
-import { Camelize } from "../utils/index.js";
+import { SnakeCase } from "../utils/index.js";
 
-export const TracingBatchEntity = z.object({
-  batch_id: z.string(),
-  last_event_id: z.string(),
+export const TracingBatch = z.object({
+  batchId: z.string(),
+  lastEventId: z.string(),
   type: z.string(),
   state: z.string(),
-  tmst_created: z.string(),
+  tmstCreated: z.string(),
 });
 
-export const ProducerEserviceEntity = z.object({
-  event_id: z.number(),
-  eservice_id: z.string(),
-  producer_id: z.string(),
-  agreement_id: z.string(),
-  descriptor_id: z.string(),
+export const ProducerService = z.object({
+  eventId: z.number(),
+  eserviceId: z.string(),
+  producerId: z.string(),
+  agreementId: z.string(),
+  descriptorId: z.string(),
   state: z.string(),
-  tmst_insert: z.string(),
-  tmst_last_edit: z.string(),
+  tmstInsert: z.string(),
+  tmstLastEdit: z.string(),
 });
 
-export const ConsumerEserviceEntity = z.object({
-  event_id: z.number(),
-  eservice_id: z.string(),
-  producer_id: z.string(),
-  agreement_id: z.string(),
-  descriptor_id: z.string(),
+export const ConsumerEservice = z.object({
+  eventId: z.number(),
+  eserviceId: z.string(),
+  producerId: z.string(),
+  agreementId: z.string(),
+  descriptorId: z.string(),
   state: z.string(),
+  tmstInsert: z.string().optional(),
+  tmstLastEdit: z.string().optional(),
 });
 
-export type ProducerEserviceEntity = z.infer<typeof ProducerEserviceEntity>;
-export type ConsumerEserviceEntity = z.infer<typeof ConsumerEserviceEntity>;
-export type TracingBatchEntity = z.infer<typeof TracingBatchEntity>;
+export type ProducerService = z.infer<typeof ProducerService>;
+export type ConsumerEservice = z.infer<typeof ConsumerEservice>;
+export type TracingBatch = z.infer<typeof TracingBatch>;
 
-export type ProducerEserviceDto = Camelize<
-  z.infer<typeof ProducerEserviceEntity>
+export type ProducerEserviceEntity = SnakeCase<z.infer<typeof ProducerService>>;
+export type ConsumerEserviceEntity = SnakeCase<
+  z.infer<typeof ConsumerEservice>
 >;
-export type ConsumerEserviceDto = Camelize<
-  z.infer<typeof ConsumerEserviceEntity>
->;
-export type TracingBatchDto = Camelize<z.infer<typeof TracingBatchEntity>>;
+export type TracingBatchEntity = SnakeCase<z.infer<typeof TracingBatch>>;

@@ -1,5 +1,5 @@
 import {
-  ConsumerEserviceDto,
+  ConsumerEservice,
   Logger,
   genericInternalError,
 } from "signalhub-commons";
@@ -70,7 +70,7 @@ export function interopClientServiceBuilder(
     async getConsumerEservice(
       agreementId: string,
       eventId: number
-    ): Promise<ConsumerEserviceDto | null> {
+    ): Promise<ConsumerEservice | null> {
       try {
         const { data: agreement } = await getAgreement(voucher, agreementId);
         return toConsumerEservice(agreement, eventId);
