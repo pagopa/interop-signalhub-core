@@ -1,8 +1,8 @@
 import { ApiError, genericLogger } from "signalhub-commons";
 import { describe, expect, inject, it } from "vitest";
+import { SqsConfig } from "signalhub-commons-test/dist/setupTestContainersVitestGlobal.js";
 import { ErrorCodes } from "../src/model/domain/errors.js";
 import { quequeService } from "./utils.js";
-import { SqsConfig } from "signalhub-commons-test/dist/setupTestContainersVitestGlobal.js";
 
 const sqsConfig: SqsConfig = inject("sqsConfig");
 const queueUrl = sqsConfig.queueUrl;
