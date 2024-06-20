@@ -35,8 +35,8 @@ describe("Queue service", () => {
       quequeService.send(JSON.stringify(""), genericLogger, queueUrl)
     ).resolves.not.toThrow();
   });
-  it.skip("should throw a signalNotSendedToQueque error for a non existent queue", async () => {
-    const wrongQueueUrl = "wrong-url";
+  it("should throw a signalNotSendedToQueque error for a non existent queue", async () => {
+    const wrongQueueUrl = "http://localhost/wrongQueueUrl";
     const response = expect(
       quequeService.send(JSON.stringify(""), genericLogger, wrongQueueUrl)
     ).rejects;
