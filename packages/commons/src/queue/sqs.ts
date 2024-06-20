@@ -7,7 +7,6 @@ import {
   Message,
   SQSClientConfig,
   SendMessageCommandInput,
-  GetQueueUrlCommand,
   DeleteMessageBatchCommand,
   ReceiveMessageCommandOutput,
 } from "@aws-sdk/client-sqs";
@@ -110,23 +109,6 @@ export const runConsumer = async (
   loggerInstance.info(
     `Queue processing Completed for Queue: ${config.queueUrl}`
   );
-};
-
-export const getQueueUrl = async (
-  sqsClient: SQSClient,
-  queueName: string
-): Promise<string | undefined> => {
-  const queueUrlCommand = {
-    QueueName: queueName,
-  };
-  try {
-    const command = new GetQueueUrlCommand(queueUrlCommand);
-    const response = await sqsClient.send(command);
-    return response.QueueUrl;
-  } catch (error) {
-    // TODO: handle error
-  }
-  return "";
 };
 
 export const sendMessage = async (
