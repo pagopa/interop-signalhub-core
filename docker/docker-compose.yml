@@ -34,7 +34,7 @@ services:
 
   # Localstack to simulate AWS environment
   localstack:
-    image: "localstack/localstack_3.2.0"
+    image: "localstack/localstack:3.2.0"
     container_name: signal-hub-localstack
     ports:
       - "4566-4583:4566-4583"
@@ -62,7 +62,7 @@ services:
 
   # Mockserver to simulate Interop API m2m
   mockserver:
-    image: mockserver/mockserver
+    image: mockserver/mockserver:5.15.0
     ports:
       - 1080:1080
     container_name: signal-hub-mockserver

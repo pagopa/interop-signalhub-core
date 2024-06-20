@@ -4,11 +4,13 @@ import {
   SignalHubStoreConfig,
   QuequeConfig,
   AwsConfig,
+  InteropClientConfig,
 } from "signalhub-commons";
 
 const PushServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
   .and(QuequeConfig)
-  .and(AwsConfig);
+  .and(AwsConfig)
+  .and(InteropClientConfig);
 
 export type PushServiceConfig = z.infer<typeof PushServiceConfig>;
 

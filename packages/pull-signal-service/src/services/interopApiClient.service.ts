@@ -1,4 +1,8 @@
-import { getAgreementByPurpose } from "signalhub-interop-client";
+import {
+  getAccessToken,
+  getAgreementByPurpose,
+} from "signalhub-interop-client";
+import { genericInternalError } from "signalhub-commons";
 import { Agreement } from "../model/domain/models.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -8,12 +12,12 @@ export function interopApiClientServiceBuilder() {
       purposeId: string
     ): Promise<Agreement | null> {
       try {
-        const { data } = await getAgreementByPurpose(purposeId);
+        const accessToken = await getAccessToken();
+        const { data } = await getAgreementByPurpose(purposeId, accessToken);
         return data as unknown as Agreement;
       } catch (error) {
-        // TODO: handle error
+        throw genericInternalError(`Error getAgreementByPurpose: ${error}`);
       }
-      return null;
     },
   };
 }

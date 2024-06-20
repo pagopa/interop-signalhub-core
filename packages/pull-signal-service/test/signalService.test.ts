@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { genericLogger } from "signalhub-commons";
 import {
   createSignal,
@@ -8,6 +8,7 @@ import {
 } from "signalhub-commons-test";
 
 import {
+  cleanup,
   postgresDB,
   signalService,
   sortSignalsBySignalId,
@@ -15,7 +16,9 @@ import {
   toSignals,
 } from "./utils";
 
-describe.skip("Pull Signal service", () => {
+describe("Pull Signal service", () => {
+  afterEach(cleanup);
+
   it("should get an empty signals list for a non existent e-service", async () => {
     const signalId = 0;
     const eserviceId = "non-existent-eservice-id";

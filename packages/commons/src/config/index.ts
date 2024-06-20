@@ -5,3 +5,4 @@ export * from "./queque.config.js";
 export * from "./aws.config.js";
 export * from "./jwt.config.js";
 export * from "./queque.consumer.js";
+export * from "./interop.client.config.js";

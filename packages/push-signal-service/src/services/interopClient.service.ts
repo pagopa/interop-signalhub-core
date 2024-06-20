@@ -1,11 +1,15 @@
-import { getAgreementByPurpose } from "signalhub-interop-client";
+import {
+  getAccessToken,
+  getAgreementByPurpose,
+} from "signalhub-interop-client";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function interopClientServiceBuilder() {
   return {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     async getAgreementByPurposeId(purposeId: string) {
-      return await getAgreementByPurpose(purposeId);
+      const accessToken = await getAccessToken();
+      return await getAgreementByPurpose(purposeId, accessToken);
     },
   };
 }

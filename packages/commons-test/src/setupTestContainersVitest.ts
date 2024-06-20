@@ -8,8 +8,9 @@ import {
   SQS,
   SignalHubStoreConfig,
   createDbInstance,
+  InteropClientConfig,
 } from "signalhub-commons";
-import { SqsConfig } from "./index.js";
+import { SqsConfig, truncateSignalTable } from "./index.js";
 /**
  * This function is a setup for vitest that initializes the postgres
  * database and returns their instances along with a cleanup function.
@@ -31,15 +32,6 @@ import { SqsConfig } from "./index.js";
  */
 
 export function setupTestContainersVitest(
-  signalHubStoreConfig?: SignalHubStoreConfig,
-  sqsConfig?: SqsConfig
-): {
-  postgresDB: DB;
-  sqsClient: SQS.SQSClient;
-  cleanup: () => Promise<void>;
-};
-
-export function setupTestContainersVitest(
   signalHubStoreConfig?: SignalHubStoreConfig
 ): {
   postgresDB: DB;
@@ -50,8 +42,30 @@ export function setupTestContainersVitest(
   signalHubStoreConfig?: SignalHubStoreConfig,
   sqsConfig?: SqsConfig
 ): {
+  postgresDB: DB;
+  sqsClient: SQS.SQSClient;
+  cleanup: () => Promise<void>;
+};
+
+export function setupTestContainersVitest(
+  signalHubStoreConfig?: SignalHubStoreConfig,
+  sqsConfig?: SqsConfig,
+  interopClientConfig?: InteropClientConfig
+): {
+  postgresDB: DB;
+  sqsClient: SQS.SQSClient;
+  interopClientConfig: InteropClientConfig;
+  cleanup: () => Promise<void>;
+};
+
+export function setupTestContainersVitest(
+  signalHubStoreConfig?: SignalHubStoreConfig,
+  sqsConfig?: SqsConfig,
+  interopClientConfig?: InteropClientConfig
+): {
   postgresDB?: DB;
   sqsClient?: SQS.SQSClient;
+  interopClientConfig?: InteropClientConfig;
   cleanup: () => Promise<void>;
 } {
   let postgresDB: DB | undefined;
@@ -79,8 +93,9 @@ export function setupTestContainersVitest(
   return {
     postgresDB,
     sqsClient,
+    interopClientConfig,
     cleanup: async (): Promise<void> => {
-      await postgresDB?.none("TRUNCATE DEV_SIGNALHUB.SIGNAL;");
+      await truncateSignalTable(postgresDB!);
       // TODO: clean queque messages
     },
   };
