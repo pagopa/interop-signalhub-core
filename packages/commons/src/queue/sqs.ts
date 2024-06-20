@@ -30,10 +30,7 @@ const processExit = async (exitStatusCode: number = 1): Promise<void> => {
   process.exit(exitStatusCode);
 };
 
-export const instantiateClient = (config: SQSClientConfig): SQSClient =>
-  new SQSClient({
-    endpoint: config.endpoint,
-  });
+export const instantiateClient = (): SQSClient => new SQSClient();
 
 const processQueue = async (
   sqsClient: SQSClient,

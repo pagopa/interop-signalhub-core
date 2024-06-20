@@ -24,10 +24,7 @@ export function serviceBuilder(): {
   });
   const storeService = storeServiceBuilder(db);
 
-  const sqsClient: SQS.SQSClient = SQS.instantiateClient({
-    region: config.awsRegion,
-    endpoint: config.queueEndpoint,
-  });
+  const sqsClient: SQS.SQSClient = SQS.instantiateClient();
   const quequeService = quequeServiceBuilder(sqsClient);
   const domainService = domainServiceBuilder();
   const interopClientService = interopClientServiceBuilder();
