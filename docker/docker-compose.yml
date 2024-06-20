@@ -32,23 +32,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # Localstack to simulate AWS environment
-  localstack:
-    image: "localstack/localstack_3.2.0"
-    container_name: signal-hub-localstack
-    ports:
-      - "4566-4583:4566-4583"
-    environment:
-      - EDGE_PORT=4566
-      - SERVICES=sqs
-      - DATA_DIR=${TEMPDATADIR:-/tmp/localstack/data}
-      - DEBUG=1
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-      - "./localstack/aws-credentials:/root/.aws/credentials"
-    networks:
-      - develop-network
-
   # ElasticMQ is a local SQS-compatible queue system, to replace AWS SQS in local development
   elasticmq:
     image: softwaremill/elasticmq-native:1.5.7
