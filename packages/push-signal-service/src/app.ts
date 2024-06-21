@@ -15,7 +15,7 @@ const { domainService, signalService, quequeService, interopService } =
 
 // express
 const app: Express = express();
-
+app.use(express.json());
 app.use(contextMiddleware(serviceName));
 app.use(authenticationMiddleware);
 setupSwaggerRoute(app);

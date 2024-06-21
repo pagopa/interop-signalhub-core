@@ -33,9 +33,6 @@ export function interopServiceBuilder(
       eserviceId: string,
       logger: Logger
     ): Promise<void> {
-      logger.info(
-        `InteropService::canProducerDepositSignal eserviceId: ${eserviceId} producerId: ${producerId}`
-      );
       const state = "PUBLISHED";
       const eserviceOwned = await eserviceRepository(db).findBy(
         producerId,
