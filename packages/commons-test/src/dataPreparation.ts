@@ -43,6 +43,17 @@ async function setupConsumerEserviceTable(db: DB): Promise<void> {
   }
 }
 
+// TODO: to delete
+export const dataPreparation = async (db: DB): Promise<void> => {
+  await setupEserviceTable(db);
+  await setupConsumerEserviceTable(db);
+};
+// TODO: to delete
+export const dataPreparationCleanup = async (db: DB): Promise<void> => {
+  await truncateEserviceTable(db);
+  await truncateConsumerEserviceTable(db);
+};
+
 export const dataPreparationSignalProducer = async (db: DB): Promise<void> => {
   await setupEserviceTable(db);
 };

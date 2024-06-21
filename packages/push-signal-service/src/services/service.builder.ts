@@ -1,17 +1,15 @@
 import { DB, SQS, createDbInstance } from "signalhub-commons";
 import { config } from "../config/env.js";
-import { storeServiceBuilder, StoreService } from "./store.service.js";
+import { signalServiceBuilder, SignalService } from "./signal.service.js";
 import { quequeServiceBuilder, QuequeService } from "./queque.service.js";
 import { domainServiceBuilder, DomainService } from "./domain.service.js";
-import {
-  InteropClientService,
-  interopClientServiceBuilder,
-} from "./interopClient.service.js";
+import { interopApiClientServiceBuilder } from "./interopApiClient.service.js";
+import { InteropService, interopServiceBuilder } from "./interop.service.js";
 export function serviceBuilder(): {
-  storeService: StoreService;
+  signalService: SignalService;
+  interopService: InteropService;
   quequeService: QuequeService;
   domainService: DomainService;
-  interopClientService: InteropClientService;
 } {
   const db: DB = createDbInstance({
     username: config.signalhubStoreDbUsername,
@@ -22,20 +20,22 @@ export function serviceBuilder(): {
     schema: config.signalhubStoreDbSchema,
     useSSL: config.signalhubStoreDbUseSSL,
   });
-  const storeService = storeServiceBuilder(db);
-
+  const signalService = signalServiceBuilder(db);
+  const interopService = interopServiceBuilder(
+    db,
+    interopApiClientServiceBuilder()
+  );
   const sqsClient: SQS.SQSClient = SQS.instantiateClient({
     region: config.awsRegion,
     endpoint: config.queueEndpoint,
   });
   const quequeService = quequeServiceBuilder(sqsClient);
   const domainService = domainServiceBuilder();
-  const interopClientService = interopClientServiceBuilder();
 
   return {
-    storeService,
+    signalService,
     quequeService,
     domainService,
-    interopClientService,
+    interopService,
   };
 }

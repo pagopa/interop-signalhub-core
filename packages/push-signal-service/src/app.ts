@@ -10,12 +10,12 @@ import { serviceBuilder } from "./services/service.builder.js";
 const serviceName = "push-signal";
 
 // services
-const { domainService, storeService, quequeService, interopClientService } =
+const { domainService, signalService, quequeService, interopService } =
   serviceBuilder();
 
 // express
 const app: Express = express();
-app.use(express.json());
+
 app.use(contextMiddleware(serviceName));
 app.use(authenticationMiddleware);
 setupSwaggerRoute(app);
@@ -26,7 +26,7 @@ app.disable("x-powered-by");
 const tsServer = initServer();
 const routes = tsServer.router(
   contract,
-  pushRoutes(domainService, storeService, quequeService, interopClientService)
+  pushRoutes(signalService, interopService, domainService, quequeService)
 );
 
 createExpressEndpoints(contract, routes, app, {
