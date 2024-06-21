@@ -47,7 +47,7 @@ export const consumerEserviceRepository = (
       return toConsumerEservice(response);
     } catch (error) {
       throw genericInternalError(
-        "Error findByEserviceIdAndConsumerIdAndDescriptorId:" + error
+        `Error findByEserviceIdAndConsumerIdAndDescriptorId:" ${error} `
       );
     }
   },

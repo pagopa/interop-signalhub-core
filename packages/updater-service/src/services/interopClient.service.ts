@@ -98,7 +98,6 @@ export function interopClientServiceBuilder(
           return null;
         }
 
-        console.error(error);
         throw genericInternalError("Generic internal error on getEservice ");
       }
     },
