@@ -10,24 +10,27 @@ import {
   QuequeConfig,
   SignalHubStoreConfig,
   AwsConfig,
+  InteropClientConfig,
 } from "signalhub-commons";
 import { StartedTestContainer } from "testcontainers";
 import { z } from "zod";
 import {
+  TEST_ELASTIC_MQ_PORT,
   TEST_POSTGRES_DB_PORT,
-  TEST_SQS_PORT,
+  elasticMQContainer,
   postgreSQLContainer,
-  sqsContainer,
+  mockserverContainer,
+  TEST_MOCKSERVER_PORT,
 } from "./containerTestUtils.js";
 
 const SqsConfig = QuequeConfig.and(AwsConfig);
-
 export type SqsConfig = z.infer<typeof SqsConfig>;
 
 declare module "vitest" {
   export interface ProvidedContext {
     signalHubStoreConfig: SignalHubStoreConfig;
     sqsConfig: SqsConfig;
+    interopClientConfig: InteropClientConfig;
   }
 }
 
@@ -43,12 +46,14 @@ export function setupTestContainersVitestGlobal() {
   dotenv();
   const signalHubStoreConfig = SignalHubStoreConfig.safeParse(process.env);
   const sqsConfig = SqsConfig.safeParse(process.env);
+  const interopClientConfig = InteropClientConfig.safeParse(process.env);
 
   return async function ({
     provide,
   }: GlobalSetupContext): Promise<() => Promise<void>> {
     let startedPostgreSqlContainer: StartedTestContainer | undefined;
-    let startedSqContainer: StartedTestContainer | undefined;
+    let startedMockserverContainer: StartedTestContainer | undefined;
+    let startedElasticMQContainer: StartedTestContainer | undefined;
 
     if (signalHubStoreConfig.success) {
       startedPostgreSqlContainer = await postgreSQLContainer(
@@ -78,30 +83,30 @@ export function setupTestContainersVitestGlobal() {
     }
 
     if (sqsConfig.success) {
-      startedSqContainer = await sqsContainer(sqsConfig.data).start();
-      await startedSqContainer.exec([
-        "aws",
-        "sqs",
-        "create-queue",
-        "--queue-name",
-        `${sqsConfig.data.queueName}`,
-        "--endpoint-url",
-        `${sqsConfig.data.queueEndpoint}`,
-      ]);
+      startedElasticMQContainer = await elasticMQContainer().start();
 
-      sqsConfig.data.queuePort =
-        startedSqContainer?.getMappedPort(TEST_SQS_PORT);
-
-      sqsConfig.data.queueEndpoint = `http://localhost:${sqsConfig.data.queuePort}`;
+      sqsConfig.data.queueUrl = `http://localhost:${startedElasticMQContainer.getMappedPort(
+        TEST_ELASTIC_MQ_PORT
+      )}/000000000000/sqsLocalQueue`;
 
       provide("sqsConfig", sqsConfig.data);
+    }
+    if (interopClientConfig.success) {
+      startedMockserverContainer = await mockserverContainer(
+        interopClientConfig.data
+      ).start();
+      const mockserverPort =
+        startedMockserverContainer?.getMappedPort(TEST_MOCKSERVER_PORT);
+      interopClientConfig.data.gatewayUrl = `http://localhost:${mockserverPort}/1.0`;
+      provide("interopClientConfig", interopClientConfig.data);
     }
 
     return async (): Promise<void> => {
       // eslint-disable-next-line no-console
       console.info("Stopping test containers");
       await startedPostgreSqlContainer?.stop();
-      await startedSqContainer?.stop();
+      await startedElasticMQContainer?.stop();
+      await startedMockserverContainer?.stop();
     };
   };
 }

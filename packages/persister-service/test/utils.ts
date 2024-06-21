@@ -19,7 +19,6 @@ export const wrongDB: DB = createDbInstance({
   host: "wrong",
   port: 65535,
   database: "wrong",
-  schema: "wrong",
   useSSL: false,
 });
 export const wrongStoreSignalService = storeSignalServiceBuilder(wrongDB);

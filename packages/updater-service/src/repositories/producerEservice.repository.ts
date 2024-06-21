@@ -38,7 +38,7 @@ export const producerEserviceRepository = (
   ): Promise<ProducerService | null> {
     try {
       const result = await db.oneOrNone(
-        "SELECT * FROM eservice WHERE eservice.eservice_id = $1 AND eservice.producer_id = $2 AND eservice.descriptor_id = $3",
+        "SELECT * FROM DEV_INTEROP.eservice e WHERE e.eservice_id = $1 AND e.producer_id = $2 AND e.descriptor_id = $3",
         [eserviceId, producerId, descriptorId]
       );
 
@@ -63,7 +63,7 @@ export const producerEserviceRepository = (
   ): Promise<number | null> {
     try {
       return (await db.oneOrNone(
-        "INSERT INTO eservice(eservice_id, producer_id, descriptor_id, event_id,state) VALUES($1, $2, $3, $4, $5) RETURNING eservice_id",
+        "INSERT INTO DEV_INTEROP.eservice(eservice_id, producer_id, descriptor_id, event_id,state) VALUES($1, $2, $3, $4, $5) RETURNING eservice_id",
         [eserviceId, producerId, descriptorId, eventId, state]
       )) as number;
     } catch (error) {
@@ -79,7 +79,7 @@ export const producerEserviceRepository = (
   ): Promise<number | null> {
     try {
       return (await db.oneOrNone(
-        "UPDATE eservice SET state = $1, event_id = $2 WHERE eservice.eservice_id = $3 AND eservice.descriptor_id = $4",
+        "UPDATE DEV_INTEROP.eservice SET state = $1, event_id = $2 WHERE eservice.eservice_id = $3 AND eservice.descriptor_id = $4",
         [state, eventId, eserviceId, descriptorId]
       )) as number;
     } catch (error) {

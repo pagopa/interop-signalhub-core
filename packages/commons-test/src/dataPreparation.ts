@@ -1,5 +1,9 @@
 import { DB, SQS } from "signalhub-commons";
 import { signalProducer, eserviceProducer, signalConsumer } from "./common.js";
+import {
+  truncateConsumerEserviceTable,
+  truncateEserviceTable,
+} from "./databaseUtils.js";
 
 async function setupEserviceTable(db: DB): Promise<void> {
   const allProducers = [signalProducer, eserviceProducer];
@@ -9,10 +13,10 @@ async function setupEserviceTable(db: DB): Promise<void> {
     const { id, eservices } = producer;
     for (const eservice of eservices) {
       const query = {
-        text: "INSERT INTO eservice (eservice_id, producer_id, descriptor_id, event_id, state) values ($1, $2, $3, $4, $5)",
+        text: "INSERT INTO DEV_INTEROP.eservice (eservice_id, producer_id, descriptor_id, event_id, state) values ($1, $2, $3, $4, $5)",
         values: [eservice.id, id, eservice.descriptor, ++count, eservice.state],
       };
-      await db.oneOrNone(query);
+      await db.none(query);
     }
   }
 }
@@ -25,7 +29,7 @@ async function setupConsumerEserviceTable(db: DB): Promise<void> {
     (e: any) => !("skip_insert" in e)
   )) {
     const query = {
-      text: "INSERT INTO consumer_eservice (agreement_id, eservice_id, consumer_id, descriptor_id, event_id, state) values ($1, $2, $3, $4, $5,$6)",
+      text: "INSERT INTO DEV_INTEROP.consumer_eservice (agreement_id, eservice_id, consumer_id, descriptor_id, event_id, state) values ($1, $2, $3, $4, $5,$6)",
       values: [
         agreement.id,
         agreement.eservice,
@@ -35,20 +39,39 @@ async function setupConsumerEserviceTable(db: DB): Promise<void> {
         agreement.state,
       ],
     };
-    await db.oneOrNone(query);
+    await db.none(query);
   }
 }
 
+// TODO: to delete
 export const dataPreparation = async (db: DB): Promise<void> => {
-  // console.info(`\n*** SIGNALHUB DATA PREPARATION  ***\n`);
   await setupEserviceTable(db);
   await setupConsumerEserviceTable(db);
 };
-
+// TODO: to delete
 export const dataPreparationCleanup = async (db: DB): Promise<void> => {
-  // console.info("\n*** SIGNALHUB DATA PREPARATION CLEANUP ***\n");
-  await db.none("truncate eservice;");
-  await db.none("truncate consumer_eservice;");
+  await truncateEserviceTable(db);
+  await truncateConsumerEserviceTable(db);
+};
+
+export const dataPreparationSignalProducer = async (db: DB): Promise<void> => {
+  await setupEserviceTable(db);
+};
+
+export const dataPreparationSignalConsumer = async (db: DB): Promise<void> => {
+  await setupConsumerEserviceTable(db);
+};
+
+export const dataPreparationSignalProducerCleanup = async (
+  db: DB
+): Promise<void> => {
+  await truncateEserviceTable(db);
+};
+
+export const dataPreparationSignalConsumerCleanup = async (
+  db: DB
+): Promise<void> => {
+  await truncateConsumerEserviceTable(db);
 };
 
 export const deleteAllSqsMessages = async (

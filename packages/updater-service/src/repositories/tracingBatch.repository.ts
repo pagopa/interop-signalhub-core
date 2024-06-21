@@ -23,7 +23,7 @@ export const tracingBatchRepository = (db: DB): ITracingBatchRepository => ({
   async findLatestByType(applicationType): Promise<TracingBatch[]> {
     try {
       const response = await db.manyOrNone(
-        "SELECT * from TRACING_BATCH where last_event_id = (select MAX(t.last_event_id) from TRACING_BATCH t where t.type = $1) order by tmst_created desc",
+        "SELECT * from DEV_INTEROP.TRACING_BATCH where last_event_id = (select MAX(t.last_event_id) from TRACING_BATCH t where t.type = $1) order by tmst_created desc",
         [applicationType]
       );
 
@@ -36,7 +36,7 @@ export const tracingBatchRepository = (db: DB): ITracingBatchRepository => ({
   async insert(tracingBatchState, lastEventId, applicationType): Promise<void> {
     try {
       await db.none(
-        "INSERT INTO TRACING_BATCH (last_event_id, state, type) VALUES ($1, $2, $3)",
+        "INSERT INTO DEV_INTEROP.TRACING_BATCH (last_event_id, state, type) VALUES ($1, $2, $3)",
         [lastEventId, tracingBatchState, applicationType]
       );
     } catch (error) {

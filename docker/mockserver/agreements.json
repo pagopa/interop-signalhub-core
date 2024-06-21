@@ -1,0 +1,91 @@
+[
+  {
+    "httpRequest": {
+      "path": "/1.0/agreements/2bf9db22-2b07-4ab8-acba-5fe34432820f",
+      "method": "GET"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": ["application/json"]
+      },
+      "body": {
+        "consumerId": "c19a7a21-2318-4d36-b669-ac32b02cc8bd",
+        "descriptorId": "0bc84a47-35a0-4c9a-a77a-e924202f84c9",
+        "eserviceId": "9d93e350-49fb-4e52-831a-dab97a7acae4",
+        "id": "2bf9db22-2b07-4ab8-acba-5fe34432820f",
+        "producerId": "63362ead-f496-4a00-8d1e-1073d744a13f",
+        "state": "ACTIVE"
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/1.0/agreements/ec3138eb-d133-46a5-aa88-6720b9702341",
+      "method": "GET"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": ["application/json"]
+      },
+      "body": {
+        "consumerId": "c19a7a21-2318-4d36-b669-ac32b02cc8bd",
+        "descriptorId": "eedd3d5b-dcc8-4937-8afc-1e7813af969a",
+        "eserviceId": "8f61f5a3-4332-4575-bf31-d375d83260ee",
+        "id": "ec3138eb-d133-46a5-aa88-6720b9702341",
+        "producerId": "ed023cee-eee4-4244-8e24-2a9510c94517",
+        "state": "ACTIVE"
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/1.0/agreements/770670ad-01b2-4044-a26f-b9cbec898a86",
+      "method": "GET"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": ["application/json"]
+      },
+      "body": {
+        "consumerId": "c19a7a21-2318-4d36-b669-ac32b02cc8bd",
+        "descriptorId": "b67e53c7-9612-4078-bc94-2b0f8898245e",
+        "eserviceId": "deab9ea0-5976-499d-820a-2149ccde86c1",
+        "id": "770670ad-01b2-4044-a26f-b9cbec898a86",
+        "producerId": "ed023cee-eee4-4244-8e24-2a9510c94517",
+        "state": "ACTIVE"
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/1.0/purposes/881ba6a2-c31b-4613-939f-c9122d555fd7/agreement",
+      "method": "GET"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": ["application/json"]
+      },
+      "body": {
+        "audience": ["v1"],
+        "dailyCallsPerConsumer": 1000,
+        "dailyCallsTotal": 10000,
+        "description": "version 1",
+        "docs": [],
+        "id": "0bc84a47-35a0-4c9a-a77a-e924202f84c9",
+        "interface": {
+          "contentType": "application/octet-stream",
+          "id": "1becd0d7-f25a-4ba7-af62-c56984c54f2c",
+          "name": "openapi (3).yaml"
+        },
+        "serverUrls": ["https://d3tkgbazr3ssc0.cloudfront.net/sdg"],
+        "state": "SUSPENDED",
+        "version": "1",
+        "voucherLifespan": 60
+      }
+    }
+  }
+]

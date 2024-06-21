@@ -18,7 +18,7 @@ export const consumerEserviceRepository = (
   ): Promise<string | null> {
     try {
       return await db.oneOrNone(
-        "SELECT consumer_id FROM consumer_eservice WHERE consumer_id = $1 AND eservice_id = $2 AND state = $3",
+        "SELECT consumer_id FROM DEV_INTEROP.consumer_eservice c WHERE c.consumer_id = $1 AND c.eservice_id = $2 AND c.state = $3",
         [consumerId, eserviceId, state]
       );
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

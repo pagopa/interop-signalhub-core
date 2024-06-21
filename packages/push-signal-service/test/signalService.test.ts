@@ -1,13 +1,8 @@
-import { genericLogger, operationForbidden } from "signalhub-commons";
+import { genericLogger } from "signalhub-commons";
 import { describe, expect, it } from "vitest";
-import {
-  createSignal,
-  eserviceIdPushSignals,
-  signalProducer,
-  writeSignal,
-} from "signalhub-commons-test";
+import { createSignal, writeSignal } from "signalhub-commons-test";
 import { signalIdDuplicatedForEserviceId } from "../src/model/domain/errors.js";
-import { postgresDB, storeService } from "./utils.js";
+import { postgresDB, signalService } from "./utils.js";
 
 describe("Store service", () => {
   describe("verifySignalDuplicated", () => {
@@ -15,7 +10,11 @@ describe("Store service", () => {
       const signalId = 1;
       const eserviceId = "test-eservice-id";
       await expect(
-        storeService.verifySignalDuplicated(signalId, eserviceId, genericLogger)
+        signalService.verifySignalDuplicated(
+          signalId,
+          eserviceId,
+          genericLogger
+        )
       ).resolves.not.toThrow();
     });
     it("If signal already exist on db should throw a signalIdDuplicatedForEserviceId error", async () => {
@@ -25,23 +24,24 @@ describe("Store service", () => {
       await writeSignal(signal, postgresDB);
 
       await expect(
-        storeService.verifySignalDuplicated(signalId, eserviceId, genericLogger)
+        signalService.verifySignalDuplicated(
+          signalId,
+          eserviceId,
+          genericLogger
+        )
       ).rejects.toThrowError(
         signalIdDuplicatedForEserviceId(signalId, eserviceId)
       );
     });
   });
 
+  /*
   describe("canProducerDepositSignal", () => {
-    it.skip("Should producer not be able to deposit signal because he has a valid agreement but e-service is not PUBLISHED", async () => {
-      // TODO: test with other mock interopService
-    });
-
     it("Should producer not be able to deposit signal if he is not the owner of the e-service", async () => {
       const producerId = "fake-producer-id";
       const eserviceId = eserviceIdPushSignals;
       await expect(
-        storeService.canProducerDepositSignal(
+        signalService.canProducerDepositSignal(
           producerId,
           eserviceId,
           genericLogger
@@ -53,12 +53,12 @@ describe("Store service", () => {
       const eserviceId = eserviceIdPushSignals;
 
       await expect(
-        storeService.canProducerDepositSignal(
+        signalService.canProducerDepositSignal(
           producerId,
           eserviceId,
           genericLogger
         )
       ).resolves.not.toThrow();
     });
-  });
+  }) */
 });
