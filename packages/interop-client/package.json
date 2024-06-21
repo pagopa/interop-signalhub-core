@@ -20,6 +20,7 @@
   },
   "keywords": [],
   "dependencies": {
+    "signalhub-commons": "workspace:*",
     "@aws-sdk/client-kms": "^3.592.0",
     "axios": "^1.6.8",
     "jose": "^5.4.0",

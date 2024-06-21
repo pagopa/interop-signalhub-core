@@ -11,7 +11,6 @@ const db: DB = createDbInstance({
   host: config.signalhubStoreDbHost,
   port: config.signalhubStoreDbPort,
   database: config.signalhubStoreDbName,
-  schema: config.signalhubStoreDbSchema,
   useSSL: config.signalhubStoreDbUseSSL,
 });
 

@@ -129,6 +129,9 @@ importers:
       jose:
         specifier: ^5.4.0
         version: 5.4.0
+      signalhub-commons:
+        specifier: workspace:*
+        version: link:../commons
       swagger-typescript-api:
         specifier: ^13.0.5
         version: 13.0.5

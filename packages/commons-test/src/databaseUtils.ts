@@ -1,5 +1,20 @@
 import { DB, Signal, SignalPayload } from "signalhub-commons";
 
+export async function truncateConsumerEserviceTable(db: DB): Promise<void> {
+  await db.none("truncate dev_interop.consumer_eservice;");
+}
+export async function truncateEserviceTable(db: DB): Promise<void> {
+  await db.none("truncate dev_interop.eservice;");
+}
+
+export async function truncateSignalTable(db: DB): Promise<void> {
+  await db.none("truncate dev_signalhub.signal;");
+}
+
+export async function truncateDeadSignalTable(db: DB): Promise<void> {
+  await db.none("truncate dev_signalhub.dead_signal;");
+}
+
 export async function writeSignal(
   signal: Partial<Signal>,
   db: DB
@@ -18,7 +33,7 @@ export async function writeSignal(
   );
 }
 
-export async function writeSignalsInBatch(
+export async function writeSignals(
   signals: Array<Partial<Signal>>,
   db: DB
 ): Promise<number[]> {

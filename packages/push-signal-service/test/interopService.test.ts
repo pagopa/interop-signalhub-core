@@ -1,8 +1,8 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { genericLogger, operationForbidden } from "signalhub-commons";
 import {
-  dataPreparationSignalConsumer,
-  dataPreparationSignalConsumerCleanup,
+  dataPreparationSignalProducer,
+  dataPreparationSignalProducerCleanup,
   eserviceIdPushSignals,
 } from "signalhub-commons-test";
 import {
@@ -10,12 +10,12 @@ import {
   interopApiClient,
   interopService,
   postgresDB,
-} from "./utils";
+} from "./utils.js";
 
 describe("PDND Interoperability service", () => {
   beforeAll(async () => {
-    await dataPreparationSignalConsumerCleanup(postgresDB);
-    await dataPreparationSignalConsumer(postgresDB);
+    await dataPreparationSignalProducerCleanup(postgresDB);
+    await dataPreparationSignalProducer(postgresDB);
   });
 
   beforeEach(() => {
@@ -23,7 +23,7 @@ describe("PDND Interoperability service", () => {
     vi.clearAllMocks();
   });
 
-  it("should give permission to a signals consumer for pull signals", async () => {
+  it("should give permission to a signals producer for pull signals", async () => {
     vi.spyOn(interopApiClient, "getAgreementByPurposeId").mockResolvedValue(
       aValidMockAgreement
     );
@@ -38,7 +38,7 @@ describe("PDND Interoperability service", () => {
     );
   });
 
-  it("should deny permission to a signal consumer with no agreement for e-service pull", async () => {
+  it("should deny permission to a signal producer with no agreement for e-service push", async () => {
     const anInvalidMockAgreement = null;
     vi.spyOn(interopApiClient, "getAgreementByPurposeId").mockResolvedValue(
       anInvalidMockAgreement
@@ -53,7 +53,7 @@ describe("PDND Interoperability service", () => {
       purposeId
     );
   });
-  it.skip("should deny permission to a signal consumer that is not a consumer of the e-service", async () => {
+  it("should deny permission to a signal producer that is not owner of the e-service", async () => {
     vi.spyOn(interopApiClient, "getAgreementByPurposeId").mockResolvedValue(
       aValidMockAgreement
     );

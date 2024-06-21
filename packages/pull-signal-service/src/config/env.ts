@@ -3,10 +3,12 @@ import {
   HTTPServerConfig,
   SignalHubStoreConfig,
   AwsConfig,
+  InteropClientConfig,
 } from "signalhub-commons";
 
-const PullServiceConfig =
-  HTTPServerConfig.and(SignalHubStoreConfig).and(AwsConfig);
+const PullServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
+  .and(AwsConfig)
+  .and(InteropClientConfig);
 
 export type PullServiceConfig = z.infer<typeof PullServiceConfig>;
 

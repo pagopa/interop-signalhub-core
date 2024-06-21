@@ -2,21 +2,20 @@ import { AppRouteImplementation, initServer } from "@ts-rest/express";
 import { logger, Problem, SignalPayload } from "signalhub-commons";
 import { match } from "ts-pattern";
 import { contract } from "../contract/contract.js";
-import { StoreService } from "../services/store.service.js";
+import { SignalService } from "../services/signal.service.js";
 import { makeApiProblem } from "../model/domain/errors.js";
 import { QuequeService } from "../services/queque.service.js";
 import { DomainService } from "../services/domain.service.js";
-import { producerAuthorization } from "../authorization/authorization.js";
-import { InteropClientService } from "../services/interopClient.service.js";
+import { InteropService } from "../services/interop.service.js";
 
 const s = initServer();
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const pushRoutes = (
+  signalService: SignalService,
+  interopService: InteropService,
   domainService: DomainService,
-  storeService: StoreService,
-  quequeService: QuequeService,
-  interopClientService: InteropClientService
+  quequeService: QuequeService
 ) => {
   const pushSignal: AppRouteImplementation<
     typeof contract.pushSignal
@@ -25,20 +24,27 @@ export const pushRoutes = (
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
     });
-    loggerInstance.info("pushController BEGIN");
+    loggerInstance.info(
+      `pushController BEGIN with body: ${JSON.stringify(
+        body
+      )}, session: ${JSON.stringify(req.ctx.sessionData)}`
+    );
     try {
       const { signalId, eserviceId } = body;
-      await producerAuthorization(
-        storeService,
-        interopClientService,
-        loggerInstance
-      ).verify(req.ctx.sessionData.purposeId, eserviceId);
+      const { purposeId } = req.ctx.sessionData;
 
-      await storeService.verifySignalDuplicated(
+      await interopService.verifyAuthorization(
+        purposeId,
+        eserviceId,
+        loggerInstance
+      );
+
+      await signalService.verifySignalDuplicated(
         signalId,
         eserviceId,
         loggerInstance
       );
+
       const message = domainService.signalToMessage(
         body as SignalPayload,
         req.ctx.correlationId,

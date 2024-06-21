@@ -45,7 +45,7 @@ services:
 
   # Mockserver to simulate Interop API m2m
   mockserver:
-    image: mockserver/mockserver
+    image: mockserver/mockserver:5.15.0
     ports:
       - 1080:1080
     container_name: signal-hub-mockserver
