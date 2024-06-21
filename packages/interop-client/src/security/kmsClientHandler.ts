@@ -1,6 +1,5 @@
 import {
   KMSClient,
-  KMSClientConfig,
   SignCommand,
   SignCommandOutput,
   SignRequest,
@@ -17,10 +16,7 @@ type Claims = {
   jti: string;
 };
 export const kmsClientBuilder = (): { buildJWT: () => Promise<string> } => {
-  const configuration: KMSClientConfig = {
-    region: config.kmsRegion,
-  };
-  const kms: KMSClient = new KMSClient(configuration);
+  const kms: KMSClient = new KMSClient();
 
   return {
     async buildJWT(): Promise<string> {

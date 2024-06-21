@@ -14,10 +14,10 @@ import {
 import { StartedTestContainer } from "testcontainers";
 import { z } from "zod";
 import {
+  TEST_ELASTIC_MQ_PORT,
   TEST_POSTGRES_DB_PORT,
-  TEST_SQS_PORT,
+  elasticMQContainer,
   postgreSQLContainer,
-  sqsContainer,
 } from "./containerTestUtils.js";
 
 const SqsConfig = QuequeConfig.and(AwsConfig);
@@ -49,6 +49,7 @@ export function setupTestContainersVitestGlobal() {
   }: GlobalSetupContext): Promise<() => Promise<void>> {
     let startedPostgreSqlContainer: StartedTestContainer | undefined;
     let startedSqContainer: StartedTestContainer | undefined;
+    let startedElasticMQContainer: StartedTestContainer | undefined;
 
     if (signalHubStoreConfig.success) {
       startedPostgreSqlContainer = await postgreSQLContainer(
@@ -78,21 +79,11 @@ export function setupTestContainersVitestGlobal() {
     }
 
     if (sqsConfig.success) {
-      startedSqContainer = await sqsContainer(sqsConfig.data).start();
-      await startedSqContainer.exec([
-        "aws",
-        "sqs",
-        "create-queue",
-        "--queue-name",
-        `${sqsConfig.data.queueName}`,
-        "--endpoint-url",
-        `${sqsConfig.data.queueEndpoint}`,
-      ]);
+      startedElasticMQContainer = await elasticMQContainer().start();
 
-      sqsConfig.data.queuePort =
-        startedSqContainer?.getMappedPort(TEST_SQS_PORT);
-
-      sqsConfig.data.queueEndpoint = `http://localhost:${sqsConfig.data.queuePort}`;
+      sqsConfig.data.queueUrl = `http://localhost:${startedElasticMQContainer.getMappedPort(
+        TEST_ELASTIC_MQ_PORT
+      )}/000000000000/sqsLocalQueue`;
 
       provide("sqsConfig", sqsConfig.data);
     }
