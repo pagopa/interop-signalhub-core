@@ -3,10 +3,7 @@ import { config } from "./config/env.js";
 import { processMessage } from "./messageHandler.js";
 import { storeSignalServiceBuilder } from "./services/storeSignal.service.js";
 
-const sqsClient: SQS.SQSClient = SQS.instantiateClient({
-  region: config.awsRegion,
-  endpoint: config.queueEndpoint,
-});
+const sqsClient: SQS.SQSClient = SQS.instantiateClient();
 
 const db: DB = createDbInstance({
   username: config.signalhubStoreDbUsername,

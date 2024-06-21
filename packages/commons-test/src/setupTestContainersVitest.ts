@@ -84,10 +84,7 @@ export function setupTestContainersVitest(
   }
 
   if (sqsConfig) {
-    sqsClient = SQS.instantiateClient({
-      region: sqsConfig.awsRegion,
-      endpoint: sqsConfig.queueEndpoint,
-    });
+    sqsClient = SQS.instantiateClient();
   }
 
   return {

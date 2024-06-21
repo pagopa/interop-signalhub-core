@@ -1,15 +1,14 @@
 import { SignalHubStoreConfig, InteropVoucherConfig } from "signalhub-commons";
 import { GenericContainer, Wait } from "testcontainers";
-import { SqsConfig } from "./index.js";
 
 export const TEST_POSTGRES_DB_PORT = 5432;
 export const TEST_POSTGRES_DB_IMAGE = "postgres:14";
 
-export const TEST_SQS_PORT = 4566;
-export const TEST_SQS_IMAGE = "localstack/localstack:3.2.0";
-
 export const TEST_MOCKSERVER_PORT = 1080;
 export const TEST_MOCKSERVER_IMAGE = "mockserver/mockserver:5.15.0";
+
+export const TEST_ELASTIC_MQ_IMAGE = "softwaremill/elasticmq-native:1.5.7";
+export const TEST_ELASTIC_MQ_PORT = 9324;
 
 export const postgreSQLContainer = (
   config: SignalHubStoreConfig
@@ -28,18 +27,15 @@ export const postgreSQLContainer = (
     ])
     .withExposedPorts(TEST_POSTGRES_DB_PORT);
 
-export const sqsContainer = (_config: SqsConfig): GenericContainer =>
-  new GenericContainer(TEST_SQS_IMAGE)
+export const elasticMQContainer = (): GenericContainer =>
+  new GenericContainer(TEST_ELASTIC_MQ_IMAGE)
     .withCopyFilesToContainer([
       {
-        source: "aws.config.local",
-        target: "/root/.aws/credentials",
+        source: "../../docker/elasticmq/elasticmq.local.conf",
+        target: "/opt/elasticmq.conf",
       },
     ])
-    .withEnvironment({
-      SERVICES: "sqs",
-    })
-    .withExposedPorts(TEST_SQS_PORT);
+    .withExposedPorts(TEST_ELASTIC_MQ_PORT);
 
 export const mockserverContainer = (
   _config: InteropVoucherConfig

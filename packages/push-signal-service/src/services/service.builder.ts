@@ -25,10 +25,8 @@ export function serviceBuilder(): {
     db,
     interopApiClientServiceBuilder()
   );
-  const sqsClient: SQS.SQSClient = SQS.instantiateClient({
-    region: config.awsRegion,
-    endpoint: config.queueEndpoint,
-  });
+
+  const sqsClient: SQS.SQSClient = SQS.instantiateClient();
   const quequeService = quequeServiceBuilder(sqsClient);
   const domainService = domainServiceBuilder();
 
