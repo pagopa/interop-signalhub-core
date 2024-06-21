@@ -14,7 +14,6 @@ export function createDbInstance({
   host,
   port,
   database,
-  schema,
   useSSL,
 }: {
   username: string;
@@ -22,12 +21,9 @@ export function createDbInstance({
   host: string;
   port: number;
   database: string;
-  schema: string;
   useSSL: boolean;
 }): DB {
-  const pgp = pgPromise({
-    schema,
-  });
+  const pgp = pgPromise();
 
   const conData = new ConnectionString(
     `postgresql://${username}:${password}@${host}:${port}/${database}`

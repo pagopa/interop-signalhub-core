@@ -17,7 +17,6 @@ export function serviceBuilder(): {
     host: config.signalhubStoreDbHost,
     port: config.signalhubStoreDbPort,
     database: config.signalhubStoreDbName,
-    schema: config.signalhubStoreDbSchema,
     useSSL: config.signalhubStoreDbUseSSL,
   });
   const signalService = signalServiceBuilder(db);

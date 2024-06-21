@@ -78,7 +78,6 @@ export function setupTestContainersVitest(
       host: signalHubStoreConfig.signalhubStoreDbHost,
       port: signalHubStoreConfig.signalhubStoreDbPort,
       database: signalHubStoreConfig.signalhubStoreDbName,
-      schema: signalHubStoreConfig.signalhubStoreDbSchema,
       useSSL: signalHubStoreConfig.signalhubStoreDbUseSSL,
     });
   }
