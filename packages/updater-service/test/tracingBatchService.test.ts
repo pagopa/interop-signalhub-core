@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { tracingBatchService } from "./utils";
 import { TracingBatchStateEnum } from "../src/models/domain/model";
+import { tracingBatchService } from "./utils";
 
 describe("Tracing batch service", () => {
   describe("terminateTracingBatch", () => {
