@@ -21,7 +21,7 @@ export const tracingBatchRepository = (db: DB): ITracingBatchRepository => ({
   async findLatestByType(applicationType): Promise<TracingBatchEntity[]> {
     try {
       return await db.manyOrNone(
-        "SELECT * from DEV_INTEROP.TRACING_BATCH where last_event_id = (select MAX(t.last_event_id) from TRACING_BATCH t where t.type = $1) order by tmst_created desc",
+        "SELECT * from DEV_INTEROP.TRACING_BATCH where last_event_id = (select MAX(t.last_event_id) from DEV_INTEROP.TRACING_BATCH t where t.type = $1) order by tmst_created desc",
         [applicationType]
       );
     } catch (error) {
