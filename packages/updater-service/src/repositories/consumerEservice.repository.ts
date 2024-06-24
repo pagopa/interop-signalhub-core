@@ -1,13 +1,17 @@
 /* eslint-disable functional/no-method-signature */
-import { DB } from "signalhub-commons";
-import { ConsumerEserviceEntity } from "../models/domain/model.js";
+import {
+  ConsumerEservice,
+  DB,
+  genericInternalError,
+  toConsumerEservice,
+} from "signalhub-commons";
 
 export interface IConsumerEserviceRepository {
   findByEserviceIdAndConsumerIdAndDescriptorId(
     eserviceId: string,
     consumerId: string,
     descriptorId: string
-  ): Promise<ConsumerEserviceEntity | null>;
+  ): Promise<ConsumerEservice | null>;
 
   insertConsumerEservice(
     agreementId: string,
@@ -33,11 +37,19 @@ export const consumerEserviceRepository = (
     eserviceId,
     consumerId,
     descriptorId
-  ): Promise<ConsumerEserviceEntity | null> {
-    return await db.oneOrNone(
-      "select consumer from DEV_INTEROP.CONSUMER_ESERVICE consumer where consumer.eservice_id = $1 AND consumer.consumer_id = $2  AND consumer.descriptor_id = $3",
-      [eserviceId, consumerId, descriptorId]
-    );
+  ): Promise<ConsumerEservice | null> {
+    try {
+      const response = await db.oneOrNone(
+        "select consumer from DEV_INTEROP.CONSUMER_ESERVICE consumer where consumer.eservice_id = $1 AND consumer.consumer_id = $2  AND consumer.descriptor_id = $3",
+        [eserviceId, consumerId, descriptorId]
+      );
+
+      return toConsumerEservice(response);
+    } catch (error) {
+      throw genericInternalError(
+        `Error findByEserviceIdAndConsumerIdAndDescriptorId:" ${error} `
+      );
+    }
   },
 
   // eslint-disable-next-line max-params
@@ -49,10 +61,14 @@ export const consumerEserviceRepository = (
     eventId: number,
     state: string
   ): Promise<number | null> {
-    return await db.oneOrNone(
-      "INSERT INTO DEV_INTEROP.CONSUMER_ESERVICE(agreement_id,eservice_id, consumer_id, descriptor_id, event_id,state) VALUES($1, $2, $3, $4, $5,$6) RETURNING eservice_id",
-      [agreementId, eserviceId, consumerId, descriptorId, eventId, state]
-    );
+    try {
+      return await db.oneOrNone(
+        "INSERT INTO DEV_INTEROP.CONSUMER_ESERVICE(agreement_id,eservice_id, consumer_id, descriptor_id, event_id,state) VALUES($1, $2, $3, $4, $5,$6) RETURNING eservice_id",
+        [agreementId, eserviceId, consumerId, descriptorId, eventId, state]
+      );
+    } catch (error) {
+      throw genericInternalError(`Error insertConsumerEservice:" ${error} `);
+    }
   },
 
   async updateConsumerEservice(
@@ -61,9 +77,13 @@ export const consumerEserviceRepository = (
     descriptorId: string,
     state: string
   ): Promise<number | null> {
-    return await db.oneOrNone(
-      "update DEV_INTEROP.CONSUMER_ESERVICE set state = $1 where eservice_id = $2 AND consumer_id = $3  AND descriptor_id = $4",
-      [state, eserviceId, consumerId, descriptorId]
-    );
+    try {
+      return await db.oneOrNone(
+        "update DEV_INTEROP.CONSUMER_ESERVICE set state = $1 where eservice_id = $2 AND consumer_id = $3  AND descriptor_id = $4",
+        [state, eserviceId, consumerId, descriptorId]
+      );
+    } catch (error) {
+      throw genericInternalError(`Error updateConsumerEservice:" ${error} `);
+    }
   },
 });

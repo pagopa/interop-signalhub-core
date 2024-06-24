@@ -1,8 +1,5 @@
-import { DB, Logger } from "signalhub-commons";
-import {
-  AgreementEventDto,
-  ConsumerEserviceEntity,
-} from "../models/domain/model.js";
+import { ConsumerEservice, DB, Logger } from "signalhub-commons";
+import { AgreementEventDto } from "../models/domain/model.js";
 import { consumerEserviceRepository } from "../repositories/consumerEservice.repository.js";
 import { InteropClientService } from "./interopClient.service.js";
 import { ProducerService } from "./producerService.service.js";
@@ -17,8 +14,8 @@ export function consumerServiceBuilder(
   const consumerEserviceRepositoryInstance = consumerEserviceRepository(db);
 
   const setInitialConsumerEservice = (
-    consumerEservice: ConsumerEserviceEntity
-  ): ConsumerEserviceEntity => consumerEservice;
+    consumerEservice: ConsumerEservice
+  ): ConsumerEservice => consumerEservice;
 
   return {
     async updateConsumer(

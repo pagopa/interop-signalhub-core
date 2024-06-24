@@ -22,48 +22,50 @@ export function producerServiceBuilder(
         eServiceEvent.eServiceId
       );
 
-      logger.info(`Retrieved E-service with eServiceId: ${eService.id}`);
+      if (eService) {
+        logger.info(`Retrieved E-service with eServiceId: ${eService.id}`);
 
-      /** Need to getEserviceDescriptor detail in order to retrieve state information of the eservice */
-      const detailEservice = await interopClientService.getEserviceDescriptor(
-        eService.id,
-        eServiceEvent.descriptorId
-      );
-
-      logger.info(
-        `Retrieved detail for e-service with descriptorId: ${detailEservice.id}`
-      );
-
-      /** Check if in db this eservice already exist */
-      const entity =
-        await producerEserviceRepositoryInstance.findByEserviceIdAndProducerIdAndDescriptorId(
-          eService.id, // get from GetEservice
-          eService.producer.id, // get from GetEservice
-          eServiceEvent.descriptorId // get from event Eservice
-        );
-
-      if (!entity) {
-        logger.info(
-          `Eservice with eServiceId: ${eService.id} and ${eServiceEvent.descriptorId} doesn't exist, creating new one`
-        );
-        await producerEserviceRepositoryInstance.insertEservice(
+        /** Need to getEserviceDescriptor detail in order to retrieve state information of the eservice */
+        const detailEservice = await interopClientService.getEserviceDescriptor(
           eService.id,
-          eService.producer.id,
-          eServiceEvent.descriptorId,
+          eServiceEvent.descriptorId
+        );
+
+        logger.info(
+          `Retrieved detail for e-service with descriptorId: ${detailEservice.id}`
+        );
+
+        /** Check if in db this eservice already exist */
+        const entity =
+          await producerEserviceRepositoryInstance.findByEserviceIdAndProducerIdAndDescriptorId(
+            eService.id, // get from GetEservice
+            eService.producer.id, // get from GetEservice
+            eServiceEvent.descriptorId // get from event Eservice
+          );
+
+        if (!entity) {
+          logger.info(
+            `Eservice with eServiceId: ${eService.id} and ${eServiceEvent.descriptorId} doesn't exist, creating new one`
+          );
+          await producerEserviceRepositoryInstance.insertEservice(
+            eService.id,
+            eService.producer.id,
+            eServiceEvent.descriptorId,
+            eServiceEvent.eventId,
+            detailEservice.state
+          );
+
+          return eServiceEvent.eventId;
+        }
+
+        logger.info(`Eservice with ${entity.eserviceId} already exist on DB`);
+        await producerEserviceRepositoryInstance.updateEservice(
+          entity.eserviceId,
+          entity.descriptorId,
           eServiceEvent.eventId,
           detailEservice.state
         );
-
-        return eServiceEvent.eventId;
       }
-
-      logger.info(`Eservice with ${entity.eserviceId} already exist on DB`);
-      await producerEserviceRepositoryInstance.updateEservice(
-        entity.eserviceId,
-        entity.descriptorId,
-        eServiceEvent.eventId,
-        detailEservice.state
-      );
 
       return eServiceEvent.eventId;
     },
