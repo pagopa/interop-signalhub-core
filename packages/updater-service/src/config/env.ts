@@ -1,4 +1,4 @@
-import { SignalHubStoreConfig } from "signalhub-commons";
+import { InteropClientConfig, SignalHubStoreConfig } from "signalhub-commons";
 import { z } from "zod";
 
 const UpdaterConfig = z
@@ -13,7 +13,8 @@ const UpdaterConfig = z
     attemptEvent: c.ATTEMPT_EVENT,
   }));
 
-const UpdaterServiceConfig = SignalHubStoreConfig.and(UpdaterConfig);
+const UpdaterServiceConfig =
+  SignalHubStoreConfig.and(UpdaterConfig).and(InteropClientConfig);
 
 export type UpdaterServiceConfigType = z.infer<typeof UpdaterServiceConfig>;
 export type ApplicationType = z.infer<typeof UpdaterConfig>["applicationType"];

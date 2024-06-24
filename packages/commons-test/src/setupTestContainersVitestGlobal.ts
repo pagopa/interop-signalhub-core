@@ -98,6 +98,9 @@ export function setupTestContainersVitestGlobal() {
       const mockserverPort =
         startedMockserverContainer?.getMappedPort(TEST_MOCKSERVER_PORT);
       interopClientConfig.data.gatewayUrl = `http://localhost:${mockserverPort}/1.0`;
+
+      process.env.GATEWAY_URL = interopClientConfig.data.gatewayUrl;
+
       provide("interopClientConfig", interopClientConfig.data);
     }
 

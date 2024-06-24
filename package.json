@@ -11,6 +11,7 @@
     "test:push": "turbo test --filter push-signal-service",
     "test:pull": "turbo test --filter pull-signal-service",
     "test:persister": "turbo test --filter persister-service",
+    "test:updater": "turbo test --filter  signalhub-updater-service",
     "build": "turbo build",
     "lint": "turbo lint",
     "lint:autofix": "turbo lint:autofix",

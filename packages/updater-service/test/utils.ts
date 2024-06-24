@@ -1,4 +1,4 @@
-import { afterEach, inject } from "vitest";
+import { afterEach, inject, vi } from "vitest";
 import {
   setupTestContainersVitest,
   truncateTracingBatchTable,
@@ -6,9 +6,12 @@ import {
 import { tracingBatchServiceBuilder } from "../src/services/tracingBatch.service.js";
 import { interopClientServiceBuilder } from "../src/services/interopClient.service.js";
 import { logger } from "signalhub-commons";
-export const { cleanup, postgresDB } = setupTestContainersVitest(
-  inject("signalHubStoreConfig")
-);
+export const { cleanup, postgresDB, interopClientConfig } =
+  setupTestContainersVitest(
+    inject("signalHubStoreConfig"),
+    inject("sqsConfig"),
+    inject("interopClientConfig")
+  );
 
 const loggerInstance = logger({
   serviceName: "updater test",

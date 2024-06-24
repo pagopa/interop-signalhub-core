@@ -43,13 +43,13 @@ export const mockserverContainer = (
   new GenericContainer(TEST_MOCKSERVER_IMAGE)
     .withCopyFilesToContainer([
       {
-        source: "../../docker/mockserver/agreements.json",
-        target: "/config/agreements.json",
+        source: "../../docker/mockserver/webhook.json",
+        target: "/config/webhook.json",
       },
     ])
     .withEnvironment({
       MOCKSERVER_SERVER_PORT: `${TEST_MOCKSERVER_PORT}`,
-      MOCKSERVER_INITIALIZATION_JSON_PATH: "/config/agreements.json",
+      MOCKSERVER_INITIALIZATION_JSON_PATH: "/config/webhook.json",
       MOCKSERVER_ENABLE_CORS_FOR_ALL_RESPONSES: "true",
       MOCKSERVER_CORS_ALLOW_ORIGIN: "*",
       MOCKSERVER_CORS_ALLOW_METHODS:
