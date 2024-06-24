@@ -1,4 +1,8 @@
-import { Logger, genericInternalError } from "signalhub-commons";
+import {
+  ConsumerEservice,
+  Logger,
+  genericInternalError,
+} from "signalhub-commons";
 import { AxiosError } from "axios";
 import {
   getAgreement,
@@ -10,7 +14,6 @@ import {
   getEServiceDescriptor,
   getEServicesEventsFromId,
 } from "signalhub-interop-client";
-import { ConsumerEserviceEntity } from "../models/domain/model.js";
 import { toConsumerEservice } from "../models/domain/toConsumerEservice.js";
 import { config } from "../config/env.js";
 import { emptyQueueEventsException } from "../models/domain/errors.js";
@@ -67,7 +70,7 @@ export function interopClientServiceBuilder(
     async getConsumerEservice(
       agreementId: string,
       eventId: number
-    ): Promise<ConsumerEserviceEntity | null> {
+    ): Promise<ConsumerEservice | null> {
       try {
         const { data: agreement } = await getAgreement(voucher, agreementId);
         return toConsumerEservice(agreement, eventId);
@@ -83,9 +86,20 @@ export function interopClientServiceBuilder(
       }
     },
 
-    async getEservice(eserviceId: string): Promise<EService> {
-      const { data: eservice } = await getEservice(voucher, eserviceId);
-      return eservice;
+    async getEservice(eserviceId: string): Promise<EService | null> {
+      try {
+        const { data: eservice } = await getEservice(voucher, eserviceId);
+        return eservice;
+      } catch (error) {
+        if (error instanceof AxiosError && error.response?.status === 404) {
+          loggerInstance.info(
+            `Agreement with agrementId ${eserviceId} not found`
+          );
+          return null;
+        }
+
+        throw genericInternalError("Generic internal error on getEservice ");
+      }
     },
 
     async getEserviceDescriptor(

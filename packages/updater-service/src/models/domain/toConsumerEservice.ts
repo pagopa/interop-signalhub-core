@@ -1,10 +1,10 @@
+import { ConsumerEservice } from "signalhub-commons";
 import { Agreement } from "signalhub-interop-client";
-import { ConsumerEserviceEntity } from "./model.js";
 
 export function toConsumerEservice(
   agreeement: Agreement,
   eventId: number
-): ConsumerEserviceEntity {
+): ConsumerEservice {
   return {
     eventId,
     eserviceId: agreeement.eserviceId,
