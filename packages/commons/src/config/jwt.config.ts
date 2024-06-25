@@ -11,4 +11,4 @@ export const JWTConfig = z
   }));
 export type JWTConfig = z.infer<typeof JWTConfig>;
 
-export const jwtConfig: () => JWTConfig = () => JWTConfig.parse(process.env);
+export const jwtConfig: () => JWTConfig = () => process.env as JWTConfig;
