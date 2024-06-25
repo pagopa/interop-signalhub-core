@@ -9,6 +9,7 @@ describe("Interop client service", () => {
     expect(response.lastEventId).toBe(3);
     expect(response.events.length).toBe(3);
   });
+
   it("Should retrieve a list of Eservices Events", async () => {
     const lastId = 1;
     const response = await interopClientService.getEservicesEvents(lastId);

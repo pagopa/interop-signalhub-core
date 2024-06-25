@@ -37,6 +37,7 @@ export const producerEserviceRepository = (
     descriptorId: string
   ): Promise<ProducerService | null> {
     try {
+      console.log("here", eserviceId, producerId, descriptorId);
       const result = await db.oneOrNone(
         "SELECT * FROM DEV_INTEROP.eservice e WHERE e.eservice_id = $1 AND e.producer_id = $2 AND e.descriptor_id = $3",
         [eserviceId, producerId, descriptorId]

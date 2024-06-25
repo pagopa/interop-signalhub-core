@@ -1,6 +1,7 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { EserviceEventDto } from "../src/models/domain/model";
-import { producerEservice } from "./utils";
+import { interopClientService, producerEservice } from "./utils";
+import { producerEserviceRepository } from "../src/repositories/producerEservice.repository";
 
 describe("ProducerEservice service", () => {
   const eServiceEvent: EserviceEventDto = {
@@ -14,5 +15,7 @@ describe("ProducerEservice service", () => {
   it("Should insert a record on ESERVICE table if not exist", async () => {
     const response = await producerEservice.updateEservice(eServiceEvent);
     expect(response).toBe(eServiceEvent.eventId);
+
+    // expect(spyFind).toHaveBeenCalled();
   });
 });

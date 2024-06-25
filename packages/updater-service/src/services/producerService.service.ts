@@ -4,7 +4,7 @@ import { producerEserviceRepository } from "../repositories/producerEservice.rep
 import { InteropClientService } from "./interopClient.service.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function producerServiceBuilder(
+export async function producerServiceBuilder(
   db: DB,
   interopClientService: InteropClientService,
   logger: Logger
@@ -35,6 +35,10 @@ export function producerServiceBuilder(
           `Retrieved detail for e-service with descriptorId: ${detailEservice.id}`
         );
 
+        console.log(
+          "producer",
+          producerEserviceRepositoryInstance.findByEserviceIdAndProducerIdAndDescriptorId
+        );
         /** Check if in db this eservice already exist */
         const entity =
           await producerEserviceRepositoryInstance.findByEserviceIdAndProducerIdAndDescriptorId(
@@ -42,6 +46,8 @@ export function producerServiceBuilder(
             eService.producer.id, // get from GetEservice
             eServiceEvent.descriptorId // get from event Eservice
           );
+
+        console.log("entity", entity);
 
         if (!entity) {
           logger.info(
