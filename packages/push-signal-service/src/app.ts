@@ -5,6 +5,7 @@ import { contract } from "./contract/contract.js";
 import { pushRoutes } from "./routes/push.route.js";
 import { validationErrorHandler } from "./validation/validation.js";
 import { serviceBuilder } from "./services/service.builder.js";
+import { setupHealthRoute } from "./routes/health.route.js";
 
 const serviceName = "push-signal";
 
@@ -16,8 +17,7 @@ const { domainService, signalService, quequeService, interopService } =
 const app: Express = express();
 app.use(express.json());
 app.use(contextMiddleware(serviceName));
-app.get("/status", async (_, res) => res.status(200).end());
-
+setupHealthRoute(app);
 app.use(authenticationMiddleware);
 
 // setupSwaggerRoute(app);
