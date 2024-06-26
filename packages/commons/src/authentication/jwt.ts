@@ -30,7 +30,6 @@ const decodeJwtToken = (jwtToken: string): JwtPayload | null => {
   try {
     return jwt.decode(jwtToken, { json: true });
   } catch (err) {
-    console.error("Errore", err);
     throw jwtDecodingError(err);
   }
 };
