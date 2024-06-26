@@ -21,7 +21,9 @@ const getKey =
           return callback(err, undefined);
         } else {
           const signKey = key?.getPublicKey();
-          if (signKey) return callback(null, signKey);
+          if (signKey) {
+            return callback(null, signKey);
+          }
         }
       });
     }
@@ -52,11 +54,11 @@ export const validateToken = (
 ): Promise<{ success: boolean; err: jwt.JsonWebTokenError | null }> => {
   const config = JWTConfig.parse(process.env);
 
-  const clients = config.wellKnownUrls.map((url) => {
-    return jwksClient({
+  const clients = config.wellKnownUrls.map((url) =>
+    jwksClient({
       jwksUri: url,
-    });
-  });
+    })
+  );
 
   return new Promise((resolve, _reject) => {
     jwt.verify(
