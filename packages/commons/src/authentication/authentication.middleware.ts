@@ -10,11 +10,9 @@ import {
   missingBearer,
   missingHeader,
 } from "../errors/index.js";
-import { JWTConfig, jwtConfig } from "../config/index.js";
 import { readSessionDataFromJwtToken, validateToken } from "./jwt.js";
 
 const makeApiProblem = makeApiProblemBuilder({});
-const config = jwtConfig();
 
 export const authenticationMiddleware = async (
   req: Request,
@@ -23,7 +21,6 @@ export const authenticationMiddleware = async (
 ): Promise<void | Response> => {
   const validateTokenAndAddSessionDataToContext = async (
     authHeader: string,
-    config: JWTConfig,
     logger: Logger
   ): Promise<void> => {
     if (!authHeader) {
@@ -43,7 +40,7 @@ export const authenticationMiddleware = async (
     }
 
     const jwtToken = authorizationHeader[1];
-    const validationResult = await validateToken(jwtToken, config, logger);
+    const validationResult = await validateToken(jwtToken, logger);
 
     if (!validationResult.success) {
       throw jwtDecodingError(validationResult.err);
@@ -74,7 +71,6 @@ export const authenticationMiddleware = async (
         async (headers) => {
           await validateTokenAndAddSessionDataToContext(
             headers.authorization,
-            config,
             loggerInstance
           );
           loggerInstance.info("Authentication END");

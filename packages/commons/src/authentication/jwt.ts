@@ -7,16 +7,23 @@ import { JWTConfig } from "../config/jwt.config.js";
 
 export const getKey =
   (
-    client: jwksClient.JwksClient
+    clients: jwksClient.JwksClient[],
+    logger: Logger
   ): ((header: JwtHeader, callback: SigningKeyCallback) => void) =>
   (header, callback) => {
-    client.getSigningKey(header.kid, function (err, key) {
-      if (err) {
-        return callback(err, undefined);
-      } else {
-        return callback(null, key?.getPublicKey());
-      }
-    });
+    for (const { client, last } of clients.map((c, i) => ({
+      client: c,
+      last: i === clients.length - 1,
+    }))) {
+      client.getSigningKey(header.kid, function (err, key) {
+        if (err && last) {
+          logger.error(`Error getting signing key: ${err}`);
+          return callback(err, undefined);
+        } else {
+          return callback(null, key?.getPublicKey());
+        }
+      });
+    }
   };
 const decodeJwtToken = (jwtToken: string): JwtPayload | null => {
   try {
@@ -39,17 +46,20 @@ export const readSessionDataFromJwtToken = (jwtToken: string): SessionData => {
 
 export const validateToken = (
   token: string,
-  config: JWTConfig,
   logger: Logger
 ): Promise<{ success: boolean; err: jwt.JsonWebTokenError | null }> => {
-  const client = jwksClient({
-    jwksUri: config.wellKnownUrl,
-  });
+  const config = JWTConfig.parse(process.env);
+
+  const clients = config.wellKnownUrls.map((url) =>
+    jwksClient({
+      jwksUri: url,
+    })
+  );
 
   return new Promise((resolve, _reject) => {
     jwt.verify(
       token,
-      getKey(client),
+      getKey(clients, logger),
       {
         audience: config.acceptedAudience,
       },

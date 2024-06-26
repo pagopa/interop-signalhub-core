@@ -1,14 +1,21 @@
 import { z } from "zod";
 
+const APIEndpoint = z
+  .string()
+  .min(1)
+  .transform((s) => s.replace(/\/+$/, ""))
+  .brand<"APIEndpoint">();
+
 export const JWTConfig = z
   .object({
-    WELL_KNOWN_URL: z.string(),
+    WELL_KNOWN_URLS: z
+      .string()
+      .transform((s) => s.split(","))
+      .pipe(z.array(APIEndpoint)),
     ACCEPTED_AUDIENCE: z.string(),
   })
   .transform((c) => ({
-    wellKnownUrl: c.WELL_KNOWN_URL,
+    wellKnownUrls: c.WELL_KNOWN_URLS,
     acceptedAudience: c.ACCEPTED_AUDIENCE,
   }));
 export type JWTConfig = z.infer<typeof JWTConfig>;
-
-export const jwtConfig: () => JWTConfig = () => process.env as JWTConfig;
