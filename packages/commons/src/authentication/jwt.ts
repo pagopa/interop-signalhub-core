@@ -5,7 +5,7 @@ import { invalidClaim, jwtDecodingError } from "../errors/index.js";
 import { SessionData, AuthToken } from "../models/index.js";
 import { JWTConfig } from "../config/jwt.config.js";
 
-export const getKey =
+const getKey =
   (
     clients: jwksClient.JwksClient[],
     logger: Logger
@@ -20,7 +20,10 @@ export const getKey =
           logger.error(`Error getting signing key: ${err}`);
           return callback(err, undefined);
         } else {
-          return callback(null, key?.getPublicKey());
+          const signKey = key?.getPublicKey();
+          if (signKey) {
+            return callback(null, signKey);
+          }
         }
       });
     }
@@ -34,6 +37,7 @@ const decodeJwtToken = (jwtToken: string): JwtPayload | null => {
 };
 export const readSessionDataFromJwtToken = (jwtToken: string): SessionData => {
   const decoded = decodeJwtToken(jwtToken);
+
   const token = AuthToken.safeParse(decoded);
   if (token.success === false) {
     throw invalidClaim(token.error);
