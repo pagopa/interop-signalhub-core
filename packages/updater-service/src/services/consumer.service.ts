@@ -29,8 +29,6 @@ export function consumerServiceBuilder(
         agreementEventDto.eventId
       );
 
-      console.log("DetailAgreement", detailAgreement);
-
       if (detailAgreement) {
         logger.info(
           `Retrieved detail for agreement with id: ${detailAgreement.agreementId} with state ${detailAgreement.state}`

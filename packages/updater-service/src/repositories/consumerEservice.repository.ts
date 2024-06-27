@@ -20,14 +20,14 @@ export interface IConsumerEserviceRepository {
     descriptorId: string,
     eventId: number,
     state: string
-  ): Promise<number | null>;
+  ): Promise<ConsumerEservice>;
 
   updateConsumerEservice(
     eserviceId: string,
     consumerId: string,
     descriptorId: string,
     state: string
-  ): Promise<number | null>;
+  ): Promise<ConsumerEservice>;
 }
 
 export const consumerEserviceRepository = (
@@ -60,12 +60,14 @@ export const consumerEserviceRepository = (
     descriptorId: string,
     eventId: number,
     state: string
-  ): Promise<number | null> {
+  ): Promise<ConsumerEservice> {
     try {
-      return await db.oneOrNone(
-        "INSERT INTO DEV_INTEROP.CONSUMER_ESERVICE(agreement_id,eservice_id, consumer_id, descriptor_id, event_id,state) VALUES($1, $2, $3, $4, $5,$6) RETURNING eservice_id",
+      const response = await db.oneOrNone(
+        "INSERT INTO DEV_INTEROP.CONSUMER_ESERVICE(agreement_id,eservice_id, consumer_id, descriptor_id, event_id,state) VALUES($1, $2, $3, $4, $5,$6) RETURNING *",
         [agreementId, eserviceId, consumerId, descriptorId, eventId, state]
       );
+
+      return toConsumerEservice(response);
     } catch (error) {
       throw genericInternalError(`Error insertConsumerEservice:" ${error} `);
     }
@@ -76,12 +78,14 @@ export const consumerEserviceRepository = (
     consumerId: string,
     descriptorId: string,
     state: string
-  ): Promise<number | null> {
+  ): Promise<ConsumerEservice> {
     try {
-      return await db.oneOrNone(
-        "update DEV_INTEROP.CONSUMER_ESERVICE set state = $1 where eservice_id = $2 AND consumer_id = $3  AND descriptor_id = $4",
+      const response = await db.oneOrNone(
+        "update DEV_INTEROP.CONSUMER_ESERVICE set state = $1 where eservice_id = $2 AND consumer_id = $3  AND descriptor_id = $4 RETURING *",
         [state, eserviceId, consumerId, descriptorId]
       );
+
+      return toConsumerEservice(response);
     } catch (error) {
       throw genericInternalError(`Error updateConsumerEservice:" ${error} `);
     }
