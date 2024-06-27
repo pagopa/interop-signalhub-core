@@ -16,6 +16,7 @@ import {
   ProducerService,
   producerServiceBuilder,
 } from "./producerService.service.js";
+import { consumerEserviceRepository } from "../repositories/consumerEservice.repository.js";
 
 export async function serviceBuilder(): Promise<{
   tracingBatchService: TracingBatchService;
@@ -45,6 +46,7 @@ export async function serviceBuilder(): Promise<{
   );
 
   const producerEserviceRepositoryInstance = producerEserviceRepository(db);
+  const consumerEserviceRepositoryInstance = consumerEserviceRepository(db);
 
   const producerService = producerServiceBuilder(
     producerEserviceRepositoryInstance,
@@ -53,7 +55,7 @@ export async function serviceBuilder(): Promise<{
   );
 
   const consumerService = consumerServiceBuilder(
-    db,
+    consumerEserviceRepositoryInstance,
     interopClientService,
     producerService,
     loggerInstance
