@@ -1,6 +1,8 @@
 import { DB, createDbInstance, logger } from "signalhub-commons";
 import { getAccessToken } from "signalhub-interop-client";
 import { config } from "../config/env.js";
+import { producerEserviceRepository } from "../repositories/producerEservice.repository.js";
+
 import {
   TracingBatchService,
   tracingBatchServiceBuilder,
@@ -42,8 +44,10 @@ export async function serviceBuilder(): Promise<{
     loggerInstance
   );
 
+  const producerEserviceRepositoryInstance = producerEserviceRepository(db);
+
   const producerService = producerServiceBuilder(
-    db,
+    producerEserviceRepositoryInstance,
     interopClientService,
     loggerInstance
   );

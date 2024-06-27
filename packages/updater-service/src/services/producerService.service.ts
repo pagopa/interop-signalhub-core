@@ -1,18 +1,30 @@
-import { DB, Logger } from "signalhub-commons";
+/* eslint-disable functional/no-method-signature */
+
+import { Logger, ProducerService as ProducerEService } from "signalhub-commons";
 import { EserviceEventDto } from "../models/domain/model.js";
-import { producerEserviceRepository } from "../repositories/producerEservice.repository.js";
+import { IProducerServiceRepository } from "../repositories/producerEservice.repository.js";
 import { InteropClientService } from "./interopClient.service.js";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export async function producerServiceBuilder(
-  db: DB,
+export interface IProducerService {
+  updateEservice(
+    eServiceEvent: EserviceEventDto
+  ): Promise<ProducerEService | { eventId: number }>;
+  checkEserviceTable(
+    eServiceId: string,
+    producerId: string,
+    descriptorId: string,
+    eventId: number
+  ): Promise<void>;
+}
+export function producerServiceBuilder(
+  producerEserviceRepository: IProducerServiceRepository,
   interopClientService: InteropClientService,
   logger: Logger
-) {
-  const producerEserviceRepositoryInstance = producerEserviceRepository(db);
-
+): IProducerService {
   return {
-    async updateEservice(eServiceEvent: EserviceEventDto): Promise<number> {
+    async updateEservice(
+      eServiceEvent: EserviceEventDto
+    ): Promise<ProducerEService | { eventId: number }> {
       logger.info(
         `Retrieving E-service from Event with eServiceId: ${eServiceEvent.eServiceId}`
       );
@@ -35,25 +47,20 @@ export async function producerServiceBuilder(
           `Retrieved detail for e-service with descriptorId: ${detailEservice.id}`
         );
 
-        console.log(
-          "producer",
-          producerEserviceRepositoryInstance.findByEserviceIdAndProducerIdAndDescriptorId
-        );
         /** Check if in db this eservice already exist */
-        const entity =
-          await producerEserviceRepositoryInstance.findByEserviceIdAndProducerIdAndDescriptorId(
+        // eslint-disable-next-line functional/no-let
+        let entity =
+          await producerEserviceRepository.findByEserviceIdAndProducerIdAndDescriptorId(
             eService.id, // get from GetEservice
             eService.producer.id, // get from GetEservice
             eServiceEvent.descriptorId // get from event Eservice
           );
 
-        console.log("entity", entity);
-
         if (!entity) {
           logger.info(
             `Eservice with eServiceId: ${eService.id} and ${eServiceEvent.descriptorId} doesn't exist, creating new one`
           );
-          await producerEserviceRepositoryInstance.insertEservice(
+          entity = await producerEserviceRepository.insertEservice(
             eService.id,
             eService.producer.id,
             eServiceEvent.descriptorId,
@@ -61,19 +68,21 @@ export async function producerServiceBuilder(
             detailEservice.state
           );
 
-          return eServiceEvent.eventId;
+          return entity;
         }
 
         logger.info(`Eservice with ${entity.eserviceId} already exist on DB`);
-        await producerEserviceRepositoryInstance.updateEservice(
+        entity = await producerEserviceRepository.updateEservice(
           entity.eserviceId,
           entity.descriptorId,
           eServiceEvent.eventId,
           detailEservice.state
         );
+
+        return entity;
       }
 
-      return eServiceEvent.eventId;
+      return { eventId: eServiceEvent.eventId };
     },
 
     async checkEserviceTable(
@@ -87,7 +96,7 @@ export async function producerServiceBuilder(
       );
 
       const entity =
-        await producerEserviceRepositoryInstance.findByEserviceIdAndProducerIdAndDescriptorId(
+        await producerEserviceRepository.findByEserviceIdAndProducerIdAndDescriptorId(
           eServiceId,
           producerId,
           descriptorId

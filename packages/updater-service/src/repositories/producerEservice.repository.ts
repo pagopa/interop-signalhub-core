@@ -19,14 +19,14 @@ export interface IProducerServiceRepository {
     descriptorId: string,
     eventId: number,
     state: string
-  ): Promise<number | null>;
+  ): Promise<ProducerService>;
 
   updateEservice(
     eServiceId: string,
     descriptorId: string,
     eventId: number,
     state: string
-  ): Promise<number | null>;
+  ): Promise<ProducerService>;
 }
 export const producerEserviceRepository = (
   db: DB
@@ -37,7 +37,6 @@ export const producerEserviceRepository = (
     descriptorId: string
   ): Promise<ProducerService | null> {
     try {
-      console.log("here", eserviceId, producerId, descriptorId);
       const result = await db.oneOrNone(
         "SELECT * FROM DEV_INTEROP.eservice e WHERE e.eservice_id = $1 AND e.producer_id = $2 AND e.descriptor_id = $3",
         [eserviceId, producerId, descriptorId]
@@ -61,12 +60,14 @@ export const producerEserviceRepository = (
     descriptorId: string,
     eventId: number,
     state: string
-  ): Promise<number | null> {
+  ): Promise<ProducerService> {
     try {
-      return (await db.oneOrNone(
-        "INSERT INTO DEV_INTEROP.eservice(eservice_id, producer_id, descriptor_id, event_id,state) VALUES($1, $2, $3, $4, $5) RETURNING eservice_id",
+      const response = await db.oneOrNone(
+        "INSERT INTO DEV_INTEROP.eservice(eservice_id, producer_id, descriptor_id, event_id,state) VALUES($1, $2, $3, $4, $5) RETURNING *",
         [eserviceId, producerId, descriptorId, eventId, state]
-      )) as number;
+      );
+
+      return toProducerEservice(response);
     } catch (error) {
       throw genericInternalError(`Error insertEservice:" ${error} `);
     }
@@ -77,12 +78,14 @@ export const producerEserviceRepository = (
     descriptorId: string,
     eventId: number,
     state: string
-  ): Promise<number | null> {
+  ): Promise<ProducerService> {
     try {
-      return (await db.oneOrNone(
-        "UPDATE DEV_INTEROP.eservice SET state = $1, event_id = $2 WHERE eservice.eservice_id = $3 AND eservice.descriptor_id = $4",
+      const response = await db.oneOrNone(
+        "UPDATE DEV_INTEROP.eservice SET state = $1, event_id = $2 WHERE eservice.eservice_id = $3 AND eservice.descriptor_id = $4 RETURNING *",
         [state, eventId, eserviceId, descriptorId]
-      )) as number;
+      );
+
+      return toProducerEservice(response);
     } catch (error) {
       throw genericInternalError(`Error updateEservice:" ${error} `);
     }

@@ -1,4 +1,4 @@
-import { afterEach, inject, vi } from "vitest";
+import { afterEach, inject } from "vitest";
 import {
   setupTestContainersVitest,
   truncateTracingBatchTable,
@@ -16,7 +16,7 @@ export const { cleanup, postgresDB, interopClientConfig } =
     inject("interopClientConfig")
   );
 
-const loggerInstance = logger({
+export const loggerInstance = logger({
   serviceName: "updater test",
   correlationId: "",
 });
@@ -32,15 +32,11 @@ export const interopClientService = interopClientServiceBuilder(
   loggerInstance
 );
 
-export const spyFindEservice = vi
-  .spyOn(
-    producerEserviceRepository(postgresDB),
-    "findByEserviceIdAndProducerIdAndDescriptorId"
-  )
-  .mockResolvedValue(1 as any);
+const producerEserviceRepositoryInstance =
+  producerEserviceRepository(postgresDB);
 
 export const producerEservice = producerServiceBuilder(
-  postgresDB,
+  producerEserviceRepositoryInstance,
   interopClientService,
   loggerInstance
 );
