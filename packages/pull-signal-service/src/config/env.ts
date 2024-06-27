@@ -4,11 +4,13 @@ import {
   SignalHubStoreConfig,
   AwsConfig,
   InteropClientConfig,
+  JWTConfig,
 } from "signalhub-commons";
 
 const PullServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
   .and(AwsConfig)
-  .and(InteropClientConfig);
+  .and(InteropClientConfig)
+  .and(JWTConfig);
 
 export type PullServiceConfig = z.infer<typeof PullServiceConfig>;
 
