@@ -2,7 +2,6 @@ import { z } from "zod";
 
 export const InteropClientAssertionConfig = z
   .object({
-    KMS_REGION: z.string(),
     KMS_KEY_ID: z.string(),
     KEY_ID: z.string(),
     ISSUER: z.string(),
@@ -11,7 +10,6 @@ export const InteropClientAssertionConfig = z
     EXPIRES_IN_SEC: z.coerce.number(),
   })
   .transform((c) => ({
-    kmsRegion: c.KMS_REGION,
     kmsKeyId: c.KMS_KEY_ID,
     keyId: c.KEY_ID,
     issuer: c.ISSUER,
