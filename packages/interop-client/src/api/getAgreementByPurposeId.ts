@@ -1,6 +1,6 @@
 import { AxiosPromise } from "axios";
 import { apiClient } from "../client.js";
-import { getAuthorizationHeader } from "../utils/index.js";
+import { getAuthorizationHeader } from "../auth/index.js";
 import { Agreement } from "../index.js";
 
 export const getAgreementByPurpose = async (
