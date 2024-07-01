@@ -44,6 +44,10 @@ export const consumerEserviceRepository = (
         [eserviceId, consumerId, descriptorId]
       );
 
+      if (!response) {
+        return null;
+      }
+
       return toConsumerEservice(response);
     } catch (error) {
       throw genericInternalError(
