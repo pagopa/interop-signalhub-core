@@ -14,14 +14,22 @@ export function interopServiceBuilder(
       logger: Logger
     ): Promise<void> {
       logger.debug(`InteropService::verifyAuthorization BEGIN`);
-      const agreement = await this.producerHasValidAgreement(purposeId);
+      const agreement = await this.producerHasValidAgreement(purposeId, logger);
       const { consumerId: producerId } = agreement;
       await this.canProducerDepositSignal(producerId, eserviceId, logger);
       logger.debug(`InteropService::verifyAuthorization END`);
     },
-    async producerHasValidAgreement(purposeId: string): Promise<Agreement> {
+    async producerHasValidAgreement(
+      purposeId: string,
+      logger: Logger
+    ): Promise<Agreement> {
       const agreement = await interopApiClient.getAgreementByPurposeId(
         purposeId
+      );
+      logger.debug(
+        `InteropService::producerHasValidAgreement agreement: ${JSON.stringify(
+          agreement
+        )}`
       );
       if (!agreement) {
         throw operationForbidden;
@@ -40,7 +48,9 @@ export function interopServiceBuilder(
         state
       );
       logger.debug(
-        `InteropService::canProducerDepositSignal eserviceOwned: ${eserviceOwned}`
+        `InteropService::canProducerDepositSignal eserviceOwned: ${JSON.stringify(
+          eserviceOwned
+        )}`
       );
 
       if (eserviceOwned) {
