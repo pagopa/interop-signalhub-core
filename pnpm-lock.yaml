@@ -370,6 +370,9 @@ importers:
       signalhub-commons:
         specifier: workspace:*
         version: link:../commons
+      signalhub-commons-test:
+        specifier: workspace:*
+        version: link:../commons-test
       signalhub-interop-client:
         specifier: workspace:*
         version: link:../interop-client

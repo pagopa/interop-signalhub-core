@@ -74,24 +74,41 @@ export const updaterBuilder = async (
   ): Promise<number> => {
     try {
       // eslint-disable-next-line functional/no-let
-      let lastEventId;
+      let lastEventId = 0;
       for (const event of events) {
         loggerInstance.info(
           `\n ---- Event with eventId: ${event.eventId} ---- \n`
         );
         if (applicationType === "AGREEMENT") {
-          const agreementEvent = toAgreementEvent(event);
-          lastEventId = await consumerService.updateConsumer(agreementEvent);
+          lastEventId = await updateAgreementEvent(event);
         } else {
-          const eServiceEvent = toEserviceEvent(event);
-          lastEventId = await producerService.updateEservice(eServiceEvent);
+          lastEventId = await updateEserviceEvent(event, lastEventId);
         }
       }
-      return lastEventId as number;
+      return lastEventId;
     } catch (error) {
       loggerInstance.error(error);
       throw error;
     }
+  };
+
+  const updateAgreementEvent = async (event: Event): Promise<number> => {
+    const agreementEvent = toAgreementEvent(event);
+    return await consumerService.updateConsumer(agreementEvent);
+  };
+
+  const updateEserviceEvent = async (
+    event: Event,
+    lastEventId: number
+  ): Promise<number> => {
+    const eServiceEvent = toEserviceEvent(event);
+    const eService = await producerService.updateEservice(eServiceEvent);
+
+    if (eService) {
+      return eService.eventId;
+    }
+
+    return lastEventId;
   };
 
   return {

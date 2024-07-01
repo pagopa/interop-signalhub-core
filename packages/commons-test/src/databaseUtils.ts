@@ -15,6 +15,10 @@ export async function truncateDeadSignalTable(db: DB): Promise<void> {
   await db.none("truncate dev_signalhub.dead_signal;");
 }
 
+export async function truncateTracingBatchTable(db: DB): Promise<void> {
+  await db.none("truncate dev_interop.tracing_batch;");
+}
+
 export async function writeSignal(
   signal: Partial<Signal>,
   db: DB
