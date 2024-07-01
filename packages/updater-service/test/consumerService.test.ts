@@ -1,8 +1,9 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { truncateTracingBatchTable } from "signalhub-commons-test";
 import { consumerServiceBuilder } from "../src/services/consumer.service.js";
 import { AgreementEventDto } from "../src/models/domain/model.js";
 import { IProducerService } from "../src/services/producerService.service.js";
-import { interopClientService, loggerInstance } from "./utils.js";
+import { interopClientService, loggerInstance, postgresDB } from "./utils.js";
 
 describe("ConsumerService", () => {
   const agreementEventDto: AgreementEventDto = {
@@ -82,4 +83,6 @@ describe("ConsumerService", () => {
     // Result from mockserver is a detailAgreement with state ACTIVE
     expect(producerService.checkEserviceTable).toBeCalledTimes(1);
   });
+
+  afterEach(() => truncateTracingBatchTable(postgresDB));
 });

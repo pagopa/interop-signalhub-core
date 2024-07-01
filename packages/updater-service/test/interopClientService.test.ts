@@ -1,9 +1,9 @@
 import { expect, describe, it } from "vitest";
 import { interopClientService } from "./utils.js";
 
-describe.skip("Interop client service", () => {
+describe("Interop client service", () => {
   it("Should retrieve a list of Agreements Events", async () => {
-    const lastId = 1;
+    const lastId = 0;
     const response = await interopClientService.getAgreementsEvents(lastId);
 
     expect(response.lastEventId).toBe(3);
@@ -11,11 +11,11 @@ describe.skip("Interop client service", () => {
   });
 
   it("Should retrieve a list of Eservices Events", async () => {
-    const lastId = 1;
+    const lastId = 0;
     const response = await interopClientService.getEservicesEvents(lastId);
 
-    expect(response.lastEventId).toBe(3);
-    expect(response.events.length).toBe(3);
+    expect(response.lastEventId).toBe(4);
+    expect(response.events.length).toBe(4);
   });
 
   it("Should get a specific agreement by id and transform it on consumerEservice object domain", async () => {

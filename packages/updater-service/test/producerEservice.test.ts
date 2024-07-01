@@ -1,4 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { truncateTracingBatchTable } from "signalhub-commons-test";
 import { ProducerService } from "signalhub-commons";
 import { EserviceEventDto } from "../src/models/domain/model.js";
 import {
@@ -101,4 +102,6 @@ describe("ProducerEservice service", () => {
     const response = await producerEservice.updateEservice(eServiceEvent);
     expect(response).toBe(null);
   });
+
+  afterEach(() => truncateTracingBatchTable(postgresDB));
 });

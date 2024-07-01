@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
+import { truncateTracingBatchTable } from "signalhub-commons-test";
 import { TracingBatchStateEnum } from "../src/models/domain/model";
-import { tracingBatchService } from "./utils";
+import { postgresDB, tracingBatchService } from "./utils";
 
 describe("Tracing batch service", () => {
   describe("terminateTracingBatch", () => {
@@ -52,4 +53,6 @@ describe("Tracing batch service", () => {
       ).toBe(lastEventId);
     });
   });
+
+  afterEach(() => truncateTracingBatchTable(postgresDB));
 });

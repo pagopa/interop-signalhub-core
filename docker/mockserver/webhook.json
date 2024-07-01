@@ -293,7 +293,7 @@
       "path": "/1.0/events/agreements",
       "queryStringParameters": {
         "limit": ["100"],
-        "lastEventId": ["1"]
+        "lastEventId": ["0"]
       },
       "method": "GET"
     },
