@@ -8,6 +8,9 @@ import { tracingBatchServiceBuilder } from "../src/services/tracingBatch.service
 import { interopClientServiceBuilder } from "../src/services/interopClient.service.js";
 import { producerServiceBuilder } from "../src/services/producerService.service.js";
 import { producerEserviceRepository } from "../src/repositories/producerEservice.repository.js";
+import { updaterBuilder } from "../src/updater.js";
+import { consumerServiceBuilder } from "../src/services/consumer.service.js";
+import { consumerEserviceRepository } from "../src/repositories/consumerEservice.repository.js";
 
 export const { cleanup, postgresDB, interopClientConfig } =
   setupTestContainersVitest(
@@ -17,26 +20,41 @@ export const { cleanup, postgresDB, interopClientConfig } =
   );
 
 export const loggerInstance = logger({
-  serviceName: "updater test",
+  serviceName: "updater-test",
   correlationId: "",
 });
 
 afterEach(cleanup);
 afterEach(() => truncateTracingBatchTable(postgresDB));
-
 export const tracingBatchService = tracingBatchServiceBuilder(postgresDB);
 
-const accessToken = "";
 export const interopClientService = interopClientServiceBuilder(
-  accessToken,
+  "",
   loggerInstance
 );
 
 const producerEserviceRepositoryInstance =
   producerEserviceRepository(postgresDB);
 
-export const producerEservice = producerServiceBuilder(
+const consumerEserviceRepositoryInstance =
+  consumerEserviceRepository(postgresDB);
+
+const producerEservice = producerServiceBuilder(
   producerEserviceRepositoryInstance,
   interopClientService,
   loggerInstance
+);
+
+const consumer = consumerServiceBuilder(
+  consumerEserviceRepositoryInstance,
+  interopClientService,
+  producerEservice,
+  loggerInstance
+);
+
+export const task = await updaterBuilder(
+  tracingBatchService,
+  interopClientService,
+  consumer,
+  producerEservice
 );

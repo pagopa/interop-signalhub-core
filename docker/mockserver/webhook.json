@@ -4,7 +4,7 @@
       "path": "/1.0/events/eservices",
       "queryStringParameters": {
         "limit": ["100"],
-        "lastEventId": ["1"]
+        "lastEventId": ["0"]
       },
       "method": "GET"
     },
@@ -35,6 +35,16 @@
           },
           {
             "eventId": 3,
+            "eventType": "ADDED",
+            "objectId": {
+              "eServiceId": "deab9ea0-5976-499d-820a-2149ccde86c1",
+              "descriptorId": "b67e53c7-9612-4078-bc94-2b0f8898245e"
+            },
+            "objectType": "ESERVICE"
+          },
+
+          {
+            "eventId": 4,
             "eventType": "UPDATED",
             "objectId": {
               "eServiceId": "deab9ea0-5976-499d-820a-2149ccde86c1",
@@ -43,7 +53,7 @@
             "objectType": "ESERVICE"
           }
         ],
-        "lastEventId": 3
+        "lastEventId": 4
       }
     }
   },
@@ -52,7 +62,27 @@
       "path": "/1.0/events/eservices",
       "queryStringParameters": {
         "limit": ["100"],
-        "lastEventId": ["3"]
+        "lastEventId": ["0"]
+      },
+      "method": "GET"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": ["application/json"]
+      },
+      "body": {
+        "events": [],
+        "lastEventId": 4
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/1.0/events/eservices",
+      "queryStringParameters": {
+        "limit": ["100"],
+        "lastEventId": ["4"]
       },
       "method": "GET"
     },

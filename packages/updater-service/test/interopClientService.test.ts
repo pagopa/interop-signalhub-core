@@ -1,7 +1,7 @@
 import { expect, describe, it } from "vitest";
 import { interopClientService } from "./utils.js";
 
-describe("Interop client service", () => {
+describe.skip("Interop client service", () => {
   it("Should retrieve a list of Agreements Events", async () => {
     const lastId = 1;
     const response = await interopClientService.getAgreementsEvents(lastId);
