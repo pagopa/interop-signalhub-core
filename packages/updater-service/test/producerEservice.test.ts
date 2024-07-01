@@ -86,7 +86,7 @@ describe("ProducerEservice service", () => {
     expect(response.eventId).toBe(eServiceEvent.eventId);
   });
 
-  it("Should return an object with eventId if Eservice is not found", async () => {
+  it("Should return null with if Eservice is not found", async () => {
     const interopClientService = {
       getEservice: vi.fn().mockResolvedValue(null),
       getEserviceDescriptor: vi.fn(),
@@ -99,6 +99,6 @@ describe("ProducerEservice service", () => {
     );
 
     const response = await producerEservice.updateEservice(eServiceEvent);
-    expect(response.eventId).toBe(eServiceEvent.eventId);
+    expect(response).toBe(null);
   });
 });

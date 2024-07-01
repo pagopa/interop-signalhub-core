@@ -1,7 +1,10 @@
 import { DB, createDbInstance, logger } from "signalhub-commons";
 import { getAccessToken } from "signalhub-interop-client";
-import { producerEserviceRepository } from "../repositories/producerEservice.repository.js";
-import { consumerEserviceRepository } from "../repositories/consumerEservice.repository.js";
+
+import {
+  producerEserviceRepository,
+  consumerEserviceRepository,
+} from "../repositories/index.js";
 import { config } from "../config/env.js";
 import {
   TracingBatchService,

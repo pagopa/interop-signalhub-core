@@ -1,5 +1,5 @@
 import { expect, describe, it } from "vitest";
-import { interopClientService } from "./utils";
+import { interopClientService } from "./utils.js";
 
 describe("Interop client service", () => {
   it("Should retrieve a list of Agreements Events", async () => {

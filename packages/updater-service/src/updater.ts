@@ -84,8 +84,11 @@ export const updaterBuilder = async (
           lastEventId = await consumerService.updateConsumer(agreementEvent);
         } else {
           const eServiceEvent = toEserviceEvent(event);
-          const response = await producerService.updateEservice(eServiceEvent);
-          lastEventId = response.eventId;
+          const eService = await producerService.updateEservice(eServiceEvent);
+
+          if (eService) {
+            lastEventId = eService.eventId;
+          }
         }
       }
       return lastEventId as number;

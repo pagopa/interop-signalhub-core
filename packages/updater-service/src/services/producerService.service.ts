@@ -8,7 +8,7 @@ import { InteropClientService } from "./interopClient.service.js";
 export interface IProducerService {
   updateEservice(
     eServiceEvent: EserviceEventDto
-  ): Promise<ProducerEService | { eventId: number }>;
+  ): Promise<ProducerEService | null>;
   checkEserviceTable(
     eServiceId: string,
     producerId: string,
@@ -24,7 +24,7 @@ export function producerServiceBuilder(
   return {
     async updateEservice(
       eServiceEvent: EserviceEventDto
-    ): Promise<ProducerEService | { eventId: number }> {
+    ): Promise<ProducerEService | null> {
       logger.info(
         `Retrieving E-service from Event with eServiceId: ${eServiceEvent.eServiceId}`
       );
@@ -82,7 +82,7 @@ export function producerServiceBuilder(
         return entity;
       }
 
-      return { eventId: eServiceEvent.eventId };
+      return null;
     },
 
     async checkEserviceTable(
