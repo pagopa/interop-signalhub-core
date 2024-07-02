@@ -9,5 +9,7 @@ export function getAuthorizationHeader(token: string): {
 
 export async function getAccessToken(): Promise<string> {
   const clientAssertion = await getClientAssertion();
+
+  console.log("clientAssertion: ", clientAssertion);
   return await getVoucher(clientAssertion);
 }

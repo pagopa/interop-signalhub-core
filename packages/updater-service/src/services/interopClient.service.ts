@@ -13,6 +13,7 @@ import {
   EServiceDescriptor,
   getEServiceDescriptor,
   getEServicesEventsFromId,
+  getAccessToken,
 } from "signalhub-interop-client";
 import { toConsumerEservice } from "../models/domain/toConsumerEservice.js";
 import { config } from "../config/env.js";
@@ -30,18 +31,21 @@ export interface IInteropClientService {
     eServiceId: string,
     descriptorId: string
   ): Promise<EServiceDescriptor>;
+  getCachedVoucher(): Promise<string>;
 }
 
 export function interopClientServiceBuilder(
   voucher: string,
   loggerInstance: Logger
 ): IInteropClientService {
+  let cachedVoucher = voucher;
   return {
     async getEservicesEvents(lastId: number): Promise<Events> {
       loggerInstance.info(
         `Retrieving Eservices events from eventId: ${lastId}, limit: ${config.eventsLimit}`
       );
 
+      const voucher = await this.getCachedVoucher();
       const response = await getEServicesEventsFromId(voucher, {
         lastEventId: lastId,
         limit: config.eventsLimit,
@@ -63,6 +67,7 @@ export function interopClientServiceBuilder(
         `Retrieving Agremeent events from eventId: ${lastId}`
       );
 
+      const voucher = await this.getCachedVoucher();
       const response = await getAgreementsEventsFromId(voucher, {
         lastEventId: lastId,
         limit: config.eventsLimit,
@@ -85,6 +90,7 @@ export function interopClientServiceBuilder(
       eventId: number
     ): Promise<ConsumerEservice | null> {
       try {
+        const voucher = await this.getCachedVoucher();
         const { data: agreement } = await getAgreement(voucher, agreementId);
         return toConsumerEservice(agreement, eventId);
       } catch (error) {
@@ -101,6 +107,7 @@ export function interopClientServiceBuilder(
 
     async getEservice(eserviceId: string): Promise<EService | null> {
       try {
+        voucher = await this.getCachedVoucher();
         const { data: eservice } = await getEservice(voucher, eserviceId);
         return eservice;
       } catch (error) {
@@ -119,6 +126,7 @@ export function interopClientServiceBuilder(
       eServiceId: string,
       descriptorId: string
     ): Promise<EServiceDescriptor> {
+      voucher = await this.getCachedVoucher();
       const { data: eServiceDetail } = await getEServiceDescriptor(
         voucher,
         eServiceId,
@@ -126,6 +134,13 @@ export function interopClientServiceBuilder(
       );
 
       return eServiceDetail;
+    },
+
+    async getCachedVoucher(): Promise<string> {
+      if (cachedVoucher) return cachedVoucher;
+
+      cachedVoucher = await getAccessToken();
+      return cachedVoucher;
     },
   };
 }
