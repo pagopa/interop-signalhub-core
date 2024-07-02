@@ -4,6 +4,7 @@ import {
   ConsumerEservice,
   Logger,
   genericInternalError,
+  isTokenExpired,
 } from "signalhub-commons";
 import { AxiosError } from "axios";
 import {
@@ -140,10 +141,10 @@ export function interopClientServiceBuilder(
     },
 
     async getCachedVoucher(): Promise<string> {
-      if (cachedVoucher) {
+      // if is present a vocher and is not expired return the voucher, otherwise get a new one
+      if (cachedVoucher || !isTokenExpired(cachedVoucher)) {
         return cachedVoucher;
       }
-
       cachedVoucher = await getAccessToken();
       return cachedVoucher;
     },

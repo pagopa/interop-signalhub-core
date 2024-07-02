@@ -48,6 +48,11 @@ export const readSessionDataFromJwtToken = (jwtToken: string): SessionData => {
   }
 };
 
+export const isTokenExpired = (token: string): boolean => {
+  const decoded = decodeJwtToken(token);
+  return decoded?.exp! < Date.now();
+};
+
 export const validateToken = (
   token: string,
   logger: Logger
