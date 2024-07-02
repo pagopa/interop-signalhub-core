@@ -142,7 +142,6 @@ export function interopClientServiceBuilder(
 
     async getCachedVoucher(): Promise<string> {
       // if is present a vocher and is not expired return the voucher, otherwise get a new one
-
       if (cachedVoucher && !isTokenExpired(cachedVoucher)) {
         return cachedVoucher;
       }
