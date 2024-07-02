@@ -29,7 +29,7 @@ jobs:
             dockerfile_path: packages/persister-service
           - image_name: pull-signal
             dockerfile_path: packages/pull-signal-service
-          - image_name: updater-service
+          - image_name: batch-update
             dockerfile_path: packages/updater-service
 
     steps:
