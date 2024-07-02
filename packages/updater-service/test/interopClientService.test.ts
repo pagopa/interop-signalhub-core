@@ -1,7 +1,11 @@
-import { expect, describe, it } from "vitest";
-import { interopClientService } from "./utils.js";
+import { expect, describe, it, vi } from "vitest";
+import * as commons from "signalhub-interop-client";
+import { interopClientServiceBuilder } from "../src/services/interopClient.service.js";
+import { interopClientService, loggerInstance } from "./utils.js";
 
 describe("Interop client service", () => {
+  vi.spyOn(commons, "getAccessToken").mockResolvedValue("");
+
   it("Should retrieve a list of Agreements Events", async () => {
     const lastId = 0;
     const response = await interopClientService.getAgreementsEvents(lastId);
@@ -48,7 +52,22 @@ describe("Interop client service", () => {
       eserviceId,
       descriptorId
     );
-
     expect(response).toBeDefined();
+  });
+
+  it("Should be able to create new voucher if old one is expired", async () => {
+    const spyAccessToken = vi
+      .spyOn(commons, "getAccessToken")
+      .mockResolvedValue("token");
+    const expiredVoucher =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjMsImV4cCI6MTcxOTkxMzMwMH0.OqLZiIyWDdvE4MIPdoRD0DZ7hFnIkAJXfpBU2qeG8ZQ";
+    const interopClientService = interopClientServiceBuilder(
+      expiredVoucher,
+      loggerInstance
+    );
+
+    const voucher = await interopClientService.getCachedVoucher();
+    expect(spyAccessToken).toHaveBeenCalledOnce();
+    expect(voucher).toBe("token");
   });
 });

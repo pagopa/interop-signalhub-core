@@ -3,6 +3,7 @@ import {
   truncateEserviceTable,
   truncateTracingBatchTable,
 } from "signalhub-commons-test";
+import * as commons from "signalhub-interop-client";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { postgresDB, task } from "../utils";
 import { config } from "../../src/config/env";
@@ -24,6 +25,8 @@ async function cleanDatabase(): Promise<void> {
   await truncateTracingBatchTable(postgresDB);
 }
 describe("Updater service", () => {
+  vi.spyOn(commons, "getAccessToken").mockResolvedValue("");
+
   beforeAll(async () => {
     vi.spyOn(process, "exit").mockImplementation(
       (value: string | number | null | undefined) => value as never
