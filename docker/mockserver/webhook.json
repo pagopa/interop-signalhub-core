@@ -35,6 +35,16 @@
           },
           {
             "eventId": 3,
+            "eventType": "ADDED",
+            "objectId": {
+              "eServiceId": "deab9ea0-5976-499d-820a-2149ccde86c1",
+              "descriptorId": "b67e53c7-9612-4078-bc94-2b0f8898245e"
+            },
+            "objectType": "ESERVICE"
+          },
+
+          {
+            "eventId": 4,
             "eventType": "UPDATED",
             "objectId": {
               "eServiceId": "deab9ea0-5976-499d-820a-2149ccde86c1",
@@ -43,7 +53,7 @@
             "objectType": "ESERVICE"
           }
         ],
-        "lastEventId": 3
+        "lastEventId": 4
       }
     }
   },
@@ -52,7 +62,27 @@
       "path": "/1.0/events/eservices",
       "queryStringParameters": {
         "limit": ["100"],
-        "lastEventId": ["3"]
+        "lastEventId": ["0"]
+      },
+      "method": "GET"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": ["application/json"]
+      },
+      "body": {
+        "events": [],
+        "lastEventId": 4
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/1.0/events/eservices",
+      "queryStringParameters": {
+        "limit": ["100"],
+        "lastEventId": ["4"]
       },
       "method": "GET"
     },
@@ -94,9 +124,7 @@
           "id": "63362ead-f496-4a00-8d1e-1073d744a13f",
           "name": "Agenzia per L'Italia Digitale"
         },
-        "serverUrls": [
-          "https://d3tkgbazr3ssc0.cloudfront.net/sdg"
-        ],
+        "serverUrls": ["https://d3tkgbazr3ssc0.cloudfront.net/sdg"],
         "state": "SUSPENDED",
         "technology": "REST",
         "version": "1"
@@ -114,9 +142,7 @@
         "content-type": ["application/json"]
       },
       "body": {
-        "audience": [
-          "v1"
-        ],
+        "audience": ["v1"],
         "dailyCallsPerConsumer": 1000,
         "dailyCallsTotal": 10000,
         "description": "version 1",
@@ -127,15 +153,13 @@
           "id": "1becd0d7-f25a-4ba7-af62-c56984c54f2c",
           "name": "openapi (3).yaml"
         },
-        "serverUrls": [
-          "https://d3tkgbazr3ssc0.cloudfront.net/sdg"
-        ],
+        "serverUrls": ["https://d3tkgbazr3ssc0.cloudfront.net/sdg"],
         "state": "SUSPENDED",
         "version": "1",
         "voucherLifespan": 60
       }
     }
-  },  
+  },
   {
     "httpRequest": {
       "path": "/1.0/eservices/8f61f5a3-4332-4575-bf31-d375d83260ee",
@@ -182,9 +206,7 @@
         "content-type": ["application/json"]
       },
       "body": {
-        "audience": [
-          "https://apicotestpd.lavoro.gov.it/apincn/unipi/"
-        ],
+        "audience": ["https://apicotestpd.lavoro.gov.it/apincn/unipi/"],
         "dailyCallsPerConsumer": 1000,
         "dailyCallsTotal": 25000,
         "description": "Correzione specifiche OpenAPI e audience",
@@ -195,15 +217,13 @@
           "id": "14a6e39d-dced-4da3-b99b-ac3814858f11",
           "name": "openapi.unipi.json"
         },
-        "serverUrls": [
-          "https://apicotestpd.lavoro.gov.it"
-        ],
+        "serverUrls": ["https://apicotestpd.lavoro.gov.it"],
         "state": "PUBLISHED",
         "version": "2",
         "voucherLifespan": 3600
       }
     }
-  }, 
+  },
   {
     "httpRequest": {
       "path": "/1.0/eservices/deab9ea0-5976-499d-820a-2149ccde86c1",
@@ -250,9 +270,7 @@
         "content-type": ["application/json"]
       },
       "body": {
-        "audience": [
-          "https://apicotestpd.lavoro.gov.it/apincn/unilavcong/"
-        ],
+        "audience": ["https://apicotestpd.lavoro.gov.it/apincn/unilavcong/"],
         "dailyCallsPerConsumer": 1000,
         "dailyCallsTotal": 25000,
         "description": "Seconda versione rilasciata del servizio ai fini di testing.",
@@ -263,15 +281,13 @@
           "id": "910a793e-af33-47d3-88f3-8ee77e423793",
           "name": "openapi.unilavcong.json"
         },
-        "serverUrls": [
-          "https://apicotestpd.lavoro.gov.it"
-        ],
+        "serverUrls": ["https://apicotestpd.lavoro.gov.it"],
         "state": "SUSPENDED",
         "version": "2",
         "voucherLifespan": 3600
       }
     }
-  }, 
+  },
   {
     "httpRequest": {
       "path": "/1.0/events/agreements",
@@ -407,9 +423,7 @@
         "content-type": ["application/json"]
       },
       "body": {
-        "audience": [
-          "v1"
-        ],
+        "audience": ["v1"],
         "dailyCallsPerConsumer": 1000,
         "dailyCallsTotal": 10000,
         "description": "version 1",
@@ -420,9 +434,7 @@
           "id": "1becd0d7-f25a-4ba7-af62-c56984c54f2c",
           "name": "openapi (3).yaml"
         },
-        "serverUrls": [
-          "https://d3tkgbazr3ssc0.cloudfront.net/sdg"
-        ],
+        "serverUrls": ["https://d3tkgbazr3ssc0.cloudfront.net/sdg"],
         "state": "SUSPENDED",
         "version": "1",
         "voucherLifespan": 60

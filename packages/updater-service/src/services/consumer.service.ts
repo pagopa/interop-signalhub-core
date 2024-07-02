@@ -1,18 +1,16 @@
-import { ConsumerEservice, DB, Logger } from "signalhub-commons";
+import { ConsumerEservice, Logger } from "signalhub-commons";
 import { AgreementEventDto } from "../models/domain/model.js";
-import { consumerEserviceRepository } from "../repositories/consumerEservice.repository.js";
+import { IConsumerEserviceRepository } from "../repositories/consumerEservice.repository.js";
 import { InteropClientService } from "./interopClient.service.js";
 import { ProducerService } from "./producerService.service.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function consumerServiceBuilder(
-  db: DB,
+  consumerEserviceRepository: IConsumerEserviceRepository,
   interopClientService: InteropClientService,
   producerService: ProducerService,
   logger: Logger
 ) {
-  const consumerEserviceRepositoryInstance = consumerEserviceRepository(db);
-
   const setInitialConsumerEservice = (
     consumerEservice: ConsumerEservice
   ): ConsumerEservice => consumerEservice;
@@ -39,16 +37,16 @@ export function consumerServiceBuilder(
         /** Check on DB if eservice is already present */
         // eslint-disable-next-line @typescript-eslint/no-unused-vars, functional/no-let
         let entity =
-          await consumerEserviceRepositoryInstance.findByEserviceIdAndConsumerIdAndDescriptorId(
+          await consumerEserviceRepository.findByEserviceIdAndConsumerIdAndDescriptorId(
             detailAgreement.eserviceId,
             detailAgreement.producerId,
             detailAgreement.descriptorId
           );
-
+        // if entity is not present, it means that the agreement is not present on DB and we need to insert it
         if (!entity) {
           entity = setInitialConsumerEservice(detailAgreement);
 
-          await consumerEserviceRepositoryInstance.insertConsumerEservice(
+          await consumerEserviceRepository.insertConsumerEservice(
             entity.agreementId,
             entity.eserviceId,
             entity.producerId,
@@ -60,7 +58,7 @@ export function consumerServiceBuilder(
           logger.info(
             ` agreement with id: ${detailAgreement.agreementId} is already available on DB`
           );
-          await consumerEserviceRepositoryInstance.updateConsumerEservice(
+          await consumerEserviceRepository.updateConsumerEservice(
             entity.eserviceId,
             entity.producerId,
             entity.descriptorId,
