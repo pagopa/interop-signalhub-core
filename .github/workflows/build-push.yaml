@@ -29,6 +29,8 @@ jobs:
             dockerfile_path: packages/persister-service
           - image_name: pull-signal
             dockerfile_path: packages/pull-signal-service
+          - image_name: updater-service
+            dockerfile_path: packages/updater-service
 
     steps:
       - name: Checkout repository
@@ -80,4 +82,3 @@ jobs:
           push: true
           tags: ${{ github.ref_type == 'branch' && steps.meta_latest.outputs.tags || steps.meta_tag.outputs.tags }}
           labels: ${{ github.ref_type == 'branch' && steps.meta_latest.outputs.labels || steps.meta_tag.outputs.labels }}
-
