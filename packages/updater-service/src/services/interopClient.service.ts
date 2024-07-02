@@ -18,11 +18,24 @@ import { toConsumerEservice } from "../models/domain/toConsumerEservice.js";
 import { config } from "../config/env.js";
 import { emptyQueueEventsException } from "../models/domain/errors.js";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export interface IInteropClientService {
+  getEservicesEvents(lastId: number): Promise<Events>;
+  getAgreementsEvents(lastId: number): Promise<Events>;
+  getConsumerEservice(
+    agreementId: string,
+    eventId: number
+  ): Promise<ConsumerEservice | null>;
+  getEservice(eserviceId: string): Promise<EService | null>;
+  getEserviceDescriptor(
+    eServiceId: string,
+    descriptorId: string
+  ): Promise<EServiceDescriptor>;
+}
+
 export function interopClientServiceBuilder(
   voucher: string,
   loggerInstance: Logger
-) {
+): IInteropClientService {
   return {
     async getEservicesEvents(lastId: number): Promise<Events> {
       loggerInstance.info(
