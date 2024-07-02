@@ -27,7 +27,7 @@ if (!parsedFromEnv.success) {
 
   // eslint-disable-next-line no-console
   console.error(
-    "Invalid or missing env vars: Updater Service  " + invalidEnvVars.join(", ")
+    "Invalid or missing env vars: Updater Service " + invalidEnvVars.join(", ")
   );
   process.exit(1);
 }

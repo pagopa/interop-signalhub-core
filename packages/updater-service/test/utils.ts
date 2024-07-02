@@ -4,10 +4,12 @@ import { logger } from "signalhub-commons";
 import { tracingBatchServiceBuilder } from "../src/services/tracingBatch.service.js";
 import { interopClientServiceBuilder } from "../src/services/interopClient.service.js";
 import { producerServiceBuilder } from "../src/services/producerService.service.js";
-import { producerEserviceRepository } from "../src/repositories/producerEservice.repository.js";
+import {
+  producerEserviceRepository,
+  consumerEserviceRepository,
+} from "../src/repositories/index.js";
 import { updaterBuilder } from "../src/updater.js";
 import { consumerServiceBuilder } from "../src/services/consumer.service.js";
-import { consumerEserviceRepository } from "../src/repositories/consumerEservice.repository.js";
 
 export const { cleanup, postgresDB, interopClientConfig } =
   setupTestContainersVitest(

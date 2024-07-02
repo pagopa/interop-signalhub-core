@@ -46,9 +46,11 @@ export async function serviceBuilder(): Promise<{
     accessToken,
     loggerInstance
   );
-
+  // -- Repositories -- //
   const producerEserviceRepositoryInstance = producerEserviceRepository(db);
   const consumerEserviceRepositoryInstance = consumerEserviceRepository(db);
+
+  // -- Services -- //
 
   const producerService = producerServiceBuilder(
     producerEserviceRepositoryInstance,
