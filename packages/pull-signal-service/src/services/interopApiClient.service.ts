@@ -2,7 +2,7 @@ import {
   getAccessToken,
   getAgreementByPurpose,
 } from "signalhub-interop-client";
-import { genericInternalError } from "signalhub-commons";
+import { genericInternalError, isTokenExpired } from "signalhub-commons";
 import { Agreement } from "../model/domain/models.js";
 
 // eslint-disable-next-line functional/no-let
@@ -31,7 +31,7 @@ export type InteropApiClientService = ReturnType<
 >;
 
 async function getVoucher(): Promise<string> {
-  if (cachedVoucher) {
+  if (cachedVoucher && !isTokenExpired(cachedVoucher)) {
     return cachedVoucher;
   }
   cachedVoucher = await getAccessToken();
