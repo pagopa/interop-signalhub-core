@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
+import * as commons from "signalhub-interop-client";
 import { truncateTracingBatchTable } from "signalhub-commons-test";
 import { consumerServiceBuilder } from "../src/services/consumer.service.js";
 import { AgreementEventDto } from "../src/models/domain/model.js";
@@ -6,6 +7,8 @@ import { IProducerService } from "../src/services/producerService.service.js";
 import { interopClientService, loggerInstance, postgresDB } from "./utils.js";
 
 describe("ConsumerService", () => {
+  vi.spyOn(commons, "getAccessToken").mockResolvedValue("");
+
   const agreementEventDto: AgreementEventDto = {
     agreementId: "2bf9db22-2b07-4ab8-acba-5fe34432820f", // agreementId available on webhook for testing with mockserver
     eventId: 1,

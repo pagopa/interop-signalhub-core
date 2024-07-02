@@ -1,7 +1,10 @@
+/* eslint-disable functional/no-method-signature */
+
 import {
   ConsumerEservice,
   Logger,
   genericInternalError,
+  isTokenExpired,
 } from "signalhub-commons";
 import { AxiosError } from "axios";
 import {
@@ -13,22 +16,40 @@ import {
   EServiceDescriptor,
   getEServiceDescriptor,
   getEServicesEventsFromId,
+  getAccessToken,
 } from "signalhub-interop-client";
 import { toConsumerEservice } from "../models/domain/toConsumerEservice.js";
 import { config } from "../config/env.js";
 import { emptyQueueEventsException } from "../models/domain/errors.js";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export interface IInteropClientService {
+  getEservicesEvents(lastId: number): Promise<Events>;
+  getAgreementsEvents(lastId: number): Promise<Events>;
+  getConsumerEservice(
+    agreementId: string,
+    eventId: number
+  ): Promise<ConsumerEservice | null>;
+  getEservice(eserviceId: string): Promise<EService | null>;
+  getEserviceDescriptor(
+    eServiceId: string,
+    descriptorId: string
+  ): Promise<EServiceDescriptor>;
+  getCachedVoucher(): Promise<string>;
+}
+
 export function interopClientServiceBuilder(
   voucher: string,
   loggerInstance: Logger
-) {
+): IInteropClientService {
+  // eslint-disable-next-line functional/no-let
+  let cachedVoucher = voucher;
   return {
     async getEservicesEvents(lastId: number): Promise<Events> {
       loggerInstance.info(
         `Retrieving Eservices events from eventId: ${lastId}, limit: ${config.eventsLimit}`
       );
 
+      const voucher = await this.getCachedVoucher();
       const response = await getEServicesEventsFromId(voucher, {
         lastEventId: lastId,
         limit: config.eventsLimit,
@@ -50,6 +71,7 @@ export function interopClientServiceBuilder(
         `Retrieving Agremeent events from eventId: ${lastId}`
       );
 
+      const voucher = await this.getCachedVoucher();
       const response = await getAgreementsEventsFromId(voucher, {
         lastEventId: lastId,
         limit: config.eventsLimit,
@@ -72,6 +94,7 @@ export function interopClientServiceBuilder(
       eventId: number
     ): Promise<ConsumerEservice | null> {
       try {
+        const voucher = await this.getCachedVoucher();
         const { data: agreement } = await getAgreement(voucher, agreementId);
         return toConsumerEservice(agreement, eventId);
       } catch (error) {
@@ -88,6 +111,7 @@ export function interopClientServiceBuilder(
 
     async getEservice(eserviceId: string): Promise<EService | null> {
       try {
+        const voucher = await this.getCachedVoucher();
         const { data: eservice } = await getEservice(voucher, eserviceId);
         return eservice;
       } catch (error) {
@@ -106,6 +130,7 @@ export function interopClientServiceBuilder(
       eServiceId: string,
       descriptorId: string
     ): Promise<EServiceDescriptor> {
+      const voucher = await this.getCachedVoucher();
       const { data: eServiceDetail } = await getEServiceDescriptor(
         voucher,
         eServiceId,
@@ -113,6 +138,16 @@ export function interopClientServiceBuilder(
       );
 
       return eServiceDetail;
+    },
+
+    async getCachedVoucher(): Promise<string> {
+      // if is present a vocher and is not expired return the voucher, otherwise get a new one
+
+      if (cachedVoucher && !isTokenExpired(cachedVoucher)) {
+        return cachedVoucher;
+      }
+      cachedVoucher = await getAccessToken();
+      return cachedVoucher;
     },
   };
 }
