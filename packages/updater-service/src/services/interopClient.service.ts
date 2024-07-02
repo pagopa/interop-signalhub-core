@@ -1,3 +1,5 @@
+/* eslint-disable functional/no-method-signature */
+
 import {
   ConsumerEservice,
   Logger,
@@ -38,6 +40,7 @@ export function interopClientServiceBuilder(
   voucher: string,
   loggerInstance: Logger
 ): IInteropClientService {
+  // eslint-disable-next-line functional/no-let
   let cachedVoucher = voucher;
   return {
     async getEservicesEvents(lastId: number): Promise<Events> {
@@ -107,7 +110,7 @@ export function interopClientServiceBuilder(
 
     async getEservice(eserviceId: string): Promise<EService | null> {
       try {
-        voucher = await this.getCachedVoucher();
+        const voucher = await this.getCachedVoucher();
         const { data: eservice } = await getEservice(voucher, eserviceId);
         return eservice;
       } catch (error) {
@@ -126,7 +129,7 @@ export function interopClientServiceBuilder(
       eServiceId: string,
       descriptorId: string
     ): Promise<EServiceDescriptor> {
-      voucher = await this.getCachedVoucher();
+      const voucher = await this.getCachedVoucher();
       const { data: eServiceDetail } = await getEServiceDescriptor(
         voucher,
         eServiceId,
@@ -137,7 +140,9 @@ export function interopClientServiceBuilder(
     },
 
     async getCachedVoucher(): Promise<string> {
-      if (cachedVoucher) return cachedVoucher;
+      if (cachedVoucher) {
+        return cachedVoucher;
+      }
 
       cachedVoucher = await getAccessToken();
       return cachedVoucher;
