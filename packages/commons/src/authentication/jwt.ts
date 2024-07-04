@@ -1,33 +1,10 @@
-import jwt, { JwtHeader, JwtPayload, SigningKeyCallback } from "jsonwebtoken";
+import jwt, { JwtHeader, JwtPayload, Secret } from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
 import { Logger } from "../logging/index.js";
 import { invalidClaim, jwtDecodingError } from "../errors/index.js";
 import { SessionData, AuthToken } from "../models/index.js";
 import { JWTConfig } from "../config/jwt.config.js";
 
-const getKey =
-  (
-    clients: jwksClient.JwksClient[],
-    logger: Logger
-  ): ((header: JwtHeader, callback: SigningKeyCallback) => void) =>
-  (header, callback) => {
-    for (const { client, last } of clients.map((c, i) => ({
-      client: c,
-      last: i === clients.length - 1,
-    }))) {
-      client.getSigningKey(header.kid, function (err, key) {
-        if (err && last) {
-          logger.error(`Error getting signing key: ${err}`);
-          return callback(err, undefined);
-        } else {
-          const signKey = key?.getPublicKey();
-          if (signKey) {
-            return callback(null, signKey);
-          }
-        }
-      });
-    }
-  };
 const decodeJwtToken = (jwtToken: string): JwtPayload | null => {
   try {
     return jwt.decode(jwtToken, { json: true });
@@ -54,7 +31,34 @@ export const isTokenExpired = (token: string): boolean => {
   return decoded?.exp ? decoded.exp < currentDate : true;
 };
 
-export const validateToken = (
+const getPublicKey = async (
+  token: string,
+  jwkClient: jwksClient.JwksClient[],
+  logger: Logger
+): Promise<Secret> => {
+  const clientList = jwkClient.map((c, i) => ({
+    client: c,
+    last: i === jwkClient.length - 1,
+  }));
+  for (const { client, last } of clientList) {
+    logger.debug(`last: ${last}`);
+    try {
+      const decoded = jwt.decode(token, { complete: true });
+      const header = decoded?.header as JwtHeader;
+      const key = await client.getSigningKey(header.kid);
+      logger.debug(`key: ${JSON.stringify(key)}`);
+      return key?.getPublicKey();
+    } catch (error) {
+      logger.debug(`err: ${JSON.stringify(error)}`);
+      if (error && last) {
+        throw error;
+      }
+    }
+  }
+  return "";
+};
+
+export const validateToken = async (
   token: string,
   logger: Logger
 ): Promise<{ success: boolean; err: jwt.JsonWebTokenError | null }> => {
@@ -65,27 +69,36 @@ export const validateToken = (
       jwksUri: url,
     })
   );
-
-  return new Promise((resolve, _reject) => {
-    jwt.verify(
-      token,
-      getKey(clients, logger),
-      {
-        audience: config.acceptedAudience,
-      },
-      function (err, _decoded) {
-        if (err) {
-          logger.warn(`Token verification failed: ${err}`);
-          resolve({
-            success: false,
-            err,
+  try {
+    const pubKey = await getPublicKey(token, clients, logger);
+    return new Promise((resolve, _reject) => {
+      jwt.verify(
+        token,
+        pubKey,
+        {
+          audience: config.acceptedAudience,
+        },
+        function (err, _decoded) {
+          if (err) {
+            logger.warn(`Token verification failed: ${err}`);
+            resolve({
+              success: false,
+              err,
+            });
+          }
+          return resolve({
+            success: true,
+            err: null,
           });
         }
-        return resolve({
-          success: true,
-          err: null,
-        });
-      }
-    );
-  });
+      );
+    });
+  } catch (error) {
+    return new Promise((resolve, _reject) => {
+      resolve({
+        success: false,
+        err: error as jwt.JsonWebTokenError,
+      });
+    });
+  }
 };
