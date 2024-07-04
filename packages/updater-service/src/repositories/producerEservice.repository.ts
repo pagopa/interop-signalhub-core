@@ -80,9 +80,10 @@ export const producerEserviceRepository = (
     state: string
   ): Promise<ProducerService> {
     try {
+      const tmstLastEdit = new Date().toISOString();
       const response = await db.oneOrNone(
-        "UPDATE DEV_INTEROP.eservice SET state = $1, event_id = $2 WHERE eservice.eservice_id = $3 AND eservice.descriptor_id = $4 RETURNING *",
-        [state, eventId, eserviceId, descriptorId]
+        "UPDATE DEV_INTEROP.eservice SET state = $1, event_id = $2 , tmst_last_edit= $3  WHERE eservice.eservice_id = $4 AND eservice.descriptor_id = $5 RETURNING *",
+        [state, eventId, tmstLastEdit, eserviceId, descriptorId]
       );
 
       return toProducerEservice(response);

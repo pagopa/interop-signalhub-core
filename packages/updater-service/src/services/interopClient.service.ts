@@ -105,7 +105,9 @@ export function interopClientServiceBuilder(
           return null;
         }
 
-        throw genericInternalError("Generic internal error on getAgreement");
+        throw genericInternalError(
+          `Generic internal error on getEservice ${error}`
+        );
       }
     },
 
@@ -122,7 +124,9 @@ export function interopClientServiceBuilder(
           return null;
         }
 
-        throw genericInternalError("Generic internal error on getEservice ");
+        throw genericInternalError(
+          `Generic internal error on getEservice ${error}`
+        );
       }
     },
 

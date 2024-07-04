@@ -49,14 +49,20 @@ export const updaterBuilder = async (
       }
     } catch (error) {
       if (error instanceof EmptyQueueEventsError) {
+        loggerInstance.info(
+          `There aren't events to process: lastEventId: ${lastEventIdUpdated}`
+        );
+
         await tracingBatchService.terminateTracingBatch(
           TracingBatchStateEnum.ENDED,
           lastEventIdUpdated,
           config.applicationType
         );
-      }
+      } else {
+        loggerInstance.error(
+          `UpdaterServiceError: lastEventId: ${lastEventIdUpdated} - ${error}`
+        );
 
-      if (error instanceof QueueEventsGenericError) {
         await tracingBatchService.terminateTracingBatch(
           TracingBatchStateEnum.ENDED_WITH_ERROR,
           lastEventIdUpdated,
