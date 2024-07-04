@@ -5,6 +5,7 @@ import {
   genericInternalError,
   toConsumerEservice,
 } from "signalhub-commons";
+import { getCurrentDate } from "../utils.js";
 
 export interface IConsumerEserviceRepository {
   findByEserviceIdAndConsumerIdAndDescriptorId(
@@ -84,9 +85,11 @@ export const consumerEserviceRepository = (
     state: string
   ): Promise<ConsumerEservice> {
     try {
+      const tmstLastEdit = getCurrentDate();
+
       const response = await db.oneOrNone(
-        "update DEV_INTEROP.CONSUMER_ESERVICE set state = $1 where eservice_id = $2 AND consumer_id = $3  AND descriptor_id = $4 RETURING *",
-        [state, eserviceId, consumerId, descriptorId]
+        "update DEV_INTEROP.CONSUMER_ESERVICE set state = $1, tmst_last_edit= $2  where eservice_id = $3 AND consumer_id = $4  AND descriptor_id = $5 RETURNING *",
+        [state, tmstLastEdit, eserviceId, consumerId, descriptorId]
       );
 
       return toConsumerEservice(response);

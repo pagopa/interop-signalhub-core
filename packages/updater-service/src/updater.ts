@@ -9,10 +9,7 @@ import { ProducerService } from "./services/producerService.service.js";
 import { toAgreementEvent } from "./models/domain/toAgreementEvent.js";
 import { toEserviceEvent } from "./models/domain/toEserviceEvent.js";
 import { TracingBatchStateEnum } from "./models/domain/model.js";
-import {
-  EmptyQueueEventsError,
-  QueueEventsGenericError,
-} from "./models/domain/errors.js";
+import { EmptyQueueEventsError } from "./models/domain/errors.js";
 
 const loggerInstance = logger({
   serviceName: "updater-service",
@@ -49,14 +46,20 @@ export const updaterBuilder = async (
       }
     } catch (error) {
       if (error instanceof EmptyQueueEventsError) {
+        loggerInstance.info(
+          `There aren't events to process: lastEventId: ${lastEventIdUpdated}`
+        );
+
         await tracingBatchService.terminateTracingBatch(
           TracingBatchStateEnum.ENDED,
           lastEventIdUpdated,
           config.applicationType
         );
-      }
+      } else {
+        loggerInstance.error(
+          `UpdaterServiceError: lastEventId: ${lastEventIdUpdated} - ${error}`
+        );
 
-      if (error instanceof QueueEventsGenericError) {
         await tracingBatchService.terminateTracingBatch(
           TracingBatchStateEnum.ENDED_WITH_ERROR,
           lastEventIdUpdated,
