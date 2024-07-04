@@ -50,7 +50,8 @@ export const readSessionDataFromJwtToken = (jwtToken: string): SessionData => {
 
 export const isTokenExpired = (token: string): boolean => {
   const decoded = decodeJwtToken(token);
-  return decoded?.exp ? decoded.exp < Date.now() : true;
+  const currentDate = Date.now() / 1000;
+  return decoded?.exp ? decoded.exp < currentDate : true;
 };
 
 export const validateToken = (
