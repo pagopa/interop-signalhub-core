@@ -5,6 +5,7 @@ import {
   genericInternalError,
   toProducerEservice,
 } from "signalhub-commons";
+import { getCurrentDate } from "../utils.js";
 
 export interface IProducerServiceRepository {
   findByEserviceIdAndProducerIdAndDescriptorId(
@@ -80,7 +81,7 @@ export const producerEserviceRepository = (
     state: string
   ): Promise<ProducerService> {
     try {
-      const tmstLastEdit = new Date().toISOString();
+      const tmstLastEdit = getCurrentDate();
       const response = await db.oneOrNone(
         "UPDATE DEV_INTEROP.eservice SET state = $1, event_id = $2 , tmst_last_edit= $3  WHERE eservice.eservice_id = $4 AND eservice.descriptor_id = $5 RETURNING *",
         [state, eventId, tmstLastEdit, eserviceId, descriptorId]

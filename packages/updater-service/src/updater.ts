@@ -9,10 +9,7 @@ import { ProducerService } from "./services/producerService.service.js";
 import { toAgreementEvent } from "./models/domain/toAgreementEvent.js";
 import { toEserviceEvent } from "./models/domain/toEserviceEvent.js";
 import { TracingBatchStateEnum } from "./models/domain/model.js";
-import {
-  EmptyQueueEventsError,
-  QueueEventsGenericError,
-} from "./models/domain/errors.js";
+import { EmptyQueueEventsError } from "./models/domain/errors.js";
 
 const loggerInstance = logger({
   serviceName: "updater-service",
