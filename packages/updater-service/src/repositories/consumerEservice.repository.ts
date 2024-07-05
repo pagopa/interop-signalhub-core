@@ -41,7 +41,7 @@ export const consumerEserviceRepository = (
   ): Promise<ConsumerEservice | null> {
     try {
       const response = await db.oneOrNone(
-        "select consumer from DEV_INTEROP.CONSUMER_ESERVICE consumer where consumer.eservice_id = $1 AND consumer.consumer_id = $2  AND consumer.descriptor_id = $3",
+        "select * from DEV_INTEROP.CONSUMER_ESERVICE consumer where consumer.eservice_id = $1 AND consumer.consumer_id = $2  AND consumer.descriptor_id = $3",
         [eserviceId, consumerId, descriptorId]
       );
 
@@ -88,7 +88,7 @@ export const consumerEserviceRepository = (
       const tmstLastEdit = getCurrentDate();
 
       const response = await db.oneOrNone(
-        "update DEV_INTEROP.CONSUMER_ESERVICE set state = $1, tmst_last_edit= $2  where eservice_id = $3 AND consumer_id = $4  AND descriptor_id = $5 RETURNING *",
+        "update DEV_INTEROP.CONSUMER_ESERVICE set state = $1, tmst_last_edit= $2  where eservice_id = $3 AND descriptor_id = $5 RETURNING *",
         [state, tmstLastEdit, eserviceId, consumerId, descriptorId]
       );
 
