@@ -1,0 +1,32 @@
+{
+  "name": "batch-cleanup",
+  "version": "1.0.0",
+  "description": "PagoPA Clean Signals Batch",
+  "type": "module",
+  "main": "dist",
+  "scripts": {
+    "start": "node --watch --loader ts-node/esm -r 'dotenv-flow/config'  ./src/index.ts",
+    "lint": "eslint . --ext .ts,.tsx",
+    "build": "tsc",
+    "test": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv-flow": "^4.1.0",
+    "pg-promise": "^11.8.0",
+    "signalhub-commons": "workspace:*",
+    "signalhub-commons-test": "workspace:*",
+    "signalhub-interop-client": "workspace:*",
+    "ts-pattern": "^5.1.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@pagopa/eslint-config": "^3.0.0",
+    "@types/node": "^20.11.24",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
+  }
+}

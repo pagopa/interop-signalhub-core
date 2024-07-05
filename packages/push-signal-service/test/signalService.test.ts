@@ -34,31 +34,4 @@ describe("Store service", () => {
       );
     });
   });
-
-  /*
-  describe("canProducerDepositSignal", () => {
-    it("Should producer not be able to deposit signal if he is not the owner of the e-service", async () => {
-      const producerId = "fake-producer-id";
-      const eserviceId = eserviceIdPushSignals;
-      await expect(
-        signalService.canProducerDepositSignal(
-          producerId,
-          eserviceId,
-          genericLogger
-        )
-      ).rejects.toThrowError(operationForbidden);
-    });
-    it("Should producer able to deposit signal if he is the owner of the e-services", async () => {
-      const producerId = signalProducer.id;
-      const eserviceId = eserviceIdPushSignals;
-
-      await expect(
-        signalService.canProducerDepositSignal(
-          producerId,
-          eserviceId,
-          genericLogger
-        )
-      ).resolves.not.toThrow();
-    });
-  }) */
 });
