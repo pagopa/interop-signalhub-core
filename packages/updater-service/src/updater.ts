@@ -10,6 +10,7 @@ import { toAgreementEvent } from "./models/domain/toAgreementEvent.js";
 import { toEserviceEvent } from "./models/domain/toEserviceEvent.js";
 import { TracingBatchStateEnum } from "./models/domain/model.js";
 import { EmptyQueueEventsError } from "./models/domain/errors.js";
+import { getCurrentDate } from "./utils.js";
 
 const loggerInstance = logger({
   serviceName: "updater-service",
@@ -67,7 +68,12 @@ export const updaterBuilder = async (
         );
       }
 
-      process.exit(1);
+      loggerInstance.info(
+        `Scheduler updater with applicationType: ${
+          config.applicationType
+        }  completed at: ${getCurrentDate()}`
+      );
+      process.exit(0);
     }
   };
 
@@ -119,7 +125,7 @@ export const updaterBuilder = async (
       loggerInstance.info(
         `Scheduler updater with applicationType: ${
           config.applicationType
-        }  started at: ${new Date().toString()}`
+        }  started at: ${getCurrentDate()}`
       );
 
       const lastEventId =
