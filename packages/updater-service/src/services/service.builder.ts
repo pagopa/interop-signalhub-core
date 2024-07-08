@@ -49,12 +49,14 @@ export async function serviceBuilder(): Promise<{
 
   // -- Services -- //
 
+  const tracingBatchService = tracingBatchServiceBuilder(db);
+
   const deadEventService = deadServiceBuilder(
     deadEventRepositoryInstance,
+    tracingBatchService,
     loggerInstance
   );
 
-  const tracingBatchService = tracingBatchServiceBuilder(db);
   const interopClientService = interopClientServiceBuilder(
     accessToken,
     loggerInstance
