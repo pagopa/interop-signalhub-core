@@ -12,3 +12,5 @@ export function deadServiceBuilder(
     },
   };
 }
+
+export type DeadEventService = ReturnType<typeof deadServiceBuilder>;

@@ -4,7 +4,7 @@ export interface IDeadEventRepository {
   insertDeadEvent: (deadEvent: any) => Promise<void>;
 }
 
-export const DeadEv = (db: DB): IDeadEventRepository => ({
+export const deadEventRepository = (db: DB): IDeadEventRepository => ({
   async insertDeadEvent(deadEvent): Promise<void> {
     try {
       await db.none(

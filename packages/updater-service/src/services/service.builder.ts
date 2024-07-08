@@ -4,6 +4,7 @@ import { getAccessToken } from "signalhub-interop-client";
 import {
   producerEserviceRepository,
   consumerEserviceRepository,
+  deadEventRepository,
 } from "../repositories/index.js";
 import { config } from "../config/env.js";
 import {
@@ -19,12 +20,14 @@ import {
   ProducerService,
   producerServiceBuilder,
 } from "./producerService.service.js";
+import { deadServiceBuilder, DeadEventService } from "./deadEvent.service.js";
 
 export async function serviceBuilder(): Promise<{
   tracingBatchService: TracingBatchService;
   interopClientService: InteropClientService;
   consumerService: ConsumerService;
   producerService: ProducerService;
+  deadEventService: DeadEventService;
 }> {
   const loggerInstance = logger({
     serviceName: "updater-service",
@@ -41,16 +44,23 @@ export async function serviceBuilder(): Promise<{
 
   const accessToken = await getAccessToken();
 
+  // -- Repositories -- //
+  const producerEserviceRepositoryInstance = producerEserviceRepository(db);
+  const consumerEserviceRepositoryInstance = consumerEserviceRepository(db);
+  const deadEventRepositoryInstance = deadEventRepository(db);
+
+  // -- Services -- //
+
+  const deadEventService = deadServiceBuilder(
+    deadEventRepositoryInstance,
+    loggerInstance
+  );
+
   const tracingBatchService = tracingBatchServiceBuilder(db);
   const interopClientService = interopClientServiceBuilder(
     accessToken,
     loggerInstance
   );
-  // -- Repositories -- //
-  const producerEserviceRepositoryInstance = producerEserviceRepository(db);
-  const consumerEserviceRepositoryInstance = consumerEserviceRepository(db);
-
-  // -- Services -- //
 
   const producerService = producerServiceBuilder(
     producerEserviceRepositoryInstance,
@@ -66,6 +76,7 @@ export async function serviceBuilder(): Promise<{
   );
 
   return {
+    deadEventService,
     tracingBatchService,
     interopClientService,
     consumerService,

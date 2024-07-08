@@ -6,13 +6,15 @@ const {
   interopClientService,
   consumerService,
   producerService,
+  deadEventService,
 } = await serviceBuilder();
 
 const task = await updaterBuilder(
   tracingBatchService,
   interopClientService,
   consumerService,
-  producerService
+  producerService,
+  deadEventService
 );
 
 await task.executeTask();
