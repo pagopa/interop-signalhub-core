@@ -1,7 +1,7 @@
 import { SignalHubStoreConfig } from "signalhub-commons";
 import { z } from "zod";
 
-const UpdaterConfig = z
+const ClenaupConfig = z
   .object({
     SIGNALS_RETENTION_HOURS: z.coerce.number().min(1),
   })
@@ -9,7 +9,7 @@ const UpdaterConfig = z
     signalsRetentionHours: c.SIGNALS_RETENTION_HOURS,
   }));
 
-const BatchCleanupConfig = SignalHubStoreConfig.and(UpdaterConfig);
+const BatchCleanupConfig = SignalHubStoreConfig.and(ClenaupConfig);
 
 export type BatchCleanupConfig = z.infer<typeof BatchCleanupConfig>;
 
