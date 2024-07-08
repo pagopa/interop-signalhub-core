@@ -12,6 +12,11 @@ interface ITracingBatchService {
     lastEventId: number,
     applicationType: ApplicationType
   ) => Promise<number>;
+
+  countBatchInErrorWithLastEventIdAndType: (
+    eventId: number,
+    applicationType: ApplicationType
+  ) => Promise<number>;
 }
 export function tracingBatchServiceBuilder(db: DB): ITracingBatchService {
   const tracingBatchRepositoryInstance = tracingBatchRepository(db);
@@ -63,6 +68,19 @@ export function tracingBatchServiceBuilder(db: DB): ITracingBatchService {
         applicationType
       );
       return lastEventId;
+    },
+
+    async countBatchInErrorWithLastEventIdAndType(
+      eventId: number,
+      applicationType: ApplicationType
+    ): Promise<number> {
+      const tracingBatchEntityList =
+        await tracingBatchRepositoryInstance.findAllByStateEndedWithErrorAndLastEventIdAndType(
+          eventId,
+          applicationType
+        );
+
+      return tracingBatchEntityList.length;
     },
   };
 }
