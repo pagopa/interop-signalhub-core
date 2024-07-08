@@ -100,7 +100,7 @@ export const updaterBuilder = async (
           `Error processing event with eventId: ${event.eventId} - ${error}`
         );
 
-        deadEventService.saveDeadEvent(event);
+        deadEventService.saveDeadEvent(event, config.applicationType);
       }
     }
     return lastEventId;

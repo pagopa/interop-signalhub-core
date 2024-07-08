@@ -12,14 +12,13 @@ interface EventDto {
 }
 
 export interface DeadEvent extends EventDto {
-  eventTmpId: string;
   tmstInsert: string;
   errorReason: string;
   eventType: string;
   objectType: string;
-  eserviceId: string;
-  agreementId: string;
-  descriptorId: string;
+  eserviceId?: string;
+  agreementId?: string;
+  descriptorId?: string;
 }
 
 export type DeadEventEntity = SnakeCase<DeadEvent>;
