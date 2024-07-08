@@ -15,12 +15,10 @@ export function signalServiceBuilder(
       logger.debug(
         `SignalService::cleanup retention period (hours): ${signalRetentionPeriodInHours}`
       );
-      const currentDate = clockService.roundDateToTheNearestMinute(
-        clockService.getCurrentDate()
-      );
-      const dateInThePast = clockService.subtractTime(
-        clockService.dateToMilliSecs(currentDate),
-        clockService.hoursToMilliSecs(signalRetentionPeriodInHours)
+      const currentDate = clockService.getCurrentDate();
+      const dateInThePast = clockService.getPastDate(
+        currentDate,
+        signalRetentionPeriodInHours
       );
       logger.debug(
         `SignalService::cleanup current date ISO [${currentDate.toISOString()}], UTC: [${currentDate.toUTCString()}], LOCAL: [${currentDate.toLocaleString()}]`

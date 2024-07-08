@@ -23,6 +23,16 @@ export function createDbInstance({
   database: string;
   useSSL: boolean;
 }): DB {
+  // ONLY FOR FOR DEBUGGING
+  /*
+  const initOptions = {
+    query(e: { query: unknown }): void {
+      // eslint-disable-next-line no-console
+      console.log(e.query);
+    },
+  };
+  const pgp = pgPromise(initOptions);
+  */
   const pgp = pgPromise();
 
   const conData = new ConnectionString(
@@ -40,6 +50,6 @@ export function createDbInstance({
 
   const loggerInstance = logger({});
   loggerInstance.info("initDB");
-  // createding a Database instance
+  // creating a Database instance
   return pgp(dbConfig);
 }

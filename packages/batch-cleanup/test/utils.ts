@@ -9,9 +9,11 @@ export const { cleanup, postgresDB } = setupTestContainersVitest(
   inject("signalHubStoreConfig")
 );
 
-const clockService = clockServiceBuilder();
+export const clockService = clockServiceBuilder();
 export const signalService = signalServiceBuilder(
   postgresDB,
   clockService,
   genericLogger
 );
+
+export const ONE_HOUR = 60 * 60 * 1000; /* ms */

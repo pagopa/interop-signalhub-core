@@ -5,24 +5,26 @@ export function clockServiceBuilder() {
       return new Date();
     },
 
-    roundDateToTheNearestMinute(date: Date, minutes = 1): Date {
-      const coeff = 1000 * 60 * minutes;
-      return new Date(Math.round(date.getTime() / coeff) * coeff);
-    },
-
-    dateToMilliSecs(date: Date): number {
-      return date.getTime();
-    },
-
-    hoursToMilliSecs(hours: number): number {
-      const hour = 1000 * 60 * 60;
-      return hours * hour;
-    },
-
-    subtractTime(dateInMilliSecs: number, milliSecsAgo: number): Date {
-      return new Date(dateInMilliSecs - milliSecsAgo);
+    getPastDate(currentDate: Date, hoursAgo: number): Date {
+      return subtractTime(
+        dateToMilliSecs(currentDate),
+        hoursToMilliSecs(hoursAgo)
+      );
     },
   };
 }
 
 export type ClockService = ReturnType<typeof clockServiceBuilder>;
+
+function dateToMilliSecs(date: Date): number {
+  return date.getTime();
+}
+
+function hoursToMilliSecs(hours: number): number {
+  const hour = 1000 * 60 * 60;
+  return hours * hour;
+}
+
+function subtractTime(dateInMilliSecs: number, milliSecsAgo: number): Date {
+  return new Date(dateInMilliSecs - milliSecsAgo);
+}
