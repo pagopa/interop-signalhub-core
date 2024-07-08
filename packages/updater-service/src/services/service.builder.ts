@@ -1,26 +1,24 @@
 import { DB, createDbInstance, logger } from "signalhub-commons";
 import { getAccessToken } from "signalhub-interop-client";
-
+import { config } from "../config/env.js";
 import {
   producerEserviceRepository,
   consumerEserviceRepository,
   deadEventRepository,
 } from "../repositories/index.js";
-import { config } from "../config/env.js";
-import {
-  TracingBatchService,
-  tracingBatchServiceBuilder,
-} from "./tracingBatch.service.js";
-import {
-  InteropClientService,
-  interopClientServiceBuilder,
-} from "./interopClient.service.js";
-import { ConsumerService, consumerServiceBuilder } from "./consumer.service.js";
+
 import {
   ProducerService,
   producerServiceBuilder,
-} from "./producerService.service.js";
-import { deadServiceBuilder, DeadEventService } from "./deadEvent.service.js";
+  ConsumerService,
+  consumerServiceBuilder,
+  deadServiceBuilder,
+  DeadEventService,
+  InteropClientService,
+  interopClientServiceBuilder,
+  TracingBatchService,
+  tracingBatchServiceBuilder,
+} from "./index.js";
 
 export async function serviceBuilder(): Promise<{
   tracingBatchService: TracingBatchService;
