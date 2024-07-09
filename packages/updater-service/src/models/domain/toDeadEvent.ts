@@ -1,6 +1,6 @@
-import { AgreementEventDto, DeadEvent, EserviceEventDto } from "./model.js";
 import { ApplicationType } from "../../config/env.js";
 import { getCurrentDate } from "../../utils.js";
+import { AgreementEventDto, DeadEvent, EserviceEventDto } from "./model.js";
 
 export function toDeadEvent(
   event: AgreementEventDto | EserviceEventDto,

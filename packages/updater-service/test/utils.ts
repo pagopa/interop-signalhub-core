@@ -10,6 +10,7 @@ import {
 } from "../src/repositories/index.js";
 import { updaterBuilder } from "../src/updater.js";
 import { consumerServiceBuilder } from "../src/services/consumer.service.js";
+import { config } from "../src/config/env.js";
 
 export const { cleanup, postgresDB, interopClientConfig } =
   setupTestContainersVitest(
@@ -17,6 +18,8 @@ export const { cleanup, postgresDB, interopClientConfig } =
     inject("sqsConfig"),
     inject("interopClientConfig")
   );
+
+provide("attemptEvent", config.attemptEvent);
 
 export const loggerInstance = logger({
   serviceName: "updater-test",

@@ -9,8 +9,7 @@ export const deadEventRepository = (db: DB): IDeadEventRepository => ({
   async insertDeadEvent(deadEvent): Promise<void> {
     try {
       await db.none(
-        "INSERT INTO DEV_INTEROP.DEAD_EVENT (event_id,agreement_id,eservice_id, descriptor_id,tmst_insert, error_reason,event_type, object_type) \
-         VALUES ($1, $2, $3, $4, $5, $6, $7,$8)",
+        "INSERT INTO DEV_INTEROP.DEAD_EVENT (event_id,agreement_id,eservice_id, descriptor_id,tmst_insert, error_reason,event_type, object_type) VALUES ($1, $2, $3, $4, $5, $6, $7,$8)",
         [
           deadEvent.eventId,
           deadEvent.agreementId,
