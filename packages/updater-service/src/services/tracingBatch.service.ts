@@ -39,6 +39,8 @@ export function tracingBatchServiceBuilder(db: DB): ITracingBatchService {
           return parseInt(tracingBatchEntityList[0].lastEventId, 10);
         }
 
+        // If For a specific event we try a certain number of times, updater will skip it and will start
+        // from next event
         if (tracingBatchEntityList.length > config.attemptEvent) {
           return (
             parseInt(

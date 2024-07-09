@@ -13,17 +13,21 @@ export function deadServiceBuilder(
   logger: Logger
 ) {
   return {
-    saveDeadEvent: async (event: Event, applicationType: ApplicationType) => {
+    saveDeadEvent: async (
+      event: Event,
+      applicationType: ApplicationType,
+      errorReason: string
+    ) => {
       const deadEvent =
         applicationType === "AGREEMENT"
-          ? toDeadEvent(toAgreementEvent(event), applicationType)
-          : toDeadEvent(toEserviceEvent(event), applicationType);
+          ? toDeadEvent(toAgreementEvent(event), applicationType, errorReason)
+          : toDeadEvent(toEserviceEvent(event), applicationType, errorReason);
 
-      logger.info(`Saving dead event with id: ${event}`);
+      logger.info(`Saving dead event with id: ${deadEvent}`);
 
       const numberOfErrorsWithEqualEventId =
         await tracingBatchService.countBatchInErrorWithLastEventIdAndType(
-          deadEvent.eventId - 1,
+          deadEvent.eventId - 1, // Put "-1" because TRACING_BATCH save lastEventId not processed
           applicationType
         );
 

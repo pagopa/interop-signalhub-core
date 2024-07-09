@@ -87,11 +87,11 @@ export const updaterBuilder = async (
     let lastEventId = 0;
     for (const event of events) {
       try {
-        loggerInstance.info(
-          `\n ---- Event with eventId: ${event.eventId} ---- \n`
-        );
         if (applicationType === "AGREEMENT") {
           lastEventId = await updateAgreementEvent(event);
+          loggerInstance.info(
+            `\n ---- Event with eventId: ${event.eventId} ---- \n`
+          );
         } else {
           lastEventId = await updateEserviceEvent(event, lastEventId);
         }
@@ -100,7 +100,14 @@ export const updaterBuilder = async (
           `Error processing event with eventId: ${event.eventId} - ${error}`
         );
 
-        deadEventService.saveDeadEvent(event, config.applicationType);
+        const err = error as Error;
+
+        await deadEventService.saveDeadEvent(
+          event,
+          config.applicationType,
+          err.message
+        );
+        throw error;
       }
     }
     return lastEventId;
