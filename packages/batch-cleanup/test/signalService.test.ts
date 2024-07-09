@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   writeSignal,
   createSignal,
@@ -9,10 +9,6 @@ import { cleanup, ONE_HOUR, postgresDB, signalService } from "./utils.js";
 
 describe("Signal service", () => {
   afterEach(cleanup);
-
-  beforeEach(() => {
-    vi.useFakeTimers(); // tell vitest we use mocked time
-  });
 
   afterEach(() => {
     vi.useRealTimers(); // restoring date after each test run
@@ -38,7 +34,7 @@ describe("Signal service", () => {
   it("should clean 1 signals if the signal has exceeded the limit period (one hour)", async () => {
     const periodRetentionSignalsInHours = 1;
     await writeSignal(createSignal(), postgresDB);
-
+    vi.useFakeTimers(); // tell vitest we use mocked time
     const anHourHasAlreadyPassed = new Date(new Date().getTime() + ONE_HOUR);
     vi.setSystemTime(anHourHasAlreadyPassed);
 
@@ -54,6 +50,7 @@ describe("Signal service", () => {
     const batchSignals = createMultipleSignals(10);
     await writeSignals(batchSignals, postgresDB);
 
+    vi.useFakeTimers(); // tell vitest we use mocked time
     const anHourHasAlreadyPassed = new Date(new Date().getTime() + ONE_HOUR);
     vi.setSystemTime(anHourHasAlreadyPassed);
 
