@@ -31,6 +31,8 @@ jobs:
             dockerfile_path: packages/pull-signal-service
           - image_name: batch-update
             dockerfile_path: packages/updater-service
+          - image_name: batch-cleanup
+            dockerfile_path: packages/batch-cleanup
 
     steps:
       - name: Checkout repository
