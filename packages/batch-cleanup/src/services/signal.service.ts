@@ -12,7 +12,7 @@ export function signalServiceBuilder(
     async cleanup(
       signalRetentionPeriodInHours: number
     ): Promise<number | null> {
-      logger.debug(
+      logger.info(
         `SignalService::cleanup retention period (hours): ${signalRetentionPeriodInHours}`
       );
       const currentDate = clockService.getCurrentDate();
@@ -20,17 +20,14 @@ export function signalServiceBuilder(
         currentDate,
         signalRetentionPeriodInHours
       );
-      logger.debug(
+      logger.info(
         `SignalService::cleanup current date ISO [${currentDate.toISOString()}], UTC: [${currentDate.toUTCString()}], LOCAL: [${currentDate.toLocaleString()}]`
       );
-      logger.debug(
+      logger.info(
         `SignalService::cleanup date limit:  ISO [${dateInThePast.toISOString()}], UTC: [${dateInThePast.toUTCString()}], LOCAL: [${dateInThePast.toLocaleString()}]`
       );
-      // check PRE DELETE
-      // clock application == clock database
-      // signals to be deleted are the last signals?
       const signalsDeleted = await signalRepository(db).deleteBy(dateInThePast);
-      logger.debug(`SignalService::cleanup deleted signals: ${signalsDeleted}`);
+      logger.info(`SignalService::cleanup deleted signals: ${signalsDeleted}`);
       if (signalsDeleted === null) {
         throw genericInternalError(
           `Error deleting signals: null response from db`
