@@ -11,6 +11,7 @@ import { toEserviceEvent } from "./models/domain/toEserviceEvent.js";
 import { TracingBatchStateEnum } from "./models/domain/model.js";
 import { EmptyQueueEventsError } from "./models/domain/errors.js";
 import { getCurrentDate } from "./utils.js";
+import { DeadEventService } from "./services/deadEvent.service.js";
 
 const loggerInstance = logger({
   serviceName: "updater-service",
@@ -21,7 +22,8 @@ export const updaterBuilder = async (
   tracingBatchService: TracingBatchService,
   interopClientService: InteropClientService,
   consumerService: ConsumerService,
-  producerService: ProducerService
+  producerService: ProducerService,
+  deadEventService: DeadEventService
 ) => {
   const getEvents = async (
     applicationType: ApplicationType,
@@ -81,24 +83,34 @@ export const updaterBuilder = async (
     events: Event[],
     applicationType: ApplicationType
   ): Promise<number> => {
-    try {
-      // eslint-disable-next-line functional/no-let
-      let lastEventId = 0;
-      for (const event of events) {
-        loggerInstance.info(
-          `\n ---- Event with eventId: ${event.eventId} ---- \n`
-        );
+    // eslint-disable-next-line functional/no-let
+    let lastEventId = 0;
+    for (const event of events) {
+      try {
         if (applicationType === "AGREEMENT") {
           lastEventId = await updateAgreementEvent(event);
+          loggerInstance.info(
+            `\n ---- Event with eventId: ${event.eventId} ---- \n`
+          );
         } else {
           lastEventId = await updateEserviceEvent(event, lastEventId);
         }
+      } catch (error) {
+        loggerInstance.error(
+          `Error processing event with eventId: ${event.eventId} - ${error}`
+        );
+
+        const err = error as Error;
+
+        await deadEventService.saveDeadEvent(
+          event,
+          config.applicationType,
+          err.message
+        );
+        throw error;
       }
-      return lastEventId;
-    } catch (error) {
-      loggerInstance.error(error);
-      throw error;
     }
+    return lastEventId;
   };
 
   const updateAgreementEvent = async (event: Event): Promise<number> => {

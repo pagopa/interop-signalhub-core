@@ -1,30 +1,31 @@
 import { DB, createDbInstance, logger } from "signalhub-commons";
 import { getAccessToken } from "signalhub-interop-client";
-
+import { config } from "../config/env.js";
 import {
   producerEserviceRepository,
   consumerEserviceRepository,
+  deadEventRepository,
 } from "../repositories/index.js";
-import { config } from "../config/env.js";
-import {
-  TracingBatchService,
-  tracingBatchServiceBuilder,
-} from "./tracingBatch.service.js";
-import {
-  InteropClientService,
-  interopClientServiceBuilder,
-} from "./interopClient.service.js";
-import { ConsumerService, consumerServiceBuilder } from "./consumer.service.js";
+
 import {
   ProducerService,
   producerServiceBuilder,
-} from "./producerService.service.js";
+  ConsumerService,
+  consumerServiceBuilder,
+  deadServiceBuilder,
+  DeadEventService,
+  InteropClientService,
+  interopClientServiceBuilder,
+  TracingBatchService,
+  tracingBatchServiceBuilder,
+} from "./index.js";
 
 export async function serviceBuilder(): Promise<{
   tracingBatchService: TracingBatchService;
   interopClientService: InteropClientService;
   consumerService: ConsumerService;
   producerService: ProducerService;
+  deadEventService: DeadEventService;
 }> {
   const loggerInstance = logger({
     serviceName: "updater-service",
@@ -41,16 +42,25 @@ export async function serviceBuilder(): Promise<{
 
   const accessToken = await getAccessToken();
 
+  // -- Repositories -- //
+  const producerEserviceRepositoryInstance = producerEserviceRepository(db);
+  const consumerEserviceRepositoryInstance = consumerEserviceRepository(db);
+  const deadEventRepositoryInstance = deadEventRepository(db);
+
+  // -- Services -- //
+
   const tracingBatchService = tracingBatchServiceBuilder(db);
+
+  const deadEventService = deadServiceBuilder(
+    deadEventRepositoryInstance,
+    tracingBatchService,
+    loggerInstance
+  );
+
   const interopClientService = interopClientServiceBuilder(
     accessToken,
     loggerInstance
   );
-  // -- Repositories -- //
-  const producerEserviceRepositoryInstance = producerEserviceRepository(db);
-  const consumerEserviceRepositoryInstance = consumerEserviceRepository(db);
-
-  // -- Services -- //
 
   const producerService = producerServiceBuilder(
     producerEserviceRepositoryInstance,
@@ -66,6 +76,7 @@ export async function serviceBuilder(): Promise<{
   );
 
   return {
+    deadEventService,
     tracingBatchService,
     interopClientService,
     consumerService,

@@ -12,6 +12,11 @@ export interface ITracingBatchRepository {
     applicationType: ApplicationType
   ) => Promise<TracingBatch[]>;
 
+  findAllByStateEndedWithErrorAndLastEventIdAndType: (
+    lastEventId: number,
+    applicationType: ApplicationType
+  ) => Promise<TracingBatch[]>;
+
   insert: (
     tracingBatchState: TracingBatchStateEnum,
     lastEventId: number,
@@ -30,6 +35,24 @@ export const tracingBatchRepository = (db: DB): ITracingBatchRepository => ({
       return response.map(toTracingBatch);
     } catch (error) {
       throw genericInternalError(`Error findLatestByType:" ${error} `);
+    }
+  },
+
+  async findAllByStateEndedWithErrorAndLastEventIdAndType(
+    lastEventId,
+    applicationType
+  ): Promise<TracingBatch[]> {
+    try {
+      const response = await db.manyOrNone(
+        "SELECT * from DEV_INTEROP.TRACING_BATCH where last_event_id = $1 and state = 'ENDED_WITH_ERROR' and type = $2",
+        [lastEventId, applicationType]
+      );
+
+      return response.map(toTracingBatch);
+    } catch (error) {
+      throw genericInternalError(
+        `Error findAllByStateEndedWithErrorAndLastEventIdAndType:" ${error} `
+      );
     }
   },
 
