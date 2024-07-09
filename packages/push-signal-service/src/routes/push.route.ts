@@ -71,6 +71,7 @@ export const pushRoutes = (
         loggerInstance,
         req.ctx.correlationId
       );
+
       // eslint-disable-next-line sonarjs/no-small-switch
       switch (problem.status) {
         case 400:

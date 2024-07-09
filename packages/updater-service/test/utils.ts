@@ -10,6 +10,7 @@ import {
 } from "../src/repositories/index.js";
 import { updaterBuilder } from "../src/updater.js";
 import { consumerServiceBuilder } from "../src/services/consumer.service.js";
+import { DeadEventService } from "../src/services/deadEvent.service.js";
 
 export const { cleanup, postgresDB, interopClientConfig } =
   setupTestContainersVitest(
@@ -55,5 +56,5 @@ export const task = await updaterBuilder(
   interopClientService,
   consumer,
   producerEservice,
-  {} as any
+  {} as DeadEventService
 );
