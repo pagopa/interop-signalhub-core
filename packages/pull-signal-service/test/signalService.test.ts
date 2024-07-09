@@ -14,7 +14,7 @@ import {
   sortSignalsBySignalId,
   toSignal,
   toSignals,
-} from "./utils";
+} from "./utils.js";
 
 describe("Pull Signal service", () => {
   afterEach(cleanup);
@@ -127,7 +127,8 @@ describe("Pull Signal service", () => {
       genericLogger
     );
 
-    const lastSignal = sortSignalsBySignalId(toSignals(batchSignals)).pop();
+    const sortedSignals = sortSignalsBySignalId(toSignals(batchSignals));
+    const lastSignal = sortedSignals.at(-1);
     expect(lastSignalId).toBe(lastSignal?.signalId);
   });
 
