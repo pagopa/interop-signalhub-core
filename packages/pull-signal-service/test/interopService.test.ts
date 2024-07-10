@@ -19,8 +19,7 @@ describe("PDND Interoperability service", () => {
   });
 
   beforeEach(() => {
-    // clear the mock to avoid side effects and start the count with 0 for every test
-    vi.clearAllMocks();
+    vi.clearAllMocks(); // clear the mock to avoid side effects and start the count with 0 for every test
   });
 
   it("should give permission to a signals consumer for pull signals", async () => {
