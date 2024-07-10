@@ -28,7 +28,7 @@ jobs:
           - image_name: signal-persister
             dockerfile_path: packages/persister-service
           - image_name: pull-signal
-            dockerfile_path: packages/pull-signal-service
+            dockerfile_path: packages/pull-signal
           - image_name: batch-update
             dockerfile_path: packages/updater-service
           - image_name: batch-cleanup
