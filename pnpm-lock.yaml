@@ -197,7 +197,7 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
 
-  packages/persister-service:
+  packages/persister:
     dependencies:
       "@aws-sdk/client-sqs":
         specifier: ^3.583.0
