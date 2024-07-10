@@ -54,23 +54,23 @@ export const dataPreparationCleanup = async (db: DB): Promise<void> => {
   await truncateConsumerEserviceTable(db);
 };
 
-export const dataPreparationSignalProducer = async (db: DB): Promise<void> => {
+export const dataPreparationForSignalProducers = async (
+  db: DB
+): Promise<void> => {
   await setupEserviceTable(db);
 };
 
-export const dataPreparationSignalConsumer = async (db: DB): Promise<void> => {
+export const dataPreparationForSignalConsumers = async (
+  db: DB
+): Promise<void> => {
   await setupConsumerEserviceTable(db);
 };
 
-export const dataPreparationSignalProducerCleanup = async (
-  db: DB
-): Promise<void> => {
+export const dataResetForSignalProducers = async (db: DB): Promise<void> => {
   await truncateEserviceTable(db);
 };
 
-export const dataPreparationSignalConsumerCleanup = async (
-  db: DB
-): Promise<void> => {
+export const dataResetForSignalConsumers = async (db: DB): Promise<void> => {
   await truncateConsumerEserviceTable(db);
 };
 
