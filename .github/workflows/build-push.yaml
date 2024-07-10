@@ -24,13 +24,13 @@ jobs:
       matrix:
         include:
           - image_name: push-signal
-            dockerfile_path: packages/push-signal-service
+            dockerfile_path: packages/push-signal
           - image_name: signal-persister
-            dockerfile_path: packages/persister-service
+            dockerfile_path: packages/persister
           - image_name: pull-signal
-            dockerfile_path: packages/pull-signal-service
+            dockerfile_path: packages/pull-signal
           - image_name: batch-update
-            dockerfile_path: packages/updater-service
+            dockerfile_path: packages/batch-update
           - image_name: batch-cleanup
             dockerfile_path: packages/batch-cleanup
 

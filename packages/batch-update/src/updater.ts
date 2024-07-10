@@ -14,7 +14,7 @@ import { getCurrentDate } from "./utils.js";
 import { DeadEventService } from "./services/deadEvent.service.js";
 
 const loggerInstance = logger({
-  serviceName: "updater-service",
+  serviceName: "batch-update",
 });
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

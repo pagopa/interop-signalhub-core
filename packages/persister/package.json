@@ -1,33 +1,39 @@
 {
-  "name": "signalhub-updater-service",
+  "name": "persister",
   "version": "1.0.0",
-  "description": "PagoPA Updater service",
+  "description": "PagoPA Persister service",
   "type": "module",
   "main": "dist",
   "scripts": {
     "start": "node --watch --loader ts-node/esm -r 'dotenv-flow/config'  ./src/index.ts",
-    "lint": "eslint . --ext .ts,.tsx",
     "build": "tsc",
-    "test": "vitest"
+    "test": "vitest",
+    "format:check": "prettier --check src test",
+    "format:write": "prettier --write src test",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:autofix": "eslint . --ext .ts,.tsx --fix",
+    "check": "tsc --project tsconfig.check.json"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.6.8",
+    "@aws-sdk/client-sqs": "^3.583.0",
+    "connection-string": "^4.4.0",
     "dotenv-flow": "^4.1.0",
-    "pg-promise": "^11.8.0",
+    "express": "^4.19.2",
+    "pg-promise": "^11.6.0",
     "signalhub-commons": "workspace:*",
     "signalhub-commons-test": "workspace:*",
-    "signalhub-interop-client": "workspace:*",
-    "ts-pattern": "^5.1.2",
+    "ts-pattern": "^5.1.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@pagopa/eslint-config": "^3.0.0",
+    "@types/express": "^4.17.21",
     "@types/node": "^20.11.24",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5",
+    "typescript": "^5.3.3",
     "vitest": "^1.6.0"
   }
 }
