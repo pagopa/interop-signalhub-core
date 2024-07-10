@@ -9,7 +9,7 @@
     "start:updater": "turbo start --filter signalhub-updater-service",
     "start:cleanup": "turbo start --filter batch-cleanup",
     "test": "turbo test",
-    "test:push": "turbo test --filter push-signal-service",
+    "test:push": "turbo test --filter push-signal",
     "test:pull": "turbo test --filter pull-signal-service",
     "test:persister": "turbo test --filter persister-service",
     "test:updater": "turbo test --filter  signalhub-updater-service",
