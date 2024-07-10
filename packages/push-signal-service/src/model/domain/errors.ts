@@ -1,4 +1,4 @@
-import { ApiError, makeApiProblemBuilder } from "signalhub-commons";
+import { ApiError, Problem, makeApiProblemBuilder } from "signalhub-commons";
 
 export const errorCodes = {
   validationError: "0001",
@@ -9,6 +9,13 @@ export const errorCodes = {
 export type ErrorCodes = keyof typeof errorCodes;
 
 export const makeApiProblem = makeApiProblemBuilder(errorCodes);
+
+export function makeTsResponseError<T>(problem: Problem, status: T) {
+  return {
+    status: status,
+    body: problem,
+  };
+}
 
 export function requestValidationError(message: string): ApiError<ErrorCodes> {
   return new ApiError({

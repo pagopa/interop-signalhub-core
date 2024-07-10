@@ -1,9 +1,12 @@
 import { AppRouteImplementation, initServer } from "@ts-rest/express";
 import { logger, Problem, SignalPayload } from "signalhub-commons";
 import { match } from "ts-pattern";
-import { contract } from "../contract/contract.js";
+import {
+  HttpStatusPushSignalErrorCode,
+  contract,
+} from "../contract/contract.js";
 import { SignalService } from "../services/signal.service.js";
-import { makeApiProblem } from "../model/domain/errors.js";
+import { makeApiProblem, makeTsResponseError } from "../model/domain/errors.js";
 import { QuequeService } from "../services/queque.service.js";
 import { DomainService } from "../services/domain.service.js";
 import { InteropService } from "../services/interop.service.js";
@@ -64,36 +67,18 @@ export const pushRoutes = (
           match(err.code)
             .with("signalDuplicate", () => 400)
             .with("signalNotSended", () => 400)
-            .with("unauthorizedError", () => 401)
+            .with("unauthorizedError", () => 402)
             .with("operationForbidden", () => 403)
             .with("genericError", () => 500)
             .otherwise(() => 500),
         loggerInstance,
         req.ctx.correlationId
       );
-      // eslint-disable-next-line sonarjs/no-small-switch
-      switch (problem.status) {
-        case 400:
-          return {
-            status: 400,
-            body: problem,
-          };
-        case 401:
-          return {
-            status: 401,
-            body: problem,
-          };
-        case 403:
-          return {
-            status: 403,
-            body: problem,
-          };
-        default:
-          return {
-            status: 500,
-            body: problem,
-          };
-      }
+
+      return makeTsResponseError<HttpStatusPushSignalErrorCode>(
+        problem,
+        problem.status as HttpStatusPushSignalErrorCode
+      );
     }
   };
 
