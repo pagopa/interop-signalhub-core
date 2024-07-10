@@ -1,7 +1,7 @@
 import { DB, Logger } from "signalhub-commons";
 import { signalRepository } from "../repositories/signal.repository.js";
 
-import { signalIdDuplicatedForEserviceId } from "../model/domain/errors.js";
+import { signalIdDuplicatedForEserviceId } from "../models/domain/errors.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function signalServiceBuilder(db: DB) {

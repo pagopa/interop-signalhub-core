@@ -1,5 +1,5 @@
 import { Logger, SQS } from "signalhub-commons";
-import { signalNotSendedToQueque } from "../model/domain/errors.js";
+import { signalNotSendedToQueque } from "../models/domain/errors.js";
 import { config } from "../config/env.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

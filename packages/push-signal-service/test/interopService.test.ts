@@ -1,8 +1,8 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { genericLogger, operationForbidden } from "signalhub-commons";
 import {
-  dataPreparationSignalProducer,
-  dataPreparationSignalProducerCleanup,
+  dataPreparationForSignalProducers,
+  dataResetForSignalProducers,
   eserviceIdPushSignals,
 } from "signalhub-commons-test";
 import {
@@ -14,13 +14,12 @@ import {
 
 describe("PDND Interoperability service", () => {
   beforeAll(async () => {
-    await dataPreparationSignalProducerCleanup(postgresDB);
-    await dataPreparationSignalProducer(postgresDB);
+    await dataResetForSignalProducers(postgresDB);
+    await dataPreparationForSignalProducers(postgresDB);
   });
 
   beforeEach(() => {
-    // clear the mock to avoid side effects and start the count with 0 for every test
-    vi.clearAllMocks();
+    vi.clearAllMocks(); // clear the mock to avoid side effects and start the count with 0 for every test
   });
 
   it("should give permission to a signals producer for pull signals", async () => {
@@ -53,6 +52,7 @@ describe("PDND Interoperability service", () => {
       purposeId
     );
   });
+
   it("should deny permission to a signal producer that is not owner of the e-service", async () => {
     vi.spyOn(interopApiClient, "getAgreementByPurposeId").mockResolvedValue(
       aValidMockAgreement

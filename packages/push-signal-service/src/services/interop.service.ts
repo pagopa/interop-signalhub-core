@@ -1,5 +1,5 @@
 import { DB, Logger, operationForbidden } from "signalhub-commons";
-import { Agreement } from "../model/domain/models.js";
+import { Agreement } from "../models/domain/models.js";
 import { eserviceRepository } from "../repositories/eservice.repository.js";
 import { InteropApiClientService } from "./interopApiClient.service.js";
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
