@@ -9,8 +9,6 @@ import {
   recoverableMessageError,
 } from "../models/domain/errors.js";
 
-// const logger = logger({});
-
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function storeSignalServiceBuilder(db: DB, logger: Logger) {
   return {
