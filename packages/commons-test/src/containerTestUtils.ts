@@ -2,12 +2,15 @@ import { SignalHubStoreConfig, InteropVoucherConfig } from "signalhub-commons";
 import { GenericContainer, Wait } from "testcontainers";
 
 export const TEST_POSTGRES_DB_PORT = 5432;
-export const TEST_POSTGRES_DB_IMAGE = "postgres:14";
+export const TEST_POSTGRES_DB_IMAGE =
+  "postgres:14@sha256:2f7365d1f574dba34f6332978169afe60af9de9608fffbbfecb7d04cc5233698";
 
 export const TEST_MOCKSERVER_PORT = 1080;
-export const TEST_MOCKSERVER_IMAGE = "mockserver/mockserver:5.15.0";
+export const TEST_MOCKSERVER_IMAGE =
+  "mockserver/mockserver:5.15.0@sha256:0f9ef78c94894ac3e70135d156193b25e23872575d58e2228344964273b4af6b";
 
-export const TEST_ELASTIC_MQ_IMAGE = "softwaremill/elasticmq-native:1.5.7";
+export const TEST_ELASTIC_MQ_IMAGE =
+  "softwaremill/elasticmq-native:1.5.7@sha256:0cb5bcc04638c80af1631e8cf5da9b96b9fb6f46a4164462231065dc516c102f";
 export const TEST_ELASTIC_MQ_PORT = 9324;
 
 export const postgreSQLContainer = (

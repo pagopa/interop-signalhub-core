@@ -2,7 +2,7 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    setupFiles: ["./test/dataPreparationSetup.ts"],
+    setupFiles: [],
     globalSetup: ["./test/vitestGlobalSetup.ts"],
     testTimeout: 60000,
     hookTimeout: 60000,

@@ -3,10 +3,10 @@ import { logger, Problem, SignalPayload } from "signalhub-commons";
 import { match } from "ts-pattern";
 import { contract } from "../contract/contract.js";
 import { SignalService } from "../services/signal.service.js";
-import { makeApiProblem } from "../model/domain/errors.js";
+import { makeApiProblem } from "../models/domain/errors.js";
 import { QuequeService } from "../services/queque.service.js";
-import { DomainService } from "../services/domain.service.js";
 import { InteropService } from "../services/interop.service.js";
+import { toSignalMessage } from "../models/domain/toSignalMessage.js";
 
 const s = initServer();
 
@@ -14,7 +14,6 @@ const s = initServer();
 export const pushRoutes = (
   signalService: SignalService,
   interopService: InteropService,
-  domainService: DomainService,
   quequeService: QuequeService
 ) => {
   const pushSignal: AppRouteImplementation<
@@ -45,10 +44,9 @@ export const pushRoutes = (
         loggerInstance
       );
 
-      const message = domainService.signalToMessage(
+      const message = toSignalMessage(
         body as SignalPayload,
-        req.ctx.correlationId,
-        loggerInstance
+        req.ctx.correlationId
       );
       await quequeService.send(message, loggerInstance);
       return {

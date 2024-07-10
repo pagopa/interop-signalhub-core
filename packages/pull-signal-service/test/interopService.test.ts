@@ -1,8 +1,8 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { genericLogger, operationForbidden } from "signalhub-commons";
 import {
-  dataPreparationSignalConsumer,
-  dataPreparationSignalConsumerCleanup,
+  dataPreparationForSignalConsumers,
+  dataResetForSignalConsumers,
   eserviceIdPushSignals,
 } from "signalhub-commons-test";
 import {
@@ -14,13 +14,12 @@ import {
 
 describe("PDND Interoperability service", () => {
   beforeAll(async () => {
-    await dataPreparationSignalConsumerCleanup(postgresDB);
-    await dataPreparationSignalConsumer(postgresDB);
+    await dataResetForSignalConsumers(postgresDB);
+    await dataPreparationForSignalConsumers(postgresDB);
   });
 
   beforeEach(() => {
-    // clear the mock to avoid side effects and start the count with 0 for every test
-    vi.clearAllMocks();
+    vi.clearAllMocks(); // clear the mock to avoid side effects and start the count with 0 for every test
   });
 
   it("should give permission to a signals consumer for pull signals", async () => {

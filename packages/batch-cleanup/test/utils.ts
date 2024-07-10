@@ -17,3 +17,4 @@ export const signalService = signalServiceBuilder(
 );
 
 export const ONE_HOUR = 60 * 60 * 1000; /* ms */
+export const ONE_MINUTE = 60 * 1000; /* ms */

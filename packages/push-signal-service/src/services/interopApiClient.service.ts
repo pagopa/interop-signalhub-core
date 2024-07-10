@@ -3,7 +3,7 @@ import {
   getAgreementByPurpose,
 } from "signalhub-interop-client";
 import { genericInternalError, isTokenExpired } from "signalhub-commons";
-import { Agreement } from "../model/domain/models.js";
+import { Agreement } from "../models/domain/models.js";
 
 // eslint-disable-next-line functional/no-let
 let cachedVoucher: string | null;

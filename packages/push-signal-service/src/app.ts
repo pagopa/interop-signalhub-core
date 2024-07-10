@@ -10,8 +10,7 @@ import { setupHealthRoute } from "./routes/health.route.js";
 const serviceName = "push-signal";
 
 // services
-const { domainService, signalService, quequeService, interopService } =
-  serviceBuilder();
+const { signalService, quequeService, interopService } = serviceBuilder();
 
 // express
 const app: Express = express();
@@ -28,7 +27,7 @@ app.disable("x-powered-by");
 const tsServer = initServer();
 const routes = tsServer.router(
   contract,
-  pushRoutes(signalService, interopService, domainService, quequeService)
+  pushRoutes(signalService, interopService, quequeService)
 );
 
 createExpressEndpoints(contract, routes, app, {
