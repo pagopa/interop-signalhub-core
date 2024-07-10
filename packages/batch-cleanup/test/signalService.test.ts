@@ -5,7 +5,13 @@ import {
   createMultipleSignals,
   writeSignals,
 } from "signalhub-commons-test";
-import { cleanup, ONE_HOUR, postgresDB, signalService } from "./utils.js";
+import {
+  cleanup,
+  ONE_HOUR,
+  ONE_MINUTE,
+  postgresDB,
+  signalService,
+} from "./utils.js";
 
 describe("Signal service", () => {
   afterEach(cleanup);
@@ -51,8 +57,10 @@ describe("Signal service", () => {
     await writeSignals(batchSignals, postgresDB);
 
     vi.useFakeTimers(); // tell vitest we use mocked time
-    const anHourHasAlreadyPassed = new Date(new Date().getTime() + ONE_HOUR);
-    vi.setSystemTime(anHourHasAlreadyPassed);
+    const anHourAndSomeMinutesHasAlreadyPassed = new Date(
+      new Date().getTime() + ONE_HOUR + 2 * ONE_MINUTE
+    );
+    vi.setSystemTime(anHourAndSomeMinutesHasAlreadyPassed);
 
     const howManySignalsDeleted = await signalService.cleanup(
       periodRetentionSignalsInHours
