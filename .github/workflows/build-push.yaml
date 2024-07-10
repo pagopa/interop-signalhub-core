@@ -24,7 +24,7 @@ jobs:
       matrix:
         include:
           - image_name: push-signal
-            dockerfile_path: packages/push-signal-service
+            dockerfile_path: packages/push-signal
           - image_name: signal-persister
             dockerfile_path: packages/persister-service
           - image_name: pull-signal
