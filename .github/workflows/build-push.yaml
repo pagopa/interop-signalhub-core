@@ -30,7 +30,7 @@ jobs:
           - image_name: pull-signal
             dockerfile_path: packages/pull-signal
           - image_name: batch-update
-            dockerfile_path: packages/updater-service
+            dockerfile_path: packages/batch-update
           - image_name: batch-cleanup
             dockerfile_path: packages/batch-cleanup
 

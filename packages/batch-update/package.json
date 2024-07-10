@@ -1,5 +1,5 @@
 {
-  "name": "signalhub-updater-service",
+  "name": "signalhub-batch-update",
   "version": "1.0.0",
   "description": "PagoPA Updater service",
   "type": "module",

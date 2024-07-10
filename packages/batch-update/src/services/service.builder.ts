@@ -28,7 +28,7 @@ export async function serviceBuilder(): Promise<{
   deadEventService: DeadEventService;
 }> {
   const loggerInstance = logger({
-    serviceName: "updater-service",
+    serviceName: "batch-update",
   });
 
   const db: DB = createDbInstance({
