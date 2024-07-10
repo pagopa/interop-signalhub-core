@@ -1,4 +1,4 @@
-import { DB, logger, SignalMessage } from "signalhub-commons";
+import { DB, Logger, SignalMessage } from "signalhub-commons";
 import { toSignal } from "../models/domain/toSignal.js";
 import { signalRepository } from "../repositories/signal.repository.js";
 import { deadSignalRepository } from "../repositories/deadSignal.repository.js";
@@ -9,10 +9,8 @@ import {
   recoverableMessageError,
 } from "../models/domain/errors.js";
 
-const loggerInstance = logger({});
-
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function storeSignalServiceBuilder(db: DB) {
+export function storeSignalServiceBuilder(db: DB, logger: Logger) {
   return {
     async storeSignal(signalMessage: SignalMessage): Promise<void> {
       try {
@@ -26,17 +24,17 @@ export function storeSignalServiceBuilder(db: DB) {
 
         /* it means that signal is already present on db */
         if (signalRecordId !== null) {
-          loggerInstance.info(`SignalId: ${signal.signalId} already exists`);
+          logger.info(`SignalId: ${signal.signalId} already exists`);
           throw notRecoverableMessageError("duplicateSignal", signal);
         } else {
-          loggerInstance.info(
+          logger.info(
             `Signal with signalId: ${signalMessage.signalId} not found on DB`
           );
           const id = await signalRepositoryInstance.insertSignal(signal);
-          loggerInstance.info(`Signal with id: ${id} has been inserted on DB`);
+          logger.info(`Signal with id: ${id} has been inserted on DB`);
         }
       } catch (error) {
-        loggerInstance.error(error);
+        logger.error(error);
 
         if (error instanceof NotRecoverableMessageError) {
           throw error;

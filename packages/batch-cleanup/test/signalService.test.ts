@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import {
   writeSignal,
   createSignal,
@@ -15,6 +15,10 @@ import {
 
 describe("Signal service", () => {
   afterEach(cleanup);
+
+  beforeAll(() => {
+    vi.useRealTimers(); // use real time
+  });
 
   afterEach(() => {
     vi.useRealTimers(); // restoring date after each test run
