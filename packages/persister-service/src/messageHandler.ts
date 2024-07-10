@@ -1,4 +1,4 @@
-import { SQS, logger } from "signalhub-commons";
+import { SQS, Logger } from "signalhub-commons";
 import { P, match } from "ts-pattern";
 import { StoreSignalService } from "./services/storeSignal.service.js";
 import {
@@ -8,14 +8,13 @@ import {
 } from "./models/domain/errors.js";
 import { parseQueueMessageToSignal } from "./models/domain/utils.js";
 
-const loggerInstance = logger({});
-
 export function processMessage(
-  storeSignalService: StoreSignalService
+  storeSignalService: StoreSignalService,
+  logger: Logger
 ): (message: SQS.Message) => Promise<void> {
   return async (message: SQS.Message): Promise<void> => {
     try {
-      const signalMessage = parseQueueMessageToSignal(message, loggerInstance);
+      const signalMessage = parseQueueMessageToSignal(message, logger);
 
       await storeSignalService.storeSignal(signalMessage);
     } catch (error) {
@@ -23,14 +22,14 @@ export function processMessage(
         .with(
           P.instanceOf(NotRecoverableGenericMessageError),
           async (error) => {
-            loggerInstance.info(
+            logger.info(
               `Not recoverable message: even impossibile to save, with error: ${error.code}`
             );
           }
         )
 
         .with(P.instanceOf(NotRecoverableMessageError), async (error) => {
-          loggerInstance.info(
+          logger.info(
             `Not recoverable message saved it on DEAD_SIGNAL with error: ${error.code}`
           );
           await storeSignalService.storeDeadSignal(error.signal);
@@ -41,7 +40,7 @@ export function processMessage(
         })
 
         .otherwise((_error: unknown) => {
-          loggerInstance.info("Generic error");
+          logger.info("Generic error");
           throw error;
         });
     }
