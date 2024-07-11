@@ -1,7 +1,7 @@
 {
-  "name": "signalhub-batch-update",
+  "name": "pagopa-signalhub-batch-update",
   "version": "1.0.0",
-  "description": "PagoPA Updater service",
+  "description": "PagoPA Interop Signalhub update Interop data (agreement, e-service) in batch",
   "type": "module",
   "main": "dist",
   "scripts": {
@@ -17,13 +17,13 @@
     "axios": "^1.6.8",
     "dotenv-flow": "^4.1.0",
     "pg-promise": "^11.8.0",
-    "signalhub-commons": "workspace:*",
-    "signalhub-commons-test": "workspace:*",
-    "signalhub-interop-client": "workspace:*",
+    "pagopa-signalhub-commons": "workspace:*",
+    "pagopa-signalhub-interop-client": "workspace:*",
     "ts-pattern": "^5.1.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "pagopa-signalhub-commons-test": "workspace:*",
     "@pagopa/eslint-config": "^3.0.0",
     "@types/node": "^20.11.24",
     "ts-node": "^10.9.2",

@@ -10,7 +10,5 @@ export const openApiDocument = generateOpenApi(contract, {
   },
 });
 
-writeFileSync(
-  `interface/push-signals_${openApiDocument.info.version}_.yaml`,
-  yaml.dump(openApiDocument)
-);
+const fileOutputDocument = `./src/api/push-signals_${openApiDocument.info.version}_.yaml`;
+writeFileSync(fileOutputDocument, yaml.dump(openApiDocument));

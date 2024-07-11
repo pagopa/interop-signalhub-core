@@ -1,8 +1,8 @@
 {
-  "name": "signalhub-commons",
+  "name": "pagopa-signalhub-commons",
   "private": true,
   "version": "1.0.0",
-  "description": "PagoPA Signal-hub common utilities",
+  "description": "PagoPA Interop Signalhub common utilities",
   "main": "dist",
   "type": "module",
   "exports": {

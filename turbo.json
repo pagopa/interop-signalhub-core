@@ -27,6 +27,8 @@
       "outputs": ["dist"]
     },
     "format:check": {},
-    "format:write": {}
+    "format:write": {},
+    "api:validate": {},
+    "api:generate": {}
   }
 }

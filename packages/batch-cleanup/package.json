@@ -1,7 +1,7 @@
 {
-  "name": "signalhub-batch-cleanup",
+  "name": "pagopa-signalhub-batch-cleanup",
   "version": "1.0.0",
-  "description": "PagoPA Clean Signals Batch",
+  "description": "PagoPA Interop Signalhub deletion signals in batch",
   "type": "module",
   "main": "dist",
   "scripts": {
@@ -16,13 +16,13 @@
   "dependencies": {
     "dotenv-flow": "^4.1.0",
     "pg-promise": "^11.8.0",
-    "signalhub-commons": "workspace:*",
-    "signalhub-commons-test": "workspace:*",
-    "signalhub-interop-client": "workspace:*",
+    "pagopa-signalhub-commons": "workspace:*",
+    "pagopa-signalhub-interop-client": "workspace:*",
     "ts-pattern": "^5.1.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "pagopa-signalhub-commons-test": "workspace:*",
     "@pagopa/eslint-config": "^3.0.0",
     "@types/node": "^20.11.24",
     "ts-node": "^10.9.2",
