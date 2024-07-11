@@ -1,5 +1,5 @@
 {
-  "name": "push-signal",
+  "name": "signalhub-push-signal",
   "version": "1.0.0",
   "description": "PagoPA Push Signal Service",
   "type": "module",

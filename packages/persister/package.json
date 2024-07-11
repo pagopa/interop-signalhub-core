@@ -1,5 +1,5 @@
 {
-  "name": "persister",
+  "name": "signalhub-persister",
   "version": "1.0.0",
   "description": "PagoPA Persister service",
   "type": "module",

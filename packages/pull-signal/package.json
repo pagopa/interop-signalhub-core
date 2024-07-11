@@ -1,5 +1,5 @@
 {
-  "name": "pull-signal",
+  "name": "signalhub-pull-signal",
   "version": "1.0.0",
   "description": "PagoPA Pull Signal Service",
   "type": "module",

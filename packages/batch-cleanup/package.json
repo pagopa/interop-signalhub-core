@@ -1,5 +1,5 @@
 {
-  "name": "batch-cleanup",
+  "name": "signalhub-batch-cleanup",
   "version": "1.0.0",
   "description": "PagoPA Clean Signals Batch",
   "type": "module",
