@@ -1,4 +1,4 @@
-import { DB } from "signalhub-commons";
+import { DB } from "pagopa-signalhub-commons";
 import { DeadSignal } from "../models/domain/model.js";
 import { recoverableMessageError } from "../models/domain/errors.js";
 

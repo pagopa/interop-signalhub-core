@@ -1,4 +1,4 @@
-import { DB, genericInternalError } from "signalhub-commons";
+import { DB, genericInternalError } from "pagopa-signalhub-commons";
 import { DeadEvent } from "../models/domain/model.js";
 
 export interface IDeadEventRepository {

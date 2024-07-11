@@ -4,7 +4,7 @@ import {
   ProducerService,
   genericInternalError,
   toProducerEservice,
-} from "signalhub-commons";
+} from "pagopa-signalhub-commons";
 import { getCurrentDate } from "../utils.js";
 
 export interface IProducerServiceRepository {

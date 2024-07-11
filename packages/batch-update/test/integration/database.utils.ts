@@ -1,7 +1,7 @@
 import {
   ConsumerEserviceEntity,
   ProducerEserviceEntity,
-} from "signalhub-commons";
+} from "pagopa-signalhub-commons";
 import { postgresDB } from "../utils";
 
 export async function getConsumerEserviceTableRows(): Promise<

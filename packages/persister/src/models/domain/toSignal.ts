@@ -1,4 +1,4 @@
-import { Signal, SignalMessage } from "signalhub-commons";
+import { Signal, SignalMessage } from "pagopa-signalhub-commons";
 
 export function toSignal(signalMessage: SignalMessage): Signal {
   return {

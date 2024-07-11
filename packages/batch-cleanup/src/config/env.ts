@@ -1,4 +1,4 @@
-import { SignalHubStoreConfig } from "signalhub-commons";
+import { SignalHubStoreConfig } from "pagopa-signalhub-commons";
 import { z } from "zod";
 
 const ClenaupConfig = z

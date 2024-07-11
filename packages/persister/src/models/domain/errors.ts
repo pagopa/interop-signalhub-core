@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import { Signal } from "signalhub-commons";
+import { Signal } from "pagopa-signalhub-commons";
 import { DeadSignal } from "./model.js";
 
 export class PersisterServiceError<T> extends Error {

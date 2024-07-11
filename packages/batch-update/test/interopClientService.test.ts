@@ -1,5 +1,5 @@
 import { expect, describe, it, vi } from "vitest";
-import * as commons from "signalhub-interop-client";
+import * as commons from "pagopa-signalhub-interop-client";
 import { interopClientServiceBuilder } from "../src/services/interopClient.service.js";
 import { interopClientService, loggerInstance } from "./utils.js";
 

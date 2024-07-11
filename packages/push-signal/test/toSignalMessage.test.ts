@@ -1,4 +1,4 @@
-import { createSignalPayload } from "signalhub-commons-test";
+import { createSignalPayload } from "pagopa-signalhub-commons-test";
 import { describe, expect, expectTypeOf, it } from "vitest";
 import { toSignalMessage } from "../src/models/domain/toSignalMessage.js";
 

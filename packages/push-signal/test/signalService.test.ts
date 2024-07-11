@@ -1,6 +1,6 @@
-import { genericLogger } from "signalhub-commons";
+import { genericLogger } from "pagopa-signalhub-commons";
 import { describe, expect, it } from "vitest";
-import { createSignal, writeSignal } from "signalhub-commons-test";
+import { createSignal, writeSignal } from "pagopa-signalhub-commons-test";
 import { signalIdDuplicatedForEserviceId } from "../src/models/domain/errors.js";
 import { postgresDB, signalService } from "./utils.js";
 

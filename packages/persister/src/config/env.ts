@@ -3,7 +3,7 @@ import {
   SignalHubStoreConfig,
   QuequeConfig,
   AwsConfig,
-} from "signalhub-commons";
+} from "pagopa-signalhub-commons";
 
 const PersisterServiceConfig =
   SignalHubStoreConfig.and(QuequeConfig).and(AwsConfig);

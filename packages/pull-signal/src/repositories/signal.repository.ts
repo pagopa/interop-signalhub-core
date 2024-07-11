@@ -1,4 +1,8 @@
-import { genericInternalError, DB, SignalRecord } from "signalhub-commons";
+import {
+  genericInternalError,
+  DB,
+  SignalRecord,
+} from "pagopa-signalhub-commons";
 
 export interface ISignalRepository {
   getByEservice: (

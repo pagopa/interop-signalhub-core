@@ -1,4 +1,4 @@
-import { DB, Logger } from "signalhub-commons";
+import { DB, Logger } from "pagopa-signalhub-commons";
 import { signalRepository } from "../repositories/signal.repository.js";
 
 import { signalIdDuplicatedForEserviceId } from "../models/domain/errors.js";

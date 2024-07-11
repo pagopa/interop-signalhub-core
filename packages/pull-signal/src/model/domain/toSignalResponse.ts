@@ -1,4 +1,4 @@
-import { SignalRecord, SignalResponse } from "signalhub-commons";
+import { SignalRecord, SignalResponse } from "pagopa-signalhub-commons";
 
 export function toSignalResponse(record: SignalRecord): SignalResponse {
   return {

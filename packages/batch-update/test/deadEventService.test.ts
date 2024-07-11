@@ -1,5 +1,5 @@
 import { describe, expect, vi, it, beforeEach } from "vitest";
-import { Event } from "signalhub-interop-client";
+import { Event } from "pagopa-signalhub-interop-client";
 import { deadServiceBuilder } from "../src/services/deadEvent.service";
 import { TracingBatchService } from "../src/services/tracingBatch.service";
 import { config } from "../src/config/env";

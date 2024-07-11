@@ -1,4 +1,4 @@
-import { Logger, SQS, SignalMessage } from "signalhub-commons";
+import { Logger, SQS, SignalMessage } from "pagopa-signalhub-commons";
 import {
   notRecoverableGenericMessageError,
   notRecoverableMessageError,

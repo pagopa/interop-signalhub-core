@@ -1,4 +1,4 @@
-import { DB, SQS, createDbInstance } from "signalhub-commons";
+import { DB, SQS, createDbInstance } from "pagopa-signalhub-commons";
 import { config } from "../config/env.js";
 import { signalServiceBuilder, SignalService } from "./signal.service.js";
 import { quequeServiceBuilder, QuequeService } from "./queque.service.js";

@@ -1,4 +1,4 @@
-import { SnakeCase } from "signalhub-commons";
+import { SnakeCase } from "pagopa-signalhub-commons";
 
 export enum TracingBatchStateEnum {
   ENDED = "ENDED",

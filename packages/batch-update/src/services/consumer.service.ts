@@ -1,4 +1,4 @@
-import { ConsumerEservice, Logger } from "signalhub-commons";
+import { ConsumerEservice, Logger } from "pagopa-signalhub-commons";
 import { AgreementEventDto } from "../models/domain/model.js";
 import { IConsumerEserviceRepository } from "../repositories/consumerEservice.repository.js";
 import { InteropClientService } from "./interopClient.service.js";

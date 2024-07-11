@@ -1,4 +1,7 @@
-import { SignalHubStoreConfig, InteropVoucherConfig } from "signalhub-commons";
+import {
+  SignalHubStoreConfig,
+  InteropVoucherConfig,
+} from "pagopa-signalhub-commons";
 import { GenericContainer, Wait } from "testcontainers";
 
 export const TEST_POSTGRES_DB_PORT = 5432;

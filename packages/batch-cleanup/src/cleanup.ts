@@ -1,4 +1,4 @@
-import { Logger } from "signalhub-commons";
+import { Logger } from "pagopa-signalhub-commons";
 import { config } from "./config/env.js";
 import { SignalService } from "./services/signal.service.js";
 

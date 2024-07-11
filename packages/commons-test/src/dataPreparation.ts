@@ -1,4 +1,4 @@
-import { DB, SQS } from "signalhub-commons";
+import { DB, SQS } from "pagopa-signalhub-commons";
 import { signalProducer, eserviceProducer, signalConsumer } from "./common.js";
 import {
   truncateConsumerEserviceTable,

@@ -5,7 +5,7 @@ import {
   AwsConfig,
   InteropClientConfig,
   JWTConfig,
-} from "signalhub-commons";
+} from "pagopa-signalhub-commons";
 
 const PullServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
   .and(AwsConfig)

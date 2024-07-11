@@ -1,9 +1,9 @@
 import {
   setupTestContainersVitest,
   signalConsumer,
-} from "signalhub-commons-test";
+} from "pagopa-signalhub-commons-test";
 import { inject } from "vitest";
-import { SignalMessage, SignalResponse } from "signalhub-commons";
+import { SignalMessage, SignalResponse } from "pagopa-signalhub-commons";
 import { signalServiceBuilder } from "../src/services/signal.service";
 import { interopServiceBuilder } from "../src/services/interop.service";
 import { interopApiClientServiceBuilder } from "../src/services/interopApiClient.service";

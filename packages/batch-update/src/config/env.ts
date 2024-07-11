@@ -1,4 +1,7 @@
-import { InteropClientConfig, SignalHubStoreConfig } from "signalhub-commons";
+import {
+  InteropClientConfig,
+  SignalHubStoreConfig,
+} from "pagopa-signalhub-commons";
 import { z } from "zod";
 
 const UpdaterConfig = z

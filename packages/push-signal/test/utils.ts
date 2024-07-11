@@ -1,7 +1,7 @@
 import {
   setupTestContainersVitest,
   signalProducer,
-} from "signalhub-commons-test";
+} from "pagopa-signalhub-commons-test";
 import { inject } from "vitest";
 
 import { quequeServiceBuilder } from "../src/services/queque.service.js";

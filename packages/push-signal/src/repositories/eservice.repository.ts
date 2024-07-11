@@ -1,4 +1,4 @@
-import { genericError, DB } from "signalhub-commons";
+import { genericError, DB } from "pagopa-signalhub-commons";
 
 export interface IEserviceRepository {
   findBy: (

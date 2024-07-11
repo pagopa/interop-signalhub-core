@@ -1,5 +1,5 @@
-import { Logger } from "signalhub-commons";
-import { Event } from "signalhub-interop-client";
+import { Logger } from "pagopa-signalhub-commons";
+import { Event } from "pagopa-signalhub-interop-client";
 import { IDeadEventRepository } from "../repositories/index.js";
 import { ApplicationType, config } from "../config/env.js";
 import { toEserviceEvent } from "../models/domain/toEserviceEvent.js";

@@ -23,18 +23,15 @@ importers:
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
+      pagopa-signalhub-commons:
+        specifier: workspace:*
+        version: link:../commons
+      pagopa-signalhub-interop-client:
+        specifier: workspace:*
+        version: link:../interop-client
       pg-promise:
         specifier: ^11.8.0
         version: 11.8.0
-      signalhub-commons:
-        specifier: workspace:*
-        version: link:../commons
-      signalhub-commons-test:
-        specifier: workspace:*
-        version: link:../commons-test
-      signalhub-interop-client:
-        specifier: workspace:*
-        version: link:../interop-client
       ts-pattern:
         specifier: ^5.1.2
         version: 5.1.2
@@ -48,6 +45,9 @@ importers:
       '@types/node':
         specifier: ^20.11.24
         version: 20.12.12
+      pagopa-signalhub-commons-test:
+        specifier: workspace:*
+        version: link:../commons-test
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@20.12.12)(typescript@5.4.5)
@@ -66,18 +66,15 @@ importers:
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
+      pagopa-signalhub-commons:
+        specifier: workspace:*
+        version: link:../commons
+      pagopa-signalhub-interop-client:
+        specifier: workspace:*
+        version: link:../interop-client
       pg-promise:
         specifier: ^11.8.0
         version: 11.8.0
-      signalhub-commons:
-        specifier: workspace:*
-        version: link:../commons
-      signalhub-commons-test:
-        specifier: workspace:*
-        version: link:../commons-test
-      signalhub-interop-client:
-        specifier: workspace:*
-        version: link:../interop-client
       ts-pattern:
         specifier: ^5.1.2
         version: 5.1.2
@@ -91,6 +88,9 @@ importers:
       '@types/node':
         specifier: ^20.11.24
         version: 20.12.12
+      pagopa-signalhub-commons-test:
+        specifier: workspace:*
+        version: link:../commons-test
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@20.12.12)(typescript@5.4.5)
@@ -179,12 +179,12 @@ importers:
       jsonwebtoken:
         specifier: 9.0.2
         version: 9.0.2
+      pagopa-signalhub-commons:
+        specifier: workspace:*
+        version: link:../commons
       pg-promise:
         specifier: 11.5.0
         version: 11.5.0
-      signalhub-commons:
-        specifier: workspace:*
-        version: link:../commons
       testcontainers:
         specifier: 10.2.2
         version: 10.2.2
@@ -215,7 +215,7 @@ importers:
       jose:
         specifier: ^5.4.0
         version: 5.4.0
-      signalhub-commons:
+      pagopa-signalhub-commons:
         specifier: workspace:*
         version: link:../commons
       swagger-typescript-api:
@@ -252,18 +252,12 @@ importers:
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
-      express:
-        specifier: ^4.19.2
-        version: 4.19.2
+      pagopa-signalhub-commons:
+        specifier: workspace:*
+        version: link:../commons
       pg-promise:
         specifier: ^11.6.0
         version: 11.6.0
-      signalhub-commons:
-        specifier: workspace:*
-        version: link:../commons
-      signalhub-commons-test:
-        specifier: workspace:*
-        version: link:../commons-test
       ts-pattern:
         specifier: ^5.1.1
         version: 5.1.1
@@ -280,6 +274,9 @@ importers:
       '@types/node':
         specifier: ^20.11.24
         version: 20.12.12
+      pagopa-signalhub-commons-test:
+        specifier: workspace:*
+        version: link:../commons-test
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@20.12.12)(typescript@5.4.5)
@@ -319,18 +316,15 @@ importers:
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.0
+      pagopa-signalhub-commons:
+        specifier: workspace:*
+        version: link:../commons
+      pagopa-signalhub-interop-client:
+        specifier: workspace:*
+        version: link:../interop-client
       pg-promise:
         specifier: ^11.6.0
         version: 11.8.0
-      signalhub-commons:
-        specifier: workspace:*
-        version: link:../commons
-      signalhub-commons-test:
-        specifier: workspace:*
-        version: link:../commons-test
-      signalhub-interop-client:
-        specifier: workspace:*
-        version: link:../interop-client
       swagger-ui-express:
         specifier: ^5.0.0
         version: 5.0.0(express@4.19.2)
@@ -356,6 +350,9 @@ importers:
       '@types/swagger-ui-express':
         specifier: ^4.1.6
         version: 4.1.6
+      pagopa-signalhub-commons-test:
+        specifier: workspace:*
+        version: link:../commons-test
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@20.12.12)(typescript@5.4.5)
@@ -395,18 +392,15 @@ importers:
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.0
+      pagopa-signalhub-commons:
+        specifier: workspace:*
+        version: link:../commons
+      pagopa-signalhub-interop-client:
+        specifier: workspace:*
+        version: link:../interop-client
       pg-promise:
         specifier: ^11.6.0
         version: 11.8.0
-      signalhub-commons:
-        specifier: workspace:*
-        version: link:../commons
-      signalhub-commons-test:
-        specifier: workspace:*
-        version: link:../commons-test
-      signalhub-interop-client:
-        specifier: workspace:*
-        version: link:../interop-client
       swagger-ui-express:
         specifier: ^5.0.0
         version: 5.0.0(express@4.19.2)
@@ -432,6 +426,9 @@ importers:
       '@types/swagger-ui-express':
         specifier: ^4.1.6
         version: 4.1.6
+      pagopa-signalhub-commons-test:
+        specifier: workspace:*
+        version: link:../commons-test
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@20.12.12)(typescript@5.4.5)

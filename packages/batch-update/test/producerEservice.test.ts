@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import * as commons from "signalhub-interop-client";
-import { truncateTracingBatchTable } from "signalhub-commons-test";
-import { ProducerService } from "signalhub-commons";
+import * as commons from "pagopa-signalhub-interop-client";
+import { truncateTracingBatchTable } from "pagopa-signalhub-commons-test";
+import { ProducerService } from "pagopa-signalhub-commons";
 import { EserviceEventDto } from "../src/models/domain/model.js";
 import {
   IProducerServiceRepository,
