@@ -1,10 +1,10 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { genericLogger, operationForbidden } from "signalhub-commons";
+import { genericLogger, operationForbidden } from "pagopa-signalhub-commons";
 import {
   dataPreparationForSignalConsumers,
   dataResetForSignalConsumers,
   eserviceIdPushSignals,
-} from "signalhub-commons-test";
+} from "pagopa-signalhub-commons-test";
 import {
   aValidMockAgreement,
   interopApiClient,

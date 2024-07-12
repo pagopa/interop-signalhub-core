@@ -1,4 +1,4 @@
-import { logger } from "signalhub-commons";
+import { logger } from "pagopa-signalhub-commons";
 import { serviceBuilder } from "./services/service.builder.js";
 import { cleanupBuilder } from "./cleanup.js";
 

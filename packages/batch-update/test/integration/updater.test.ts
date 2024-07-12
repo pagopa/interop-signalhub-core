@@ -2,8 +2,8 @@ import {
   truncateConsumerEserviceTable,
   truncateEserviceTable,
   truncateTracingBatchTable,
-} from "signalhub-commons-test";
-import * as commons from "signalhub-interop-client";
+} from "pagopa-signalhub-commons-test";
+import * as commons from "pagopa-signalhub-interop-client";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { postgresDB, task } from "../utils";
 import { config } from "../../src/config/env";

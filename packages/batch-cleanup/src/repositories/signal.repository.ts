@@ -1,4 +1,4 @@
-import { genericInternalError, DB } from "signalhub-commons";
+import { genericInternalError, DB } from "pagopa-signalhub-commons";
 
 export interface ISignalRepository {
   deleteBy: (date: Date) => Promise<number | null>;

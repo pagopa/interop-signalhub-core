@@ -1,7 +1,7 @@
 {
-  "name": "persister",
+  "name": "pagopa-signalhub-persister",
   "version": "1.0.0",
-  "description": "PagoPA Persister service",
+  "description": "PagoPA Interop Signalhub internal service to store signals",
   "type": "module",
   "main": "dist",
   "scripts": {
@@ -21,14 +21,13 @@
     "@aws-sdk/client-sqs": "^3.583.0",
     "connection-string": "^4.4.0",
     "dotenv-flow": "^4.1.0",
-    "express": "^4.19.2",
     "pg-promise": "^11.6.0",
-    "signalhub-commons": "workspace:*",
-    "signalhub-commons-test": "workspace:*",
+    "pagopa-signalhub-commons": "workspace:*",
     "ts-pattern": "^5.1.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "pagopa-signalhub-commons-test": "workspace:*",
     "@pagopa/eslint-config": "^3.0.0",
     "@types/express": "^4.17.21",
     "@types/node": "^20.11.24",

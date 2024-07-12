@@ -1,4 +1,4 @@
-import { DB, createDbInstance, Logger } from "signalhub-commons";
+import { DB, createDbInstance, Logger } from "pagopa-signalhub-commons";
 import { config } from "../config/env.js";
 import { SignalService, signalServiceBuilder } from "./signal.service.js";
 import { clockServiceBuilder } from "./clock.service.js";

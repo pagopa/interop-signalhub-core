@@ -1,4 +1,4 @@
-import { Event } from "signalhub-interop-client";
+import { Event } from "pagopa-signalhub-interop-client";
 import { EserviceEventDto } from "./model.js";
 
 export function toEserviceEvent(event: Event): EserviceEventDto {

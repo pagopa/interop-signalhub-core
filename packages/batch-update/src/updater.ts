@@ -1,6 +1,6 @@
-import { Event, Events } from "signalhub-interop-client";
+import { Event, Events } from "pagopa-signalhub-interop-client";
 
-import { logger } from "signalhub-commons";
+import { logger } from "pagopa-signalhub-commons";
 import { TracingBatchService } from "./services/tracingBatch.service.js";
 import { InteropClientService } from "./services/interopClient.service.js";
 import { ApplicationType, config } from "./config/env.js";

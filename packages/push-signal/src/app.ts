@@ -1,6 +1,9 @@
 import express, { Express } from "express";
 import { initServer, createExpressEndpoints } from "@ts-rest/express";
-import { authenticationMiddleware, contextMiddleware } from "signalhub-commons";
+import {
+  authenticationMiddleware,
+  contextMiddleware,
+} from "pagopa-signalhub-commons";
 import { contract } from "./contract/contract.js";
 import { pushRoutes } from "./routes/push.route.js";
 import { validationErrorHandler } from "./validation/validation.js";

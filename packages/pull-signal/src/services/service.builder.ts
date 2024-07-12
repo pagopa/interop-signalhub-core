@@ -1,4 +1,4 @@
-import { DB, createDbInstance } from "signalhub-commons";
+import { DB, createDbInstance } from "pagopa-signalhub-commons";
 import { config } from "../config/env.js";
 import { interopApiClientServiceBuilder } from "./interopApiClient.service.js";
 import { interopServiceBuilder, InteropService } from "./interop.service.js";

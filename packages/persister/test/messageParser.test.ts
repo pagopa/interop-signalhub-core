@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { genericLogger } from "signalhub-commons";
-import { createSignal } from "signalhub-commons-test";
+import { genericLogger } from "pagopa-signalhub-commons";
+import { createSignal } from "pagopa-signalhub-commons-test";
 import {
   notRecoverableGenericMessageError,
   notRecoverableMessageError,

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Signal } from "signalhub-commons";
+import { Signal } from "pagopa-signalhub-commons";
 
 export const SignalDeleted = Signal.extend({
   tmstInsert: z.date().default(new Date()),

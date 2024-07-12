@@ -1,5 +1,9 @@
 import { initContract } from "@ts-rest/core";
-import { SignalPayload, SignalPushResponse, Problem } from "signalhub-commons";
+import {
+  SignalPayload,
+  SignalPushResponse,
+  Problem,
+} from "pagopa-signalhub-commons";
 import { z } from "zod";
 
 const c = initContract();

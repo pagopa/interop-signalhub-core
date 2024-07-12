@@ -1,6 +1,6 @@
 import { afterEach, inject } from "vitest";
-import { DB, createDbInstance, genericLogger } from "signalhub-commons";
-import { setupTestContainersVitest } from "signalhub-commons-test";
+import { DB, createDbInstance, genericLogger } from "pagopa-signalhub-commons";
+import { setupTestContainersVitest } from "pagopa-signalhub-commons-test";
 import { storeSignalServiceBuilder } from "../src/services/storeSignal.service.js";
 import { processMessage } from "../src/messageHandler.js";
 

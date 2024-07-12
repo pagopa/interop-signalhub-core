@@ -1,4 +1,4 @@
-import { DB, Logger, operationForbidden } from "signalhub-commons";
+import { DB, Logger, operationForbidden } from "pagopa-signalhub-commons";
 import { consumerEserviceRepository } from "../repositories/consumerEservice.repository.js";
 import { Agreement } from "../model/domain/models.js";
 import { InteropApiClientService } from "./interopApiClient.service.js";

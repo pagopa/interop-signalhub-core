@@ -1,4 +1,4 @@
-import { DB, genericInternalError } from "signalhub-commons";
+import { DB, genericInternalError } from "pagopa-signalhub-commons";
 import { tracingBatchRepository } from "../repositories/tracingBatch.repository.js";
 import { TracingBatchStateEnum } from "../models/domain/model.js";
 import { ApplicationType, config } from "../config/env.js";

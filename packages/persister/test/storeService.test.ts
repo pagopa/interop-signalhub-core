@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createSignal, writeSignal } from "signalhub-commons-test";
+import { createSignal, writeSignal } from "pagopa-signalhub-commons-test";
 import {
   notRecoverableMessageError,
   recoverableMessageError,

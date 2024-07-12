@@ -3,7 +3,7 @@ import {
   TracingBatch,
   genericInternalError,
   toTracingBatch,
-} from "signalhub-commons";
+} from "pagopa-signalhub-commons";
 import { TracingBatchStateEnum } from "../models/domain/model.js";
 import { ApplicationType } from "../config/env.js";
 

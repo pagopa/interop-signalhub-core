@@ -1,4 +1,4 @@
-import { Signal, DB } from "signalhub-commons";
+import { Signal, DB } from "pagopa-signalhub-commons";
 
 export interface ISignalRepository {
   insertSignal: (signal: Signal) => Promise<number | null>;

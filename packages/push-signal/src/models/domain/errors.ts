@@ -1,4 +1,4 @@
-import { ApiError, makeApiProblemBuilder } from "signalhub-commons";
+import { ApiError, makeApiProblemBuilder } from "pagopa-signalhub-commons";
 
 export const errorCodes = {
   validationError: "0001",

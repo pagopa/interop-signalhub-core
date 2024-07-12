@@ -1,11 +1,11 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { genericLogger } from "signalhub-commons";
+import { genericLogger } from "pagopa-signalhub-commons";
 import {
   createSignal,
   createMultipleSignals,
   writeSignals,
   createMultipleOrderedSignals,
-} from "signalhub-commons-test";
+} from "pagopa-signalhub-commons-test";
 
 import {
   cleanup,

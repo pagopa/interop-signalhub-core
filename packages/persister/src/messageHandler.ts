@@ -1,4 +1,4 @@
-import { SQS, Logger } from "signalhub-commons";
+import { SQS, Logger } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
 import { StoreSignalService } from "./services/storeSignal.service.js";
 import {

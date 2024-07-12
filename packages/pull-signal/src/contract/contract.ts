@@ -1,5 +1,5 @@
 import { initContract } from "@ts-rest/core";
-import { Problem, SignalPullResponse } from "signalhub-commons";
+import { Problem, SignalPullResponse } from "pagopa-signalhub-commons";
 import { z } from "zod";
 
 const c = initContract();

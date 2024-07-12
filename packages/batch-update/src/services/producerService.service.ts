@@ -1,6 +1,9 @@
 /* eslint-disable functional/no-method-signature */
 
-import { Logger, ProducerService as ProducerEService } from "signalhub-commons";
+import {
+  Logger,
+  ProducerService as ProducerEService,
+} from "pagopa-signalhub-commons";
 import { EserviceEventDto } from "../models/domain/model.js";
 import { IProducerServiceRepository } from "../repositories/producerEservice.repository.js";
 import { InteropClientService } from "./interopClient.service.js";

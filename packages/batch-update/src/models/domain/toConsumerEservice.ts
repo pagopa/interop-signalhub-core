@@ -1,5 +1,5 @@
-import { ConsumerEservice } from "signalhub-commons";
-import { Agreement } from "signalhub-interop-client";
+import { ConsumerEservice } from "pagopa-signalhub-commons";
+import { Agreement } from "pagopa-signalhub-interop-client";
 
 export function toConsumerEservice(
   agreeement: Agreement,

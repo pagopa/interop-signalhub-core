@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import * as commons from "signalhub-interop-client";
-import { truncateTracingBatchTable } from "signalhub-commons-test";
+import * as commons from "pagopa-signalhub-interop-client";
+import { truncateTracingBatchTable } from "pagopa-signalhub-commons-test";
 import { consumerServiceBuilder } from "../src/services/consumer.service.js";
 import { AgreementEventDto } from "../src/models/domain/model.js";
 import { IProducerService } from "../src/services/producerService.service.js";

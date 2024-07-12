@@ -1,5 +1,5 @@
-import { DB, createDbInstance, logger } from "signalhub-commons";
-import { getAccessToken } from "signalhub-interop-client";
+import { DB, createDbInstance, logger } from "pagopa-signalhub-commons";
+import { getAccessToken } from "pagopa-signalhub-interop-client";
 import { config } from "../config/env.js";
 import {
   producerEserviceRepository,

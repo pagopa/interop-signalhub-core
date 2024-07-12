@@ -1,4 +1,4 @@
-import { Logger, SQS } from "signalhub-commons";
+import { Logger, SQS } from "pagopa-signalhub-commons";
 import { signalNotSendedToQueque } from "../models/domain/errors.js";
 import { config } from "../config/env.js";
 

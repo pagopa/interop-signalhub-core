@@ -1,6 +1,6 @@
 import { afterEach, inject } from "vitest";
-import { setupTestContainersVitest } from "signalhub-commons-test";
-import { logger } from "signalhub-commons";
+import { setupTestContainersVitest } from "pagopa-signalhub-commons-test";
+import { logger } from "pagopa-signalhub-commons";
 import { tracingBatchServiceBuilder } from "../src/services/tracingBatch.service.js";
 import { interopClientServiceBuilder } from "../src/services/interopClient.service.js";
 import { producerServiceBuilder } from "../src/services/producerService.service.js";

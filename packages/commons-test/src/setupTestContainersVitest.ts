@@ -9,7 +9,7 @@ import {
   SignalHubStoreConfig,
   createDbInstance,
   InteropClientConfig,
-} from "signalhub-commons";
+} from "pagopa-signalhub-commons";
 import { SqsConfig, truncateSignalTable } from "./index.js";
 /**
  * This function is a setup for vitest that initializes the postgres

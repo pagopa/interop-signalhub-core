@@ -1,4 +1,4 @@
-import { genericInternalError, DB } from "signalhub-commons";
+import { genericInternalError, DB } from "pagopa-signalhub-commons";
 
 export interface ISignalRepository {
   findBy: (signalId: number, eserviceId: string) => Promise<number | null>;

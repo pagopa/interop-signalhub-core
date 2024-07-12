@@ -1,4 +1,4 @@
-import { Signal } from "signalhub-commons";
+import { Signal } from "pagopa-signalhub-commons";
 import { z } from "zod";
 
 export const DeadSignal = Signal.merge(

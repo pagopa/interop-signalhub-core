@@ -2,7 +2,7 @@ import { afterAll, beforeAll } from "vitest";
 import {
   dataPreparation,
   dataPreparationCleanup,
-} from "signalhub-commons-test";
+} from "pagopa-signalhub-commons-test";
 import { postgresDB } from "./utils.js";
 
 beforeAll(async () => {

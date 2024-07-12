@@ -3,7 +3,7 @@ import {
   SignalMessage,
   SignalMessageSchema,
   SignalPayload,
-} from "signalhub-commons";
+} from "pagopa-signalhub-commons";
 
 export function toSignalMessage(
   signalRequest: SignalPayload,

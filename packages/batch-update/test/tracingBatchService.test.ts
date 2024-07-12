@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { truncateTracingBatchTable } from "signalhub-commons-test";
+import { truncateTracingBatchTable } from "pagopa-signalhub-commons-test";
 import { TracingBatchStateEnum } from "../src/models/domain/model";
 import { postgresDB, tracingBatchService } from "./utils";
 

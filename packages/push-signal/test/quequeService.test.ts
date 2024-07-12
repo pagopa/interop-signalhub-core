@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, inject, it } from "vitest";
-import { ApiError, genericLogger } from "signalhub-commons";
-import { deleteAllSqsMessages, SqsConfig } from "signalhub-commons-test";
+import { ApiError, genericLogger } from "pagopa-signalhub-commons";
+import { deleteAllSqsMessages, SqsConfig } from "pagopa-signalhub-commons-test";
 import { ErrorCodes } from "../src/models/domain/errors.js";
 import { config } from "../src/config/env.js";
 import { quequeService, sqsClient } from "./utils.js";

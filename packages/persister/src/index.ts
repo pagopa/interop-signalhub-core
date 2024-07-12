@@ -1,4 +1,4 @@
-import { DB, SQS, createDbInstance, logger } from "signalhub-commons";
+import { DB, SQS, createDbInstance, logger } from "pagopa-signalhub-commons";
 import { config } from "./config/env.js";
 import { processMessage } from "./messageHandler.js";
 import { storeSignalServiceBuilder } from "./services/storeSignal.service.js";

@@ -4,7 +4,7 @@ import {
   createSignal,
   createMultipleSignals,
   writeSignals,
-} from "signalhub-commons-test";
+} from "pagopa-signalhub-commons-test";
 import {
   cleanup,
   ONE_HOUR,

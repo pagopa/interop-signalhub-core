@@ -1,4 +1,4 @@
-import { DB, genericInternalError, Logger } from "signalhub-commons";
+import { DB, genericInternalError, Logger } from "pagopa-signalhub-commons";
 import { signalRepository } from "../repositories/index.js";
 import { ClockService } from "./clock.service.js";
 

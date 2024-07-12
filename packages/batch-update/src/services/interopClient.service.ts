@@ -5,7 +5,7 @@ import {
   Logger,
   genericInternalError,
   isTokenExpired,
-} from "signalhub-commons";
+} from "pagopa-signalhub-commons";
 import { AxiosError } from "axios";
 import {
   getAgreement,
@@ -17,7 +17,7 @@ import {
   getEServiceDescriptor,
   getEServicesEventsFromId,
   getAccessToken,
-} from "signalhub-interop-client";
+} from "pagopa-signalhub-interop-client";
 import { toConsumerEservice } from "../models/domain/toConsumerEservice.js";
 import { config } from "../config/env.js";
 import { emptyQueueEventsException } from "../models/domain/errors.js";

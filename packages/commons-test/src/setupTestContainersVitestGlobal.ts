@@ -11,7 +11,7 @@ import {
   SignalHubStoreConfig,
   AwsConfig,
   InteropClientConfig,
-} from "signalhub-commons";
+} from "pagopa-signalhub-commons";
 import { StartedTestContainer } from "testcontainers";
 import { z } from "zod";
 import {

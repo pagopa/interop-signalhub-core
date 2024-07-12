@@ -1,4 +1,4 @@
-import { DB, Logger, SignalMessage } from "signalhub-commons";
+import { DB, Logger, SignalMessage } from "pagopa-signalhub-commons";
 import { toSignal } from "../models/domain/toSignal.js";
 import { signalRepository } from "../repositories/signal.repository.js";
 import { deadSignalRepository } from "../repositories/deadSignal.repository.js";

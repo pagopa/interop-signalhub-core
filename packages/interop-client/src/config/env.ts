@@ -1,4 +1,4 @@
-import { InteropClientConfig } from "signalhub-commons";
+import { InteropClientConfig } from "pagopa-signalhub-commons";
 
 const parsedFromEnv = InteropClientConfig.safeParse(process.env);
 if (!parsedFromEnv.success) {

@@ -1,7 +1,7 @@
-import { setupTestContainersVitest } from "signalhub-commons-test";
+import { setupTestContainersVitest } from "pagopa-signalhub-commons-test";
 import { inject } from "vitest";
 
-import { genericLogger } from "signalhub-commons";
+import { genericLogger } from "pagopa-signalhub-commons";
 import { signalServiceBuilder } from "../src/services/signal.service.js";
 import { clockServiceBuilder } from "../src/services/clock.service.js";
 

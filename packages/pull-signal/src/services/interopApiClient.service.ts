@@ -1,8 +1,8 @@
 import {
   getAccessToken,
   getAgreementByPurpose,
-} from "signalhub-interop-client";
-import { genericInternalError } from "signalhub-commons";
+} from "pagopa-signalhub-interop-client";
+import { genericInternalError } from "pagopa-signalhub-commons";
 import { Agreement } from "../model/domain/models.js";
 
 // eslint-disable-next-line functional/no-let

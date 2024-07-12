@@ -4,7 +4,7 @@ import {
   DB,
   genericInternalError,
   toConsumerEservice,
-} from "signalhub-commons";
+} from "pagopa-signalhub-commons";
 import { getCurrentDate } from "../utils.js";
 
 export interface IConsumerEserviceRepository {
