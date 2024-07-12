@@ -19,7 +19,6 @@
     "pg-promise": "^11.8.0",
     "pagopa-signalhub-commons": "workspace:*",
     "pagopa-signalhub-interop-client": "workspace:*",
-    "ts-pattern": "^5.1.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
