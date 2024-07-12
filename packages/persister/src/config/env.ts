@@ -1,12 +1,7 @@
 import { z } from "zod";
-import {
-  SignalHubStoreConfig,
-  QuequeConfig,
-  AwsConfig,
-} from "pagopa-signalhub-commons";
+import { SignalHubStoreConfig, QuequeConfig } from "pagopa-signalhub-commons";
 
-const PersisterServiceConfig =
-  SignalHubStoreConfig.and(QuequeConfig).and(AwsConfig);
+const PersisterServiceConfig = SignalHubStoreConfig.and(QuequeConfig);
 
 const parsedFromEnv = PersisterServiceConfig.safeParse(process.env);
 if (!parsedFromEnv.success) {

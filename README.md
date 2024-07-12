@@ -46,13 +46,14 @@ To maintain data across restart add this:
 ### ElasticMQ to simulate AWS SQS
 
 ```
+# There's no need to set env vars
 docker-compose up elaticmq
 ```
 
 Test with:
 
 ```
-export AWS_REGION=us-east-1
+export AWS_PROFILE=<some aws profile in your ~/.aws/config>
 aws sqs list-queues --endpoint-url http://localhost:9324
 ```
 

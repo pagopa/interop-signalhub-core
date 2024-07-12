@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "start": "turbo start",
-    "start:push-signals": "turbo start --filter pagopa-signalhub-push-signal",
-    "start:pull-signals": "turbo start --filter pagopa-signalhub-pull-signal",
+    "start:push": "turbo start --filter pagopa-signalhub-push-signal",
+    "start:pull": "turbo start --filter pagopa-signalhub-pull-signal",
     "start:persister": "turbo start --filter pagopa-signalhub-persister",
     "start:updater": "turbo start --filter pagopa-signalhub-batch-update",
     "start:cleaner": "turbo start --filter pagopa-signalhub-batch-cleanup",

@@ -2,13 +2,11 @@ import { z } from "zod";
 import {
   HTTPServerConfig,
   SignalHubStoreConfig,
-  AwsConfig,
   InteropClientConfig,
   JWTConfig,
 } from "pagopa-signalhub-commons";
 
 const PullServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
-  .and(AwsConfig)
   .and(InteropClientConfig)
   .and(JWTConfig);
 
