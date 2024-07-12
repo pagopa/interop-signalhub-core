@@ -3,14 +3,12 @@ import {
   HTTPServerConfig,
   SignalHubStoreConfig,
   QuequeConfig,
-  AwsConfig,
   InteropClientConfig,
   JWTConfig,
 } from "pagopa-signalhub-commons";
 
 const PushServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
   .and(QuequeConfig)
-  .and(AwsConfig)
   .and(InteropClientConfig)
   .and(JWTConfig);
 
