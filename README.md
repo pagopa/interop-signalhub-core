@@ -52,7 +52,7 @@ docker-compose up elaticmq
 Test with:
 
 ```
-export AWS_REGION=us-east-1
+export AWS_REGION=eu-south-1
 aws sqs list-queues --endpoint-url http://localhost:9324
 ```
 
