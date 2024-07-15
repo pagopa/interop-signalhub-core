@@ -80,7 +80,7 @@ Test with:
 export AWS_PROFILE=<some aws profile in your ~/.aws/config>
 aws sqs list-queues --endpoint-url http://localhost:9324
 ```
-You can even a fake profile:
+You can even use a fake profile:
 ````
 [profile FAKE-FOR-TEST]
 aws_access_key_id=test-aws-key
