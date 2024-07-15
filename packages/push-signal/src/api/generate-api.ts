@@ -20,7 +20,7 @@ new Command()
   .hook("preAction", async (command) => {
     const options = command.opts();
 
-    if (!isValidSemanticVersion(options.version!)) {
+    if (!isValidSemanticVersion(options.version)) {
       throw new Error("Invalid version format. Please use semantic versioning");
     }
   })
@@ -29,7 +29,7 @@ new Command()
     const openApiDocument = generateOpenApi(contract, {
       info: {
         title: "Push signal Service API",
-        version: version!,
+        version,
       },
     });
 
