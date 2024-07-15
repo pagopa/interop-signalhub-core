@@ -1,14 +1,13 @@
+import { writeFileSync } from "fs";
 import { Command, Option } from "@commander-js/extra-typings";
 import { generateOpenApi } from "@ts-rest/open-api";
-import { contract } from "../contract/contract.js";
-import { writeFileSync } from "fs";
 import * as yaml from "js-yaml";
+import { contract } from "../contract/contract.js";
 
 const semanticVersionRegex = /^([1-9]\d*|0)(\.(([1-9]\d*)|0)){2}$/;
 
 function isValidSemanticVersion(version: string): boolean {
-  const res = semanticVersionRegex.test(version);
-  return res;
+  return semanticVersionRegex.test(version);
 }
 
 new Command()
