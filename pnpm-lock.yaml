@@ -280,6 +280,9 @@ importers:
 
   packages/pull-signal:
     dependencies:
+      '@commander-js/extra-typings':
+        specifier: ^12.1.0
+        version: 12.1.0(commander@12.1.0)
       '@ts-rest/core':
         specifier: ^3.45.2
         version: 3.45.2(zod@3.23.8)
@@ -292,6 +295,9 @@ importers:
       axios:
         specifier: ^1.6.8
         version: 1.7.0
+      commander-js:
+        specifier: 0.0.1-security
+        version: 0.0.1-security
       connection-string:
         specifier: ^4.4.0
         version: 4.4.0
@@ -356,6 +362,9 @@ importers:
 
   packages/push-signal:
     dependencies:
+      '@commander-js/extra-typings':
+        specifier: ^12.1.0
+        version: 12.1.0(commander@12.1.0)
       '@ts-rest/core':
         specifier: ^3.45.2
         version: 3.45.2(zod@3.23.8)
@@ -417,6 +426,9 @@ importers:
       '@types/swagger-ui-express':
         specifier: ^4.1.6
         version: 4.1.6
+      commander:
+        specifier: ^12.1.0
+        version: 12.1.0
       pagopa-signalhub-commons-test:
         specifier: workspace:*
         version: link:../commons-test
@@ -1351,6 +1363,14 @@ packages:
   /@colors/colors@1.6.0:
     resolution: {integrity: sha512-Ir+AOibqzrIsL6ajt3Rz3LskB7OiMVHqltZmspbW/TJuTVuyOMirVqAkjfY6JISiLHgyNqicAC8AyHHGzNd/dA==}
     engines: {node: '>=0.1.90'}
+    dev: false
+
+  /@commander-js/extra-typings@12.1.0(commander@12.1.0):
+    resolution: {integrity: sha512-wf/lwQvWAA0goIghcb91dQYpkLBcyhOhQNqG/VgWhnKzgt+UOMvra7EX/2fv70arm5RW+PUHoQHHDa6/p77Eqg==}
+    peerDependencies:
+      commander: ~12.1.0
+    dependencies:
+      commander: 12.1.0
     dev: false
 
   /@cspotcode/source-map-support@0.8.1:
@@ -3422,6 +3442,14 @@ packages:
     engines: {node: '>= 0.8'}
     dependencies:
       delayed-stream: 1.0.0
+
+  /commander-js@0.0.1-security:
+    resolution: {integrity: sha512-OW7fC8kIkcPSh2pOlrkadPk7rTHZdfx7nk/TUKuhdywP4XByYwQE8vu3N3yJMFcdL8Y6/n8cedXMuD2uXnXt0Q==}
+    dev: false
+
+  /commander@12.1.0:
+    resolution: {integrity: sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==}
+    engines: {node: '>=18'}
 
   /comment-parser@1.3.1:
     resolution: {integrity: sha512-B52sN2VNghyq5ofvUsqZjmk6YkihBX5vMSChmSK9v4ShjKf3Vk5Xcmgpw4o+iIgtrnM/u5FiMpz9VKb8lpBveA==}
