@@ -1,0 +1,71 @@
+# Notes on Execution environments
+
+- local execution
+- local testing
+- CI testing
+- k8s execution
+
+## .env file
+
+FIle .```env`` contains variables needed for application (local run)
+FIle ``.env.test`` contains variables needed for testing (does not introduce other variables: overwrites those in ``.env``)
+
+#### module **interop-client** 
+- is a client module, is a dependency, should not be started
+- contains the ```buildJWT()``` operation that signs the client assertion, uses KMS
+- depends on AWS KMS service, so 
+- depends on AWS credentials
+- requires:
+	- authenticated AWS session (+ export profile)
+
+`~/.aws.config`
+`[PROFILE YOUR_AWS_PROFILE]`
+
+`export AWS_PROFILE=YOUR_AWS_PROFILE` 
+`aws sso login`
+
+#### module **batch-cleanup**
+- no setup
+
+#### module **batch-update**
+- depends on interop-client
+- requires:
+	- authenticated AWS session (+ export profile)
+
+For test execution:
+- does not require AWS session + profile
+
+#### module **persister**
+- depends on AWS SQS service
+- depends on AWS credentials
+- requires:
+	- authenticated AWS session (+ export profile)
+
+Running elasticmq locally does not need variables
+
+#### module **pull**
+- depends on interop-client
+- needs:
+	- authenticated AWS session (+ export profile)
+
+For test execution:
+- does not require AWS session + profile
+
+#### module **push**
+- depends on interop-client
+- depends on AWS SQS service
+- requires:
+	- authenticated AWS session (+ export profile)
+
+
+For test execution:
+- for AWS SQS requires AWS credentials.
+- FIle `.env.test`:
+	`AWS_CONFIG_FILE=aws.config.local`.
+	File` aws.config.local`
+	`[default]`
+	`aws_access_key_id=test-aws-key`
+	`aws_secret_access_key=test-aws-secret`
+	`region=us-south-1`
+
+

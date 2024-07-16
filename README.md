@@ -19,10 +19,34 @@ pnpm install
 
 ```
 pnpm start:<service-name>
-# example: pnpm start:push-signals
+# example: pnpm start:push
 ```
 
-## Local Environment (docker-compose)
+## How to run services in background (with startup scripts):
+
+```
+./script/push-start.sh
+```
+
+```
+./script/pull-start.sh
+```
+
+## Local Environment
+
+### Startup scripts
+
+To start __all__ the external services: 
+```
+./script/infra-start.sh
+```
+
+To watch status and logs:
+```
+./script/infra-status.sh
+```
+
+### Without startup scripts
 
 ### Database
 
@@ -56,7 +80,13 @@ Test with:
 export AWS_PROFILE=<some aws profile in your ~/.aws/config>
 aws sqs list-queues --endpoint-url http://localhost:9324
 ```
-
+You can even use a fake profile:
+````
+[profile FAKE-FOR-TEST]
+aws_access_key_id=test-aws-key
+aws_secret_access_key=test-aws-secret
+region=eu-south-1
+```
 
 ### Mockserver to simulate Interop API m2m
 
@@ -69,5 +99,3 @@ To test:
 ```
 curl -vv http://localhost:1080/1.0/events/eservices?limit=100&lastEventId=0
 ```
-
-
