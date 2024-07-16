@@ -15,7 +15,7 @@ cleanup() {
 trap cleanup EXIT
 
 # Start push service in the background
-pnpm start:pull-signals &
+pnpm start:pull &
 pid1=$! # Get the process ID of the last backgrounded command
 
 # Wait indefinitely. The cleanup function will handle interruption and cleanup.
