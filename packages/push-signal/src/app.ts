@@ -1,5 +1,5 @@
 import express, { Express } from "express";
-import { initServer, createExpressEndpoints } from "@ts-rest/express";
+import { createExpressEndpoints } from "@ts-rest/express";
 import {
   authenticationMiddleware,
   contextMiddleware,
@@ -22,17 +22,11 @@ app.use(contextMiddleware(serviceName));
 setupHealthRoute(app);
 app.use(authenticationMiddleware);
 
-// setupSwaggerRoute(app);
 // Disable the "X-Powered-By: Express" HTTP header for security reasons: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#recommendation_16
 app.disable("x-powered-by");
 
 // ts-rest
-const tsServer = initServer();
-const routes = tsServer.router(
-  contract,
-  pushRoutes(signalService, interopService, quequeService)
-);
-
+const routes = pushRoutes(signalService, interopService, quequeService);
 createExpressEndpoints(contract, routes, app, {
   requestValidationErrorHandler: validationErrorHandler(),
 });
