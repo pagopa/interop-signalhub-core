@@ -22,7 +22,6 @@ app.use(contextMiddleware(serviceName));
 setupHealthRoute(app);
 app.use(authenticationMiddleware);
 
-// setupSwaggerRoute(app);
 // Disable the "X-Powered-By: Express" HTTP header for security reasons: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#recommendation_16
 app.disable("x-powered-by");
 
