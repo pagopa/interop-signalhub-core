@@ -15,7 +15,7 @@ cleanup() {
 trap cleanup EXIT
 
 # Start push service in the background
-pnpm start:push-signals &
+pnpm start:push &
 pid1=$! # Get the process ID of the last backgrounded command
 
 # Start persister service in the background
