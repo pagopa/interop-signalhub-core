@@ -39,7 +39,7 @@ export function consumerServiceBuilder(
         let entity =
           await consumerEserviceRepository.findByEserviceIdAndConsumerIdAndDescriptorId(
             detailAgreement.eserviceId,
-            detailAgreement.producerId,
+            detailAgreement.consumerId,
             detailAgreement.descriptorId
           );
         // if entity is not present, it means that the agreement is not present on DB and we need to insert it
@@ -49,7 +49,7 @@ export function consumerServiceBuilder(
           await consumerEserviceRepository.insertConsumerEservice(
             entity.agreementId,
             entity.eserviceId,
-            entity.producerId,
+            entity.consumerId,
             entity.descriptorId,
             entity.eventId,
             detailAgreement.state
@@ -60,7 +60,7 @@ export function consumerServiceBuilder(
           );
           await consumerEserviceRepository.updateConsumerEservice(
             entity.eserviceId,
-            entity.producerId,
+            entity.consumerId,
             entity.descriptorId,
             detailAgreement.state
           );

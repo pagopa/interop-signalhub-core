@@ -24,6 +24,7 @@ export const ConsumerEservice = z.object({
   eventId: z.number(),
   eserviceId: z.string(),
   producerId: z.string(),
+  consumerId: z.string(),
   agreementId: z.string(),
   descriptorId: z.string(),
   state: z.string(),

@@ -61,7 +61,7 @@ export function producerServiceBuilder(
 
         if (!entity) {
           logger.info(
-            `Eservice with eServiceId: ${eService.id} and ${eServiceEvent.descriptorId} doesn't exist, creating new one`
+            `Eservice with eServiceId: ${eService.id} and descriptorId: ${eServiceEvent.descriptorId} doesn't exist, creating new one`
           );
           entity = await producerEserviceRepository.insertEservice(
             eService.id,
