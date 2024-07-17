@@ -6,7 +6,6 @@
   "main": "dist",
   "scripts": {
     "start": "node --watch --loader ts-node/esm -r 'dotenv-flow/config'  ./src/index.ts",
-    "generate-api": "node --loader ts-node/esm -r 'dotenv-flow/config' ./src/api/generate-api.ts",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:autofix": "eslint . --ext .ts,.tsx --fix",
     "build": "tsc",
@@ -14,8 +13,8 @@
     "format:check": "prettier --check src test",
     "format:write": "prettier --write src test",
     "check": "tsc --project tsconfig.check.json",
-    "api:generate": "node --loader ts-node/esm -r 'dotenv-flow/config' ./src/api/generate-api.ts",
-    "api:validate": "npx @redocly/cli lint ./src/api/push-signals_1.0_.yaml"
+    "api:validate": "node --loader ts-node/esm -r 'dotenv-flow/config' ./src/api/validate-api.ts",
+    "api:generate": "node --loader ts-node/esm -r 'dotenv-flow/config' ./src/api/generate-api.ts"
   },
   "keywords": [],
   "author": "",
@@ -30,20 +29,21 @@
     "express": "^4.19.2",
     "fast-json-stringify": "^5.16.0",
     "js-yaml": "^4.1.0",
-    "pg-promise": "^11.6.0",
     "pagopa-signalhub-commons": "workspace:*",
     "pagopa-signalhub-interop-client": "workspace:*",
+    "pg-promise": "^11.6.0",
     "swagger-ui-express": "^5.0.0",
     "ts-pattern": "^5.1.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "pagopa-signalhub-commons-test": "workspace:*",
     "@pagopa/eslint-config": "^3.0.0",
     "@types/express": "^4.17.21",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.11.24",
     "@types/swagger-ui-express": "^4.1.6",
+    "commander": "^12.1.0",
+    "pagopa-signalhub-commons-test": "workspace:*",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
     "vitest": "^1.6.0"
