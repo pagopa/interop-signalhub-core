@@ -1,5 +1,5 @@
 import { writeFileSync } from "fs";
-import { Command, Option } from "@commander-js/extra-typings";
+import { Command, Option } from "commander";
 import { generateOpenApi } from "@ts-rest/open-api";
 import * as yaml from "js-yaml";
 import { contract } from "../contract/contract.js";

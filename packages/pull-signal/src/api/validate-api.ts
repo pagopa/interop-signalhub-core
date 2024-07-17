@@ -1,8 +1,5 @@
-import { writeFileSync } from "fs";
+import { exec } from "child_process";
 import { Command, Option } from "commander";
-import { generateOpenApi } from "@ts-rest/open-api";
-import * as yaml from "js-yaml";
-import { contract } from "../contract/contract.js";
 
 const semanticVersionRegex = /^([1-9]\d*|0)(\.(([1-9]\d*)|0)){2}$/;
 
@@ -14,7 +11,7 @@ new Command()
   .addOption(
     new Option(
       "-v, --version <string>",
-      "Pull signal API version"
+      "Pull signal validate openAPI"
     ).makeOptionMandatory()
   )
   .hook("preAction", async (command) => {
@@ -26,14 +23,13 @@ new Command()
   })
   .action(async (options) => {
     const { version } = options;
-    const openApiDocument = generateOpenApi(contract, {
-      info: {
-        title: "Pull signal Service API",
-        version,
-      },
+    const fileOutputDocument = `./src/api/pull-signals_${version}_.yaml`;
+    exec(`npx @redocly/cli lint ${fileOutputDocument}`, (error, stdout) => {
+      if (error) {
+        console.error(`Error: ${error.message}`);
+        throw error;
+      }
+      console.log(`Stdout: ${stdout}`);
     });
-
-    const fileOutputDocument = `./src/api/pull-signals_${openApiDocument.info.version}_.yaml`;
-    writeFileSync(fileOutputDocument, yaml.dump(openApiDocument));
   })
   .parse(process.argv);
