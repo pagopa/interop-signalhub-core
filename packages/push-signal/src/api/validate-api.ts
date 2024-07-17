@@ -1,5 +1,5 @@
-import { exec } from "child_process";
 import { Command, Option } from "commander";
+import { validateApi } from "../commands/validate-api.command.js";
 
 const semanticVersionRegex = /^([1-9]\d*|0)(\.(([1-9]\d*)|0)){2}$/;
 
@@ -22,16 +22,6 @@ new Command()
     }
   })
   .action(async (options) => {
-    const { version } = options;
-    const fileOutputDocument = `./src/api/push-signals_${version}_.yaml`;
-    exec(`npx @redocly/cli lint ${fileOutputDocument}`, (error, stdout) => {
-      if (error) {
-        // eslint-disable-next-line no-console
-        console.error(`Error: ${error.message}`);
-        throw error;
-      }
-      // eslint-disable-next-line no-console
-      console.log(`Stdout: ${stdout}`);
-    });
+    validateApi(options.version);
   })
   .parse(process.argv);

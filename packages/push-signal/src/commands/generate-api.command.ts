@@ -26,12 +26,12 @@ export function generateApi(version: string): void {
       ],
       servers: [
         {
-          url: "/pull-signal",
-          description: "Pull signal data",
+          url: "/push-signal",
+          description: "Push signal data",
         },
       ],
       info: {
-        title: "Pull signal Service API",
+        title: "Push signal Service API",
         version,
         license: {
           name: "ISC",
@@ -44,6 +44,6 @@ export function generateApi(version: string): void {
     }
   );
 
-  const fileOutputDocument = `./src/api/pull-signals_${openApiDocument.info.version}_.yaml`;
+  const fileOutputDocument = `./src/api/push-signals_${openApiDocument.info.version}_.yaml`;
   writeFileSync(fileOutputDocument, yaml.dump(openApiDocument));
 }
