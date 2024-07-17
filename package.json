@@ -22,6 +22,7 @@
     "format:write": "turbo format:write",
     "check": "turbo check",
     "api:validate:pull": "turbo api:validate --filter pagopa-signalhub-pull-signal --",
+    "api:validate:push": "turbo api:validate --filter pagopa-signalhub-push-signal --",
     "api:generate:pull": "turbo api:generate --filter pagopa-signalhub-pull-signal --",
     "api:generate:push": "turbo api:generate --filter pagopa-signalhub-push-signal --",
     "dev": "turbo dev",

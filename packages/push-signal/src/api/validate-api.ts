@@ -11,7 +11,7 @@ new Command()
   .addOption(
     new Option(
       "-v, --version <string>",
-      "Pull signal validate openAPI"
+      "Push signal validate openAPI"
     ).makeOptionMandatory()
   )
   .hook("preAction", async (command) => {
@@ -23,8 +23,8 @@ new Command()
   })
   .action(async (options) => {
     const { version } = options;
-    const fileOutputDocument = `./src/api/pull-signals_${version}_.yaml`;
-    exec(`npx @redocly/cli lint  ${fileOutputDocument}`, (error, stdout) => {
+    const fileOutputDocument = `./src/api/push-signals_${version}_.yaml`;
+    exec(`npx @redocly/cli lint ${fileOutputDocument}`, (error, stdout) => {
       if (error) {
         // eslint-disable-next-line no-console
         console.error(`Error: ${error.message}`);

@@ -5,7 +5,6 @@
   "type": "module",
   "main": "dist",
   "scripts": {
-    "api:generate": "node --loader ts-node/esm -r 'dotenv-flow/config' ./src/api/generate-api.ts",
     "start": "node --watch --loader ts-node/esm -r 'dotenv-flow/config'  ./src/index.ts",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:autofix": "eslint . --ext .ts,.tsx --fix",
@@ -14,13 +13,13 @@
     "format:check": "prettier --check src test",
     "format:write": "prettier --write src test",
     "check": "tsc --project tsconfig.check.json",
-    "api:validate": "npx @redocly/cli lint ./src/api/push-signals_1.0_.yaml"
+    "api:validate": "node --loader ts-node/esm -r 'dotenv-flow/config' ./src/api/validate-api.ts",
+    "api:generate": "node --loader ts-node/esm -r 'dotenv-flow/config' ./src/api/generate-api.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@commander-js/extra-typings": "^12.1.0",
     "@ts-rest/core": "^3.45.2",
     "@ts-rest/express": "^3.45.2",
     "@ts-rest/open-api": "^3.45.2",
