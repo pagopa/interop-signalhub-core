@@ -231,3 +231,9 @@ pnpm run api:generate:push --version <version>
 You can find new open api spec file (for push-service) under **packages/push-signal/src/api**
 
 **NOTE**: It's important define a version of open API following semantic versioning rules, otherwise cli will throw an error.
+
+## Validate Open API
+
+If you can check if openAPI created before is compliant on openAPI specification can run:
+
+`pnpm run api:validate:<service_name> --version <version>`
