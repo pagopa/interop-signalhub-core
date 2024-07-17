@@ -86,12 +86,12 @@ export const updaterBuilder = async (
     // eslint-disable-next-line functional/no-let
     let lastEventId = 0;
     for (const event of events) {
+      loggerInstance.info(
+        `\n ---- Event with eventId: ${event.eventId} ---- \n`
+      );
       try {
         if (applicationType === "AGREEMENT") {
           lastEventId = await updateAgreementEvent(event);
-          loggerInstance.info(
-            `\n ---- Event with eventId: ${event.eventId} ---- \n`
-          );
         } else {
           lastEventId = await updateEserviceEvent(event, lastEventId);
         }
