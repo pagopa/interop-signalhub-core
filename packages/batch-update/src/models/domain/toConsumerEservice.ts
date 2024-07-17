@@ -12,5 +12,6 @@ export function toConsumerEservice(
     agreementId: agreeement.id,
     descriptorId: agreeement.descriptorId,
     state: agreeement.state,
+    consumerId: agreeement.consumerId,
   };
 }

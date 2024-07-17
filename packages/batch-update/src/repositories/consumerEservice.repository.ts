@@ -88,8 +88,8 @@ export const consumerEserviceRepository = (
       const tmstLastEdit = getCurrentDate();
 
       const response = await db.oneOrNone(
-        "update DEV_INTEROP.CONSUMER_ESERVICE set state = $1, tmst_last_edit= $2  where eservice_id = $3 AND descriptor_id = $5 RETURNING *",
-        [state, tmstLastEdit, eserviceId, consumerId, descriptorId]
+        "update DEV_INTEROP.CONSUMER_ESERVICE set state = $1, tmst_last_edit= $2  where eservice_id = $3 AND descriptor_id = $4 AND consumer_id= $5 RETURNING *",
+        [state, tmstLastEdit, eserviceId, descriptorId, consumerId]
       );
 
       return toConsumerEservice(response);

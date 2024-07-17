@@ -27,6 +27,7 @@ export const toConsumerEservice = (
   eserviceId: consumerEserviceEntity.eservice_id,
   producerId: consumerEserviceEntity.producer_id,
   agreementId: consumerEserviceEntity.agreement_id,
+  consumerId: consumerEserviceEntity.consumer_id,
   descriptorId: consumerEserviceEntity.descriptor_id,
   state: consumerEserviceEntity.state,
   tmstInsert: consumerEserviceEntity.tmst_insert,
