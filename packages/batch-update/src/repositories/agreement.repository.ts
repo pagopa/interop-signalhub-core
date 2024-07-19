@@ -72,7 +72,7 @@ export const agreementRepository = (db: DB): IAgreementRepository => ({
 
       return toAgreement(response);
     } catch (error) {
-      throw genericInternalError(`Error insertConsumerEservice:" ${error} `);
+      throw genericInternalError(`Error insertAgreement:" ${error} `);
     }
   },
 
@@ -92,7 +92,7 @@ export const agreementRepository = (db: DB): IAgreementRepository => ({
 
       return toAgreement(response);
     } catch (error) {
-      throw genericInternalError(`Error updateConsumerEservice:" ${error} `);
+      throw genericInternalError(`Error updateAgreement:" ${error} `);
     }
   },
 });

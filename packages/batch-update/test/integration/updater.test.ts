@@ -1,5 +1,5 @@
 import {
-  truncateConsumerEserviceTable,
+  truncateAgreementTable,
   truncateEserviceTable,
   truncateTracingBatchTable,
 } from "pagopa-signalhub-commons-test";
@@ -8,7 +8,7 @@ import { beforeAll, describe, expect, it, vi } from "vitest";
 import { postgresDB, task } from "../utils";
 import { config } from "../../src/config/env";
 import {
-  getConsumerEserviceTableRows,
+  getAgreementTableRows,
   getEserviceTableRows,
   getEventIdFromTracingBatch,
 } from "./database.utils";
@@ -20,7 +20,7 @@ import {
  */
 
 async function cleanDatabase(): Promise<void> {
-  await truncateConsumerEserviceTable(postgresDB);
+  await truncateAgreementTable(postgresDB);
   await truncateEserviceTable(postgresDB);
   await truncateTracingBatchTable(postgresDB);
 }
@@ -55,10 +55,10 @@ describe("Updater service", () => {
       ).toHaveLength(1);
     });
 
-    it("Should get 0 rows from consumer_service table", async () => {
-      // From webhook.json: consumer_eservice table should be an empty array because application TYPE in this case is "ESERVICE"
-      const consumerEserviceList = await getConsumerEserviceTableRows();
-      expect(consumerEserviceList.length).toBe(0);
+    it("Should get 0 rows from agreement table", async () => {
+      // From webhook.json: agreement table should be an empty array because application TYPE in this case is "ESERVICE"
+      const agreementList = await getAgreementTableRows();
+      expect(agreementList.length).toBe(0);
     });
 
     it("Should get lastEventId = 4 from tracing_batch table", async () => {
@@ -89,10 +89,10 @@ describe("Updater service", () => {
         eServiceList.filter((it) => it.state === "PUBLISHED")
       ).toHaveLength(1);
     });
-    it("Should get 3 rows from consumer_service table", async () => {
-      // From webhook.json consumer_eservice table should be an arra with 3 elements"
-      const consumerEserviceList = await getConsumerEserviceTableRows();
-      expect(consumerEserviceList.length).toBe(3);
+    it("Should get 3 rows from agreement table", async () => {
+      // From webhook.json agreement table should be an arra with 3 elements"
+      const agreementList = await getAgreementTableRows();
+      expect(agreementList.length).toBe(3);
     });
 
     it("Should get lastEventId = 3 from tracing_batch table", async () => {
