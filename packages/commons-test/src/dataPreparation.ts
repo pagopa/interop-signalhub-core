@@ -29,7 +29,7 @@ async function setupConsumerEserviceTable(db: DB): Promise<void> {
     (e: any) => !("skip_insert" in e)
   )) {
     const query = {
-      text: "INSERT INTO DEV_INTEROP.consumer_eservice (agreement_id, eservice_id, consumer_id, descriptor_id, event_id, state) values ($1, $2, $3, $4, $5,$6)",
+      text: "INSERT INTO dev_interop.agreement (agreement_id, eservice_id, consumer_id, descriptor_id, event_id, state) values ($1, $2, $3, $4, $5,$6)",
       values: [
         agreement.id,
         agreement.eservice,

@@ -41,7 +41,7 @@ export const consumerEserviceRepository = (
   ): Promise<ConsumerEservice | null> {
     try {
       const response = await db.oneOrNone(
-        "select * from DEV_INTEROP.CONSUMER_ESERVICE consumer where consumer.eservice_id = $1 AND consumer.consumer_id = $2  AND consumer.descriptor_id = $3",
+        "select * from dev_interop.agreement consumer where consumer.eservice_id = $1 AND consumer.consumer_id = $2  AND consumer.descriptor_id = $3",
         [eserviceId, consumerId, descriptorId]
       );
 
@@ -68,7 +68,7 @@ export const consumerEserviceRepository = (
   ): Promise<ConsumerEservice> {
     try {
       const response = await db.oneOrNone(
-        "INSERT INTO DEV_INTEROP.CONSUMER_ESERVICE(agreement_id,eservice_id, consumer_id, descriptor_id, event_id,state) VALUES($1, $2, $3, $4, $5,$6) RETURNING *",
+        "INSERT INTO dev_interop.agreement(agreement_id,eservice_id, consumer_id, descriptor_id, event_id,state) VALUES($1, $2, $3, $4, $5,$6) RETURNING *",
         [agreementId, eserviceId, consumerId, descriptorId, eventId, state]
       );
 
@@ -88,7 +88,7 @@ export const consumerEserviceRepository = (
       const tmstLastEdit = getCurrentDate();
 
       const response = await db.oneOrNone(
-        "update DEV_INTEROP.CONSUMER_ESERVICE set state = $1, tmst_last_edit= $2  where eservice_id = $3 AND descriptor_id = $4 AND consumer_id= $5 RETURNING *",
+        "update dev_interop.agreement set state = $1, tmst_last_edit= $2  where eservice_id = $3 AND descriptor_id = $4 AND consumer_id= $5 RETURNING *",
         [state, tmstLastEdit, eserviceId, descriptorId, consumerId]
       );
 

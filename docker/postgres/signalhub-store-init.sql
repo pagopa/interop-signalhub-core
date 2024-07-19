@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."eservice" (
 CREATE INDEX IF NOT EXISTS ESERVICE_INDEX_ID ON "dev_interop"."eservice" USING hash (eservice_id);
 CREATE INDEX IF NOT EXISTS ESERVICE_INDEX_PRODUCER_ID ON "dev_interop"."eservice" USING hash (producer_id);
 
-CREATE TABLE IF NOT EXISTS "dev_interop"."consumer_eservice" (
+CREATE TABLE IF NOT EXISTS "dev_interop"."agreement" (
     agreement_id    VARCHAR (255) NOT NULL,
     eservice_id     VARCHAR (255) NOT NULL,
     consumer_id     VARCHAR (255) NOT NULL,
@@ -29,9 +29,9 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."consumer_eservice" (
     PRIMARY KEY (eservice_id, consumer_id, descriptor_id)
 );
 
-CREATE INDEX IF NOT EXISTS CONSUMER_ESERVICE_INDEX_ID ON "dev_interop"."consumer_eservice" USING hash (eservice_id);
-CREATE INDEX IF NOT EXISTS CONSUMER_ESERVICE_INDEX_CONSUMER_ID ON "dev_interop"."consumer_eservice" USING hash (consumer_id);
-CREATE INDEX IF NOT EXISTS CONSUMER_ESERVICE_INDEX_DESCRIPTOR_ID ON "dev_interop"."consumer_eservice" USING hash (descriptor_id);
+CREATE INDEX IF NOT EXISTS agreement_INDEX_ID ON "dev_interop"."agreement" USING hash (eservice_id);
+CREATE INDEX IF NOT EXISTS agreement_INDEX_CONSUMER_ID ON "dev_interop"."agreement" USING hash (consumer_id);
+CREATE INDEX IF NOT EXISTS agreement_INDEX_DESCRIPTOR_ID ON "dev_interop"."agreement" USING hash (descriptor_id);
 
 CREATE TABLE IF NOT EXISTS "dev_signalhub"."signal" (
     id             SERIAL PRIMARY KEY,

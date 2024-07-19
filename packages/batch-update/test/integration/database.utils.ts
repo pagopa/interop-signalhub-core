@@ -7,9 +7,7 @@ import { postgresDB } from "../utils";
 export async function getConsumerEserviceTableRows(): Promise<
   ConsumerEserviceEntity[]
 > {
-  return await postgresDB.manyOrNone(
-    "SELECT * FROM DEV_INTEROP.consumer_eservice"
-  );
+  return await postgresDB.manyOrNone("SELECT * FROM dev_interop.agreement");
 }
 
 export async function getEserviceTableRows(): Promise<
