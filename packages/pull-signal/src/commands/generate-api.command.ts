@@ -26,7 +26,7 @@ export function generateApi(version: string): void {
       ],
       servers: [
         {
-          url: "/pull-signal",
+          url: "/signals",
           description: "Pull signal data",
         },
       ],

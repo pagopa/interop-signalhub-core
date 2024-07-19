@@ -18,7 +18,7 @@ export const contract = c.router(
         role: "user",
       } as const,
       method: "POST",
-      path: "/push-signal",
+      path: "/signals",
       responses: {
         200: SignalPushResponse,
         400: Problem,
