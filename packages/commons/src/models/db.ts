@@ -9,6 +9,15 @@ export const TracingBatch = z.object({
   tmstCreated: z.string(),
 });
 
+export const TracingBatchCleanup = z.object({
+  batchId: z.number().nullish(),
+  tmstStartAt: z.string().nullish(),
+  tmstEndAt: z.string().nullish(),
+  error: z.unknown().optional().nullish(),
+  tmstDeleteFrom: z.string().optional().nullish(),
+  countDeleted: z.number().optional().nullish(),
+});
+
 export const ProducerService = z.object({
   eventId: z.number(),
   eserviceId: z.string(),
@@ -35,6 +44,7 @@ export const Agreement = z.object({
 export type ProducerService = z.infer<typeof ProducerService>;
 export type Agreement = z.infer<typeof Agreement>;
 export type TracingBatch = z.infer<typeof TracingBatch>;
+export type TracingBatchCleanup = z.infer<typeof TracingBatchCleanup>;
 
 export type ProducerEserviceEntity = SnakeCase<z.infer<typeof ProducerService>>;
 export type AgreementEntity = SnakeCase<z.infer<typeof Agreement>>;

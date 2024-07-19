@@ -1,18 +1,54 @@
-import { Logger } from "pagopa-signalhub-commons";
+import { Logger, TracingBatchCleanup } from "pagopa-signalhub-commons";
 import { config } from "./config/env.js";
 import { SignalService } from "./services/signal.service.js";
+import { TracingBatchCleanupService } from "./services/tracingBatchCleanup.service.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const cleanupBuilder = async (
   signalService: SignalService,
+  tracingBatchCleanupService: TracingBatchCleanupService,
   logger: Logger
 ) => {
   const cleanSignals = async (): Promise<void> => {
-    logger.info(`cleanSignals started at: ${new Date().toISOString()}`);
+    // eslint-disable-next-line functional/no-let
+    let tracingBatchCleanup: TracingBatchCleanup = {
+      batchId: null,
+      tmstStartAt: null,
+      tmstEndAt: null,
+      tmstDeleteFrom: null,
+      error: null,
+      countDeleted: null,
+    };
+    const tmstStartAt = new Date().toISOString();
+    logger.info(`cleanSignals started at: ${tmstStartAt}`);
+
     try {
-      await signalService.cleanup(config.signalsRetentionHours);
+      const batchId = await tracingBatchCleanupService.start(tmstStartAt);
+      tracingBatchCleanup = {
+        batchId,
+        tmstStartAt,
+      };
+
+      const { countDeleted, dateInThePast } = await signalService.cleanup(
+        config.signalsRetentionHours
+      );
+
+      tracingBatchCleanup = {
+        ...tracingBatchCleanup,
+        tmstEndAt: new Date().toISOString(),
+        tmstDeleteFrom: dateInThePast.toISOString(),
+        countDeleted,
+      };
+      await tracingBatchCleanupService.end(tracingBatchCleanup);
     } catch (error) {
       logger.error(`cleanSignals error deleting signals: ${error}`);
+      if (tracingBatchCleanup.batchId) {
+        tracingBatchCleanup = {
+          error,
+          ...tracingBatchCleanup,
+        };
+        await tracingBatchCleanupService.end(tracingBatchCleanup);
+      }
     } finally {
       logger.info(`cleanSignals ended at: ${new Date().toISOString()}`);
       process.exit(0);
