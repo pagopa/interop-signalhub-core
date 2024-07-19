@@ -1,7 +1,7 @@
 import { DB, Signal, SignalPayload } from "pagopa-signalhub-commons";
 
 export async function truncateConsumerEserviceTable(db: DB): Promise<void> {
-  await db.none("truncate dev_interop.consumer_eservice;");
+  await db.none("truncate dev_interop.agreement;");
 }
 export async function truncateEserviceTable(db: DB): Promise<void> {
   await db.none("truncate dev_interop.eservice;");
