@@ -4,7 +4,7 @@ import { updaterBuilder } from "./updater.js";
 const {
   tracingBatchService,
   interopClientService,
-  consumerService,
+  agreementService,
   producerService,
   deadEventService,
 } = await serviceBuilder();
@@ -12,7 +12,7 @@ const {
 const task = await updaterBuilder(
   tracingBatchService,
   interopClientService,
-  consumerService,
+  agreementService,
   producerService,
   deadEventService
 );

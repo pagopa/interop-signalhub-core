@@ -1,7 +1,7 @@
 /* eslint-disable functional/no-method-signature */
 
 import {
-  ConsumerEservice,
+  Agreement,
   Logger,
   genericInternalError,
   isTokenExpired,
@@ -18,17 +18,17 @@ import {
   getEServicesEventsFromId,
   getAccessToken,
 } from "pagopa-signalhub-interop-client";
-import { toConsumerEservice } from "../models/domain/toConsumerEservice.js";
+import { toAgreement } from "../models/domain/toAgreement.js";
 import { config } from "../config/env.js";
 import { emptyQueueEventsException } from "../models/domain/errors.js";
 
 export interface IInteropClientService {
   getEservicesEvents(lastId: number): Promise<Events>;
   getAgreementsEvents(lastId: number): Promise<Events>;
-  getConsumerEservice(
+  getDetailAgreement(
     agreementId: string,
     eventId: number
-  ): Promise<ConsumerEservice | null>;
+  ): Promise<Agreement | null>;
   getEservice(eserviceId: string): Promise<EService | null>;
   getEserviceDescriptor(
     eServiceId: string,
@@ -89,14 +89,14 @@ export function interopClientServiceBuilder(
       return { events, lastEventId };
     },
 
-    async getConsumerEservice(
+    async getDetailAgreement(
       agreementId: string,
       eventId: number
-    ): Promise<ConsumerEservice | null> {
+    ): Promise<Agreement | null> {
       try {
         const voucher = await this.getCachedVoucher();
         const { data: agreement } = await getAgreement(voucher, agreementId);
-        return toConsumerEservice(agreement, eventId);
+        return toAgreement(agreement, eventId);
       } catch (error) {
         if (error instanceof AxiosError && error.response?.status === 404) {
           loggerInstance.info(

@@ -1,12 +1,7 @@
-import {
-  ConsumerEserviceEntity,
-  ProducerEserviceEntity,
-} from "pagopa-signalhub-commons";
+import { Agreement, ProducerEserviceEntity } from "pagopa-signalhub-commons";
 import { postgresDB } from "../utils";
 
-export async function getConsumerEserviceTableRows(): Promise<
-  ConsumerEserviceEntity[]
-> {
+export async function getAgreementTableRows(): Promise<Agreement[]> {
   return await postgresDB.manyOrNone("SELECT * FROM dev_interop.agreement");
 }
 

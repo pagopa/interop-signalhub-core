@@ -6,11 +6,11 @@ import { interopClientServiceBuilder } from "../src/services/interopClient.servi
 import { producerServiceBuilder } from "../src/services/producerService.service.js";
 import {
   producerEserviceRepository,
-  consumerEserviceRepository,
+  agreementRepository,
 } from "../src/repositories/index.js";
 import { updaterBuilder } from "../src/updater.js";
-import { consumerServiceBuilder } from "../src/services/consumer.service.js";
 import { DeadEventService } from "../src/services/deadEvent.service.js";
+import { agreementServiceBuilder } from "../src/services/agreement.service.js";
 
 export const { cleanup, postgresDB, interopClientConfig } =
   setupTestContainersVitest(
@@ -35,8 +35,7 @@ export const interopClientService = interopClientServiceBuilder(
 const producerEserviceRepositoryInstance =
   producerEserviceRepository(postgresDB);
 
-const consumerEserviceRepositoryInstance =
-  consumerEserviceRepository(postgresDB);
+const agreementRepositoryInstance = agreementRepository(postgresDB);
 
 const producerEservice = producerServiceBuilder(
   producerEserviceRepositoryInstance,
@@ -44,8 +43,8 @@ const producerEservice = producerServiceBuilder(
   loggerInstance
 );
 
-const consumer = consumerServiceBuilder(
-  consumerEserviceRepositoryInstance,
+const agreementService = agreementServiceBuilder(
+  agreementRepositoryInstance,
   interopClientService,
   producerEservice,
   loggerInstance
@@ -54,7 +53,7 @@ const consumer = consumerServiceBuilder(
 export const task = await updaterBuilder(
   tracingBatchService,
   interopClientService,
-  consumer,
+  agreementService,
   producerEservice,
   {} as DeadEventService
 );

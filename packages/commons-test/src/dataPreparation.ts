@@ -1,7 +1,7 @@
 import { DB, SQS } from "pagopa-signalhub-commons";
 import { signalProducer, eserviceProducer, signalConsumer } from "./common.js";
 import {
-  truncateConsumerEserviceTable,
+  truncateAgreementTable,
   truncateEserviceTable,
 } from "./databaseUtils.js";
 
@@ -20,7 +20,7 @@ async function setupEserviceTable(db: DB): Promise<void> {
     }
   }
 }
-async function setupConsumerEserviceTable(db: DB): Promise<void> {
+async function setupAgreementTable(db: DB): Promise<void> {
   const { id, agreements } = signalConsumer;
   // eslint-disable-next-line functional/no-let
   let count = 0;
@@ -46,12 +46,12 @@ async function setupConsumerEserviceTable(db: DB): Promise<void> {
 // TODO: to delete
 export const dataPreparation = async (db: DB): Promise<void> => {
   await setupEserviceTable(db);
-  await setupConsumerEserviceTable(db);
+  await setupAgreementTable(db);
 };
 // TODO: to delete
 export const dataPreparationCleanup = async (db: DB): Promise<void> => {
   await truncateEserviceTable(db);
-  await truncateConsumerEserviceTable(db);
+  await truncateAgreementTable(db);
 };
 
 export const dataPreparationForSignalProducers = async (
@@ -63,7 +63,7 @@ export const dataPreparationForSignalProducers = async (
 export const dataPreparationForSignalConsumers = async (
   db: DB
 ): Promise<void> => {
-  await setupConsumerEserviceTable(db);
+  await setupAgreementTable(db);
 };
 
 export const dataResetForSignalProducers = async (db: DB): Promise<void> => {
@@ -71,7 +71,7 @@ export const dataResetForSignalProducers = async (db: DB): Promise<void> => {
 };
 
 export const dataResetForSignalConsumers = async (db: DB): Promise<void> => {
-  await truncateConsumerEserviceTable(db);
+  await truncateAgreementTable(db);
 };
 
 export const deleteAllSqsMessages = async (

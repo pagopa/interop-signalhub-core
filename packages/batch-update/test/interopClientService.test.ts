@@ -22,9 +22,9 @@ describe("Interop client service", () => {
     expect(response.events.length).toBe(4);
   });
 
-  it("Should get a specific agreement by id and transform it on consumerEservice object domain", async () => {
+  it("Should get a specific agreement by id and transform it on agreement object domain", async () => {
     const eventId = 1;
-    const response = await interopClientService.getConsumerEservice(
+    const response = await interopClientService.getDetailAgreement(
       "2bf9db22-2b07-4ab8-acba-5fe34432820f",
       eventId
     );

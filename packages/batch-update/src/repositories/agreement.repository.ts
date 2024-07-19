@@ -1,44 +1,42 @@
 /* eslint-disable functional/no-method-signature */
 import {
-  ConsumerEservice,
+  Agreement,
   DB,
   genericInternalError,
-  toConsumerEservice,
+  toAgreement,
 } from "pagopa-signalhub-commons";
 import { getCurrentDate } from "../utils.js";
 
-export interface IConsumerEserviceRepository {
+export interface IAgreementRepository {
   findByEserviceIdAndConsumerIdAndDescriptorId(
     eserviceId: string,
     consumerId: string,
     descriptorId: string
-  ): Promise<ConsumerEservice | null>;
+  ): Promise<Agreement | null>;
 
-  insertConsumerEservice(
+  insertAgreement(
     agreementId: string,
     eserviceId: string,
     consumerId: string,
     descriptorId: string,
     eventId: number,
     state: string
-  ): Promise<ConsumerEservice>;
+  ): Promise<Agreement>;
 
-  updateConsumerEservice(
+  updateAgreement(
     eserviceId: string,
     consumerId: string,
     descriptorId: string,
     state: string
-  ): Promise<ConsumerEservice>;
+  ): Promise<Agreement>;
 }
 
-export const consumerEserviceRepository = (
-  db: DB
-): IConsumerEserviceRepository => ({
+export const agreementRepository = (db: DB): IAgreementRepository => ({
   async findByEserviceIdAndConsumerIdAndDescriptorId(
     eserviceId,
     consumerId,
     descriptorId
-  ): Promise<ConsumerEservice | null> {
+  ): Promise<Agreement | null> {
     try {
       const response = await db.oneOrNone(
         "select * from dev_interop.agreement consumer where consumer.eservice_id = $1 AND consumer.consumer_id = $2  AND consumer.descriptor_id = $3",
@@ -49,7 +47,7 @@ export const consumerEserviceRepository = (
         return null;
       }
 
-      return toConsumerEservice(response);
+      return toAgreement(response);
     } catch (error) {
       throw genericInternalError(
         `Error findByEserviceIdAndConsumerIdAndDescriptorId:" ${error} `
@@ -58,32 +56,32 @@ export const consumerEserviceRepository = (
   },
 
   // eslint-disable-next-line max-params
-  async insertConsumerEservice(
+  async insertAgreement(
     agreementId: string,
     eserviceId: string,
     consumerId: string,
     descriptorId: string,
     eventId: number,
     state: string
-  ): Promise<ConsumerEservice> {
+  ): Promise<Agreement> {
     try {
       const response = await db.oneOrNone(
         "INSERT INTO dev_interop.agreement(agreement_id,eservice_id, consumer_id, descriptor_id, event_id,state) VALUES($1, $2, $3, $4, $5,$6) RETURNING *",
         [agreementId, eserviceId, consumerId, descriptorId, eventId, state]
       );
 
-      return toConsumerEservice(response);
+      return toAgreement(response);
     } catch (error) {
-      throw genericInternalError(`Error insertConsumerEservice:" ${error} `);
+      throw genericInternalError(`Error insertAgreement:" ${error} `);
     }
   },
 
-  async updateConsumerEservice(
+  async updateAgreement(
     eserviceId: string,
     consumerId: string,
     descriptorId: string,
     state: string
-  ): Promise<ConsumerEservice> {
+  ): Promise<Agreement> {
     try {
       const tmstLastEdit = getCurrentDate();
 
@@ -92,9 +90,9 @@ export const consumerEserviceRepository = (
         [state, tmstLastEdit, eserviceId, descriptorId, consumerId]
       );
 
-      return toConsumerEservice(response);
+      return toAgreement(response);
     } catch (error) {
-      throw genericInternalError(`Error updateConsumerEservice:" ${error} `);
+      throw genericInternalError(`Error updateAgreement:" ${error} `);
     }
   },
 });
