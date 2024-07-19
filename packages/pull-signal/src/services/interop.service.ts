@@ -1,5 +1,5 @@
 import { DB, Logger, operationForbidden } from "pagopa-signalhub-commons";
-import { consumerEserviceRepository } from "../repositories/consumerEservice.repository.js";
+import { agreementRepository } from "../repositories/agreement.repository.js";
 import { Agreement } from "../model/domain/models.js";
 import { InteropApiClientService } from "./interopApiClient.service.js";
 
@@ -38,7 +38,7 @@ export function interopServiceBuilder(
         `InteropService::consumerCanAccessToEservice consumerId: ${consumerId} eserviceId: ${eserviceId}`
       );
       const state = "ACTIVE";
-      const eserviceConsumed = await consumerEserviceRepository(db).findBy(
+      const eserviceConsumed = await agreementRepository(db).findBy(
         consumerId,
         eserviceId,
         state

@@ -1,6 +1,6 @@
 import { genericError, DB } from "pagopa-signalhub-commons";
 
-export interface IConsumerEserviceRepository {
+export interface IAgreementRepository {
   findBy: (
     consumerId: string,
     eserviceId: string,
@@ -8,9 +8,7 @@ export interface IConsumerEserviceRepository {
   ) => Promise<string | null>;
 }
 
-export const consumerEserviceRepository = (
-  db: DB
-): IConsumerEserviceRepository => ({
+export const agreementRepository = (db: DB): IAgreementRepository => ({
   async findBy(
     consumerId: string,
     eserviceId: string,
@@ -28,4 +26,4 @@ export const consumerEserviceRepository = (
   },
 });
 
-export type ConsumerEserviceRepository = typeof consumerEserviceRepository;
+export type agreementRepository = typeof agreementRepository;
