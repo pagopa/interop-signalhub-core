@@ -11,7 +11,7 @@ export const contract = c.router(
       description:
         "Retrieve a list o signals on a specific eservice starting from signalId",
       method: "GET",
-      path: "/pull-signal/:eserviceId",
+      path: "/signals/:eserviceId",
       pathParams: z.object({
         eserviceId: z.string(),
       }),
