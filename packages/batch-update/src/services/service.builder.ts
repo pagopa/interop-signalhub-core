@@ -3,15 +3,15 @@ import { getAccessToken } from "pagopa-signalhub-interop-client";
 import { config } from "../config/env.js";
 import {
   producerEserviceRepository,
-  consumerEserviceRepository,
+  agreementRepository,
   deadEventRepository,
 } from "../repositories/index.js";
 
 import {
   ProducerService,
   producerServiceBuilder,
-  ConsumerService,
-  consumerServiceBuilder,
+  AgreementService,
+  agreementServiceBuilder,
   deadServiceBuilder,
   DeadEventService,
   InteropClientService,
@@ -23,7 +23,7 @@ import {
 export async function serviceBuilder(): Promise<{
   tracingBatchService: TracingBatchService;
   interopClientService: InteropClientService;
-  consumerService: ConsumerService;
+  agreementService: AgreementService;
   producerService: ProducerService;
   deadEventService: DeadEventService;
 }> {
@@ -43,8 +43,9 @@ export async function serviceBuilder(): Promise<{
   const accessToken = await getAccessToken();
 
   // -- Repositories -- //
+
   const producerEserviceRepositoryInstance = producerEserviceRepository(db);
-  const consumerEserviceRepositoryInstance = consumerEserviceRepository(db);
+  const agreementRepositoryInstance = agreementRepository(db);
   const deadEventRepositoryInstance = deadEventRepository(db);
 
   // -- Services -- //
@@ -68,8 +69,8 @@ export async function serviceBuilder(): Promise<{
     loggerInstance
   );
 
-  const consumerService = consumerServiceBuilder(
-    consumerEserviceRepositoryInstance,
+  const agreementService = agreementServiceBuilder(
+    agreementRepositoryInstance,
     interopClientService,
     producerService,
     loggerInstance
@@ -79,7 +80,7 @@ export async function serviceBuilder(): Promise<{
     deadEventService,
     tracingBatchService,
     interopClientService,
-    consumerService,
+    agreementService,
     producerService,
   };
 }

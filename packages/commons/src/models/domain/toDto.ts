@@ -3,8 +3,8 @@ import {
   ProducerEserviceEntity,
   TracingBatch,
   TracingBatchEntity,
-  ConsumerEservice,
-  ConsumerEserviceEntity,
+  Agreement,
+  AgreementEntity,
 } from "../db.js";
 
 export const toProducerEservice = (
@@ -20,9 +20,9 @@ export const toProducerEservice = (
   tmstLastEdit: producerEserviceEntity.tmst_last_edit,
 });
 
-export const toConsumerEservice = (
-  consumerEserviceEntity: ConsumerEserviceEntity
-): ConsumerEservice => ({
+export const toAgreement = (
+  consumerEserviceEntity: AgreementEntity
+): Agreement => ({
   eventId: consumerEserviceEntity.event_id,
   eserviceId: consumerEserviceEntity.eservice_id,
   producerId: consumerEserviceEntity.producer_id,

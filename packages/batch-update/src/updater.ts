@@ -4,7 +4,7 @@ import { logger } from "pagopa-signalhub-commons";
 import { TracingBatchService } from "./services/tracingBatch.service.js";
 import { InteropClientService } from "./services/interopClient.service.js";
 import { ApplicationType, config } from "./config/env.js";
-import { ConsumerService } from "./services/consumer.service.js";
+import { AgreementService } from "./services/agreement.service.js";
 import { ProducerService } from "./services/producerService.service.js";
 import { toAgreementEvent } from "./models/domain/toAgreementEvent.js";
 import { toEserviceEvent } from "./models/domain/toEserviceEvent.js";
@@ -21,7 +21,7 @@ const loggerInstance = logger({
 export const updaterBuilder = async (
   tracingBatchService: TracingBatchService,
   interopClientService: InteropClientService,
-  consumerService: ConsumerService,
+  agreementService: AgreementService,
   producerService: ProducerService,
   deadEventService: DeadEventService
 ) => {
@@ -115,7 +115,7 @@ export const updaterBuilder = async (
 
   const updateAgreementEvent = async (event: Event): Promise<number> => {
     const agreementEvent = toAgreementEvent(event);
-    return await consumerService.updateConsumer(agreementEvent);
+    return await agreementService.updateAgreement(agreementEvent);
   };
 
   const updateEserviceEvent = async (

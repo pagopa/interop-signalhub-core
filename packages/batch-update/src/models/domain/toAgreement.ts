@@ -1,10 +1,10 @@
-import { ConsumerEservice } from "pagopa-signalhub-commons";
+import { Agreement as BatchAgreement } from "pagopa-signalhub-commons";
 import { Agreement } from "pagopa-signalhub-interop-client";
 
-export function toConsumerEservice(
+export function toAgreement(
   agreeement: Agreement,
   eventId: number
-): ConsumerEservice {
+): BatchAgreement {
   return {
     eventId,
     eserviceId: agreeement.eserviceId,

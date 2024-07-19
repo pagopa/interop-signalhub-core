@@ -20,7 +20,7 @@ export const ProducerService = z.object({
   tmstLastEdit: z.string(),
 });
 
-export const ConsumerEservice = z.object({
+export const Agreement = z.object({
   eventId: z.number(),
   eserviceId: z.string(),
   producerId: z.string(),
@@ -33,11 +33,9 @@ export const ConsumerEservice = z.object({
 });
 
 export type ProducerService = z.infer<typeof ProducerService>;
-export type ConsumerEservice = z.infer<typeof ConsumerEservice>;
+export type Agreement = z.infer<typeof Agreement>;
 export type TracingBatch = z.infer<typeof TracingBatch>;
 
 export type ProducerEserviceEntity = SnakeCase<z.infer<typeof ProducerService>>;
-export type ConsumerEserviceEntity = SnakeCase<
-  z.infer<typeof ConsumerEservice>
->;
+export type AgreementEntity = SnakeCase<z.infer<typeof Agreement>>;
 export type TracingBatchEntity = SnakeCase<z.infer<typeof TracingBatch>>;

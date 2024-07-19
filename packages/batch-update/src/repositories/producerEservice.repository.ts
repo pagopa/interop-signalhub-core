@@ -1,9 +1,9 @@
 /* eslint-disable functional/no-method-signature */
 import {
   DB,
-  ProducerService,
   genericInternalError,
   toProducerEservice,
+  ProducerService,
 } from "pagopa-signalhub-commons";
 import { getCurrentDate } from "../utils.js";
 
