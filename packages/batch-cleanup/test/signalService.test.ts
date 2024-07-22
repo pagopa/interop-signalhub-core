@@ -45,7 +45,9 @@ describe("Signal service", () => {
     const periodRetentionSignalsInHours = 1;
     await writeSignal(createSignal(), postgresDB);
     vi.useFakeTimers(); // tell vitest we use mocked time
-    const anHourHasAlreadyPassed = new Date(new Date().getTime() + ONE_HOUR);
+    const anHourHasAlreadyPassed = new Date(
+      new Date().getTime() + ONE_HOUR + ONE_MINUTE
+    );
     vi.setSystemTime(anHourHasAlreadyPassed);
 
     const { countDeleted } = await signalService.cleanup(
@@ -62,7 +64,7 @@ describe("Signal service", () => {
 
     vi.useFakeTimers(); // tell vitest we use mocked time
     const oneHourHasAlreadyPassed = new Date(
-      new Date().getTime() + ONE_HOUR + 1 * ONE_MINUTE
+      new Date().getTime() + ONE_HOUR + ONE_MINUTE
     );
     vi.setSystemTime(oneHourHasAlreadyPassed);
 
