@@ -12,7 +12,7 @@ import {
   genericLogger,
   KafkaConsumerConfig,
   Logger,
-  genericInternalError,
+  kafkaMessageProcessError,
 } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
 
@@ -154,12 +154,40 @@ export const initConsumer = async (
         await consumerHandler(payload);
         await kafkaCommitMessageOffsets(consumer, payload);
       } catch (e) {
-        throw genericInternalError("TODO: Change error");
+        throw kafkaMessageProcessError(
+          payload.topic,
+          payload.partition,
+          payload.message.offset,
+          e
+        );
       }
     },
   });
 
   return consumer;
+};
+
+const kafkaEventsListener = (consumer: Consumer): void => {
+  if (genericLogger.isDebugEnabled()) {
+    consumer.on(consumer.events.DISCONNECT, () => {
+      genericLogger.debug(`Consumer has disconnected.`);
+    });
+
+    consumer.on(consumer.events.STOP, (e) => {
+      genericLogger.debug(`Consumer has stopped ${JSON.stringify(e)}.`);
+    });
+  }
+
+  consumer.on(consumer.events.CRASH, (e) => {
+    genericLogger.error(`Error Consumer crashed ${JSON.stringify(e)}.`);
+    processExit();
+  });
+
+  consumer.on(consumer.events.REQUEST_TIMEOUT, (e) => {
+    genericLogger.error(
+      `Error Request to a broker has timed out : ${JSON.stringify(e)}.`
+    );
+  });
 };
 
 const errorEventsListener = (consumer: Consumer): void => {
