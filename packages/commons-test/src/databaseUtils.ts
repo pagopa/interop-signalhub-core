@@ -19,6 +19,10 @@ export async function truncateTracingBatchTable(db: DB): Promise<void> {
   await db.none("truncate dev_interop.tracing_batch;");
 }
 
+export async function truncateTracingBatchCleanupTable(db: DB): Promise<void> {
+  await db.none("truncate dev_interop.tracing_batch_cleanup;");
+}
+
 export async function writeSignal(
   signal: Partial<Signal>,
   db: DB

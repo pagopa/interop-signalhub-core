@@ -1,4 +1,4 @@
-import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 import {
   writeSignal,
   createSignal,
@@ -16,29 +16,29 @@ import {
 describe("Signal service", () => {
   afterEach(cleanup);
 
-  beforeAll(() => {
-    vi.useRealTimers(); // use real time
-  });
-
   afterEach(() => {
     vi.useRealTimers(); // restoring date after each test run
   });
 
+  afterAll(() => {
+    vi.useRealTimers(); // use real time
+  });
+
   it("should clean 0 signals if there's no signals", async () => {
     const periodRetentionSignalsInHours = 1;
-    const howManySignalsDeleted = await signalService.cleanup(
+    const { countDeleted } = await signalService.cleanup(
       periodRetentionSignalsInHours
     );
-    expect(howManySignalsDeleted).toBe(0);
+    expect(countDeleted).toBe(0);
   });
 
   it("should clean 0 signals if signal has been inserted now, if period retention is 1 hour", async () => {
     const periodRetentionSignalsInHours = 1;
     await writeSignal(createSignal(), postgresDB);
-    const howManySignalsDeleted = await signalService.cleanup(
+    const { countDeleted } = await signalService.cleanup(
       periodRetentionSignalsInHours
     );
-    expect(howManySignalsDeleted).toBe(0);
+    expect(countDeleted).toBe(0);
   });
 
   it("should clean 1 signals if the signal has exceeded the limit period (one hour)", async () => {
@@ -48,11 +48,11 @@ describe("Signal service", () => {
     const anHourHasAlreadyPassed = new Date(new Date().getTime() + ONE_HOUR);
     vi.setSystemTime(anHourHasAlreadyPassed);
 
-    const howManySignalsDeleted = await signalService.cleanup(
+    const { countDeleted } = await signalService.cleanup(
       periodRetentionSignalsInHours
     );
 
-    expect(howManySignalsDeleted).toBe(1);
+    expect(countDeleted).toBe(1);
   });
 
   it("should clean multiple signals if the signals has exceeded the limit period (one hour)", async () => {
@@ -61,16 +61,16 @@ describe("Signal service", () => {
     await writeSignals(batchSignals, postgresDB);
 
     vi.useFakeTimers(); // tell vitest we use mocked time
-    const anHourAndSomeMinutesHasAlreadyPassed = new Date(
-      new Date().getTime() + ONE_HOUR + 2 * ONE_MINUTE
+    const oneHourHasAlreadyPassed = new Date(
+      new Date().getTime() + ONE_HOUR + 1 * ONE_MINUTE
     );
-    vi.setSystemTime(anHourAndSomeMinutesHasAlreadyPassed);
+    vi.setSystemTime(oneHourHasAlreadyPassed);
 
-    const howManySignalsDeleted = await signalService.cleanup(
+    const { countDeleted } = await signalService.cleanup(
       periodRetentionSignalsInHours
     );
 
-    expect(howManySignalsDeleted).toBe(10);
+    expect(countDeleted).toBe(10);
   });
 
   it("should clean 0 signals if the signals has NOT exceeded the limit period (one hour)", async () => {
@@ -78,10 +78,10 @@ describe("Signal service", () => {
     const batchSignals = createMultipleSignals(10);
     await writeSignals(batchSignals, postgresDB);
 
-    const howManySignalsDeleted = await signalService.cleanup(
+    const { countDeleted } = await signalService.cleanup(
       periodRetentionSignalsInHours
     );
 
-    expect(howManySignalsDeleted).toBe(0);
+    expect(countDeleted).toBe(0);
   });
 });
