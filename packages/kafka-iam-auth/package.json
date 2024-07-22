@@ -1,0 +1,24 @@
+{
+  "name": "kafka-iam-auth",
+  "private": true,
+  "description": "PagoPA Signalhub public KafkaJS AWS IAM Authetication module",
+  "version": "1.0.0",
+  "main": "dist",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "kafkajs": "^2.2.4",
+    "ts-pattern": "^5.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3"
+  }
+}
