@@ -44,6 +44,7 @@ async function oauthBearerTokenProvider(
 
 /**
  * Method that decide the kafka configuration based on need for AWS IAM authentication
+ *
  * @param config
  * @returns
  */
@@ -75,7 +76,7 @@ export const initConsumer = async (
   config: KafkaConsumerConfig,
   topics: string[],
   consumerHandler: (payload: EachMessagePayload) => Promise<void>
-) => {
+): Promise<Consumer> => {
   genericLogger.debug(
     `Initializing kafka consumer, listening on topics: ${topics}`
   );
@@ -159,29 +160,6 @@ export const initConsumer = async (
   });
 
   return consumer;
-};
-
-const kafkaEventsListener = (consumer: Consumer): void => {
-  if (genericLogger.isDebugEnabled()) {
-    consumer.on(consumer.events.DISCONNECT, () => {
-      genericLogger.debug(`Consumer has disconnected.`);
-    });
-
-    consumer.on(consumer.events.STOP, (e) => {
-      genericLogger.debug(`Consumer has stopped ${JSON.stringify(e)}.`);
-    });
-  }
-
-  consumer.on(consumer.events.CRASH, (e) => {
-    genericLogger.error(`Error Consumer crashed ${JSON.stringify(e)}.`);
-    processExit();
-  });
-
-  consumer.on(consumer.events.REQUEST_TIMEOUT, (e) => {
-    genericLogger.error(
-      `Error Request to a broker has timed out : ${JSON.stringify(e)}.`
-    );
-  });
 };
 
 const errorEventsListener = (consumer: Consumer): void => {
