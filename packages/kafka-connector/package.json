@@ -1,7 +1,7 @@
 {
-  "name": "kafka-iam-auth",
+  "name": "kafka-connector",
   "private": true,
-  "description": "PagoPA Signalhub public KafkaJS AWS IAM Authetication module",
+  "description": "PagoPA Signalhub Kafka connector",
   "version": "1.0.0",
   "type": "module",
   "main": "dist",
