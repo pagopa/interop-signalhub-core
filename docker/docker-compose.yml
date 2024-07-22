@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   postgres:
     image: postgres:14@sha256:2f7365d1f574dba34f6332978169afe60af9de9608fffbbfecb7d04cc5233698
@@ -64,9 +63,11 @@ services:
 
   zookeeper:
     image: zookeeper@sha256:c7a6a6ea6a1413ca3c13e987a4f9a1d6d2ba62b1837c3b356875842c64458b73
+    networks:
+      - develop-network
 
   kafka:
-    image: apache/kafka:latest@sha256:3e3e0a050e01c32ca566a13831874765669cf0861193b0bf8737e0042f4098dc
+    image: quay.io/debezium/kafka:2.7@sha256:2b6aacca75457ab5476a58b9e3709368f2cd6afa37142aeef8645b2d21558c87
     ports:
       - 9092:9092
       - 29092:29092
@@ -80,10 +81,11 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER
       KAFKA_NUM_PARTITIONS: 3
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-
+    networks:
+      - develop-network
   kafka-ui:
     container_name: kafka-ui
-    image: provectuslabs/kafka-ui:53a6553765a806eda9905c43bfcfe09da6812035
+    image: provectuslabs/kafka-ui:v0.7.2@sha256:8f2ff02d64b0a7a2b71b6b3b3148b85f66d00ec20ad40c30bdcd415d46d31818
     ports:
       - 8084:8080
     depends_on:
@@ -91,6 +93,8 @@ services:
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+    networks:
+      - develop-network
 
 networks:
   develop-network:
