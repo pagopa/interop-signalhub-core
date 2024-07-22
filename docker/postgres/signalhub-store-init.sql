@@ -33,6 +33,26 @@ CREATE INDEX IF NOT EXISTS agreement_INDEX_ID ON "dev_interop"."agreement" USING
 CREATE INDEX IF NOT EXISTS agreement_INDEX_CONSUMER_ID ON "dev_interop"."agreement" USING hash (consumer_id);
 CREATE INDEX IF NOT EXISTS agreement_INDEX_DESCRIPTOR_ID ON "dev_interop"."agreement" USING hash (descriptor_id);
 
+CREATE TABLE IF NOT EXISTS "dev_interop"."tracing_batch" (
+    batch_id         SERIAL PRIMARY KEY,
+    state            VARCHAR (255) NOT NULL,
+    type             VARCHAR (50) NOT NULL,
+    last_event_id    BIGINT,
+    tmst_created     TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS "dev_interop"."dead_event" (
+    event_tmp_id        SERIAL PRIMARY KEY,
+    tmst_insert         TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    error_reason        VARCHAR(255) NOT NULL,
+    event_id            BIGINT NOT NULL,
+    event_type          VARCHAR (255) NOT NULL,
+    object_type         VARCHAR (255) NOT NULL,
+    descriptor_id       VARCHAR (255),
+    eservice_id         VARCHAR (255),
+    agreement_id        VARCHAR (255)
+);
+
 CREATE TABLE IF NOT EXISTS "dev_signalhub"."signal" (
     id             SERIAL PRIMARY KEY,
     correlation_id VARCHAR(255) NOT NULL,
@@ -60,22 +80,11 @@ CREATE TABLE IF NOT EXISTS "dev_signalhub"."dead_signal" (
     error_reason   VARCHAR(255)  NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS "dev_interop"."tracing_batch" (
+CREATE TABLE IF NOT EXISTS "dev_signalhub"."tracing_batch_cleanup" (
     batch_id         SERIAL PRIMARY KEY,
-    state            VARCHAR (255) NOT NULL,
-    type             VARCHAR (50) NOT NULL,
-    last_event_id    BIGINT,
-    tmst_created     TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS "dev_interop"."dead_event" (
-    event_tmp_id        SERIAL PRIMARY KEY,
-    tmst_insert         TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    error_reason        VARCHAR(255) NOT NULL,
-    event_id            BIGINT NOT NULL,
-    event_type          VARCHAR (255) NOT NULL,
-    object_type         VARCHAR (255) NOT NULL,
-    descriptor_id       VARCHAR (255),
-    eservice_id         VARCHAR (255),
-    agreement_id        VARCHAR (255)
+    tmst_start_at    TIMESTAMPTZ,
+    tmst_end_at      TIMESTAMPTZ,
+    error            VARCHAR (255),
+    tmst_delete_from TIMESTAMPTZ,
+    count_deleted    BIGINT
 );

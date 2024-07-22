@@ -11,7 +11,7 @@ export function signalServiceBuilder(
   return {
     async cleanup(
       signalRetentionPeriodInHours: number
-    ): Promise<number | null> {
+    ): Promise<{ countDeleted: number; dateInThePast: Date }> {
       logger.info(
         `SignalService::cleanup retention period (hours): ${signalRetentionPeriodInHours}`
       );
@@ -26,14 +26,14 @@ export function signalServiceBuilder(
       logger.info(
         `SignalService::cleanup date limit:  ISO [${dateInThePast.toISOString()}], UTC: [${dateInThePast.toUTCString()}], LOCAL: [${dateInThePast.toLocaleString()}]`
       );
-      const signalsDeleted = await signalRepository(db).deleteBy(dateInThePast);
-      logger.info(`SignalService::cleanup deleted signals: ${signalsDeleted}`);
-      if (signalsDeleted === null) {
+      const countDeleted = await signalRepository(db).deleteBy(dateInThePast);
+      logger.info(`SignalService::cleanup deleted signals: ${countDeleted}`);
+      if (countDeleted === null) {
         throw genericInternalError(
           `Error deleting signals: null response from db`
         );
       }
-      return signalsDeleted;
+      return { countDeleted, dateInThePast };
     },
   };
 }
