@@ -9,6 +9,7 @@
     "start:persister": "turbo start --filter pagopa-signalhub-persister",
     "start:updater": "turbo start --filter pagopa-signalhub-batch-update",
     "start:cleaner": "turbo start --filter pagopa-signalhub-batch-cleanup",
+    "start:event:agreement": "turbo start --filter pagoppa-signalhub-agreement-event-consumer",
     "test": "turbo test",
     "test:push": "turbo test --filter pagopa-signalhub-push-signal",
     "test:pull": "turbo test --filter pagopa-signalhub-pull-signal",

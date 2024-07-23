@@ -264,3 +264,18 @@ const kafkaCommitMessageOffsets = async (
     `Topic message offset ${Number(message.offset) + 1} committed`
   );
 };
+
+export const runConsumer = async (
+  config: KafkaConsumerConfig,
+  topics: string[],
+  consumerHandler: (messagePayload: EachMessagePayload) => Promise<void>
+): Promise<void> => {
+  try {
+    await initConsumer(config, topics, consumerHandler);
+  } catch (e) {
+    genericLogger.error(
+      `Generic error occurs during consumer initialization: ${e}`
+    );
+    processExit();
+  }
+};
