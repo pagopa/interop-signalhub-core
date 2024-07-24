@@ -1,0 +1,29 @@
+{
+  "name": "pagopa-signalhub-kafka-producer",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "dist",
+  "scripts": {
+    "start": "node --watch --loader ts-node/esm -r 'dotenv-flow/config'  ./src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "kafkajs": "^2.2.4",
+    "pagopa-signalhub-commons": "workspace:*",
+    "ts-pattern": "^5.2.0",
+    "dotenv-flow": "^4.1.0",
+    "zod": "^3.23.8",
+    "aws-msk-iam-sasl-signer-js": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "pagopa-signalhub-commons-test": "workspace:*",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
+    "vitest": "^1.6.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
