@@ -19,6 +19,7 @@
   "devDependencies": {
     "@types/node": "^20.11.24",
     "pagopa-signalhub-commons-test": "workspace:*",
+    "pagopa-interop-outbound-models": "file:../../../../progetti-interop/interop-outbound-models",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4",
     "vitest": "^1.6.0"

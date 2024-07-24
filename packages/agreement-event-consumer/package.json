@@ -17,6 +17,7 @@
     "kafkajs": "^2.2.4",
     "kafka-connector": "workspace:*",
     "pagopa-signalhub-commons": "workspace:*",
+    "pagopa-interop-outbound-models": "file:../../../../progetti-interop/interop-outbound-models",
     "pg-promise": "^11.9.1",
     "zod": "^3.23.8"
   },

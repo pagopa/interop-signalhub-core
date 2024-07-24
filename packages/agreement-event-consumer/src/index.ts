@@ -1,8 +1,24 @@
+/* eslint-disable no-console */
 import { logger } from "pagopa-signalhub-commons";
 import { runConsumer } from "kafka-connector";
 import { EachMessagePayload } from "kafkajs";
+import {
+  decodeOutboundAgreementEvent,
+  AgreementAddedV2,
+} from "pagopa-interop-outbound-models";
 import { config } from "./config/env.js";
-import { decodeOutboundAgreementEvent } from "@pagopa/interop-outbound-models";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function replacer(_key: string, value: { toString: () => any }): any {
+  if (typeof value === "bigint") {
+    return {
+      __type: "bigint",
+      __value: value.toString(),
+    };
+  } else {
+    return value;
+  }
+}
 
 export async function processMessage({
   message,
@@ -13,8 +29,14 @@ export async function processMessage({
     message.value!.toString()
   );
 
-  console.log("decodedMessage", decodedMessage);
+  console.log("decodedMessage", JSON.stringify(decodedMessage, replacer, 2));
+  console.log("event version", decodedMessage.event_version);
+  console.log("agreement data", decodedMessage.data);
 
+  const consumerId = (decodedMessage.data as AgreementAddedV2).agreement!
+    .consumerId;
+
+  console.log("agreement consumerId", consumerId);
   const loggerInstance = logger({
     serviceName: "agreement-event-consumer",
     eventType: "",
