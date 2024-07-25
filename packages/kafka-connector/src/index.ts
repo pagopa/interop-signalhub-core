@@ -158,7 +158,7 @@ export const initConsumer = async (
         throw kafkaMessageProcessError(
           payload.topic,
           payload.partition,
-          payload.kafkaMessage.offset,
+          payload.message.offset,
           e
         );
       }
@@ -256,13 +256,13 @@ const kafkaCommitMessageOffsets = async (
   consumer: Consumer,
   payload: EachMessagePayload
 ): Promise<void> => {
-  const { topic, partition, kafkaMessage } = payload;
+  const { topic, partition, message } = payload;
   await consumer.commitOffsets([
-    { topic, partition, offset: (Number(kafkaMessage.offset) + 1).toString() },
+    { topic, partition, offset: (Number(message.offset) + 1).toString() },
   ]);
 
   genericLogger.debug(
-    `Topic message offset ${Number(kafkaMessage.offset) + 1} committed`
+    `Topic message offset ${Number(message.offset) + 1} committed`
   );
 };
 

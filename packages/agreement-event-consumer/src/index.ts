@@ -14,26 +14,26 @@ import { serviceBuilder } from "./services/service.builder.js";
 const { agreementService } = serviceBuilder();
 
 export async function processMessage({
-  kafkaMessage,
+  message,
   partition,
 }: EachMessagePayload): Promise<void> {
-  if (!kafkaMessage.value) {
+  if (!message.value) {
     throw new Error("Invalid message: missing value");
   }
-  const message = decodeOutboundAgreementEvent(kafkaMessage.value.toString());
+  const decodedmessage = decodeOutboundAgreementEvent(message.value.toString());
 
-  const logger = buildLoggerInstance(message, correlationId());
+  const logger = buildLoggerInstance(decodedmessage, correlationId());
   logger.info(
-    `Processing message event: ${message.stream_id}/${message.version}`
+    `Processing message event: ${decodedmessage.stream_id}/${decodedmessage.version}`
   );
 
-  await match(message)
+  await match(decodedmessage)
     .with({ event_version: 1 }, (msg) => handleMessageV1(msg, agreementService))
     .with({ event_version: 2 }, (msg) => handleMessageV2(msg, agreementService))
     .exhaustive();
 
   logger.info(
-    `Message was processed. Partition number: ${partition}. Offset: ${kafkaMessage.offset}`
+    `Message was processed. Partition number: ${partition}. Offset: ${message.offset}`
   );
 }
 
