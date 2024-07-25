@@ -8,6 +8,10 @@ import {
   decodeOutboundAgreementEvent,
 } from "pagopa-interop-outbound-models";
 import { config } from "./config/env.js";
+import { handleMessageV1, handleMessageV2 } from "./messageHandler.js";
+import { serviceBuilder } from "./services/service.builder.js";
+
+const { agreementService } = serviceBuilder();
 
 export async function processMessage({
   kafkaMessage,
@@ -19,10 +23,13 @@ export async function processMessage({
   const message = decodeOutboundAgreementEvent(kafkaMessage.value.toString());
 
   const logger = buildLoggerInstance(message, correlationId());
+  logger.info(
+    `Processing message event: ${message.stream_id}/${message.version}`
+  );
 
   await match(message)
-    .with({ event_version: 1 }, (msg) => handleMessageV1(msg))
-    .with({ event_version: 2 }, (msg) => handleMessageV2(msg))
+    .with({ event_version: 1 }, (msg) => handleMessageV1(msg, agreementService))
+    .with({ event_version: 2 }, (msg) => handleMessageV2(msg, agreementService))
     .exhaustive();
 
   logger.info(
@@ -43,13 +50,4 @@ function buildLoggerInstance(
     streamId: message.stream_id,
     correlationId,
   });
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function handleMessageV1(_msg: any): any {
-  throw new Error("Function not implemented.");
-}
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function handleMessageV2(_msg: any): any {
-  throw new Error("Function not implemented.");
 }

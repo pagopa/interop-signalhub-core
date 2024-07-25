@@ -1,14 +1,24 @@
 import { DB, createDbInstance } from "pagopa-signalhub-commons";
-
-export function serviceBuilder() {
+import { config } from "../config/env.js";
+import { agreementRepository } from "../repositories/index.js";
+import {
+  AgreementService,
+  agreementServiceBuilder,
+} from "./agreement.service.js";
+export function serviceBuilder(): {
+  agreementService: AgreementService;
+} {
   const db: DB = createDbInstance({
-    username: "",
-    database: "",
-    host: "",
-    password: "",
-    port: 1111,
-    useSSL: false,
+    username: config.signalhubStoreDbUsername,
+    password: config.signalhubStoreDbPassword,
+    host: config.signalhubStoreDbHost,
+    port: config.signalhubStoreDbPort,
+    database: config.signalhubStoreDbName,
+    useSSL: config.signalhubStoreDbUseSSL,
   });
-
-  console.log("db", db);
+  const agreementRepositoryInstance = agreementRepository(db);
+  const agreementService = agreementServiceBuilder(agreementRepositoryInstance);
+  return {
+    agreementService,
+  };
 }
