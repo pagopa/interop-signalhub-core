@@ -256,13 +256,13 @@ const kafkaCommitMessageOffsets = async (
   consumer: Consumer,
   payload: EachMessagePayload
 ): Promise<void> => {
-  const { topic, partition, kafkaMessage: message } = payload;
+  const { topic, partition, kafkaMessage } = payload;
   await consumer.commitOffsets([
-    { topic, partition, offset: (Number(message.offset) + 1).toString() },
+    { topic, partition, offset: (Number(kafkaMessage.offset) + 1).toString() },
   ]);
 
   genericLogger.debug(
-    `Topic message offset ${Number(message.offset) + 1} committed`
+    `Topic message offset ${Number(kafkaMessage.offset) + 1} committed`
   );
 };
 

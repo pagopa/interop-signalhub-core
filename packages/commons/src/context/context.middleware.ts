@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { correlationId } from "../utils/correlationId.js";
+import { correlationId } from "../utils/index.js";
 
 export const contextMiddleware =
   (serviceName: string) =>
