@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { v4 as uuidv4 } from "uuid";
+import { correlationId } from "../utils/index.js";
 
 export const contextMiddleware =
   (serviceName: string) =>
@@ -11,7 +11,7 @@ export const contextMiddleware =
     // eslint-disable-next-line functional/immutable-data
     req.ctx = {
       serviceName,
-      correlationId: uuidv4(),
+      correlationId: correlationId(),
       sessionData: { purposeId: "" },
     };
     next();
