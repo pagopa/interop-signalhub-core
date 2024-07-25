@@ -1,7 +1,15 @@
-import { KafkaConsumerConfig } from "pagopa-signalhub-commons";
+import {
+  KafkaConsumerConfig,
+  AgreementTopicConfig,
+} from "pagopa-signalhub-commons";
+import { z } from "zod";
 
-const AgreementEventConsumerConfig = KafkaConsumerConfig;
+const AgreementEventConsumerConfig =
+  KafkaConsumerConfig.and(AgreementTopicConfig);
 
+export type AgreementEventConsumerConfig = z.infer<
+  typeof AgreementEventConsumerConfig
+>;
 const parsedFromEnv = AgreementEventConsumerConfig.safeParse(process.env);
 
 if (!parsedFromEnv.success) {
@@ -16,6 +24,6 @@ if (!parsedFromEnv.success) {
   process.exit(1);
 }
 
-export const config: KafkaConsumerConfig = {
+export const config: AgreementEventConsumerConfig = {
   ...parsedFromEnv.data,
 };

@@ -67,6 +67,7 @@ const getKafkaConfig = (config: KafkaConsumerConfig): KafkaConfig => {
         sasl: {
           mechanism: "oauthbearer",
           oauthBearerProvider: () =>
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             oauthBearerTokenProvider(config.awsRegion!, genericLogger),
         },
       };
@@ -157,7 +158,7 @@ export const initConsumer = async (
         throw kafkaMessageProcessError(
           payload.topic,
           payload.partition,
-          payload.message.offset,
+          payload.kafkaMessage.offset,
           e
         );
       }
@@ -255,7 +256,7 @@ const kafkaCommitMessageOffsets = async (
   consumer: Consumer,
   payload: EachMessagePayload
 ): Promise<void> => {
-  const { topic, partition, message } = payload;
+  const { topic, partition, kafkaMessage: message } = payload;
   await consumer.commitOffsets([
     { topic, partition, offset: (Number(message.offset) + 1).toString() },
   ]);
