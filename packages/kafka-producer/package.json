@@ -9,14 +9,16 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "aws-msk-iam-sasl-signer-js": "^1.0.0",
+    "dotenv-flow": "^4.1.0",
+    "express": "^4.19.2",
     "kafkajs": "^2.2.4",
     "pagopa-signalhub-commons": "workspace:*",
     "ts-pattern": "^5.2.0",
-    "dotenv-flow": "^4.1.0",
-    "zod": "^3.23.8",
-    "aws-msk-iam-sasl-signer-js": "^1.0.0"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/express": "^4.17.21",
     "@types/node": "^20.11.24",
     "pagopa-signalhub-commons-test": "workspace:*",
     "pagopa-interop-outbound-models": "file:../../../../progetti-interop/interop-outbound-models",

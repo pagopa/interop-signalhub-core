@@ -1,9 +1,10 @@
-import { initProducer } from "./producer.js";
+import express from "express";
+import agreementRouter from "./routes/agreement.js";
 import { config } from "./config/env.js";
-import {
-  createFakeAgreementEvent,
-  produceAgreementEvent,
-} from "./agreement/index.js";
+import { initProducer } from "./producer.js";
+
+const app = express();
+const port = 3005;
 
 export const producer = await initProducer(
   {
@@ -17,9 +18,8 @@ export const producer = await initProducer(
   "agreement"
 );
 
-const agreementEvent = createFakeAgreementEvent();
+app.use("/agreement", agreementRouter);
 
-const message = produceAgreementEvent(agreementEvent);
-await producer.send({
-  messages: [{ value: message }],
+app.listen(port, () => {
+  console.log(`Kafka-producer listening on port: ${port}`);
 });
