@@ -1,18 +1,22 @@
+import { randomUUID } from "crypto";
 import { AgreementEvent, AgreementV1 } from "pagopa-interop-outbound-models";
 import { match } from "ts-pattern";
 import { z } from "zod";
+
+const randomID = randomUUID();
+
 const agreementV1: AgreementV1 = {
   certifiedAttributes: [],
   consumerDocuments: [],
   declaredAttributes: [],
   verifiedAttributes: [],
-  consumerId: Math.random().toString(),
+  consumerId: randomID,
+  descriptorId: randomID,
+  eserviceId: randomID,
+  id: randomID,
+  producerId: randomID,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   createdAt: 1 as any,
-  descriptorId: Math.random().toString(),
-  eserviceId: Math.random().toString(),
-  id: Math.random().toString(),
-  producerId: Math.random().toString(),
   state: 4,
 };
 

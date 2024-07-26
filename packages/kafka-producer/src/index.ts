@@ -18,6 +18,7 @@ export const producer = await initProducer(
   "agreement"
 );
 
+app.use(express.json());
 app.use("/agreement", agreementRouter);
 
 app.listen(port, () => {

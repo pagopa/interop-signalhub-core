@@ -8385,7 +8385,6 @@ packages:
   file:../../progetti-interop/interop-outbound-models:
     resolution: {directory: ../../progetti-interop/interop-outbound-models, type: directory}
     name: '@pagopa/interop-outbound-models'
-    requiresBuild: true
     dependencies:
       '@protobuf-ts/runtime': 2.9.4
       ts-pattern: 5.2.0
