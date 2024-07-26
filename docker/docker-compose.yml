@@ -67,7 +67,7 @@ services:
       - develop-network
 
   kafka:
-    image: quay.io/debezium/kafka:2.7@sha256:2b6aacca75457ab5476a58b9e3709368f2cd6afa37142aeef8645b2d21558c87
+    image: quay.io/debezium/kafka:2.7@sha256:5c6de46628abfb3675b2b9f3700c1f1d51946bebc3554b0487d7ed9dcbda5433
     ports:
       - 9092:9092
       - 29092:29092
