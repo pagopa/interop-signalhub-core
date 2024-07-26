@@ -1,4 +1,4 @@
-import { AgreementEvent, AgreementV1 } from "@pagopa/interop-outbound-models";
+import { AgreementEvent, AgreementV1 } from "pagopa-interop-outbound-models";
 import { match } from "ts-pattern";
 import { z } from "zod";
 const agreementV1: AgreementV1 = {
@@ -7,6 +7,7 @@ const agreementV1: AgreementV1 = {
   declaredAttributes: [],
   verifiedAttributes: [],
   consumerId: Math.random().toString(),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   createdAt: 1 as any,
   descriptorId: Math.random().toString(),
   eserviceId: Math.random().toString(),

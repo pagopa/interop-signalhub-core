@@ -21,5 +21,6 @@ export const producer = await initProducer(
 app.use("/agreement", agreementRouter);
 
 app.listen(port, () => {
+  // eslint-disable-next-line no-console
   console.log(`Kafka-producer listening on port: ${port}`);
 });

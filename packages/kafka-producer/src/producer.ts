@@ -10,9 +10,8 @@ import {
   logLevel,
 } from "kafkajs";
 import { Logger, genericLogger } from "pagopa-signalhub-commons";
-import { KafkaConfig as ProducerKafkaConfig } from "./config/env.js";
-
 import { P, match } from "ts-pattern";
+import { KafkaConfig as ProducerKafkaConfig } from "./config/env.js";
 
 const errorTypes = ["unhandledRejection", "uncaughtException"];
 const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
