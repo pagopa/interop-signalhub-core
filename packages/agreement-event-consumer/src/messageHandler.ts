@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Agreement, Logger } from "pagopa-signalhub-commons";
-import { AgreementEvent } from "pagopa-interop-outbound-models";
+import { AgreementEvent, AgreementV1 } from "pagopa-interop-outbound-models";
+
 import { match } from "ts-pattern";
 import { AgreementService } from "./services/agreement.service.js";
 
@@ -10,46 +11,49 @@ type AgreementEventV1 = Extract<AgreementEvent, { event_version: 1 }>;
 type AgreementEventV2 = Extract<AgreementEvent, { event_version: 2 }>;
 
 export async function handleMessageV1(
-  agreementEvent: AgreementEventV1,
+  event: AgreementEventV1,
   agreementService: AgreementService,
   logger: Logger
-): Promise<any> {
-  logger.info(`Processing event version: ${agreementEvent.event_version}`);
-  await match(agreementEvent)
+): Promise<void> {
+  await match(event)
     .with(
       { type: "AgreementAdded" },
-      async (event) =>
-        await agreementService.updateAgreement(event.data.agreement)
+      async (evt) =>
+        await agreementService.update(toAgreement(evt.data.agreement!), logger)
     )
-    .with({ type: "AgreementDeleted" }, async (event) => {
-      await agreementService.updateAgreement(event.data);
+    .with({ type: "AgreementDeleted" }, async (evt) => {
+      await agreementService.delete(evt.data.agreementId, logger);
     })
     .with(
       { type: "AgreementUpdated" },
       { type: "AgreementActivated" },
       { type: "AgreementSuspended" },
       { type: "AgreementDeactivated" },
-      { type: "VerifiedAttributeUpdated" },
-      async (event) => {
-        await agreementService.updateAgreement(event.data.agreement);
+      async (evt) => {
+        await agreementService.update(toAgreement(evt.data.agreement!), logger);
       }
     )
-    .with({ type: "AgreementConsumerDocumentAdded" }, async (event) => {
-      await agreementService.updateAgreement(event.data.agreement);
-    })
-    .with({ type: "AgreementConsumerDocumentRemoved" }, async (event) => {
-      await agreementService.updateAgreement(event.data.agreement);
-    })
-    .with({ type: "AgreementContractAdded" }, async (event) => {
-      await agreementService.updateAgreement(event.data.agreement);
-    })
+    .with({ type: "VerifiedAttributeUpdated" }, async () => {})
+    .with({ type: "AgreementConsumerDocumentAdded" }, async () => {})
+    .with({ type: "AgreementConsumerDocumentRemoved" }, async () => {})
+    .with({ type: "AgreementContractAdded" }, async () => {})
     .exhaustive();
 }
 
 export function handleMessageV2(
-  agreementEvent: AgreementEventV2,
+  event: AgreementEventV2,
   _agreementService: AgreementService,
   logger: Logger
-): any {
-  logger.info(`Processing event version: ${agreementEvent.event_version}`);
+): void {
+  logger.info(`Processing event version: ${event.event_version}`);
 }
+
+export const toAgreement = (agreement: AgreementV1): Agreement => ({
+  eventId: -1,
+  eserviceId: agreement.eserviceId,
+  producerId: agreement.producerId,
+  consumerId: agreement.consumerId,
+  agreementId: agreement.id,
+  descriptorId: agreement.descriptorId,
+  state: agreement.state.toString(),
+});
