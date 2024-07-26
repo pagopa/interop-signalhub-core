@@ -19,7 +19,7 @@
     "aws-msk-iam-sasl-signer-js": "^1.0.0",
     "kafkajs": "^2.2.4",
     "pagopa-signalhub-commons": "workspace:*",
-    "pagopa-interop-outbound-models": "file:../../../../progetti-interop/interop-outbound-models",
+    "pagopa-interop-outbound-models": "file:../../../../../Desktop/pagoPA/interop-outbound-models",
     "ts-pattern": "^5.2.0"
   },
   "devDependencies": {

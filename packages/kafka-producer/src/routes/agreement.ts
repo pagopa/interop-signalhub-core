@@ -34,7 +34,7 @@ agreementRouter.get("/V1/:typeId", async (req, res, next) => {
   res.send(agreementEvent);
 });
 
-agreementRouter.get("V2/:typeId", async (req, res, next) => {
+agreementRouter.get("/V2/:typeId", async (req, res, next) => {
   const { typeId } = req.params;
   const typeEvent = AgreementEventV2Type.safeParse(typeId);
 

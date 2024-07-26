@@ -30,8 +30,8 @@ importers:
         specifier: ^2.2.4
         version: 2.2.4
       pagopa-interop-outbound-models:
-        specifier: file:../../../../progetti-interop/interop-outbound-models
-        version: file:../../progetti-interop/interop-outbound-models
+        specifier: file:../../../../../Desktop/pagoPA/interop-outbound-models
+        version: file:../../pagoPA/interop-outbound-models
       pagopa-signalhub-commons:
         specifier: workspace:*
         version: link:../commons
@@ -287,8 +287,8 @@ importers:
         specifier: ^2.2.4
         version: 2.2.4
       pagopa-interop-outbound-models:
-        specifier: file:../../../../progetti-interop/interop-outbound-models
-        version: file:../../progetti-interop/interop-outbound-models
+        specifier: file:../../../../../Desktop/pagoPA/interop-outbound-models
+        version: file:../../pagoPA/interop-outbound-models
       pagopa-signalhub-commons:
         specifier: workspace:*
         version: link:../commons
@@ -331,8 +331,8 @@ importers:
         specifier: ^20.11.24
         version: 20.12.12
       pagopa-interop-outbound-models:
-        specifier: file:../../../../progetti-interop/interop-outbound-models
-        version: file:../../progetti-interop/interop-outbound-models
+        specifier: file:../../../../../Desktop/pagoPA/interop-outbound-models
+        version: file:../../pagoPA/interop-outbound-models
       pagopa-signalhub-commons-test:
         specifier: workspace:*
         version: link:../commons-test
@@ -8382,10 +8382,9 @@ packages:
   /zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
-  file:../../progetti-interop/interop-outbound-models:
-    resolution: {directory: ../../progetti-interop/interop-outbound-models, type: directory}
+  file:../../pagoPA/interop-outbound-models:
+    resolution: {directory: ../../pagoPA/interop-outbound-models, type: directory}
     name: '@pagopa/interop-outbound-models'
-    requiresBuild: true
     dependencies:
       '@protobuf-ts/runtime': 2.9.4
       ts-pattern: 5.2.0
