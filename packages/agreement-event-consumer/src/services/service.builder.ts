@@ -16,8 +16,10 @@ export function serviceBuilder(): {
     database: config.signalhubStoreDbName,
     useSSL: config.signalhubStoreDbUseSSL,
   });
+
   const agreementRepositoryInstance = agreementRepository(db);
   const agreementService = agreementServiceBuilder(agreementRepositoryInstance);
+
   return {
     agreementService,
   };

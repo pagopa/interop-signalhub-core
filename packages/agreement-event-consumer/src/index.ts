@@ -1,16 +1,15 @@
 /* eslint-disable no-console */
-import { correlationId, Logger, logger } from "pagopa-signalhub-commons";
+import { correlationId } from "pagopa-signalhub-commons";
 import { runConsumer } from "kafka-connector";
 import { EachMessagePayload } from "kafkajs";
 import { match } from "ts-pattern";
-import {
-  AgreementEvent,
-  decodeOutboundAgreementEvent,
-} from "pagopa-interop-outbound-models";
+import { decodeOutboundAgreementEvent } from "pagopa-interop-outbound-models";
 import { config } from "./config/env.js";
 import { handleMessageV1, handleMessageV2 } from "./messageHandler.js";
 import { serviceBuilder } from "./services/service.builder.js";
+import { buildLoggerInstance } from "./utils/index.js";
 
+const serviceName = "agreement-event-consumer";
 const { agreementService } = serviceBuilder();
 
 export async function processMessage({
@@ -22,17 +21,21 @@ export async function processMessage({
   }
   const agreementEvent = decodeOutboundAgreementEvent(message.value.toString());
 
-  const logger = buildLoggerInstance(agreementEvent, correlationId());
+  const logger = buildLoggerInstance(
+    serviceName,
+    agreementEvent,
+    correlationId()
+  );
   logger.info(
     `Processing message event: ${agreementEvent.stream_id}/${agreementEvent.version}`
   );
 
   await match(agreementEvent)
-    .with({ event_version: 1 }, (agreement) =>
-      handleMessageV1(agreement, agreementService, logger)
+    .with({ event_version: 1 }, (event) =>
+      handleMessageV1(event, agreementService, logger)
     )
-    .with({ event_version: 2 }, (agreement) =>
-      handleMessageV2(agreement, agreementService, logger)
+    .with({ event_version: 2 }, (event) =>
+      handleMessageV2(event, agreementService, logger)
     )
     .exhaustive();
 
@@ -42,16 +45,3 @@ export async function processMessage({
 }
 
 await runConsumer(config, [config.agreementTopic], processMessage);
-
-function buildLoggerInstance(
-  agreementEvent: AgreementEvent,
-  correlationId: string
-): Logger {
-  return logger({
-    serviceName: "agreement-event-consumer",
-    eventType: agreementEvent.type,
-    eventVersion: agreementEvent.event_version,
-    streamId: agreementEvent.stream_id,
-    correlationId,
-  });
-}
