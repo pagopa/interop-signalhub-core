@@ -15,6 +15,7 @@ const agreementV1: AgreementV1 = {
   eserviceId: randomID,
   id: randomID,
   producerId: randomID,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   createdAt: 1 as any,
   state: 4,
 };
