@@ -1,16 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Logger } from "pagopa-signalhub-commons";
+import { AgreementEvent } from "pagopa-interop-outbound-models";
 import { AgreementService } from "./services/agreement.service.js";
 
 export function handleMessageV1(
-  _msg: any,
-  _agreementService: AgreementService
+  agreementEvent: AgreementEvent,
+  _agreementService: AgreementService,
+  logger: Logger
 ): any {
-  throw new Error("Function not implemented.");
+  logger.info(`Processing event version: ${agreementEvent.event_version}`);
 }
 
 export function handleMessageV2(
-  _msg: any,
-  _agreementService: AgreementService
+  agreementEvent: AgreementEvent,
+  _agreementService: AgreementService,
+  logger: Logger
 ): any {
-  throw new Error("Function not implemented.");
+  logger.info(`Processing event version: ${agreementEvent.event_version}`);
 }

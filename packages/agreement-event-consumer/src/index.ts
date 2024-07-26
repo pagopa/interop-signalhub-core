@@ -20,16 +20,20 @@ export async function processMessage({
   if (!message.value) {
     throw new Error("Invalid message: missing value");
   }
-  const decodedmessage = decodeOutboundAgreementEvent(message.value.toString());
+  const agreementEvent = decodeOutboundAgreementEvent(message.value.toString());
 
-  const logger = buildLoggerInstance(decodedmessage, correlationId());
+  const logger = buildLoggerInstance(agreementEvent, correlationId());
   logger.info(
-    `Processing message event: ${decodedmessage.stream_id}/${decodedmessage.version}`
+    `Processing message event: ${agreementEvent.stream_id}/${agreementEvent.version}`
   );
 
-  await match(decodedmessage)
-    .with({ event_version: 1 }, (msg) => handleMessageV1(msg, agreementService))
-    .with({ event_version: 2 }, (msg) => handleMessageV2(msg, agreementService))
+  await match(agreementEvent)
+    .with({ event_version: 1 }, (agreement) =>
+      handleMessageV1(agreement, agreementService, logger)
+    )
+    .with({ event_version: 2 }, (agreement) =>
+      handleMessageV2(agreement, agreementService, logger)
+    )
     .exhaustive();
 
   logger.info(
@@ -40,14 +44,14 @@ export async function processMessage({
 await runConsumer(config, [config.agreementTopic], processMessage);
 
 function buildLoggerInstance(
-  message: AgreementEvent,
+  agreementEvent: AgreementEvent,
   correlationId: string
 ): Logger {
   return logger({
     serviceName: "agreement-event-consumer",
-    eventType: message.type,
-    eventVersion: message.event_version,
-    streamId: message.stream_id,
+    eventType: agreementEvent.type,
+    eventVersion: agreementEvent.event_version,
+    streamId: agreementEvent.stream_id,
     correlationId,
   });
 }
