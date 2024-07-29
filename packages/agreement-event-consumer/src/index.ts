@@ -3,9 +3,9 @@ import { correlationId } from "pagopa-signalhub-commons";
 import { runConsumer } from "kafka-connector";
 import { EachMessagePayload } from "kafkajs";
 import { match } from "ts-pattern";
-import { decodeOutboundAgreementEvent } from "pagopa-interop-outbound-models";
+import { decodeOutboundAgreementEvent } from "@pagopa/interop-outbound-models";
 import { config } from "./config/env.js";
-import { handleMessageV1, handleMessageV2 } from "./messageHandler.js";
+import { handleMessageV1, handleMessageV2 } from "./handlers/index.js";
 import { serviceBuilder } from "./services/service.builder.js";
 import { buildLoggerInstance } from "./utils/index.js";
 

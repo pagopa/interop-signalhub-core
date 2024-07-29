@@ -21,7 +21,7 @@ export function agreementServiceBuilder(
       await agreementRepository.update(agreement);
     },
     async insert(agreement: AgreementEntity, logger: Logger): Promise<void> {
-      logger.debug(`inserting event: ${JSON.stringify(agreement)}`);
+      logger.debug(`inserting event: ${JSON.stringify(agreement, null, 2)}`);
       const eventWasProcessed = await agreementRepository.eventWasProcessed(
         agreement.event_stream_id,
         agreement.event_version_id

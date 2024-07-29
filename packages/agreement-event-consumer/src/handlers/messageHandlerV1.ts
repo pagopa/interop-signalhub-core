@@ -1,14 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Logger } from "pagopa-signalhub-commons";
-import { AgreementEvent, AgreementV1 } from "@pagopa/interop-outbound-models";
+import { AgreementV1, AgreementEventV1 } from "@pagopa/interop-outbound-models";
 
-import { match } from "ts-pattern";
-import { AgreementService } from "../src/services/agreement.service.js";
-import { AgreementEntity } from "../src/models/domain/model.js";
-
-// types from pagopa-interop-outbound-models, only TEMPORARY defined here
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type AgreementEventV1 = Extract<AgreementEvent, { event_version: 1 }>;
+import { P, match } from "ts-pattern";
+import { AgreementService } from "../services/agreement.service.js";
+import { AgreementEntity } from "../models/domain/model.js";
 
 export async function handleMessageV1(
   event: AgreementEventV1,
@@ -24,18 +20,17 @@ export async function handleMessageV1(
           logger
         )
     )
-    .with({ type: "AgreementDeleted" }, async (evt) => {
-      await agreementService.delete(
-        evt.data.agreementId,
-        evt.stream_id,
-        logger
-      );
-    })
     .with(
-      { type: "AgreementUpdated" },
-      { type: "AgreementActivated" },
-      { type: "AgreementSuspended" },
-      { type: "AgreementDeactivated" },
+      {
+        type: P.union(
+          "AgreementUpdated",
+          "AgreementActivated",
+          "AgreementSuspended",
+          "AgreementDeactivated",
+          "AgreementDeactivated"
+        ),
+      },
+
       async (evt) => {
         await agreementService.update(
           toAgreementEntity(evt.data.agreement, evt.stream_id, evt.version),
@@ -43,6 +38,13 @@ export async function handleMessageV1(
         );
       }
     )
+    .with({ type: "AgreementDeleted" }, async (evt) => {
+      await agreementService.delete(
+        evt.data.agreementId,
+        evt.stream_id,
+        logger
+      );
+    })
     .otherwise(async () => {
       logger.debug(`Event type ${event.type} not relevant`);
     });
