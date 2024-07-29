@@ -1,52 +1,22 @@
 /* eslint-disable functional/no-method-signature */
-import {
-  Agreement,
-  DB,
-  genericInternalError,
-  toAgreement,
-} from "pagopa-signalhub-commons";
+import { DB, genericInternalError } from "pagopa-signalhub-commons";
+import { AgreementEntity } from "../models/domain/model.js";
 
 export interface IAgreementRepository {
-  findByEserviceIdAndConsumerIdAndDescriptorId(
-    eserviceId: string,
-    consumerId: string,
-    descriptorId: string
-  ): Promise<Agreement | null>;
-
-  insertAgreement(
-    agreementId: string,
-    eserviceId: string,
-    consumerId: string,
-    descriptorId: string,
-    eventId: number,
-    state: string
-  ): Promise<Agreement>;
-
-  updateAgreement(
-    eserviceId: string,
-    consumerId: string,
-    descriptorId: string,
-    state: string
-  ): Promise<Agreement>;
+  eventWasProcessed(streamId: string, version: number): Promise<boolean>;
+  insert(agreement: AgreementEntity): Promise<void>;
+  update(agreement: AgreementEntity): Promise<void>;
+  delete(agreementId: string, streamId: string): Promise<void>;
 }
 
 export const agreementRepository = (db: DB): IAgreementRepository => ({
-  async findByEserviceIdAndConsumerIdAndDescriptorId(
-    eserviceId,
-    consumerId,
-    descriptorId
-  ): Promise<Agreement | null> {
+  async eventWasProcessed(streamId, consumerId): Promise<boolean> {
     try {
       const response = await db.oneOrNone(
-        "select * from dev_interop.agreement consumer where consumer.eservice_id = $1 AND consumer.consumer_id = $2  AND consumer.descriptor_id = $3",
-        [eserviceId, consumerId, descriptorId]
+        "select event_stream_id, event_version_id from dev_interop.agreement a where a.event_stream_id = $1 AND a.event_version_id = $2",
+        [streamId, consumerId]
       );
-
-      if (!response) {
-        return null;
-      }
-
-      return toAgreement(response);
+      return response ? true : false;
     } catch (error) {
       throw genericInternalError(
         `Error findByEserviceIdAndConsumerIdAndDescriptorId:" ${error} `
@@ -55,44 +25,68 @@ export const agreementRepository = (db: DB): IAgreementRepository => ({
   },
 
   // eslint-disable-next-line max-params
-  async insertAgreement(
-    agreementId: string,
-    eserviceId: string,
-    consumerId: string,
-    descriptorId: string,
-    eventId: number,
-    state: string
-  ): Promise<Agreement> {
+  async insert(agreement: AgreementEntity): Promise<void> {
     try {
-      const response = await db.oneOrNone(
-        "INSERT INTO dev_interop.agreement(agreement_id,eservice_id, consumer_id, descriptor_id, event_id,state) VALUES($1, $2, $3, $4, $5,$6) RETURNING *",
-        [agreementId, eserviceId, consumerId, descriptorId, eventId, state]
+      const {
+        agreement_id,
+        eservice_id,
+        consumer_id,
+        descriptor_id,
+        state,
+        event_stream_id,
+        event_version_id,
+      } = agreement;
+      await db.oneOrNone(
+        "INSERT INTO dev_interop.agreement(agreement_id, eservice_id, consumer_id, descriptor_id, state, event_stream_id, event_version_id) VALUES($1, $2, $3, $4, $5, $6, $7)",
+        [
+          agreement_id,
+          eservice_id,
+          consumer_id,
+          descriptor_id,
+          state,
+          event_stream_id,
+          event_version_id,
+        ]
       );
-
-      return toAgreement(response);
     } catch (error) {
       throw genericInternalError(`Error insertAgreement:" ${error} `);
     }
   },
 
-  async updateAgreement(
-    eserviceId: string,
-    consumerId: string,
-    descriptorId: string,
-    state: string
-  ): Promise<Agreement> {
+  async update(agreement: AgreementEntity): Promise<void> {
     try {
       const tmstLastEdit = getCurrentDate();
-
-      const response = await db.oneOrNone(
-        "update dev_interop.agreement set state = $1, tmst_last_edit= $2  where eservice_id = $3 AND descriptor_id = $4 AND consumer_id= $5 RETURNING *",
-        [state, tmstLastEdit, eserviceId, descriptorId, consumerId]
+      const {
+        agreement_id,
+        eservice_id,
+        consumer_id,
+        descriptor_id,
+        state,
+        event_stream_id,
+        event_version_id,
+      } = agreement;
+      await db.one(
+        "update dev_interop.agreement set agreement_id = $1, eservice_id = $2, consumer_id = $3, descriptor_id = $4, state = $5, event_stream_id = $6, event_version_id =$7, tmst_last_edit = $8  where agreement_id = $1 and event_stream_id = $6",
+        [
+          agreement_id,
+          eservice_id,
+          consumer_id,
+          descriptor_id,
+          state,
+          event_stream_id,
+          event_version_id,
+          tmstLastEdit,
+        ]
       );
-
-      return toAgreement(response);
     } catch (error) {
       throw genericInternalError(`Error updateAgreement:" ${error} `);
     }
+  },
+  async delete(agreementId: string, streamId: string): Promise<void> {
+    await db.one(
+      "delete from dev_interop.agreement where agreement_id = $1 and event_stream_id = $2",
+      [agreementId, streamId]
+    );
   },
 });
 

@@ -21,13 +21,17 @@ export async function handleMessageV1(
     .with(
       { type: "AgreementAdded" },
       async (evt) =>
-        await agreementService.update(
+        await agreementService.insert(
           toAgreementEntity(evt.data.agreement, evt.stream_id, evt.version),
           logger
         )
     )
     .with({ type: "AgreementDeleted" }, async (evt) => {
-      await agreementService.delete(evt.data.agreementId, logger);
+      await agreementService.delete(
+        evt.data.agreementId,
+        evt.stream_id,
+        logger
+      );
     })
     .with(
       { type: "AgreementUpdated" },

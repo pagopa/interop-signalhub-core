@@ -5,16 +5,41 @@ import { AgreementEntity } from "../models/domain/model.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function agreementServiceBuilder(
-  _agreementRepository: IAgreementRepository
+  agreementRepository: IAgreementRepository
 ) {
   return {
     async update(agreement: AgreementEntity, logger: Logger): Promise<void> {
-      // some business logic
-      logger.info(`updating event: ${JSON.stringify(agreement)}`);
+      logger.debug(`updating event: ${JSON.stringify(agreement)}`);
+      const eventWasProcessed = await agreementRepository.eventWasProcessed(
+        agreement.event_stream_id,
+        agreement.event_version_id
+      );
+      logger.debug(`event was already processed: ${eventWasProcessed}`);
+      if (eventWasProcessed) {
+        return;
+      }
+      await agreementRepository.update(agreement);
     },
-    async delete(agreementId: string, logger: Logger): Promise<void> {
+    async insert(agreement: AgreementEntity, logger: Logger): Promise<void> {
+      logger.debug(`inserting event: ${JSON.stringify(agreement)}`);
+      const eventWasProcessed = await agreementRepository.eventWasProcessed(
+        agreement.event_stream_id,
+        agreement.event_version_id
+      );
+      logger.debug(`event was already processed: ${eventWasProcessed}`);
+      if (eventWasProcessed) {
+        return;
+      }
+      await agreementRepository.insert(agreement);
+    },
+    async delete(
+      agreementId: string,
+      streamId: string,
+      logger: Logger
+    ): Promise<void> {
       // some business logic
-      logger.info(`deleting event: ${JSON.stringify(agreementId)}`);
+      logger.info(`deleting event: ${agreementId}`);
+      await agreementRepository.delete(agreementId, streamId);
     },
   };
 }
