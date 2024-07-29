@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Agreement, Logger } from "pagopa-signalhub-commons";
+import { Logger } from "pagopa-signalhub-commons";
 import { AgreementEvent, AgreementV1 } from "pagopa-interop-outbound-models";
 
 import { match } from "ts-pattern";
 import { AgreementService } from "./services/agreement.service.js";
+import { AgreementEntity } from "./models/domain/model.js";
 
+// types from pagopa-interop-outbound-models, only TEMPORARY defined here
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type AgreementEventV1 = Extract<AgreementEvent, { event_version: 1 }>;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -19,7 +21,10 @@ export async function handleMessageV1(
     .with(
       { type: "AgreementAdded" },
       async (evt) =>
-        await agreementService.update(toAgreement(evt.data.agreement!), logger)
+        await agreementService.update(
+          toAgreementEntity(evt.data.agreement, evt.stream_id, evt.version),
+          logger
+        )
     )
     .with({ type: "AgreementDeleted" }, async (evt) => {
       await agreementService.delete(evt.data.agreementId, logger);
@@ -30,14 +35,15 @@ export async function handleMessageV1(
       { type: "AgreementSuspended" },
       { type: "AgreementDeactivated" },
       async (evt) => {
-        await agreementService.update(toAgreement(evt.data.agreement!), logger);
+        await agreementService.update(
+          toAgreementEntity(evt.data.agreement, evt.stream_id, evt.version),
+          logger
+        );
       }
     )
-    .with({ type: "VerifiedAttributeUpdated" }, async () => {})
-    .with({ type: "AgreementConsumerDocumentAdded" }, async () => {})
-    .with({ type: "AgreementConsumerDocumentRemoved" }, async () => {})
-    .with({ type: "AgreementContractAdded" }, async () => {})
-    .exhaustive();
+    .otherwise(async () => {
+      logger.debug(`Event type ${event.type} not relevant`);
+    });
 }
 
 export function handleMessageV2(
@@ -48,12 +54,21 @@ export function handleMessageV2(
   logger.info(`Processing event version: ${event.event_version}`);
 }
 
-export const toAgreement = (agreement: AgreementV1): Agreement => ({
-  eventId: -1,
-  eserviceId: agreement.eserviceId,
-  producerId: agreement.producerId,
-  consumerId: agreement.consumerId,
-  agreementId: agreement.id,
-  descriptorId: agreement.descriptorId,
-  state: agreement.state.toString(),
-});
+export const toAgreementEntity = (
+  agreement: AgreementV1 | undefined,
+  streamId: string,
+  version: number
+): AgreementEntity => {
+  if (!agreement) {
+    throw new Error("Invalid agreement");
+  }
+  return {
+    agreement_id: agreement.id,
+    eservice_id: agreement.eserviceId,
+    descriptor_id: agreement.descriptorId,
+    consumer_id: agreement.consumerId,
+    state: agreement.state.toString(),
+    event_stream_id: streamId,
+    event_version_id: version,
+  };
+};
