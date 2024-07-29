@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { AgreementEvent, AgreementV1 } from "pagopa-interop-outbound-models";
+import { AgreementEvent, AgreementV1 } from "@pagopa/interop-outbound-models";
 import { match } from "ts-pattern";
 import { z } from "zod";
 

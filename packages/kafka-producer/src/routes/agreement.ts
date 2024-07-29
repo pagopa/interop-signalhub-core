@@ -9,7 +9,7 @@ import {
   AgreementEventV2Type,
   getAgreementV2ByType,
 } from "../agreement/agreementV2.event.js";
-import { AgreementEvent } from "pagopa-interop-outbound-models";
+import { AgreementEvent } from "@pagopa/interop-outbound-models";
 
 const agreementRouter: Router = express.Router();
 

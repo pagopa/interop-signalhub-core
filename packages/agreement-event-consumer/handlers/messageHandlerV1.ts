@@ -1,16 +1,14 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Logger } from "pagopa-signalhub-commons";
-import { AgreementEvent, AgreementV1 } from "pagopa-interop-outbound-models";
+import { AgreementEvent, AgreementV1 } from "@pagopa/interop-outbound-models";
 
 import { match } from "ts-pattern";
-import { AgreementService } from "./services/agreement.service.js";
-import { AgreementEntity } from "./models/domain/model.js";
+import { AgreementService } from "../src/services/agreement.service.js";
+import { AgreementEntity } from "../src/models/domain/model.js";
 
 // types from pagopa-interop-outbound-models, only TEMPORARY defined here
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type AgreementEventV1 = Extract<AgreementEvent, { event_version: 1 }>;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type AgreementEventV2 = Extract<AgreementEvent, { event_version: 2 }>;
 
 export async function handleMessageV1(
   event: AgreementEventV1,
@@ -48,14 +46,6 @@ export async function handleMessageV1(
     .otherwise(async () => {
       logger.debug(`Event type ${event.type} not relevant`);
     });
-}
-
-export function handleMessageV2(
-  event: AgreementEventV2,
-  _agreementService: AgreementService,
-  logger: Logger
-): void {
-  logger.info(`Processing event version: ${event.event_version}`);
 }
 
 export const toAgreementEntity = (

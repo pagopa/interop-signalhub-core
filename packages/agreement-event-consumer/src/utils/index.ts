@@ -1,4 +1,4 @@
-import { AgreementEvent } from "pagopa-interop-outbound-models";
+import { AgreementEvent } from "@pagopa/interop-outbound-models";
 import { Logger, logger } from "pagopa-signalhub-commons";
 
 export const buildLoggerInstance = (

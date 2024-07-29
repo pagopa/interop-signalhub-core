@@ -1,7 +1,7 @@
 import {
   AgreementEvent,
   encodeOutboundAgreementEvent,
-} from "pagopa-interop-outbound-models";
+} from "@pagopa/interop-outbound-models";
 
 const agreementEvent: AgreementEvent = {
   event_version: 2,
