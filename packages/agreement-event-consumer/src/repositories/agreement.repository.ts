@@ -24,7 +24,6 @@ export const agreementRepository = (db: DB): IAgreementRepository => ({
     }
   },
 
-  // eslint-disable-next-line max-params
   async insert(agreement: AgreementEntity): Promise<void> {
     try {
       const {
