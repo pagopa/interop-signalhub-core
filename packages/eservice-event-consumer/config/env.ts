@@ -5,13 +5,13 @@ import {
 } from "pagopa-signalhub-commons";
 import { z } from "zod";
 
-const AgreementEventConsumerConfig =
+const EserviceEventConsumerConfig =
   KafkaConsumerConfig.and(KafkaTopicConfig).and(SignalHubStoreConfig);
 
 export type AgreementEventConsumerConfig = z.infer<
-  typeof AgreementEventConsumerConfig
+  typeof EserviceEventConsumerConfig
 >;
-const parsedFromEnv = AgreementEventConsumerConfig.safeParse(process.env);
+const parsedFromEnv = EserviceEventConsumerConfig.safeParse(process.env);
 
 if (!parsedFromEnv.success) {
   const invalidEnvVars = parsedFromEnv.error.issues.flatMap(

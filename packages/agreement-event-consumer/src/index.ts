@@ -44,4 +44,4 @@ export async function processMessage({
   );
 }
 
-await runConsumer(config, [config.agreementTopic], processMessage);
+await runConsumer(config, [config.kafkaTopic], processMessage);
