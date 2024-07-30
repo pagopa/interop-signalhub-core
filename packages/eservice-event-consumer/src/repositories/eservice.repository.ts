@@ -8,6 +8,7 @@ import {
 } from "pagopa-signalhub-commons";
 
 export interface IEserviceRepository {
+  eventWasProcessed(streamId: string, version: number): Promise<boolean>;
   findByEserviceIdAndProducerIdAndDescriptorId(
     eserviceId: string,
     producerId: string,
@@ -30,6 +31,18 @@ export interface IEserviceRepository {
   ): Promise<ProducerService>;
 }
 export const eServiceRepository = (db: DB): IEserviceRepository => ({
+  async eventWasProcessed(streamId, consumerId): Promise<boolean> {
+    try {
+      const response = await db.oneOrNone(
+        "select event_stream_id, event_version_id from dev_interop.eservice a where a.event_stream_id = $1 AND a.event_version_id = $2",
+        [streamId, consumerId]
+      );
+      return response ? true : false;
+    } catch (error) {
+      throw genericInternalError(`Error eventWasProcessed:" ${error} `);
+    }
+  },
+
   async findByEserviceIdAndProducerIdAndDescriptorId(
     eserviceId: string,
     producerId: string,
