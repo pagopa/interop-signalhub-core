@@ -32,7 +32,7 @@ export async function processMessage({
   await match(eserviceEvent)
     .with(
       { event_version: 1 },
-      (_event) => handleMessageV1()
+      (event) => handleMessageV1(event, logger)
       // handleMessageV1(event, agreementService, logger)
     )
     .with(
