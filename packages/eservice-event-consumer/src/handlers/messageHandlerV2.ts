@@ -2,7 +2,7 @@ import { EServiceEventV2 } from "@pagopa/interop-outbound-models";
 import { Logger } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
 
-export async function handleMessageV1(
+export async function handleMessageV2(
   event: EServiceEventV2,
   logger: Logger
 ): Promise<void> {
