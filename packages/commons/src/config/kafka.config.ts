@@ -36,3 +36,12 @@ export const KafkaConsumerConfig = KafkaConfig.and(AwsConfig).and(
     }))
 );
 export type KafkaConsumerConfig = z.infer<typeof KafkaConsumerConfig>;
+
+export const AgreementTopicConfig = z
+  .object({
+    AGREEMENT_TOPIC: z.string(),
+  })
+  .transform((c) => ({
+    agreementTopic: c.AGREEMENT_TOPIC,
+  }));
+export type AgreementTopicConfig = z.infer<typeof AgreementTopicConfig>;

@@ -67,6 +67,7 @@ const getKafkaConfig = (config: KafkaConsumerConfig): KafkaConfig => {
         sasl: {
           mechanism: "oauthbearer",
           oauthBearerProvider: () =>
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             oauthBearerTokenProvider(config.awsRegion!, genericLogger),
         },
       };
@@ -263,4 +264,19 @@ const kafkaCommitMessageOffsets = async (
   genericLogger.debug(
     `Topic message offset ${Number(message.offset) + 1} committed`
   );
+};
+
+export const runConsumer = async (
+  config: KafkaConsumerConfig,
+  topics: string[],
+  consumerHandler: (messagePayload: EachMessagePayload) => Promise<void>
+): Promise<void> => {
+  try {
+    await initConsumer(config, topics, consumerHandler);
+  } catch (e) {
+    genericLogger.error(
+      `Generic error occurs during consumer initialization: ${e}`
+    );
+    processExit();
+  }
 };
