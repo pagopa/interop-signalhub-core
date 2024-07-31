@@ -7,9 +7,10 @@ import { decodeOutboundEServiceEvent } from "@pagopa/interop-outbound-models";
 import { config } from "./config/env.js";
 import { handleMessageV1, handleMessageV2 } from "./handlers/index.js";
 import { buildLoggerInstance } from "./utils/index.js";
+import { serviceBuilder } from "./services/service.builder.js";
 
 const serviceName = "eservice-event-consumer";
-// const {} = serviceBuilder();
+const { eServiceService } = serviceBuilder();
 
 export async function processMessage({
   message,
@@ -30,10 +31,8 @@ export async function processMessage({
   );
 
   await match(eserviceEvent)
-    .with(
-      { event_version: 1 },
-      (event) => handleMessageV1(event, logger)
-      // handleMessageV1(event, agreementService, logger)
+    .with({ event_version: 1 }, (event) =>
+      handleMessageV1(event, eServiceService, logger)
     )
     .with(
       { event_version: 2 },

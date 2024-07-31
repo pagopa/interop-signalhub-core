@@ -6,6 +6,7 @@ import {
   ProducerService,
   getCurrentDate,
 } from "pagopa-signalhub-commons";
+import { EserviceEntity } from "../models/domain/model.js";
 
 export interface IEserviceRepository {
   eventWasProcessed(streamId: string, version: number): Promise<boolean>;
@@ -15,13 +16,7 @@ export interface IEserviceRepository {
     descriptorId: string
   ): Promise<ProducerService | null>;
 
-  insertEservice(
-    eserviceId: string,
-    producerId: string,
-    descriptorId: string,
-    eventId: number,
-    state: string
-  ): Promise<ProducerService>;
+  insertEservice(eService: EserviceEntity): Promise<void>;
 
   updateEservice(
     eServiceId: string,
@@ -66,20 +61,29 @@ export const eServiceRepository = (db: DB): IEserviceRepository => ({
     }
   },
 
-  async insertEservice(
-    eserviceId: string,
-    producerId: string,
-    descriptorId: string,
-    eventId: number,
-    state: string
-  ): Promise<ProducerService> {
+  async insertEservice(eService: EserviceEntity): Promise<void> {
     try {
-      const response = await db.oneOrNone(
-        "INSERT INTO DEV_INTEROP.eservice(eservice_id, producer_id, descriptor_id, event_id,state) VALUES($1, $2, $3, $4, $5) RETURNING *",
-        [eserviceId, producerId, descriptorId, eventId, state]
+      const {
+        eservice_id,
+        producer_id,
+        descriptor_id,
+        event_version_id,
+        state,
+        event_stream_id,
+        eservice_version_id,
+      } = eService;
+      await db.oneOrNone(
+        "INSERT INTO DEV_INTEROP.eservice(eservice_id, producer_id, descriptor_id,state,eservice_version_id,event_stream_id, event_version_id) VALUES($1, $2, $3, $4, $5,$6,$7)",
+        [
+          eservice_id,
+          producer_id,
+          descriptor_id,
+          state,
+          eservice_version_id,
+          event_stream_id,
+          event_version_id,
+        ]
       );
-
-      return toProducerEservice(response);
     } catch (error) {
       throw genericInternalError(`Error insertEservice:" ${error} `);
     }
