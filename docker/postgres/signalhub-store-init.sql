@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."eservice" (
     descriptor_id   VARCHAR (255) NOT NULL,
     producer_id     VARCHAR (255) NOT NULL,
     state           VARCHAR (255) NOT NULL,
+    eservice_version INT,
     event_id        BIGINT DEFAULT -1,
     event_stream_id VARCHAR (255) NOT NULL DEFAULT gen_random_uuid(),
     event_version_id   BIGINT NOT NULL DEFAULT -1,
