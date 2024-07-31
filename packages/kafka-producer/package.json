@@ -5,7 +5,8 @@
   "type": "module",
   "main": "dist",
   "scripts": {
-    "start": "node --watch --loader ts-node/esm -r 'dotenv-flow/config'  ./src/index.ts"
+    "start": "node --watch --loader ts-node/esm -r 'dotenv-flow/config'  ./src/index.ts",
+    "build": "tsc"
   },
   "dependencies": {
     "aws-msk-iam-sasl-signer-js": "^1.0.0",

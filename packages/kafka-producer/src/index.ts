@@ -1,5 +1,6 @@
 import express from "express";
 import agreementRouter from "./routes/agreement.js";
+import eServiceRouter from "./routes/eservices.js";
 import { config } from "./config/env.js";
 import { initProducer } from "./producer.js";
 
@@ -14,14 +15,18 @@ export const producer = await initProducer(
     kafkaDisableAwsIamAuth: true,
     kafkaLogLevel: config.kafkaLogLevel,
     kafkaReauthenticationThreshold: config.kafkaReauthenticationThreshold,
+    kafkaTopic: config.kafkaTopic,
   },
-  "agreement"
+  config.kafkaTopic
 );
 
 app.use(express.json());
 app.use("/agreement", agreementRouter);
+app.use("/eservices", eServiceRouter);
 
 app.listen(port, () => {
   // eslint-disable-next-line no-console
-  console.log(`Kafka-producer listening on port: ${port}`);
+  console.log(
+    `Kafka-producer topic: ${config.kafkaTopic} listening on port: ${port}`
+  );
 });
