@@ -24,6 +24,7 @@ export async function handleMessageV1(
           evt.stream_id,
           evt.version
         );
+
         eServiceService.insert(eService, logger);
       }
     )
@@ -41,6 +42,16 @@ export async function handleMessageV1(
       },
       async (evt) => {
         console.log("TODO", evt);
+
+        const { eserviceId, eserviceDescriptor } = evt.data;
+
+        eServiceService.insertDescriptor(
+          eserviceId,
+          eserviceDescriptor?.id,
+          evt.stream_id,
+          evt.version,
+          logger
+        );
       }
     )
     .with(
@@ -80,14 +91,17 @@ export const FromEserviceAddedV1ToEserviceEntiy = (
   const { eservice } = eserviceEvent;
 
   if (eservice) {
+    const { descriptors } = eservice;
     return {
       eservice_id: eservice.id,
       producer_id: eservice.producerId,
-      descriptor_id: eservice.descriptors[0].id || "-",
-      eservice_version: getSemanticMajorVersion(
-        eservice.descriptors[0].version
-      ),
-      state: eservice.descriptors[0].state,
+      descriptor_id: descriptors.length > 0 ? eservice.descriptors[0].id : "-",
+      eservice_version:
+        descriptors.length > 0
+          ? getSemanticMajorVersion(eservice.descriptors[0].version)
+          : null,
+
+      state: descriptors.length > 0 ? descriptors[0].state : -1, // TODO: Change this
       event_stream_id: streamId,
       event_version_id: version,
     };

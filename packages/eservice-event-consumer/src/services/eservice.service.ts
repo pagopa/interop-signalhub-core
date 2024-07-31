@@ -27,12 +27,26 @@ export function eServiceServiceBuilder(
     },
 
     async insertDescriptor(
-      eService: EserviceEntity,
+      eServiceId: string,
+      descriptorId: string | undefined,
+      eventStreamId: string,
+      eventVersionId: number,
       logger: Logger
     ): Promise<void> {
-      logger.debug(
-        `insert descriptor event: ${JSON.stringify(eService, null, 2)}`
+      logger.debug(`create new descriptorId event for Eservice ${eServiceId}`);
+
+      if (!descriptorId) {
+        throw Error("Missing descriptorId");
+      }
+
+      const eventWasProcessed = await eServiceRepository.eventWasProcessed(
+        eventStreamId,
+        eventVersionId
       );
+
+      if (eventWasProcessed) {
+        return;
+      }
 
       // Se esiste eserviceId allora se la versione è successiva a quella attuale , aggiorno la riga.
     },
