@@ -64,7 +64,7 @@ export const agreementRepository = (db: DB): IAgreementRepository => ({
         event_stream_id,
         event_version_id,
       } = agreement;
-      await db.one(
+      await db.none(
         "update dev_interop.agreement set agreement_id = $1, eservice_id = $2, consumer_id = $3, descriptor_id = $4, state = $5, event_stream_id = $6, event_version_id =$7, tmst_last_edit = $8  where agreement_id = $1 and event_stream_id = $6",
         [
           agreement_id,
@@ -82,7 +82,7 @@ export const agreementRepository = (db: DB): IAgreementRepository => ({
     }
   },
   async delete(agreementId: string, streamId: string): Promise<void> {
-    await db.one(
+    await db.none(
       "delete from dev_interop.agreement where agreement_id = $1 and event_stream_id = $2",
       [agreementId, streamId]
     );

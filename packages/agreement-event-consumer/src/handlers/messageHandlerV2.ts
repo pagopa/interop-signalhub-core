@@ -66,7 +66,7 @@ export async function handleMessageV2(
 }
 
 const toAgreementId = (agreement: AgreementV2 | undefined): string => {
-  if (!agreement || !agreement.id) {
+  if (!agreement?.id) {
     throw new Error("Invalid agreement");
   }
 

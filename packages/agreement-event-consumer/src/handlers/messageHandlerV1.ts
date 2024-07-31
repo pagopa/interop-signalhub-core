@@ -26,7 +26,6 @@ export async function handleMessageV1(
           "AgreementUpdated",
           "AgreementActivated",
           "AgreementSuspended",
-          "AgreementDeactivated",
           "AgreementDeactivated"
         ),
       },
