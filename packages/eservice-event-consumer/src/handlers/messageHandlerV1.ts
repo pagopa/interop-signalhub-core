@@ -6,7 +6,6 @@ import { Logger } from "pagopa-signalhub-commons";
 import { match } from "ts-pattern";
 import { EServiceService } from "../services/eservice.service.js";
 import { EserviceEntity } from "../models/domain/model.js";
-import { getSemanticMajorVersion } from "../utils/index.js";
 
 export async function handleMessageV1(
   event: EServiceEventV1,
@@ -19,7 +18,7 @@ export async function handleMessageV1(
         type: "EServiceAdded",
       },
       async (evt) => {
-        const eService = FromEserviceAddedV1ToEserviceEntiy(
+        const eService = fromEserviceAddedV1ToEserviceEntiy(
           evt.data,
           evt.stream_id,
           evt.version
@@ -30,24 +29,18 @@ export async function handleMessageV1(
     )
     .with(
       {
-        type: "EServiceUpdated",
-      },
-      async (evt) => {
-        console.log("TODO", evt);
-      }
-    )
-    .with(
-      {
         type: "EServiceDescriptorAdded",
       },
       async (evt) => {
-        console.log("TODO", evt);
-
         const { eserviceId, eserviceDescriptor } = evt.data;
 
-        eServiceService.insertDescriptor(
+        if (!eserviceDescriptor) {
+          throw new Error("Missing eserviceDescriptor");
+        }
+
+        eServiceService.updateEserviceDescriptor(
           eserviceId,
-          eserviceDescriptor?.id,
+          eserviceDescriptor,
           evt.stream_id,
           evt.version,
           logger
@@ -56,10 +49,37 @@ export async function handleMessageV1(
     )
     .with(
       {
+        type: "EServiceUpdated",
+      },
+      async (evt) => {
+        const eService = fromEserviceAddedV1ToEserviceEntiy(
+          evt.data,
+          evt.stream_id,
+          evt.version
+        );
+
+        eServiceService.update(eService, logger);
+      }
+    )
+
+    .with(
+      {
         type: "EServiceDescriptorUpdated",
       },
       async (evt) => {
-        console.log("TODO", evt);
+        const { eserviceId, eserviceDescriptor } = evt.data;
+
+        if (!eserviceDescriptor) {
+          throw new Error("Missing eserviceDescriptor");
+        }
+
+        eServiceService.updateEserviceDescriptor(
+          eserviceId,
+          eserviceDescriptor,
+          evt.stream_id,
+          evt.version,
+          logger
+        );
       }
     )
     .with(
@@ -67,14 +87,26 @@ export async function handleMessageV1(
         type: "EServiceDeleted",
       },
       async (evt) => {
+        evt.data.eserviceId;
+        // Si può cancellare senza che il suo descrittor sia stato cancellato?
+        eServiceService.delete(evt.data.eserviceId, logger);
+      }
+    )
+    .with(
+      {
+        type: "EServiceWithDescriptorsDeleted",
+      },
+      async (evt) => {
+        // viene clonato l'eservice con tutti i suoi descrittori?
         console.log("TODO", evt);
       }
     )
     .with(
       {
-        type: "EServiceDocumentDeleted",
+        type: "ClonedEServiceAdded",
       },
       async (evt) => {
+        // viene clonato l'eservice con tutti i suoi descrittori?
         console.log("TODO", evt);
       }
     )
@@ -83,7 +115,7 @@ export async function handleMessageV1(
     });
 }
 
-export const FromEserviceAddedV1ToEserviceEntiy = (
+export const fromEserviceAddedV1ToEserviceEntiy = (
   eserviceEvent: EServiceAddedV1,
   streamId: string,
   version: number
@@ -95,13 +127,18 @@ export const FromEserviceAddedV1ToEserviceEntiy = (
     return {
       eservice_id: eservice.id,
       producer_id: eservice.producerId,
-      descriptor_id: descriptors.length > 0 ? eservice.descriptors[0].id : "-",
+      descriptor_id:
+        descriptors.length > 0
+          ? eservice.descriptors[descriptors.length - 1].id
+          : "-",
       eservice_version:
         descriptors.length > 0
-          ? getSemanticMajorVersion(eservice.descriptors[0].version)
+          ? parseInt(descriptors[descriptors.length - 1].version)
           : null,
 
-      state: descriptors.length > 0 ? descriptors[0].state : -1, // TODO: Change this
+      // TODO: Capire se salvare stringa o enum
+      state:
+        descriptors.length > 0 ? descriptors[descriptors.length - 1].state : -1,
       event_stream_id: streamId,
       event_version_id: version,
     };

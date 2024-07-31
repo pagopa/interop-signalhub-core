@@ -73,7 +73,7 @@ export const eServiceRepository = (db: DB): IEserviceRepository => ({
         eservice_version,
       } = eService;
       await db.oneOrNone(
-        "INSERT INTO DEV_INTEROP.eservice(eservice_id, producer_id, descriptor_id,state,eservice_version,event_stream_id, event_version_id) VALUES($1, $2, $3, $4, $5,$6,$7)",
+        "INSERT INTO DEV_INTEROP.eservice(eservice_id, producer_id, descriptor_id,state,eservice_version,event_stream_id, event_version_id) VALUES($1, $2, $3, $4, $5, $6, $7)",
         [
           eservice_id,
           producer_id,

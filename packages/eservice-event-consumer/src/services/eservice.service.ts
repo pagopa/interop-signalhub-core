@@ -1,7 +1,7 @@
 import { Logger } from "pagopa-signalhub-commons";
 import { IEserviceRepository } from "../repositories/eservice.repository.js";
 import { EserviceEntity } from "../models/domain/model.js";
-
+import { EServiceDescriptorV1 } from "@pagopa/interop-outbound-models";
 export function eServiceServiceBuilder(
   eServiceRepository: IEserviceRepository
 ) {
@@ -26,16 +26,16 @@ export function eServiceServiceBuilder(
       // Aggiorno la coppia eservice/descriptor con i nuovi dati
     },
 
-    async insertDescriptor(
+    async updateEserviceDescriptor(
       eServiceId: string,
-      descriptorId: string | undefined,
+      descriptorData: EServiceDescriptorV1,
       eventStreamId: string,
       eventVersionId: number,
       logger: Logger
     ): Promise<void> {
       logger.debug(`create new descriptorId event for Eservice ${eServiceId}`);
 
-      if (!descriptorId) {
+      if (!descriptorData.id) {
         throw Error("Missing descriptorId");
       }
 
@@ -51,8 +51,8 @@ export function eServiceServiceBuilder(
       // Se esiste eserviceId allora se la versione è successiva a quella attuale , aggiorno la riga.
     },
 
-    async delete(eService: EserviceEntity, logger: Logger): Promise<void> {
-      logger.debug(`delete eService: ${JSON.stringify(eService, null, 2)}`);
+    async delete(eServiceId: string, logger: Logger): Promise<void> {
+      logger.debug(`delete eService: with ${eServiceId}`);
     },
   };
 }
