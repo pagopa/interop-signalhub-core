@@ -84,7 +84,7 @@ export const FromEserviceAddedV1ToEserviceEntiy = (
       eservice_id: eservice.id,
       producer_id: eservice.producerId,
       descriptor_id: eservice.descriptors[0].id || "-",
-      eservice_version_id: getSemanticMajorVersion(
+      eservice_version: getSemanticMajorVersion(
         eservice.descriptors[0].version
       ),
       state: eservice.descriptors[0].state,
