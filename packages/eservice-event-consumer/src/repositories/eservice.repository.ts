@@ -6,7 +6,10 @@ import {
   ProducerService,
   getCurrentDate,
 } from "pagopa-signalhub-commons";
-import { EserviceEntity } from "../models/domain/model.js";
+import {
+  EserviceDescriptorEntity,
+  EserviceEntity,
+} from "../models/domain/model.js";
 
 export interface IEserviceRepository {
   eventWasProcessed(streamId: string, version: number): Promise<boolean>;
@@ -18,12 +21,7 @@ export interface IEserviceRepository {
 
   insertEservice(eService: EserviceEntity): Promise<void>;
 
-  updateEservice(
-    eServiceId: string,
-    descriptorId: string,
-    eventId: number,
-    state: string
-  ): Promise<ProducerService>;
+  updateDescriptor(eServiceDesriptor: EserviceDescriptorEntity): Promise<void>;
 }
 export const eServiceRepository = (db: DB): IEserviceRepository => ({
   async eventWasProcessed(streamId, consumerId): Promise<boolean> {
@@ -89,22 +87,33 @@ export const eServiceRepository = (db: DB): IEserviceRepository => ({
     }
   },
 
-  async updateEservice(
-    eserviceId: string,
-    descriptorId: string,
-    eventId: number,
-    state: string
-  ): Promise<ProducerService> {
+  async updateDescriptor(
+    eServiceDescriptor: EserviceDescriptorEntity
+  ): Promise<void> {
     try {
+      const {
+        descriptor_id,
+        eservice_id,
+        state,
+        eservice_version,
+        event_version_id,
+        event_stream_id,
+      } = eServiceDescriptor;
       const tmstLastEdit = getCurrentDate();
-      const response = await db.oneOrNone(
-        "UPDATE DEV_INTEROP.eservice SET state = $1, event_id = $2 , tmst_last_edit= $3  WHERE eservice.eservice_id = $4 AND eservice.descriptor_id = $5 RETURNING *",
-        [state, eventId, tmstLastEdit, eserviceId, descriptorId]
+      await db.oneOrNone(
+        "UPDATE DEV_INTEROP.eservice SET descriptor_id=$2 , state = $3 , tmst_last_edit= $4, eservice_version=$5, event_stream_id=$6 , event_version_id=$7 WHERE eservice.eservice_id = $1 AND (eservice.eservice_version < $5 OR eservice.eservice_version IS NULL)",
+        [
+          eservice_id,
+          descriptor_id,
+          state,
+          tmstLastEdit,
+          eservice_version,
+          event_stream_id,
+          event_version_id,
+        ]
       );
-
-      return toProducerEservice(response);
     } catch (error) {
-      throw genericInternalError(`Error updateEservice:" ${error} `);
+      throw genericInternalError(`Error updateEserviceDescriptor:" ${error} `);
     }
   },
 });

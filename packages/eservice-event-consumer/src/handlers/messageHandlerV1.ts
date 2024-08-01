@@ -32,6 +32,7 @@ export async function handleMessageV1(
         type: "EServiceDescriptorAdded",
       },
       async (evt) => {
+        console.log("TODO", evt);
         const { eserviceId, eserviceDescriptor } = evt.data;
 
         if (!eserviceDescriptor) {
