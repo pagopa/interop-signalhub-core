@@ -1,11 +1,11 @@
 import { AgreementEntity } from "../src/models/domain/model.js";
-import { postgresDB } from "./utils";
+import { postgresDB } from "./utils.js";
 
-export const getAnAgreementBy = async (
+export const getAnAgreementEntityBy = async (
   agreementId: string
 ): Promise<AgreementEntity | null> => {
   const agreement = await postgresDB.oneOrNone(
-    "SELECT * FROM dev_interop.agreement a WHERE a.agreement_id = $1",
+    "SELECT agreement_id, eservice_id, consumer_id, descriptor_id, state, event_stream_id, event_version_id FROM dev_interop.agreement a WHERE a.agreement_id = $1",
     [agreementId]
   );
   if (!agreement) {
@@ -14,12 +14,9 @@ export const getAnAgreementBy = async (
   return {
     ...agreement,
     event_version_id: Number(agreement.event_version_id),
-    event_id: Number(agreement.event_id),
-    tmst_insert: null,
-    tmst_last_edit: null,
   };
 };
-export const writeAnAgreement = async (
+export const writeAnAgreementEntity = async (
   agreement: AgreementEntity
 ): Promise<void> => {
   const {
