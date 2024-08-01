@@ -1,5 +1,5 @@
 import {
-  EServiceAddedV1,
+  EServiceDescriptorV1,
   EServiceEventV1,
 } from "@pagopa/interop-outbound-models";
 import { Logger } from "pagopa-signalhub-commons";
@@ -18,13 +18,19 @@ export async function handleMessageV1(
         type: "EServiceAdded",
       },
       async (evt) => {
-        const eService = fromEserviceAddedV1ToEserviceEntiy(
-          evt.data,
+        if (!evt.data.eservice) {
+          throw new Error("Missing eservice data");
+        }
+
+        const eService = fromEserviceEventToEserviceEntity(
+          evt.data.eservice?.id,
+          evt.data.eservice?.producerId,
+          evt.data.eservice?.descriptors,
           evt.stream_id,
           evt.version
         );
 
-        eServiceService.insert(eService, logger);
+        eServiceService.upsert(eService, logger);
       }
     )
     .with(
@@ -32,20 +38,21 @@ export async function handleMessageV1(
         type: "EServiceDescriptorAdded",
       },
       async (evt) => {
-        console.log("TODO", evt);
         const { eserviceId, eserviceDescriptor } = evt.data;
 
         if (!eserviceDescriptor) {
           throw new Error("Missing eserviceDescriptor");
         }
 
-        eServiceService.updateEserviceDescriptor(
+        const eService = fromEserviceEventToEserviceEntity(
           eserviceId,
-          eserviceDescriptor,
+          null,
+          [eserviceDescriptor],
           evt.stream_id,
-          evt.version,
-          logger
+          evt.version
         );
+
+        eServiceService.upsert(eService, logger);
       }
     )
     .with(
@@ -53,13 +60,19 @@ export async function handleMessageV1(
         type: "EServiceUpdated",
       },
       async (evt) => {
-        const eService = fromEserviceAddedV1ToEserviceEntiy(
-          evt.data,
+        if (!evt.data.eservice) {
+          throw new Error("Missing eservice data");
+        }
+
+        const eService = fromEserviceEventToEserviceEntity(
+          evt.data.eservice?.id,
+          evt.data.eservice?.producerId,
+          evt.data.eservice?.descriptors,
           evt.stream_id,
           evt.version
         );
 
-        eServiceService.update(eService, logger);
+        eServiceService.upsert(eService, logger);
       }
     )
 
@@ -74,9 +87,24 @@ export async function handleMessageV1(
           throw new Error("Missing eserviceDescriptor");
         }
 
-        eServiceService.updateEserviceDescriptor(
+        const eService = fromEserviceEventToEserviceEntity(
           eserviceId,
-          eserviceDescriptor,
+          null,
+          [eserviceDescriptor],
+          evt.stream_id,
+          evt.version
+        );
+
+        eServiceService.upsert(eService, logger);
+      }
+    )
+    .with(
+      {
+        type: "EServiceDeleted",
+      },
+      async (evt) => {
+        eServiceService.delete(
+          evt.data.eserviceId,
           evt.stream_id,
           evt.version,
           logger
@@ -85,21 +113,20 @@ export async function handleMessageV1(
     )
     .with(
       {
-        type: "EServiceDeleted",
-      },
-      async (evt) => {
-        evt.data.eserviceId;
-        // Si può cancellare senza che il suo descrittor sia stato cancellato?
-        eServiceService.delete(evt.data.eserviceId, logger);
-      }
-    )
-    .with(
-      {
         type: "EServiceWithDescriptorsDeleted",
       },
       async (evt) => {
-        // viene clonato l'eservice con tutti i suoi descrittori?
-        console.log("TODO", evt);
+        if (!evt.data.eservice) {
+          throw new Error("Missing eservice data");
+        }
+
+        eServiceService.deleteDescriptor(
+          evt.data.eservice?.id,
+          evt.data.descriptorId,
+          evt.stream_id,
+          evt.version,
+          logger
+        );
       }
     )
     .with(
@@ -108,7 +135,19 @@ export async function handleMessageV1(
       },
       async (evt) => {
         // viene clonato l'eservice con tutti i suoi descrittori?
-        console.log("TODO", evt);
+        if (!evt.data.eservice) {
+          throw new Error("Missing eservice data");
+        }
+
+        const eService = fromEserviceEventToEserviceEntity(
+          evt.data.eservice?.id,
+          evt.data.eservice?.producerId,
+          evt.data.eservice?.descriptors,
+          evt.stream_id,
+          evt.version
+        );
+
+        eServiceService.upsert(eService, logger);
       }
     )
     .otherwise(async () => {
@@ -116,34 +155,22 @@ export async function handleMessageV1(
     });
 }
 
-export const fromEserviceAddedV1ToEserviceEntiy = (
-  eserviceEvent: EServiceAddedV1,
+export const fromEserviceEventToEserviceEntity = (
+  eServiceId: string,
+  producerId: string | null,
+  descriptorsData: EServiceDescriptorV1[],
   streamId: string,
   version: number
 ): EserviceEntity => {
-  const { eservice } = eserviceEvent;
+  return {
+    eservice_id: eServiceId,
+    producer_id: producerId,
+    descriptors: descriptorsData.map((descriptor) => ({
+      descriptor_id: descriptor.id,
+      state: descriptor.state as unknown as string, // TODO: to fix
+    })),
 
-  if (eservice) {
-    const { descriptors } = eservice;
-    return {
-      eservice_id: eservice.id,
-      producer_id: eservice.producerId,
-      descriptor_id:
-        descriptors.length > 0
-          ? eservice.descriptors[descriptors.length - 1].id
-          : "-",
-      eservice_version:
-        descriptors.length > 0
-          ? parseInt(descriptors[descriptors.length - 1].version)
-          : null,
-
-      // TODO: Capire se salvare stringa o enum
-      state:
-        descriptors.length > 0 ? descriptors[descriptors.length - 1].state : -1,
-      event_stream_id: streamId,
-      event_version_id: version,
-    };
-  }
-
-  throw new Error("Eservice not found");
+    event_stream_id: streamId,
+    event_version_id: version,
+  };
 };

@@ -6,10 +6,7 @@ import {
   ProducerService,
   getCurrentDate,
 } from "pagopa-signalhub-commons";
-import {
-  EserviceDescriptorEntity,
-  EserviceEntity,
-} from "../models/domain/model.js";
+import { EserviceDescriptorEntity } from "../models/domain/model.js";
 
 export interface IEserviceRepository {
   eventWasProcessed(streamId: string, version: number): Promise<boolean>;
@@ -19,9 +16,17 @@ export interface IEserviceRepository {
     descriptorId: string
   ): Promise<ProducerService | null>;
 
-  insertEservice(eService: EserviceEntity): Promise<void>;
+  upsertDescriptor(
+    eServiceId: string,
+    producerId: string | null,
+    eServiceDescriptor: EserviceDescriptorEntity,
+    eventStreamId: string,
+    eventVersionId: number
+  ): Promise<void>;
 
-  updateDescriptor(eServiceDesriptor: EserviceDescriptorEntity): Promise<void>;
+  delete(eserviceId: string): Promise<void>;
+
+  deleteDescriptor(eserviceId: string, descriptorId: string): Promise<void>;
 }
 export const eServiceRepository = (db: DB): IEserviceRepository => ({
   async eventWasProcessed(streamId, consumerId): Promise<boolean> {
@@ -59,27 +64,36 @@ export const eServiceRepository = (db: DB): IEserviceRepository => ({
     }
   },
 
-  async insertEservice(eService: EserviceEntity): Promise<void> {
+  async upsertDescriptor(
+    eServiceId: string,
+    producerId: string,
+    eServiceDescriptor: EserviceDescriptorEntity,
+    eventStreamId: string,
+    eventVersionId: number
+  ): Promise<void> {
     try {
-      const {
-        eservice_id,
-        producer_id,
-        descriptor_id,
-        event_version_id,
-        state,
-        event_stream_id,
-        eservice_version,
-      } = eService;
+      const tmstLastEdit = getCurrentDate();
+      const { descriptor_id, state } = eServiceDescriptor;
       await db.oneOrNone(
-        "INSERT INTO DEV_INTEROP.eservice(eservice_id, producer_id, descriptor_id,state,eservice_version,event_stream_id, event_version_id) VALUES($1, $2, $3, $4, $5, $6, $7)",
+        `INSERT INTO DEV_INTEROP.eservice(eservice_id, producer_id, descriptor_id, state, event_stream_id, event_version_id)
+             VALUES($1, $2, $3, $4, $5, $6)
+             ON CONFLICT (eservice_id, descriptor_id)
+             DO UPDATE SET
+                producer_id = COALESCE(EXCLUDED.producer_id, DEV_INTEROP.eservice.producer_id),
+                state = EXCLUDED.state,
+                event_stream_id = EXCLUDED.event_stream_id,
+                event_version_id = EXCLUDED.event_version_id,
+                tmst_last_edit= EXCLUDED.tmst_last_edit
+                `,
+
         [
-          eservice_id,
-          producer_id,
+          eServiceId,
+          producerId,
           descriptor_id,
           state,
-          eservice_version,
-          event_stream_id,
-          event_version_id,
+          eventStreamId,
+          eventVersionId,
+          tmstLastEdit,
         ]
       );
     } catch (error) {
@@ -87,33 +101,28 @@ export const eServiceRepository = (db: DB): IEserviceRepository => ({
     }
   },
 
-  async updateDescriptor(
-    eServiceDescriptor: EserviceDescriptorEntity
-  ): Promise<void> {
+  async delete(eserviceId: string): Promise<void> {
     try {
-      const {
-        descriptor_id,
-        eservice_id,
-        state,
-        eservice_version,
-        event_version_id,
-        event_stream_id,
-      } = eServiceDescriptor;
-      const tmstLastEdit = getCurrentDate();
       await db.oneOrNone(
-        "UPDATE DEV_INTEROP.eservice SET descriptor_id=$2 , state = $3 , tmst_last_edit= $4, eservice_version=$5, event_stream_id=$6 , event_version_id=$7 WHERE eservice.eservice_id = $1 AND (eservice.eservice_version < $5 OR eservice.eservice_version IS NULL)",
-        [
-          eservice_id,
-          descriptor_id,
-          state,
-          tmstLastEdit,
-          eservice_version,
-          event_stream_id,
-          event_version_id,
-        ]
+        "DELETE FROM DEV_INTEROP.eservice WHERE eservice_id = $1",
+        [eserviceId]
       );
     } catch (error) {
-      throw genericInternalError(`Error updateEserviceDescriptor:" ${error} `);
+      throw genericInternalError(`Error deleteEservice:" ${error} `);
+    }
+  },
+
+  async deleteDescriptor(
+    eserviceId: string,
+    descriptorId: string
+  ): Promise<void> {
+    try {
+      await db.oneOrNone(
+        "DELETE FROM DEV_INTEROP.eservice WHERE eservice_id = $1 AND descriptor_id = $2",
+        [eserviceId, descriptorId]
+      );
+    } catch (error) {
+      throw genericInternalError(`Error deleteEserviceDescriptor:" ${error} `);
     }
   },
 });

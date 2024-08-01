@@ -1,13 +1,12 @@
 import { Logger } from "pagopa-signalhub-commons";
 import { IEserviceRepository } from "../repositories/eservice.repository.js";
 import { EserviceEntity } from "../models/domain/model.js";
-import { EServiceDescriptorV1 } from "@pagopa/interop-outbound-models";
-import { toUpdateDescriptorEntity } from "../models/domain/toDbEntity.js";
+
 export function eServiceServiceBuilder(
   eServiceRepository: IEserviceRepository
 ) {
   return {
-    async insert(eService: EserviceEntity, logger: Logger): Promise<void> {
+    async upsert(eService: EserviceEntity, logger: Logger): Promise<void> {
       logger.debug(`inserting event: ${JSON.stringify(eService, null, 2)}`);
 
       const eventWasProcessed = await eServiceRepository.eventWasProcessed(
@@ -20,26 +19,25 @@ export function eServiceServiceBuilder(
         return;
       }
 
-      await eServiceRepository.insertEservice(eService);
+      eService.descriptors.forEach(async (descriptor) => {
+        // TODO: Add check for STATE ARCHIVE
+        await eServiceRepository.upsertDescriptor(
+          eService.eservice_id,
+          eService.producer_id,
+          descriptor,
+          eService.event_stream_id,
+          eService.event_version_id
+        );
+      });
     },
 
-    async update(eService: EserviceEntity, logger: Logger): Promise<void> {
-      logger.debug(`updating  event: ${JSON.stringify(eService, null, 2)}`);
-      // Aggiorno la coppia eservice/descriptor con i nuovi dati
-    },
-
-    async updateEserviceDescriptor(
+    async delete(
       eServiceId: string,
-      descriptorData: EServiceDescriptorV1,
       eventStreamId: string,
       eventVersionId: number,
       logger: Logger
     ): Promise<void> {
-      logger.debug(`create new descriptorId event for Eservice ${eServiceId}`);
-
-      if (!descriptorData.id) {
-        throw Error("Missing descriptorId");
-      }
+      logger.debug(`delete eService: with ${eServiceId}`);
 
       const eventWasProcessed = await eServiceRepository.eventWasProcessed(
         eventStreamId,
@@ -51,20 +49,30 @@ export function eServiceServiceBuilder(
         return;
       }
 
-      const eServiceDescriptorEntity = toUpdateDescriptorEntity(
-        eServiceId,
-        descriptorData,
+      await eServiceRepository.delete(eServiceId);
+    },
+    async deleteDescriptor(
+      eServiceId: string,
+      descriptorId: string,
+      eventStreamId: string,
+      eventVersionId: number,
+      logger: Logger
+    ): Promise<void> {
+      logger.debug(
+        `delete eService: with ${eServiceId} and descriptorId: ${descriptorId}`
+      );
+
+      const eventWasProcessed = await eServiceRepository.eventWasProcessed(
         eventStreamId,
         eventVersionId
       );
+      logger.debug(`event was already processed: ${eventWasProcessed}`);
 
-      console.log(eServiceDescriptorEntity);
-      await eServiceRepository.updateDescriptor(eServiceDescriptorEntity);
-      // Se esiste eserviceId allora se la versione è successiva a quella attuale , aggiorno la riga.
-    },
+      if (eventWasProcessed) {
+        return;
+      }
 
-    async delete(eServiceId: string, logger: Logger): Promise<void> {
-      logger.debug(`delete eService: with ${eServiceId}`);
+      await eServiceRepository.deleteDescriptor(eServiceId, descriptorId);
     },
   };
 }

@@ -52,7 +52,7 @@ const eServiceDescriptorAdded: EServiceEvent = {
 };
 
 export const EserviceEventType = z.union([
-  z.literal("EserviceAdded"),
+  z.literal("EServiceAdded"),
   z.literal("EServiceDescriptorAdded"),
 ]);
 export type EserviceEventType = z.infer<typeof EserviceEventType>;
@@ -61,7 +61,7 @@ export function getEserviceEventV1ByType(
   type: EserviceEventType
 ): EServiceEvent {
   return match(type)
-    .with("EserviceAdded", () => eServiceAddedEvent)
+    .with("EServiceAdded", () => eServiceAddedEvent)
     .with("EServiceDescriptorAdded", () => eServiceDescriptorAdded)
     .exhaustive();
 }
