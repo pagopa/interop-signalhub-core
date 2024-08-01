@@ -45,3 +45,12 @@ export const AgreementTopicConfig = z
     agreementTopic: c.AGREEMENT_TOPIC,
   }));
 export type AgreementTopicConfig = z.infer<typeof AgreementTopicConfig>;
+
+export const PurposeTopicConfig = z
+  .object({
+    PURPOSE_TOPIC: z.string(),
+  })
+  .transform((c) => ({
+    purposeTopic: c.PURPOSE_TOPIC,
+  }));
+export type PurposeTopicConfig = z.infer<typeof PurposeTopicConfig>;
