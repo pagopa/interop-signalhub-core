@@ -7,8 +7,8 @@
 
 ## .env file
 
-FIle .```env`` contains variables needed for application (local run)
-FIle ``.env.test`` contains variables needed for testing (does not introduce other variables: overwrites those in ``.env``)
+File ```.env`` contains variables needed for application (local run)
+File ``.env.test`` contains variables needed for testing (does not introduce other variables: overwrites those in ``.env``)
 
 #### module **interop-client** 
 - is a client module, is a dependency, should not be started

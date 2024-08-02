@@ -26,7 +26,6 @@ export async function handleMessageV1(
           "AgreementUpdated",
           "AgreementActivated",
           "AgreementSuspended",
-          "AgreementDeactivated",
           "AgreementDeactivated"
         ),
       },
@@ -45,9 +44,19 @@ export async function handleMessageV1(
         logger
       );
     })
-    .otherwise(async () => {
-      logger.debug(`Event type ${event.type} not relevant`);
-    });
+    .with({ type: "AgreementContractAdded" }, async (evt) => {
+      logger.debug(`Event type ${evt.type} not relevant`);
+    })
+    .with({ type: "AgreementConsumerDocumentAdded" }, async (evt) => {
+      logger.debug(`Event type ${evt.type} not relevant`);
+    })
+    .with({ type: "AgreementConsumerDocumentRemoved" }, async (evt) => {
+      logger.debug(`Event type ${evt.type} not relevant`);
+    })
+    .with({ type: "VerifiedAttributeUpdated" }, async (evt) => {
+      logger.debug(`Event type ${evt.type} not relevant`);
+    })
+    .exhaustive();
 }
 
 export const toAgreementEntity = (

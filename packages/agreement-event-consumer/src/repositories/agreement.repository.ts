@@ -10,11 +10,11 @@ export interface IAgreementRepository {
 }
 
 export const agreementRepository = (db: DB): IAgreementRepository => ({
-  async eventWasProcessed(streamId, consumerId): Promise<boolean> {
+  async eventWasProcessed(streamId, versionId): Promise<boolean> {
     try {
       const response = await db.oneOrNone(
         "select event_stream_id, event_version_id from dev_interop.agreement a where a.event_stream_id = $1 AND a.event_version_id = $2",
-        [streamId, consumerId]
+        [streamId, versionId]
       );
       return response ? true : false;
     } catch (error) {
@@ -22,7 +22,6 @@ export const agreementRepository = (db: DB): IAgreementRepository => ({
     }
   },
 
-  // eslint-disable-next-line max-params
   async insert(agreement: AgreementEntity): Promise<void> {
     try {
       const {
@@ -63,7 +62,7 @@ export const agreementRepository = (db: DB): IAgreementRepository => ({
         event_stream_id,
         event_version_id,
       } = agreement;
-      await db.one(
+      await db.none(
         "update dev_interop.agreement set agreement_id = $1, eservice_id = $2, consumer_id = $3, descriptor_id = $4, state = $5, event_stream_id = $6, event_version_id =$7, tmst_last_edit = $8  where agreement_id = $1 and event_stream_id = $6",
         [
           agreement_id,
@@ -81,7 +80,7 @@ export const agreementRepository = (db: DB): IAgreementRepository => ({
     }
   },
   async delete(agreementId: string, streamId: string): Promise<void> {
-    await db.one(
+    await db.none(
       "delete from dev_interop.agreement where agreement_id = $1 and event_stream_id = $2",
       [agreementId, streamId]
     );

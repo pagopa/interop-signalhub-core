@@ -1,7 +1,7 @@
 {
-  "name": "pagoppa-signalhub-agreement-event-consumer",
+  "name": "pagoppa-signalhub-purpose-event-consumer",
   "version": "1.0.0",
-  "description": "PagoPA Interop Signalhub agreement event consumer",
+  "description": "PagoPA Interop Signalhub purpose event consumer",
   "type": "module",
   "main": "dist",
   "scripts": {

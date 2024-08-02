@@ -1,12 +1,11 @@
-import { SnakeCase } from "pagopa-signalhub-commons";
 import { z } from "zod";
 
-export const AgreementEntity = z.object({
-  agreementId: z.string(),
+export const PurposeEntity = z.object({
+  purposeId: z.string(),
+  purposeVersionId: z.string(),
   eserviceId: z.string(),
-  descriptorId: z.string(),
   consumerId: z.string(),
-  state: z.string(),
+  purposeState: z.string(),
   eventStreamId: z.string(),
   eventVersionId: z.number(),
   tmstInsert: z.string().nullable().optional(),
@@ -14,4 +13,4 @@ export const AgreementEntity = z.object({
   eventId: z.number().nullable().optional(),
 });
 
-export type AgreementEntity = SnakeCase<z.infer<typeof AgreementEntity>>;
+export type PurposeEntity = z.infer<typeof PurposeEntity>;
