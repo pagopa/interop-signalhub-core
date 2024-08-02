@@ -1,5 +1,15 @@
 create schema if not exists "dev_interop";
 create schema if not exists "dev_signalhub";
+
+
+
+CREATE TABLE IF NOT EXISTS "dev_interop"."eservice_producer" (
+    eservice_id     VARCHAR (255) NOT NULL,
+    producer_id     VARCHAR (255) NOT NULL,
+    tmst_insert     TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (eservice_id, producer_id),
+    PRIMARY KEY (eservice_id)
+); 
 	
 CREATE TABLE IF NOT EXISTS "dev_interop"."eservice" (
     eservice_id     VARCHAR (255) NOT NULL,
