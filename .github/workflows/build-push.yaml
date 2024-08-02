@@ -33,6 +33,8 @@ jobs:
             dockerfile_path: packages/batch-update
           - image_name: batch-cleanup
             dockerfile_path: packages/batch-cleanup
+          - image_name: agreement-event-consumer 
+            dockerfile_path: packages/agreement-event-consumer
 
     steps:
       - name: Checkout repository

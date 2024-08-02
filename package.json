@@ -19,6 +19,7 @@
     "test:updater": "turbo test --filter  pagopa-signalhub-batch-update",
     "test:cleaner": "turbo test --filter pagopa-signalhub-batch-cleanup",
     "test:event:purpose": "turbo test --filter pagoppa-signalhub-purpose-event-consumer",
+    "test:event:agreement": "turbo test --filter pagoppa-signalhub-agreement-event-consumer",
     "build": "turbo build",
     "lint": "turbo lint",
     "lint:autofix": "turbo lint:autofix",
