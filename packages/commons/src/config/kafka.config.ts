@@ -3,7 +3,10 @@ import { logLevel } from "kafkajs";
 import { AwsConfig } from "./aws.config.js";
 const KafkaConfig = z
   .object({
-    KAFKA_BROKERS: z.string(),
+    KAFKA_BROKERS: z
+      .string()
+      .transform((s) => s.split(","))
+      .pipe(z.array(z.string())),
     KAFKA_CLIENT_ID: z.string(),
     KAFKA_GROUP_ID: z.string(),
     KAFKA_DISABLE_AWS_IAM_AUTH: z.literal("true").optional(),
