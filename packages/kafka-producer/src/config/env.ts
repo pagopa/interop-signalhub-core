@@ -2,8 +2,9 @@ import { logLevel } from "kafkajs";
 import { z } from "zod";
 import { AwsConfig } from "pagopa-signalhub-commons";
 
-export const KafkaConfig = z
+export const KafkaProducerConfig = z
   .object({
+    KAFKA_TOPIC: z.string(),
     KAFKA_BROKERS: z.string(),
     KAFKA_CLIENT_ID: z.string(),
     KAFKA_DISABLE_AWS_IAM_AUTH: z.literal("true").optional(),
@@ -23,9 +24,10 @@ export const KafkaConfig = z
     kafkaDisableAwsIamAuth: c.KAFKA_DISABLE_AWS_IAM_AUTH === "true",
     kafkaLogLevel: logLevel[c.KAFKA_LOG_LEVEL],
     kafkaReauthenticationThreshold: c.KAFKA_REAUTHENTICATION_THRESHOLD,
+    kafkaTopic: c.KAFKA_TOPIC,
   }));
 
-const parsedFromEnv = KafkaConfig.safeParse(process.env);
+const parsedFromEnv = KafkaProducerConfig.safeParse(process.env);
 if (!parsedFromEnv.success) {
   const invalidEnvVars = parsedFromEnv.error.issues.flatMap(
     (issue) => issue.path
@@ -37,8 +39,8 @@ if (!parsedFromEnv.success) {
   process.exit(1);
 }
 
-export const config: KafkaConfig = {
+export const config: KafkaProducerConfig = {
   ...parsedFromEnv.data,
 };
 
-export type KafkaConfig = z.infer<typeof KafkaConfig>;
+export type KafkaProducerConfig = z.infer<typeof KafkaProducerConfig>;

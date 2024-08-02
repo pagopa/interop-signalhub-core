@@ -1,5 +1,18 @@
 create schema if not exists "dev_interop";
 create schema if not exists "dev_signalhub";
+
+
+
+CREATE TABLE IF NOT EXISTS "dev_interop"."eservice_producer" (
+    eservice_id     VARCHAR (255) NOT NULL,
+    producer_id     VARCHAR (255) NOT NULL,
+    tmst_insert     TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    event_stream_id VARCHAR (255) NOT NULL DEFAULT gen_random_uuid(),
+    event_version_id   BIGINT NOT NULL DEFAULT -1,
+    UNIQUE (event_stream_id, event_version_id),
+    UNIQUE (eservice_id, producer_id),
+    PRIMARY KEY (eservice_id)
+); 
 	
 CREATE TABLE IF NOT EXISTS "dev_interop"."eservice" (
     eservice_id     VARCHAR (255) NOT NULL,
@@ -11,7 +24,7 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."eservice" (
     event_version_id   BIGINT NOT NULL DEFAULT -1,
     tmst_insert     TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     tmst_last_edit  TIMESTAMPTZ,
-    UNIQUE (event_stream_id, event_version_id),
+    UNIQUE (event_stream_id, event_version_id,descriptor_id),
     UNIQUE (eservice_id, descriptor_id, producer_id),
     PRIMARY KEY (eservice_id, descriptor_id)
 );

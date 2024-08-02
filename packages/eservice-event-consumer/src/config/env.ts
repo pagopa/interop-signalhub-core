@@ -5,13 +5,13 @@ import {
 } from "pagopa-signalhub-commons";
 import { z } from "zod";
 
-const PurposeEventConsumerConfig =
+const EserviceEventConsumerConfig =
   KafkaConsumerConfig.and(KafkaTopicConfig).and(SignalHubStoreConfig);
 
-export type PurposeEventConsumerConfig = z.infer<
-  typeof PurposeEventConsumerConfig
+export type AgreementEventConsumerConfig = z.infer<
+  typeof EserviceEventConsumerConfig
 >;
-const parsedFromEnv = PurposeEventConsumerConfig.safeParse(process.env);
+const parsedFromEnv = EserviceEventConsumerConfig.safeParse(process.env);
 
 if (!parsedFromEnv.success) {
   const invalidEnvVars = parsedFromEnv.error.issues.flatMap(
@@ -19,12 +19,12 @@ if (!parsedFromEnv.success) {
   );
   // eslint-disable-next-line no-console
   console.error(
-    "Invalid or missing env vars: Purpose Event Consumer " +
+    "Invalid or missing env vars: Agreement Event Consumer " +
       invalidEnvVars.join(", ")
   );
   process.exit(1);
 }
 
-export const config: PurposeEventConsumerConfig = {
+export const config: AgreementEventConsumerConfig = {
   ...parsedFromEnv.data,
 };

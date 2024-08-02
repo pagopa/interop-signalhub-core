@@ -9,6 +9,7 @@
     "start:persister": "turbo start --filter pagopa-signalhub-persister",
     "start:updater": "turbo start --filter pagopa-signalhub-batch-update",
     "start:cleaner": "turbo start --filter pagopa-signalhub-batch-cleanup",
+    "start:event:eservice": "turbo start --filter pagoppa-signalhub-eservice-event-consumer",
     "start:event:agreement": "turbo start --filter pagoppa-signalhub-agreement-event-consumer",
     "start:event:purpose": "turbo start --filter pagoppa-signalhub-purpose-event-consumer",
     "start:producer": "turbo start --filter pagopa-signalhub-kafka-producer",
