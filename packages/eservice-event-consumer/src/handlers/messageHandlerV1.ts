@@ -22,15 +22,15 @@ export async function handleMessageV1(
           throw new Error("Missing eservice data");
         }
 
-        const eService = fromEserviceEventToEserviceEntity(
-          evt.data.eservice?.id,
-          evt.data.eservice?.producerId,
-          evt.data.eservice?.descriptors,
-          evt.stream_id,
-          evt.version
-        );
+        const { eservice } = evt.data;
 
-        eServiceService.upsert(eService, logger);
+        eServiceService.addEserviceProducer(
+          eservice.id,
+          eservice.producerId,
+          evt.stream_id,
+          evt.version,
+          logger
+        );
       }
     )
     .with(
@@ -46,7 +46,6 @@ export async function handleMessageV1(
 
         const eService = fromEserviceEventToEserviceEntity(
           eserviceId,
-          null,
           [eserviceDescriptor],
           evt.stream_id,
           evt.version
@@ -66,7 +65,6 @@ export async function handleMessageV1(
 
         const eService = fromEserviceEventToEserviceEntity(
           evt.data.eservice?.id,
-          evt.data.eservice?.producerId,
           evt.data.eservice?.descriptors,
           evt.stream_id,
           evt.version
@@ -89,7 +87,6 @@ export async function handleMessageV1(
 
         const eService = fromEserviceEventToEserviceEntity(
           eserviceId,
-          null,
           [eserviceDescriptor],
           evt.stream_id,
           evt.version
@@ -141,7 +138,6 @@ export async function handleMessageV1(
 
         const eService = fromEserviceEventToEserviceEntity(
           evt.data.eservice?.id,
-          evt.data.eservice?.producerId,
           evt.data.eservice?.descriptors,
           evt.stream_id,
           evt.version
@@ -157,14 +153,12 @@ export async function handleMessageV1(
 
 export const fromEserviceEventToEserviceEntity = (
   eServiceId: string,
-  producerId: string | null,
   descriptorsData: EServiceDescriptorV1[],
   streamId: string,
   version: number
 ): EserviceEntity => {
   return {
     eservice_id: eServiceId,
-    producer_id: producerId,
     descriptors: descriptorsData.map((descriptor) => ({
       descriptor_id: descriptor.id,
       state: descriptor.state as unknown as string, // TODO: to fix

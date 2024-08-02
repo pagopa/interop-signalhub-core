@@ -7,7 +7,7 @@ import { decodeOutboundEServiceEvent } from "@pagopa/interop-outbound-models";
 import { config } from "./config/env.js";
 import { handleMessageV1, handleMessageV2 } from "./handlers/index.js";
 import { buildLoggerInstance } from "./utils/index.js";
-import { serviceBuilder } from "./services/service.builder.js";
+import { serviceBuilder } from "./services/serviceBuilder.js";
 
 const serviceName = "eservice-event-consumer";
 const { eServiceService } = serviceBuilder();

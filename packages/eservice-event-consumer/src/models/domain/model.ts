@@ -7,7 +7,6 @@ export const EserviceDescriptorEntity = z.object({
 
 export const EserviceEntity = z.object({
   eservice_id: z.string(),
-  producer_id: z.string().nullable(),
   descriptors: z.array(EserviceDescriptorEntity),
   event_version_id: z.number(),
   event_stream_id: z.string(),

@@ -5,7 +5,9 @@ export interface IEserviceProduceRepository {
   insert(eServiceId: string, producerId: string): Promise<void>;
   findProducerIdByEserviceId(eServiceId: string): Promise<string | null>;
 }
-export const eServiceRepository = (db: DB): IEserviceProduceRepository => ({
+export const eServiceProducerRepository = (
+  db: DB
+): IEserviceProduceRepository => ({
   async insert(eServiceId: string, producerId: string): Promise<void> {
     try {
       await db.none(
