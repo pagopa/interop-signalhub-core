@@ -100,12 +100,7 @@ export async function handleMessageV1(
         type: "EServiceDeleted",
       },
       async (evt) => {
-        eServiceService.delete(
-          evt.data.eserviceId,
-          evt.stream_id,
-          evt.version,
-          logger
-        );
+        eServiceService.delete(evt.data.eserviceId, logger);
       }
     )
     .with(
@@ -117,6 +112,7 @@ export async function handleMessageV1(
           throw new Error("Missing eservice data");
         }
 
+        console.log("evt.data", evt.data);
         eServiceService.deleteDescriptor(
           evt.data.eservice?.id,
           evt.data.descriptorId,

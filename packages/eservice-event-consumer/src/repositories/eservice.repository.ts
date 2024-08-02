@@ -9,7 +9,11 @@ import {
 import { EserviceDescriptorEntity } from "../models/domain/model.js";
 
 export interface IEserviceRepository {
-  eventWasProcessed(streamId: string, version: number): Promise<boolean>;
+  eventWasProcessed(
+    descriptorId: string,
+    streamId: string,
+    version: number
+  ): Promise<boolean>;
   findByEserviceIdAndProducerIdAndDescriptorId(
     eserviceId: string,
     producerId: string,
@@ -29,11 +33,11 @@ export interface IEserviceRepository {
   deleteDescriptor(eserviceId: string, descriptorId: string): Promise<void>;
 }
 export const eServiceRepository = (db: DB): IEserviceRepository => ({
-  async eventWasProcessed(streamId, consumerId): Promise<boolean> {
+  async eventWasProcessed(descriptorId, streamId, versionId): Promise<boolean> {
     try {
       const response = await db.oneOrNone(
-        "select event_stream_id, event_version_id from dev_interop.eservice a where a.event_stream_id = $1 AND a.event_version_id = $2",
-        [streamId, consumerId]
+        "select event_stream_id, event_version_id from dev_interop.eservice a where a.event_stream_id = $1 AND a.event_version_id = $2 AND a.descriptor_id = $3",
+        [streamId, versionId, descriptorId]
       );
       return response ? true : false;
     } catch (error) {
@@ -117,6 +121,8 @@ export const eServiceRepository = (db: DB): IEserviceRepository => ({
     descriptorId: string
   ): Promise<void> {
     try {
+      console.log("eserviceId", eserviceId);
+      console.log("descriptorId", descriptorId);
       await db.oneOrNone(
         "DELETE FROM DEV_INTEROP.eservice WHERE eservice_id = $1 AND descriptor_id = $2",
         [eserviceId, descriptorId]

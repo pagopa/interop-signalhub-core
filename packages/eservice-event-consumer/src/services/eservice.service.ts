@@ -19,38 +19,54 @@ export function eServiceServiceBuilder(
         `Ad new eservice event: with eServiceId  ${eServiceId} and producerId ${producerId}`
       );
 
-      const eventWasProcessed = await eServiceRepository.eventWasProcessed(
+      const eventWasProcessed =
+        await eServiceProducerRepository.eventWasProcessed(
+          eventStreamId,
+          eventVersionId
+        );
+      logger.debug(`event was already processed: ${eventWasProcessed}`);
+
+      if (eventWasProcessed) {
+        return;
+      }
+      await eServiceProducerRepository.insert(
+        eServiceId,
+        producerId,
         eventStreamId,
         eventVersionId
       );
-      logger.debug(`event was already processed: ${eventWasProcessed}`);
-
-      if (eventWasProcessed) {
-        return;
-      }
-      await eServiceProducerRepository.insert(eServiceId, producerId);
     },
 
     async upsert(eService: EserviceEntity, logger: Logger): Promise<void> {
-      logger.debug(`inserting event: ${JSON.stringify(eService, null, 2)}`);
-
-      const eventWasProcessed = await eServiceRepository.eventWasProcessed(
-        eService.event_stream_id,
-        eService.event_version_id
+      logger.debug(
+        `insert or update event: ${JSON.stringify(eService, null, 2)}`
       );
-      logger.debug(`event was already processed: ${eventWasProcessed}`);
-
-      if (eventWasProcessed) {
-        return;
-      }
 
       const producerId =
         await eServiceProducerRepository.findProducerIdByEserviceId(
           eService.eservice_id
         );
 
+      console.log("PRODUCER_ID", producerId);
+      // TODO GESTIONE SE NON ESISTE
+
       eService.descriptors.forEach(async (descriptor) => {
+        const eventWasProcessed = await eServiceRepository.eventWasProcessed(
+          descriptor.descriptor_id,
+          eService.event_stream_id,
+          eService.event_version_id
+        );
+
+        logger.debug(`event was already processed: ${eventWasProcessed}`);
+
+        if (eventWasProcessed) {
+          return;
+        }
+
         // TODO: Add check for STATE ARCHIVE
+        logger.debug(
+          `upserting descriptor: ${JSON.stringify(descriptor, null, 2)}`
+        );
         await eServiceRepository.upsertDescriptor(
           eService.eservice_id,
           producerId,
@@ -61,23 +77,8 @@ export function eServiceServiceBuilder(
       });
     },
 
-    async delete(
-      eServiceId: string,
-      eventStreamId: string,
-      eventVersionId: number,
-      logger: Logger
-    ): Promise<void> {
+    async delete(eServiceId: string, logger: Logger): Promise<void> {
       logger.debug(`delete eService: with ${eServiceId}`);
-
-      const eventWasProcessed = await eServiceRepository.eventWasProcessed(
-        eventStreamId,
-        eventVersionId
-      );
-      logger.debug(`event was already processed: ${eventWasProcessed}`);
-
-      if (eventWasProcessed) {
-        return;
-      }
 
       await eServiceRepository.delete(eServiceId);
     },
@@ -93,6 +94,7 @@ export function eServiceServiceBuilder(
       );
 
       const eventWasProcessed = await eServiceRepository.eventWasProcessed(
+        descriptorId,
         eventStreamId,
         eventVersionId
       );
