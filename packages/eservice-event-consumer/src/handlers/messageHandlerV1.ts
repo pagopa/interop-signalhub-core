@@ -3,7 +3,7 @@ import {
   EServiceEventV1,
 } from "@pagopa/interop-outbound-models";
 import { Logger } from "pagopa-signalhub-commons";
-import { match } from "ts-pattern";
+import { P, match } from "ts-pattern";
 import { EServiceService } from "../services/eservice.service.js";
 import { EserviceEntity } from "../models/domain/model.js";
 
@@ -112,7 +112,6 @@ export async function handleMessageV1(
           throw new Error("Missing eservice data");
         }
 
-        console.log("evt.data", evt.data);
         eServiceService.deleteDescriptor(
           evt.data.eservice?.id,
           evt.data.descriptorId,
@@ -142,9 +141,21 @@ export async function handleMessageV1(
         eServiceService.upsert(eService, logger);
       }
     )
-    .otherwise(async () => {
-      logger.debug(`Event type ${event.type} not relevant`);
-    });
+    .with(
+      {
+        type: P.union(
+          "EServiceDocumentAdded",
+          "EServiceDocumentDeleted",
+          "EServiceDocumentUpdated",
+          "MovedAttributesFromEserviceToDescriptors"
+        ),
+      },
+
+      async (evt) => {
+        logger.debug(`Event type ${evt.type} not relevant`);
+      }
+    )
+    .exhaustive();
 }
 
 export const fromEserviceEventToEserviceEntity = (

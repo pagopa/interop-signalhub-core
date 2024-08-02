@@ -121,8 +121,6 @@ export const eServiceRepository = (db: DB): IEserviceRepository => ({
     descriptorId: string
   ): Promise<void> {
     try {
-      console.log("eserviceId", eserviceId);
-      console.log("descriptorId", descriptorId);
       await db.oneOrNone(
         "DELETE FROM DEV_INTEROP.eservice WHERE eservice_id = $1 AND descriptor_id = $2",
         [eserviceId, descriptorId]

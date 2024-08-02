@@ -47,7 +47,6 @@ export function eServiceServiceBuilder(
           eService.eservice_id
         );
 
-      console.log("PRODUCER_ID", producerId);
       // TODO GESTIONE SE NON ESISTE
 
       eService.descriptors.forEach(async (descriptor) => {

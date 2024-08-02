@@ -43,7 +43,6 @@ export const eServiceProducerRepository = (
   },
 
   async findProducerIdByEserviceId(eServiceId: string): Promise<string | null> {
-    console.log("eServiceId", eServiceId);
     try {
       const result = await db.oneOrNone(
         "SELECT producer_id FROM DEV_INTEROP.eservice_producer WHERE eservice_id = $1",
