@@ -60,13 +60,17 @@ export async function handleMessageV2(
         );
       }
     )
-    .otherwise(async () => {
-      logger.debug(`Event type ${event.type} not relevant`);
-    });
+    .with({ type: "AgreementConsumerDocumentAdded" }, async (evt) => {
+      logger.debug(`Event type ${evt.type} not relevant`);
+    })
+    .with({ type: "AgreementConsumerDocumentRemoved" }, async (evt) => {
+      logger.debug(`Event type ${evt.type} not relevant`);
+    })
+    .exhaustive();
 }
 
 const toAgreementId = (agreement: AgreementV2 | undefined): string => {
-  if (!agreement || !agreement.id) {
+  if (!agreement?.id) {
     throw new Error("Invalid agreement");
   }
 

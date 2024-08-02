@@ -9,8 +9,9 @@ export const AgreementEntity = z.object({
   state: z.string(),
   eventStreamId: z.string(),
   eventVersionId: z.number(),
-  tmstInsert: z.string().optional(),
-  tmstLastEdit: z.string().optional(),
+  tmstInsert: z.string().nullable().optional(),
+  tmstLastEdit: z.string().nullable().optional(),
+  eventId: z.number().nullable().optional(),
 });
 
 export type AgreementEntity = SnakeCase<z.infer<typeof AgreementEntity>>;
