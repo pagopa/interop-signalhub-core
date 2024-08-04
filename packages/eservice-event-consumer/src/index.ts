@@ -3,14 +3,14 @@ import { correlationId } from "pagopa-signalhub-commons";
 import { runConsumer } from "kafka-connector";
 import { EachMessagePayload } from "kafkajs";
 import { match } from "ts-pattern";
-import { decodeOutboundAgreementEvent } from "@pagopa/interop-outbound-models";
+import { decodeOutboundEServiceEvent } from "@pagopa/interop-outbound-models";
 import { config } from "./config/env.js";
 import { handleMessageV1, handleMessageV2 } from "./handlers/index.js";
-import { serviceBuilder } from "./services/service.builder.js";
 import { buildLoggerInstance } from "./utils/index.js";
+import { serviceBuilder } from "./services/serviceBuilder.js";
 
-const serviceName = "agreement-event-consumer";
-const { agreementService } = serviceBuilder();
+const serviceName = "eservice-event-consumer";
+const { eServiceService } = serviceBuilder();
 
 export async function processMessage({
   message,
@@ -19,23 +19,25 @@ export async function processMessage({
   if (!message.value) {
     throw new Error("Invalid message: missing value");
   }
-  const agreementEvent = decodeOutboundAgreementEvent(message.value.toString());
+  const eserviceEvent = decodeOutboundEServiceEvent(message.value.toString());
 
   const logger = buildLoggerInstance(
     serviceName,
-    agreementEvent,
+    eserviceEvent,
     correlationId()
   );
   logger.info(
-    `Processing message event: ${agreementEvent.stream_id}/${agreementEvent.version}`
+    `Processing message event: ${eserviceEvent.stream_id}/${eserviceEvent.version}`
   );
 
-  await match(agreementEvent)
+  await match(eserviceEvent)
     .with({ event_version: 1 }, (event) =>
-      handleMessageV1(event, agreementService, logger)
+      handleMessageV1(event, eServiceService, logger)
     )
-    .with({ event_version: 2 }, (event) =>
-      handleMessageV2(event, agreementService, logger)
+    .with(
+      { event_version: 2 },
+      (_event) => handleMessageV2
+      //handleMessageV2(event, agreementService, logger)
     )
     .exhaustive();
 

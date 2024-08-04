@@ -18,9 +18,7 @@ export const agreementRepository = (db: DB): IAgreementRepository => ({
       );
       return response ? true : false;
     } catch (error) {
-      throw genericInternalError(
-        `Error findByEserviceIdAndConsumerIdAndDescriptorId:" ${error} `
-      );
+      throw genericInternalError(`Error eventWasProcessed:" ${error} `);
     }
   },
 

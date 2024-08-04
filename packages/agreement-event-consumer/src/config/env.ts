@@ -1,12 +1,12 @@
 import {
   KafkaConsumerConfig,
-  AgreementTopicConfig,
+  KafkaTopicConfig,
   SignalHubStoreConfig,
 } from "pagopa-signalhub-commons";
 import { z } from "zod";
 
 const AgreementEventConsumerConfig =
-  KafkaConsumerConfig.and(AgreementTopicConfig).and(SignalHubStoreConfig);
+  KafkaConsumerConfig.and(KafkaTopicConfig).and(SignalHubStoreConfig);
 
 export type AgreementEventConsumerConfig = z.infer<
   typeof AgreementEventConsumerConfig

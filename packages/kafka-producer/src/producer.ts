@@ -11,7 +11,7 @@ import {
 } from "kafkajs";
 import { Logger, genericLogger } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
-import { KafkaConfig as ProducerKafkaConfig } from "./config/env.js";
+import { KafkaProducerConfig } from "./config/env.js";
 
 const errorTypes = ["unhandledRejection", "uncaughtException"];
 const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
@@ -86,7 +86,7 @@ async function oauthBearerTokenProvider(
   };
 }
 
-const initKafka = (config: ProducerKafkaConfig): Kafka => {
+const initKafka = (config: KafkaProducerConfig): Kafka => {
   const kafkaConfig: KafkaConfig = config.kafkaDisableAwsIamAuth
     ? {
         clientId: config.kafkaClientId,
@@ -140,7 +140,7 @@ const initKafka = (config: ProducerKafkaConfig): Kafka => {
 };
 
 export const initProducer = async (
-  config: ProducerKafkaConfig,
+  config: KafkaProducerConfig,
   topic: string
 ): Promise<
   Producer & {
