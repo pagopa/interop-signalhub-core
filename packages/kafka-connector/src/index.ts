@@ -51,7 +51,7 @@ async function oauthBearerTokenProvider(
 const getKafkaConfig = (config: KafkaConsumerConfig): KafkaConfig => {
   const kafkaBaseConfig = {
     clientId: config.kafkaClientId,
-    brokers: [config.kafkaBrokers],
+    brokers: config.kafkaBrokers,
     logLevel: config.kafkaLogLevel,
   };
 
