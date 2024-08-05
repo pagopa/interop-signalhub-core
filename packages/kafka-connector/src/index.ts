@@ -228,7 +228,7 @@ export const validateTopicMetadata = async (
   topicNames: string[]
 ): Promise<boolean> => {
   genericLogger.debug(
-    `Check topics [${JSON.stringify(topicNames)}] existence...`
+    `Check topics |${JSON.stringify(topicNames)}| existence...`
   );
 
   const admin = kafka.admin();

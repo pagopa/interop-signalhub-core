@@ -5,7 +5,10 @@ import { AwsConfig } from "pagopa-signalhub-commons";
 export const KafkaProducerConfig = z
   .object({
     KAFKA_TOPIC: z.string(),
-    KAFKA_BROKERS: z.string(),
+    KAFKA_BROKERS: z
+      .string()
+      .transform((s) => s.split(","))
+      .pipe(z.array(z.string())),
     KAFKA_CLIENT_ID: z.string(),
     KAFKA_DISABLE_AWS_IAM_AUTH: z.literal("true").optional(),
     KAFKA_LOG_LEVEL: z
