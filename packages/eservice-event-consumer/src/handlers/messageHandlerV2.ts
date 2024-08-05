@@ -26,7 +26,7 @@ export async function handleMessageV2(
           evt.version
         );
 
-        eServiceService.upsertV2(eService, logger);
+        await eServiceService.upsertV2(eService, logger);
       }
     )
     .with(
@@ -53,7 +53,7 @@ export async function handleMessageV2(
           evt.version
         );
 
-        eServiceService.upsertV2(eService, logger);
+        await eServiceService.upsertV2(eService, logger);
       }
     )
     .with(
@@ -82,7 +82,7 @@ export async function handleMessageV2(
       async (evt) => {
         const { eserviceId } = evt.data;
 
-        eServiceService.delete(eserviceId, logger);
+        await eServiceService.delete(eserviceId, logger);
       }
     )
 
@@ -105,7 +105,7 @@ export async function handleMessageV2(
           evt.version
         );
 
-        eServiceService.upsertV2(eService, logger);
+        await eServiceService.upsertV2(eService, logger);
       }
     )
     .with(
