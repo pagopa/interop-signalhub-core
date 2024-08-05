@@ -63,7 +63,7 @@ export const purposeRepository = (db: DB): IPurposeRepository => ({
         eventVersionId,
       } = purpose;
       await db.none(
-        "update dev_interop.purpose set purpose_id = $1, eservice_id = $2, consumer_id = $3, descriptor_id = $4, state = $5, event_stream_id = $6, event_version_id =$7, tmst_last_edit = $8  where purpose_id = $1 and event_stream_id = $6",
+        "update dev_interop.purpose set purpose_id = $1, purpose_version_id = $2, eservice_id = $3, consumer_id = $4, purpose_state = $5, event_stream_id = $6, event_version_id =$7, tmst_last_edit = $8  where purpose_id = $1 and purpose_version_id = $2 and event_stream_id = $6",
         [
           purposeId,
           purposeVersionId,

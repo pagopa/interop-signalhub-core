@@ -2,6 +2,7 @@
 import { Logger } from "pagopa-signalhub-commons";
 import {
   PurposeEventV1,
+  PurposeStateV1,
   PurposeV1,
   PurposeVersionV1,
 } from "@pagopa/interop-outbound-models";
@@ -20,8 +21,7 @@ export async function handleMessageV1(
       if (!evt.data.purpose) {
         throw new Error("Missing purpose");
       }
-      if (evt.data.purpose.versions.length === 0) {
-        // no version no state
+      if (isPurposeWithoutVersions(evt.data.purpose)) {
         return;
       }
       await purposeService.insert(
@@ -36,10 +36,29 @@ export async function handleMessageV1(
           "PurposeVersionWaitedForApproval",
           "PurposeVersionActivated",
           "PurposeVersionSuspended",
+          "PurposeVersionArchived"
+        ),
+      },
+      async (evt) => {
+        if (!evt.data.purpose) {
+          throw new Error("Missing purpose");
+        }
+        if (isPurposeWithoutVersions(evt.data.purpose)) {
+          return;
+        }
+        await purposeService.update(
+          toPurposeV1Entity(evt.data.purpose, evt.stream_id, evt.version),
+          logger
+        );
+      }
+    )
+    .with(
+      {
+        type: P.union(
           "PurposeVersionCreated",
-          "PurposeVersionArchived",
           "PurposeVersionUpdated",
-          "PurposeVersionDeleted"
+          "PurposeVersionDeleted",
+          "PurposeVersionRejected"
         ),
       },
 
@@ -48,11 +67,9 @@ export async function handleMessageV1(
       }
     )
     .with({ type: "PurposeDeleted" }, async (evt) => {
-      logger.debug(`Event type ${evt.type} not relevant`);
+      await purposeService.delete(evt.data.purposeId, evt.stream_id, logger);
     })
-    .with({ type: "PurposeVersionRejected" }, async (evt) => {
-      logger.debug(`Event type ${evt.type} not relevant`);
-    })
+
     .exhaustive();
 }
 
@@ -74,7 +91,23 @@ export const toPurposeV1Entity = (
 };
 const toPurposeVersionV1ToEntity = (
   purposeVersions: PurposeVersionV1[]
-): { versionId: string; state: string } => ({
-  versionId: purposeVersions[0].id,
-  state: purposeVersions[0].state.toString(),
-});
+): { versionId: string; state: string } => {
+  if (
+    purposeVersions.some((version) => version.state === PurposeStateV1.ACTIVE)
+  ) {
+    return purposeVersions
+      .filter((version) => version.state === PurposeStateV1.ACTIVE)
+      .reduce((obj, version) => {
+        const { id, state } = version;
+        return { ...obj, versionId: id, state: state.toString() };
+      }, {} as { versionId: string; state: string });
+  }
+  const { length: l, [l - 1]: lastVersion } = purposeVersions;
+  return {
+    versionId: lastVersion.id,
+    state: lastVersion.state.toString(),
+  };
+};
+
+const isPurposeWithoutVersions = (purpose: PurposeV1): boolean =>
+  Array.isArray(purpose.versions) && purpose.versions.length === 0;

@@ -12,6 +12,8 @@ import {
 import { purposeRepository } from "../src/repositories/purpose.repository.js";
 import { purposeServiceBuilder } from "../src/services/purpose.service.js";
 import { PurposeEntity } from "../src/models/domain/model.js";
+import { toPurposeV1Entity } from "../src/handlers/index.js";
+import { writeAPurposeEntity } from "./databaseUtils.js";
 export const { postgresDB } = setupTestContainersVitest(
   inject("signalHubStoreConfig")
 );
@@ -20,7 +22,7 @@ export const purposeService = purposeServiceBuilder(
   purposeRepository(postgresDB)
 );
 
-export const incrementVersion = (version: number): number => version + 1;
+export const incrementVersion = (version: number = 0): number => version + 1;
 
 export const generateId = (): string => randomUUID();
 export function bigIntToDate(input: bigint): Date {
@@ -69,8 +71,80 @@ export const createAPurposeCreatedEventV1 = (
   stream_id?: string,
   version?: number
 ): PurposeEventV1 => {
-  const purposeEventAddedV1: PurposeEventV1 = {
+  const purposeEventV1: PurposeEventV1 = {
     type: "PurposeCreated",
+    data: {
+      purpose,
+    },
+    event_version: 1,
+    stream_id: stream_id || generateId(),
+    version: version || 1,
+    timestamp: new Date(),
+  };
+  return purposeEventV1;
+};
+
+export const createAPurposeUpdatedEventV1 = (
+  purpose: PurposeV1,
+  stream_id?: string,
+  version?: number
+): PurposeEventV1 => {
+  const purposeEventV1: PurposeEventV1 = {
+    type: "PurposeUpdated",
+    data: {
+      purpose,
+    },
+    event_version: 1,
+    stream_id: stream_id || generateId(),
+    version: version || 1,
+    timestamp: new Date(),
+  };
+  return purposeEventV1;
+};
+
+export const createAPurposeVersionASupendedEventV1 = (
+  purpose: PurposeV1,
+  stream_id?: string,
+  version?: number
+): PurposeEventV1 => {
+  const purposeEventV1: PurposeEventV1 = {
+    type: "PurposeVersionSuspended",
+    data: {
+      purpose,
+    },
+    event_version: 1,
+    stream_id: stream_id || generateId(),
+    version: version || 1,
+    timestamp: new Date(),
+  };
+  return purposeEventV1;
+};
+
+export const createAPurposeDeletedEventV1 = (
+  purposeId: string,
+  stream_id?: string,
+  version?: number
+): PurposeEventV1 => {
+  const purposeEventV1: PurposeEventV1 = {
+    type: "PurposeDeleted",
+    data: {
+      purposeId,
+    },
+    event_version: 1,
+    stream_id: stream_id || generateId(),
+    version: version || 1,
+    timestamp: new Date(),
+  };
+  return purposeEventV1;
+};
+
+export const createAPurposeVersionActivatedEventV1 = (
+  purpose: PurposeV1,
+  stream_id?: string,
+  version?: number
+): PurposeEventV1 => {
+  const purposeEventAddedV1: PurposeEventV1 = {
+    type: "PurposeVersionActivated",
     data: {
       purpose,
     },
@@ -81,6 +155,23 @@ export const createAPurposeCreatedEventV1 = (
   };
   return purposeEventAddedV1;
 };
+
+export async function createAndWriteAPurposeEventV1(
+  purposeV1: PurposeV1,
+  streamId: string,
+  version: number
+): Promise<{
+  purposeV1: PurposeV1;
+  purposeEventV1: PurposeEventV1;
+}> {
+  const purposeEventV1 = createAPurposeCreatedEventV1(
+    purposeV1,
+    streamId,
+    version
+  );
+  await writeAPurposeEntity(toPurposeV1Entity(purposeV1, streamId, version));
+  return { purposeV1, purposeEventV1 };
+}
 
 export const fromEventToEntity = (
   purpose: PurposeV1 | PurposeV2,
