@@ -24,7 +24,7 @@ export async function handleMessageV1(
 
         const { eservice } = evt.data;
 
-        eServiceService.addEserviceProducer(
+        await eServiceService.addEserviceProducer(
           eservice.id,
           eservice.producerId,
           evt.stream_id,
@@ -51,7 +51,7 @@ export async function handleMessageV1(
           evt.version
         );
 
-        eServiceService.upsert(eService, logger);
+        await eServiceService.upsert(eService, logger);
       }
     )
     .with(
@@ -70,7 +70,7 @@ export async function handleMessageV1(
           evt.version
         );
 
-        eServiceService.upsert(eService, logger);
+        await eServiceService.upsert(eService, logger);
       }
     )
 
@@ -92,7 +92,7 @@ export async function handleMessageV1(
           evt.version
         );
 
-        eServiceService.upsert(eService, logger);
+        await eServiceService.upsert(eService, logger);
       }
     )
     .with(
@@ -100,7 +100,7 @@ export async function handleMessageV1(
         type: "EServiceDeleted",
       },
       async (evt) => {
-        eServiceService.delete(evt.data.eserviceId, logger);
+        await eServiceService.delete(evt.data.eserviceId, logger);
       }
     )
     .with(
@@ -138,7 +138,7 @@ export async function handleMessageV1(
           evt.version
         );
 
-        eServiceService.upsert(eService, logger);
+        await eServiceService.upsert(eService, logger);
       }
     )
     .with(

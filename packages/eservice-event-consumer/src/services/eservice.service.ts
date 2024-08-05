@@ -50,7 +50,8 @@ export function eServiceServiceBuilder(
 
       // TODO GESTIONE SE NON ESISTE
 
-      eService.descriptors.forEach(async (descriptor) => {
+      for (let i = 0; i < eService.descriptors.length; i++) {
+        const descriptor = eService.descriptors[i];
         const eventWasProcessed = await eServiceRepository.eventWasProcessed(
           descriptor.descriptor_id,
           eService.event_stream_id,
@@ -67,6 +68,7 @@ export function eServiceServiceBuilder(
         logger.debug(
           `upserting descriptor: ${JSON.stringify(descriptor, null, 2)}`
         );
+
         await eServiceRepository.upsertDescriptor(
           eService.eservice_id,
           producerId,
@@ -74,7 +76,7 @@ export function eServiceServiceBuilder(
           eService.event_stream_id,
           eService.event_version_id
         );
-      });
+      }
     },
 
     async upsertV2(eService: EserviceV2Entity, logger: Logger): Promise<void> {
