@@ -27,20 +27,20 @@ export const purposeRepository = (db: DB): IPurposeRepository => ({
       const {
         purposeId,
         purposeVersionId,
+        purposeState,
         eserviceId,
         consumerId,
-        purposeState,
         eventStreamId,
         eventVersionId,
       } = purpose;
       await db.oneOrNone(
-        "INSERT INTO dev_interop.purpose(purpose_id, eservice_id, consumer_id, descriptor_id, state, event_stream_id, event_version_id) VALUES($1, $2, $3, $4, $5, $6, $7)",
+        "INSERT INTO dev_interop.purpose(purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id, event_stream_id, event_version_id) VALUES($1, $2, $3, $4, $5, $6, $7)",
         [
           purposeId,
           purposeVersionId,
+          purposeState,
           eserviceId,
           consumerId,
-          purposeState,
           eventStreamId,
           eventVersionId,
         ]
