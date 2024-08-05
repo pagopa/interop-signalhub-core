@@ -34,7 +34,7 @@ export const findByEserviceIdAndProducerIdAndDescriptorId = async (
   producerId: string
 ) => {
   const result = await postgresDB.oneOrNone(
-    "SELECT * FROM dev_interop.eservice e WHERE e.eservice_id = $1",
+    "SELECT * FROM dev_interop.eservice e WHERE e.eservice_id = $1 AND e.descriptor_id = $2 AND e.producer_id = $3",
     [eServiceId, descriptorId, producerId]
   );
 
@@ -43,4 +43,18 @@ export const findByEserviceIdAndProducerIdAndDescriptorId = async (
   }
 
   return result;
+};
+
+export const insertEservice = async (
+  eServiceId: string,
+  descriptorId: string,
+  producerId: string,
+  state: string,
+  eventStreamId: string,
+  eventVersionId: number
+) => {
+  await postgresDB.none(
+    "INSERT INTO dev_interop.eservice(eservice_id, descriptor_id, producer_id, state, event_stream_id, event_version_id) VALUES ($1, $2, $3, $4, $5, $6)",
+    [eServiceId, descriptorId, producerId, state, eventStreamId, eventVersionId]
+  );
 };

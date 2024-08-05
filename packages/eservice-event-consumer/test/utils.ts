@@ -95,3 +95,22 @@ export const createEserviceDescriptorAddedEventV1 = (
     },
   };
 };
+
+export const createEserviceDescriptorUpdatedEventV1 = (
+  eServiceId: string,
+  descriptor: EServiceDescriptorV1 | undefined,
+  stream_id?: string,
+  version?: number
+): EServiceEventV1 => {
+  return {
+    type: "EServiceDescriptorUpdated",
+    event_version: 1,
+    stream_id: stream_id || generateID(),
+    timestamp: new Date(),
+    version: version || 1,
+    data: {
+      eserviceId: eServiceId,
+      eserviceDescriptor: descriptor,
+    },
+  };
+};
