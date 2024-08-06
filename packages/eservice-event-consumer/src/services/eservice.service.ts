@@ -48,8 +48,6 @@ export function eServiceServiceBuilder(
           eService.eservice_id
         );
 
-      // TODO GESTIONE SE NON ESISTE
-
       for (let i = 0; i < eService.descriptors.length; i++) {
         const descriptor = eService.descriptors[i];
         const eventWasProcessed = await eServiceRepository.eventWasProcessed(
@@ -84,7 +82,6 @@ export function eServiceServiceBuilder(
         `insert or update event: ${JSON.stringify(eService, null, 2)}`
       );
 
-      console.log("Eservice entity", eService);
       for (let i = 0; i < eService.descriptors.length; i++) {
         const descriptor = eService.descriptors[i];
 

@@ -44,7 +44,7 @@ export async function handleMessageV1(
           throw new Error("Missing eserviceDescriptor");
         }
 
-        const eService = fromEserviceEventToEserviceEntity(
+        const eService = fromEserviceEventV1ToEserviceEntity(
           eserviceId,
           [eserviceDescriptor],
           evt.stream_id,
@@ -63,7 +63,7 @@ export async function handleMessageV1(
           throw new Error("Missing eservice data");
         }
 
-        const eService = fromEserviceEventToEserviceEntity(
+        const eService = fromEserviceEventV1ToEserviceEntity(
           evt.data.eservice?.id,
           evt.data.eservice?.descriptors,
           evt.stream_id,
@@ -85,7 +85,7 @@ export async function handleMessageV1(
           throw new Error("Missing eserviceDescriptor");
         }
 
-        const eService = fromEserviceEventToEserviceEntity(
+        const eService = fromEserviceEventV1ToEserviceEntity(
           eserviceId,
           [eserviceDescriptor],
           evt.stream_id,
@@ -131,7 +131,7 @@ export async function handleMessageV1(
           throw new Error("Missing eservice data");
         }
 
-        const eService = fromEserviceEventToEserviceEntity(
+        const eService = fromEserviceEventV1ToEserviceEntity(
           evt.data.eservice?.id,
           evt.data.eservice?.descriptors,
           evt.stream_id,
@@ -158,7 +158,7 @@ export async function handleMessageV1(
     .exhaustive();
 }
 
-export const fromEserviceEventToEserviceEntity = (
+export const fromEserviceEventV1ToEserviceEntity = (
   eServiceId: string,
   descriptorsData: EServiceDescriptorV1[],
   streamId: string,
