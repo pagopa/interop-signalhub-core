@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { genericLogger } from "pagopa-signalhub-commons";
-import { truncatePurposeTable } from "pagopa-signalhub-commons-test";
 import { PurposeStateV1, PurposeV1 } from "@pagopa/interop-outbound-models";
+import { truncatePurposeTable } from "pagopa-signalhub-commons-test";
 import { handleMessageV1 } from "../src/handlers/index.js";
 import {
   createAndWriteAPurposeEventV1,
@@ -17,8 +17,8 @@ import {
   incrementVersion,
   postgresDB,
   purposeService,
-} from "./utils";
-import { getAPurposeEntityBy } from "./databaseUtils";
+} from "./utils.js";
+import { getAPurposeEntityBy } from "./databaseUtils.js";
 
 describe("Message Handler for V1 EVENTS", () => {
   beforeEach(() => truncatePurposeTable(postgresDB));
@@ -88,7 +88,7 @@ describe("Message Handler for V1 EVENTS", () => {
     );
     const purposeUpdated: PurposeV1 = {
       ...purposeV1,
-      eserviceId: generateId(), // should not change in production
+      title: "some title", // should not change in production
     };
     const purposeUpdatedEventV1 = createAPurposeUpdatedEventV1(
       purposeUpdated,

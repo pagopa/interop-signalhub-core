@@ -6,6 +6,7 @@ export interface IPurposeRepository {
   eventWasProcessed(streamId: string, version: number): Promise<boolean>;
   insert(purpose: PurposeEntity): Promise<void>;
   update(purpose: PurposeEntity): Promise<void>;
+  upsert(purpose: PurposeEntity): Promise<void>;
   delete(purposeId: string, streamId: string): Promise<void>;
 }
 
@@ -50,6 +51,43 @@ export const purposeRepository = (db: DB): IPurposeRepository => ({
     }
   },
 
+  async upsert(purpose: PurposeEntity): Promise<void> {
+    try {
+      const tmstLastEdit = getCurrentDate();
+      const {
+        purposeId,
+        purposeVersionId,
+        eserviceId,
+        consumerId,
+        purposeState,
+        eventStreamId,
+        eventVersionId,
+      } = purpose;
+      await db.oneOrNone(
+        `INSERT INTO dev_interop.purpose(purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id, event_stream_id, event_version_id) 
+          VALUES($1, $2, $3, $4, $5, $6, $7) 
+          ON CONFLICT (purpose_id) 
+          DO UPDATE SET 
+          purpose_version_id = EXCLUDED.purpose_version_id,
+          purpose_state = EXCLUDED.purpose_state,
+          event_stream_id = EXCLUDED.event_stream_id,
+          event_version_id = EXCLUDED.event_version_id,
+          tmst_last_edit= EXCLUDED.tmst_last_edit`,
+        [
+          purposeId,
+          purposeVersionId,
+          purposeState,
+          eserviceId,
+          consumerId,
+          eventStreamId,
+          eventVersionId,
+          tmstLastEdit,
+        ]
+      );
+    } catch (error) {
+      throw genericInternalError(`Error updatePurpose:" ${error} `);
+    }
+  },
   async update(purpose: PurposeEntity): Promise<void> {
     try {
       const tmstLastEdit = getCurrentDate();

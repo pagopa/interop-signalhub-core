@@ -49,7 +49,7 @@ CREATE INDEX IF NOT EXISTS AGREEMENT_INDEX_ESERVICE_AND_CONSUMER_AND_STATE ON "d
 
 CREATE TABLE IF NOT EXISTS "dev_interop"."purpose" (
     purpose_id       VARCHAR (255) NOT NULL,
-    purpose_version_id  VARCHAR (255) NOT NULL,
+    purpose_version_id  VARCHAR (255),
     purpose_state    VARCHAR (255) NOT NULL,
     eservice_id     VARCHAR (255) NOT NULL,
     consumer_id     VARCHAR (255) NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."purpose" (
     tmst_last_edit  TIMESTAMPTZ,
     UNIQUE (event_stream_id, event_version_id),
     UNIQUE (purpose_id, eservice_id, consumer_id),
-    PRIMARY KEY (purpose_id, purpose_version_id)
+    PRIMARY KEY (purpose_id)
 );
 CREATE INDEX IF NOT EXISTS PURPOSE_INDEX_ESERVICE_AND_CONSUMER_AND_STATE ON "dev_interop"."purpose"(purpose_id, consumer_id, purpose_state, eservice_id);
 

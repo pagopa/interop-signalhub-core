@@ -17,21 +17,10 @@ export async function handleMessageV1(
   logger: Logger
 ): Promise<void> {
   await match(event)
-    .with({ type: "PurposeCreated" }, async (evt) => {
-      if (!evt.data.purpose) {
-        throw new Error("Missing purpose");
-      }
-      if (isPurposeWithoutVersions(evt.data.purpose)) {
-        return;
-      }
-      await purposeService.insert(
-        toPurposeV1Entity(evt.data.purpose, evt.stream_id, evt.version),
-        logger
-      );
-    })
     .with(
       {
         type: P.union(
+          "PurposeCreated",
           "PurposeUpdated",
           "PurposeVersionWaitedForApproval",
           "PurposeVersionActivated",
@@ -46,7 +35,7 @@ export async function handleMessageV1(
         if (isPurposeWithoutVersions(evt.data.purpose)) {
           return;
         }
-        await purposeService.update(
+        await purposeService.upsert(
           toPurposeV1Entity(evt.data.purpose, evt.stream_id, evt.version),
           logger
         );
