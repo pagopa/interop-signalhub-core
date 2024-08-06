@@ -1,4 +1,7 @@
 import { beforeAll, describe, expect, it } from "vitest";
+import { genericLogger } from "pagopa-signalhub-commons";
+import { EServiceDescriptorStateV1 } from "@pagopa/interop-outbound-models";
+import { handleMessageV1 } from "../src/handlers/messageHandlerV1.js";
 import {
   createEServiceV1,
   generateID,
@@ -9,22 +12,19 @@ import {
   createEserviceDescriptorUpdatedEventV1,
   createEServiceWithDescriptorsDeletedEventV1,
 } from "./utils.js";
-import { handleMessageV1 } from "../src/handlers/messageHandlerV1.js";
-import { genericLogger } from "pagopa-signalhub-commons";
 import {
   findByEserviceIdAndProducerIdAndDescriptorId,
   findProducerIdByEserviceId,
   insertEserviceDescriptor,
   insertEserviceIdAndProducerId,
 } from "./databaseUtils.js";
-import { EServiceDescriptorStateV1 } from "@pagopa/interop-outbound-models";
 
-describe.skip("Message Handler for V1 EVENTS", () => {
-  let producerId = "producer-test-id";
-  let eServiceId = generateID();
+describe("Message Handler for V1 EVENTS", () => {
+  const producerId = "producer-test-id";
+  const eServiceId = generateID();
 
   beforeAll(async () => {
-    insertEserviceIdAndProducerId(eServiceId, producerId);
+    await insertEserviceIdAndProducerId(eServiceId, producerId);
   });
 
   describe("EserviceAdded Event", () => {
@@ -80,10 +80,10 @@ describe.skip("Message Handler for V1 EVENTS", () => {
         producerId
       );
 
-      expect(result.eservice_id).toEqual(eServiceId);
-      expect(result.producer_id).toEqual(producerId);
-      expect(result.descriptor_id).toEqual(descriptorId);
-      expect(result.state).toEqual(
+      expect(result?.eservice_id).toEqual(eServiceId);
+      expect(result?.producer_id).toEqual(producerId);
+      expect(result?.descriptor_id).toEqual(descriptorId);
+      expect(result?.state).toEqual(
         EServiceDescriptorStateV1.PUBLISHED.toString()
       ); // TODO: Change handling of State from string to num on DB
     });
@@ -131,12 +131,12 @@ describe.skip("Message Handler for V1 EVENTS", () => {
         producerId
       );
 
-      expect(response.state).toEqual(
+      expect(response?.state).toEqual(
         EServiceDescriptorStateV1.PUBLISHED.toString()
       );
-      expect(response.eservice_id).toEqual(eServiceId);
-      expect(response.descriptor_id).toEqual(descriptorId);
-      expect(response.producer_id).toEqual(producerId);
+      expect(response?.eservice_id).toEqual(eServiceId);
+      expect(response?.descriptor_id).toEqual(descriptorId);
+      expect(response?.producer_id).toEqual(producerId);
     });
 
     it("Should throw an error if eserviceDescriptor data is missing", async () => {

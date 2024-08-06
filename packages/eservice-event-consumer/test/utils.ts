@@ -1,9 +1,6 @@
+import { randomUUID } from "crypto";
 import { inject } from "vitest";
 import { setupTestContainersVitest } from "pagopa-signalhub-commons-test";
-import { eServiceServiceBuilder } from "../src/services/eservice.service.js";
-import { eServiceRepository } from "../src/repositories/eservice.repository.js";
-import { eServiceProducerRepository } from "../src/repositories/eServiceProducer.repository.js";
-import { randomUUID } from "crypto";
 import {
   AgreementApprovalPolicyV2,
   EServiceDescriptorStateV1,
@@ -20,6 +17,9 @@ import {
   EServiceV2,
 } from "@pagopa/interop-outbound-models";
 import { z } from "zod";
+import { eServiceServiceBuilder } from "../src/services/eservice.service.js";
+import { eServiceRepository } from "../src/repositories/eservice.repository.js";
+import { eServiceProducerRepository } from "../src/repositories/eServiceProducer.repository.js";
 
 export const { postgresDB } = setupTestContainersVitest(
   inject("signalHubStoreConfig")
@@ -91,128 +91,114 @@ export const createEserviceAddedEventV1 = (
   eserviceV1: EServiceV1 | undefined,
   stream_id?: string,
   version?: number
-): EServiceEventV1 => {
-  return {
-    type: "EServiceAdded",
-    timestamp: new Date(),
-    event_version: 1,
-    version: version || 1,
-    stream_id: stream_id || generateID(),
-    data: {
-      eservice: eserviceV1,
-    },
-  };
-};
+): EServiceEventV1 => ({
+  type: "EServiceAdded",
+  timestamp: new Date(),
+  event_version: 1,
+  version: version || 1,
+  stream_id: stream_id || generateID(),
+  data: {
+    eservice: eserviceV1,
+  },
+});
 
 export const createEserviceDescriptorAddedEventV1 = (
   eServiceId: string,
   descriptor: EServiceDescriptorV1 | undefined,
   stream_id?: string,
   version?: number
-): EServiceEventV1 => {
-  return {
-    type: "EServiceDescriptorAdded",
-    event_version: 1,
-    stream_id: stream_id || generateID(),
-    timestamp: new Date(),
-    version: version || 1,
-    data: {
-      eserviceId: eServiceId,
-      eserviceDescriptor: descriptor,
-    },
-  };
-};
+): EServiceEventV1 => ({
+  type: "EServiceDescriptorAdded",
+  event_version: 1,
+  stream_id: stream_id || generateID(),
+  timestamp: new Date(),
+  version: version || 1,
+  data: {
+    eserviceId: eServiceId,
+    eserviceDescriptor: descriptor,
+  },
+});
 
 export const createEserviceDescriptorUpdatedEventV1 = (
   eServiceId: string,
   descriptor: EServiceDescriptorV1 | undefined,
   stream_id?: string,
   version?: number
-): EServiceEventV1 => {
-  return {
-    type: "EServiceDescriptorUpdated",
-    event_version: 1,
-    stream_id: stream_id || generateID(),
-    timestamp: new Date(),
-    version: version || 1,
-    data: {
-      eserviceId: eServiceId,
-      eserviceDescriptor: descriptor,
-    },
-  };
-};
+): EServiceEventV1 => ({
+  type: "EServiceDescriptorUpdated",
+  event_version: 1,
+  stream_id: stream_id || generateID(),
+  timestamp: new Date(),
+  version: version || 1,
+  data: {
+    eserviceId: eServiceId,
+    eserviceDescriptor: descriptor,
+  },
+});
 
 export const createEServiceWithDescriptorsDeletedEventV1 = (
   eserviceV1: EServiceV1,
   stream_id?: string,
   version?: number
-): EServiceEventV1 => {
-  return {
-    type: "EServiceWithDescriptorsDeleted",
-    event_version: 1,
-    stream_id: stream_id || generateID(),
-    timestamp: new Date(),
-    version: version || 1,
-    data: {
-      descriptorId: eserviceV1.descriptors[0].id,
-      eservice: eserviceV1,
-    },
-  };
-};
+): EServiceEventV1 => ({
+  type: "EServiceWithDescriptorsDeleted",
+  event_version: 1,
+  stream_id: stream_id || generateID(),
+  timestamp: new Date(),
+  version: version || 1,
+  data: {
+    descriptorId: eserviceV1.descriptors[0].id,
+    eservice: eserviceV1,
+  },
+});
 
 export const createEserviceAddedEventV2 = (
   eServiceV2: EServiceV2,
   stream_id?: string,
   version?: number
-): EServiceEventV2 => {
-  return {
-    type: "EServiceAdded",
-    event_version: 2,
-    stream_id: stream_id || generateID(),
-    timestamp: new Date(),
-    version: version || 1,
-    data: {
-      eservice: eServiceV2,
-    },
-  };
-};
+): EServiceEventV2 => ({
+  type: "EServiceAdded",
+  event_version: 2,
+  stream_id: stream_id || generateID(),
+  timestamp: new Date(),
+  version: version || 1,
+  data: {
+    eservice: eServiceV2,
+  },
+});
 
 export const createEServiceDescriptorAddedEventV2 = (
   eServiceV2: EServiceV2,
   descriptorId: string,
   stream_id?: string,
   version?: number
-): EServiceEventV2 => {
-  return {
-    type: "EServiceDescriptorAdded",
-    event_version: 2,
-    stream_id: stream_id || generateID(),
-    timestamp: new Date(),
-    version: version || 1,
-    data: {
-      descriptorId: descriptorId,
-      eservice: eServiceV2,
-    },
-  };
-};
+): EServiceEventV2 => ({
+  type: "EServiceDescriptorAdded",
+  event_version: 2,
+  stream_id: stream_id || generateID(),
+  timestamp: new Date(),
+  version: version || 1,
+  data: {
+    descriptorId,
+    eservice: eServiceV2,
+  },
+});
 
 export const createEServiceWithDescriptorsDeletedEventV2 = (
   eServiceV2: EServiceV2,
   stream_id?: string,
   version?: number
-): EServiceEventV2 => {
-  return {
-    type: "EServiceDeleted",
-    event_version: 2,
-    stream_id: stream_id || generateID(),
-    timestamp: new Date(),
-    version: version || 1,
-    data: {
-      eserviceId: eServiceV2.id,
-      eservice: eServiceV2,
-    },
-  };
-};
+): EServiceEventV2 => ({
+  type: "EServiceDeleted",
+  event_version: 2,
+  stream_id: stream_id || generateID(),
+  timestamp: new Date(),
+  version: version || 1,
+  data: {
+    eserviceId: eServiceV2.id,
+    eservice: eServiceV2,
+  },
+});
 
 export const createV2Event = (
   eServiceId: string,
@@ -259,16 +245,14 @@ export const createEServiceDescriptorUpdatedEventV2 = (
   descriptorId: string,
   stream_id?: string,
   version?: number
-): EServiceEventV2 => {
-  return {
-    type: type,
-    event_version: 2,
-    stream_id: stream_id || generateID(),
-    timestamp: new Date(),
-    version: version || 1,
-    data: {
-      descriptorId: descriptorId,
-      eservice: eServiceV2,
-    },
-  };
-};
+): EServiceEventV2 => ({
+  type,
+  event_version: 2,
+  stream_id: stream_id || generateID(),
+  timestamp: new Date(),
+  version: version || 1,
+  data: {
+    descriptorId,
+    eservice: eServiceV2,
+  },
+});

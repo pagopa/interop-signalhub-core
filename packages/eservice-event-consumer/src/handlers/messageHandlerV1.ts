@@ -35,7 +35,7 @@ export async function handleMessageV1(
     )
     .with(
       {
-        type: "EServiceDescriptorAdded",
+        type: P.union("EServiceDescriptorAdded", "EServiceDescriptorUpdated"),
       },
       async (evt) => {
         const { eserviceId, eserviceDescriptor } = evt.data;
@@ -54,47 +54,7 @@ export async function handleMessageV1(
         await eServiceService.upsertV1(eService, logger);
       }
     )
-    .with(
-      {
-        type: "EServiceUpdated",
-      },
-      async (evt) => {
-        if (!evt.data.eservice) {
-          throw new Error("Missing eservice data");
-        }
 
-        const eService = fromEserviceEventV1ToEserviceEntity(
-          evt.data.eservice?.id,
-          evt.data.eservice?.descriptors,
-          evt.stream_id,
-          evt.version
-        );
-
-        await eServiceService.upsertV1(eService, logger);
-      }
-    )
-
-    .with(
-      {
-        type: "EServiceDescriptorUpdated",
-      },
-      async (evt) => {
-        const { eserviceId, eserviceDescriptor } = evt.data;
-
-        if (!eserviceDescriptor) {
-          throw new Error("Missing eserviceDescriptor");
-        }
-
-        const eService = fromEserviceEventV1ToEserviceEntity(
-          eserviceId,
-          [eserviceDescriptor],
-          evt.stream_id,
-          evt.version
-        );
-
-        await eServiceService.upsertV1(eService, logger);
-      }
-    )
     .with(
       {
         type: "EServiceDeleted",
@@ -123,7 +83,7 @@ export async function handleMessageV1(
     )
     .with(
       {
-        type: "ClonedEServiceAdded",
+        type: P.union("EServiceUpdated", "ClonedEServiceAdded"),
       },
       async (evt) => {
         // viene clonato l'eservice con tutti i suoi descrittori?
@@ -163,15 +123,13 @@ export const fromEserviceEventV1ToEserviceEntity = (
   descriptorsData: EServiceDescriptorV1[],
   streamId: string,
   version: number
-): EserviceEntity => {
-  return {
-    eservice_id: eServiceId,
-    descriptors: descriptorsData.map((descriptor) => ({
-      descriptor_id: descriptor.id,
-      state: descriptor.state as unknown as string, // TODO: to fix
-    })),
+): EserviceEntity => ({
+  eservice_id: eServiceId,
+  descriptors: descriptorsData.map((descriptor) => ({
+    descriptor_id: descriptor.id,
+    state: descriptor.state as unknown as string, // TODO: to fix
+  })),
 
-    event_stream_id: streamId,
-    event_version_id: version,
-  };
-};
+  event_stream_id: streamId,
+  event_version_id: version,
+});

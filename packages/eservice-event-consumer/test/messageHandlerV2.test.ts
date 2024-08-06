@@ -1,4 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { EServiceDescriptorStateV2 } from "@pagopa/interop-outbound-models";
+import { genericLogger } from "pagopa-signalhub-commons";
+import { handleMessageV2 } from "../src/handlers/messageHandlerV2.js";
 import {
   createEserviceAddedEventV2,
   createEServiceDescriptorAddedEventV2,
@@ -10,9 +13,6 @@ import {
   incrementVersion,
   getDescriptorV2,
 } from "./utils.js";
-import { EServiceDescriptorStateV2 } from "@pagopa/interop-outbound-models";
-import { handleMessageV2 } from "../src/handlers/messageHandlerV2.js";
-import { genericLogger } from "pagopa-signalhub-commons";
 import {
   findByEserviceIdAndProducerIdAndDescriptorId,
   getCountByEserviceId,
@@ -44,9 +44,9 @@ describe("Message Handler for V2 EVENTS", () => {
         );
 
         expect(result).not.toBeNull();
-        expect(result.eservice_id).toEqual(eServiceId);
-        expect(result.descriptor_id).toEqual(descriptorId);
-        expect(result.producer_id).toEqual(producerId);
+        expect(result?.eservice_id).toEqual(eServiceId);
+        expect(result?.descriptor_id).toEqual(descriptorId);
+        expect(result?.producer_id).toEqual(producerId);
       });
     });
 
@@ -76,9 +76,9 @@ describe("Message Handler for V2 EVENTS", () => {
         );
 
         expect(result).not.toBeNull();
-        expect(result.eservice_id).toEqual(eServiceId);
-        expect(result.descriptor_id).toEqual(descriptorId);
-        expect(result.producer_id).toEqual(producerId);
+        expect(result?.eservice_id).toEqual(eServiceId);
+        expect(result?.descriptor_id).toEqual(descriptorId);
+        expect(result?.producer_id).toEqual(producerId);
       });
     });
     describe("EServiceDescriptorPublished event", () => {
@@ -122,10 +122,10 @@ describe("Message Handler for V2 EVENTS", () => {
         );
 
         expect(result).not.toBeNull();
-        expect(result.eservice_id).toEqual(eServiceId);
-        expect(result.descriptor_id).toEqual(descriptorId);
-        expect(result.producer_id).toEqual(producerId);
-        expect(result.state).toEqual(
+        expect(result?.eservice_id).toEqual(eServiceId);
+        expect(result?.descriptor_id).toEqual(descriptorId);
+        expect(result?.producer_id).toEqual(producerId);
+        expect(result?.state).toEqual(
           EServiceDescriptorStateV2.PUBLISHED.toString()
         );
       });
@@ -172,10 +172,10 @@ describe("Message Handler for V2 EVENTS", () => {
         );
 
         expect(result).not.toBeNull();
-        expect(result.eservice_id).toEqual(eServiceId);
-        expect(result.descriptor_id).toEqual(descriptorId);
-        expect(result.producer_id).toEqual(producerId);
-        expect(result.state).toEqual(
+        expect(result?.eservice_id).toEqual(eServiceId);
+        expect(result?.descriptor_id).toEqual(descriptorId);
+        expect(result?.producer_id).toEqual(producerId);
+        expect(result?.state).toEqual(
           EServiceDescriptorStateV2.ARCHIVED.toString()
         );
       });
@@ -226,9 +226,9 @@ describe("Message Handler for V2 EVENTS", () => {
         );
 
         expect(result).not.toBeNull();
-        expect(result.eservice_id).toEqual(eServiceId);
-        expect(result.descriptor_id).toEqual(descriptorId);
-        expect(result.producer_id).toEqual(producerId);
+        expect(result?.eservice_id).toEqual(eServiceId);
+        expect(result?.descriptor_id).toEqual(descriptorId);
+        expect(result?.producer_id).toEqual(producerId);
       });
     });
 
