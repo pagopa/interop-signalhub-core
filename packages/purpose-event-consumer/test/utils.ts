@@ -9,6 +9,8 @@ import {
   PurposeV2,
   PurposeEventV2,
 } from "@pagopa/interop-outbound-models";
+import { z } from "zod";
+import { match } from "ts-pattern";
 import { purposeRepository } from "../src/repositories/purpose.repository.js";
 import { purposeServiceBuilder } from "../src/services/purpose.service.js";
 import { PurposeEntity } from "../src/models/domain/model.js";
@@ -25,9 +27,6 @@ export const purposeService = purposeServiceBuilder(
 export const incrementVersion = (version: number = 0): number => version + 1;
 
 export const generateId = (): string => randomUUID();
-export function bigIntToDate(input: bigint): Date {
-  return new Date(Number(input));
-}
 export function dateToBigInt(input: Date): bigint {
   return BigInt(input.getTime());
 }
@@ -66,13 +65,33 @@ export const getMockPurposeVersionV1 = (
   ...(state === PurposeStateV1.REJECTED ? { rejectionReason: "test" } : {}),
 });
 
-export const createAPurposeCreatedEventV1 = (
+export const PurposeEventV1Type = z.union([
+  z.literal("PurposeCreated"),
+  z.literal("PurposeUpdated"),
+  z.literal("PurposeVersionWaitedForApproval"),
+  z.literal("PurposeVersionActivated"),
+  z.literal("PurposeVersionSuspended"),
+  z.literal("PurposeVersionArchived"),
+]);
+type PurposeEventV1Type = z.infer<typeof PurposeEventV1Type>;
+
+export const PurposeVersionEventV1Type = z.union([
+  z.literal("PurposeVersionCreated"),
+  z.literal("PurposeVersionUpdated"),
+  z.literal("PurposeVersionDeleted"),
+  z.literal("PurposeVersionRejected"),
+  z.literal("PurposeDeleted"),
+]);
+type PurposeVersionEventV1Type = z.infer<typeof PurposeVersionEventV1Type>;
+
+export const createAPurposeEventV1 = (
+  type: PurposeEventV1Type,
   purpose: PurposeV1,
   stream_id?: string,
   version?: number
 ): PurposeEventV1 => {
   const purposeEventV1: PurposeEventV1 = {
-    type: "PurposeCreated",
+    type,
     data: {
       purpose,
     },
@@ -84,102 +103,88 @@ export const createAPurposeCreatedEventV1 = (
   return purposeEventV1;
 };
 
-export const createAPurposeUpdatedEventV1 = (
+export const createAPurposeVersionEventV1 = (
+  type: PurposeVersionEventV1Type,
   purpose: PurposeV1,
   stream_id?: string,
   version?: number
 ): PurposeEventV1 => {
-  const purposeEventV1: PurposeEventV1 = {
-    type: "PurposeUpdated",
-    data: {
-      purpose,
-    },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const purposeGeneric: any = {
+    type,
     event_version: 1,
     stream_id: stream_id || generateId(),
     version: version || 1,
     timestamp: new Date(),
   };
-  return purposeEventV1;
-};
-
-export const createAPurposeVersionASupendedEventV1 = (
-  purpose: PurposeV1,
-  stream_id?: string,
-  version?: number
-): PurposeEventV1 => {
-  const purposeEventV1: PurposeEventV1 = {
-    type: "PurposeVersionSuspended",
-    data: {
-      purpose,
-    },
-    event_version: 1,
-    stream_id: stream_id || generateId(),
-    version: version || 1,
-    timestamp: new Date(),
-  };
-  return purposeEventV1;
-};
-
-export const createAPurposeDeletedEventV1 = (
-  purposeId: string,
-  stream_id?: string,
-  version?: number
-): PurposeEventV1 => {
-  const purposeEventV1: PurposeEventV1 = {
-    type: "PurposeDeleted",
-    data: {
-      purposeId,
-    },
-    event_version: 1,
-    stream_id: stream_id || generateId(),
-    version: version || 1,
-    timestamp: new Date(),
-  };
-  return purposeEventV1;
-};
-
-export const createAPurposeVersionActivatedEventV1 = (
-  purpose: PurposeV1,
-  stream_id?: string,
-  version?: number
-): PurposeEventV1 => {
-  const purposeEventAddedV1: PurposeEventV1 = {
-    type: "PurposeVersionActivated",
-    data: {
-      purpose,
-    },
-    event_version: 1,
-    stream_id: stream_id || generateId(),
-    version: version || 1,
-    timestamp: new Date(),
-  };
-  return purposeEventAddedV1;
+  return (
+    match({ type })
+      .with({ type: "PurposeVersionRejected" }, () => ({
+        ...purposeGeneric,
+        data: {
+          purpose,
+          versionId: purpose.versions[0].id,
+        },
+      }))
+      .with({ type: "PurposeDeleted" }, () => ({
+        ...purposeGeneric,
+        data: {
+          purposeId: purpose.id,
+        },
+      }))
+      .with({ type: "PurposeVersionDeleted" }, () => ({
+        ...purposeGeneric,
+        data: {
+          purposeId: purpose.id,
+          versionId: purpose.versions[0].id,
+        },
+      }))
+      .with({ type: "PurposeVersionUpdated" }, () => ({
+        ...purposeGeneric,
+        data: {
+          purposeId: purpose.id,
+          version: purpose.versions[0],
+        },
+      }))
+      // eslint-disable-next-line sonarjs/no-identical-functions
+      .with({ type: "PurposeVersionCreated" }, () => ({
+        ...purposeGeneric,
+        data: {
+          purposeId: purpose.id,
+          version: purpose.versions[0],
+        },
+      }))
+      .exhaustive()
+  );
 };
 
 export async function createAndWriteAPurposeEventV1(
   purposeV1: PurposeV1,
   streamId: string,
-  version: number
+  version: number,
+  type: PurposeEventV1Type = "PurposeVersionActivated"
 ): Promise<{
   purposeV1: PurposeV1;
   purposeEventV1: PurposeEventV1;
 }> {
-  const purposeEventV1 = createAPurposeCreatedEventV1(
+  const purposeEventV1 = createAPurposeEventV1(
+    type,
     purposeV1,
     streamId,
     version
   );
-  await writeAPurposeEntity(toPurposeV1Entity(purposeV1, streamId, version));
+  await writeAPurposeEntity(toPurposeV1Entity(purposeEventV1, purposeV1));
   return { purposeV1, purposeEventV1 };
 }
 
 export const fromEventToEntity = (
   purpose: PurposeV1 | PurposeV2,
+  version: PurposeVersionV1,
   event: PurposeEventV1 | PurposeEventV2
 ): PurposeEntity => ({
   purposeId: purpose.id,
-  purposeVersionId: purpose.versions[0].id,
-  purposeState: purpose.versions[0].state.toString(),
+  purposeVersionId: version.id,
+  purposeState: version.state.toString(),
   eserviceId: purpose.eserviceId,
   consumerId: purpose.consumerId,
   eventStreamId: event.stream_id,

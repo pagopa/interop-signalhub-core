@@ -20,9 +20,6 @@ export async function handleMessageV1(
     .with(
       {
         type: P.union(
-          "PurposeCreated",
-          "PurposeUpdated",
-          "PurposeVersionWaitedForApproval",
           "PurposeVersionActivated",
           "PurposeVersionSuspended",
           "PurposeVersionArchived"
@@ -36,7 +33,7 @@ export async function handleMessageV1(
           return;
         }
         await purposeService.upsert(
-          toPurposeV1Entity(evt.data.purpose, evt.stream_id, evt.version),
+          toPurposeV1Entity(evt, evt.data.purpose),
           logger
         );
       }
@@ -44,10 +41,14 @@ export async function handleMessageV1(
     .with(
       {
         type: P.union(
+          "PurposeCreated",
+          "PurposeUpdated",
+          "PurposeVersionWaitedForApproval",
           "PurposeVersionCreated",
           "PurposeVersionUpdated",
           "PurposeVersionDeleted",
-          "PurposeVersionRejected"
+          "PurposeVersionRejected",
+          "PurposeDeleted"
         ),
       },
 
@@ -55,18 +56,14 @@ export async function handleMessageV1(
         logger.debug(`Event type ${evt.type} not relevant`);
       }
     )
-    .with({ type: "PurposeDeleted" }, async (evt) => {
-      await purposeService.delete(evt.data.purposeId, evt.stream_id, logger);
-    })
-
     .exhaustive();
 }
 
 export const toPurposeV1Entity = (
-  purpose: PurposeV1,
-  streamId: string,
-  version: number
+  event: PurposeEventV1,
+  purpose: PurposeV1
 ): PurposeEntity => {
+  const { stream_id: streamId, version } = event;
   const { versionId, state } = toPurposeVersionV1Entity(purpose.versions);
   return {
     purposeId: purpose.id,
@@ -80,23 +77,44 @@ export const toPurposeV1Entity = (
 };
 const toPurposeVersionV1Entity = (
   purposeVersions: PurposeVersionV1[]
-): { versionId: string; state: string } => {
-  if (
-    purposeVersions.some((version) => version.state === PurposeStateV1.ACTIVE)
-  ) {
-    return purposeVersions
-      .filter((version) => version.state === PurposeStateV1.ACTIVE)
-      .reduce((obj, version) => {
-        const { id, state } = version;
-        return { ...obj, versionId: id, state: state.toString() };
-      }, {} as { versionId: string; state: string });
-  }
-  const { length: l, [l - 1]: lastVersion } = purposeVersions;
-  return {
-    versionId: lastVersion.id,
-    state: lastVersion.state.toString(),
-  };
-};
-
+): { versionId: string; state: string } =>
+  match(purposeVersions)
+    .when(
+      (versions) =>
+        versions.some((version) => version.state === PurposeStateV1.ACTIVE),
+      () => getVersionBy(PurposeStateV1.ACTIVE, purposeVersions)
+    )
+    .when(
+      (versions) =>
+        versions.some((version) => version.state === PurposeStateV1.SUSPENDED),
+      () => getVersionBy(PurposeStateV1.SUSPENDED, purposeVersions)
+    )
+    .when(
+      (versions) =>
+        versions.some((version) => version.state === PurposeStateV1.ARCHIVED),
+      () => getVersionBy(PurposeStateV1.ARCHIVED, purposeVersions)
+    )
+    .otherwise(() => {
+      const { length: l, [l - 1]: lastVersion } = purposeVersions;
+      return {
+        versionId: lastVersion.id,
+        state: lastVersion.state.toString(),
+      };
+    });
 const isPurposeWithoutVersions = (purpose: PurposeV1): boolean =>
   Array.isArray(purpose.versions) && purpose.versions.length === 0;
+
+function getVersionBy(
+  purposeState: PurposeStateV1,
+  purposeVersions: PurposeVersionV1[]
+): {
+  versionId: string;
+  state: string;
+} {
+  return purposeVersions
+    .filter((version) => version.state === purposeState)
+    .reduce((obj, version) => {
+      const { id, state } = version;
+      return { ...obj, versionId: id, state: state.toString() };
+    }, {} as { versionId: string; state: string });
+}
