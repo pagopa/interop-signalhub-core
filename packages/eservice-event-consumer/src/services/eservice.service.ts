@@ -8,6 +8,11 @@ export function eServiceServiceBuilder(
   eServiceRepository: IEserviceRepository,
   eServiceProducerRepository: IEserviceProduceRepository
 ) {
+  /**
+   * This method will be used just for V1 version of event messages
+   * to add a new eservice producer on producer_table
+   */
+
   return {
     async addEserviceProducer(
       eServiceId: string,
@@ -38,7 +43,7 @@ export function eServiceServiceBuilder(
       );
     },
 
-    async upsert(eService: EserviceEntity, logger: Logger): Promise<void> {
+    async upsertV1(eService: EserviceEntity, logger: Logger): Promise<void> {
       logger.debug(
         `insert or update event: ${JSON.stringify(eService, null, 2)}`
       );

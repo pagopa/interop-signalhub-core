@@ -51,7 +51,7 @@ export async function handleMessageV1(
           evt.version
         );
 
-        await eServiceService.upsert(eService, logger);
+        await eServiceService.upsertV1(eService, logger);
       }
     )
     .with(
@@ -70,7 +70,7 @@ export async function handleMessageV1(
           evt.version
         );
 
-        await eServiceService.upsert(eService, logger);
+        await eServiceService.upsertV1(eService, logger);
       }
     )
 
@@ -92,7 +92,7 @@ export async function handleMessageV1(
           evt.version
         );
 
-        await eServiceService.upsert(eService, logger);
+        await eServiceService.upsertV1(eService, logger);
       }
     )
     .with(
@@ -138,7 +138,7 @@ export async function handleMessageV1(
           evt.version
         );
 
-        await eServiceService.upsert(eService, logger);
+        await eServiceService.upsertV1(eService, logger);
       }
     )
     .with(
