@@ -14,7 +14,7 @@ import { genericLogger } from "pagopa-signalhub-commons";
 import {
   findByEserviceIdAndProducerIdAndDescriptorId,
   findProducerIdByEserviceId,
-  insertEservice,
+  insertEserviceDescriptor,
   insertEserviceIdAndProducerId,
 } from "./databaseUtils.js";
 import { EServiceDescriptorStateV1 } from "@pagopa/interop-outbound-models";
@@ -105,7 +105,7 @@ describe.skip("Message Handler for V1 EVENTS", () => {
       const descriptorId = generateID();
       const version = 1;
 
-      await insertEservice(
+      await insertEserviceDescriptor(
         eServiceId,
         descriptorId,
         producerId,
@@ -156,7 +156,7 @@ describe.skip("Message Handler for V1 EVENTS", () => {
       const descriptorId = generateID();
       const version = 1;
 
-      await insertEservice(
+      await insertEserviceDescriptor(
         eServiceId,
         descriptorId,
         producerId,

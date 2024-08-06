@@ -29,10 +29,29 @@ export async function handleMessageV2(
         await eServiceService.upsertV2(eService, logger);
       }
     )
+
+    .with(
+      {
+        type: "EServiceDescriptorAdded",
+      },
+      async (evt) => {
+        const { eservice } = evt.data;
+
+        if (!eservice) {
+          throw new Error("Missing eservice data");
+        }
+        const eService = fromEserviceEventV2ToEserviceEntity(
+          eservice,
+          evt.stream_id,
+          evt.version
+        );
+
+        await eServiceService.upsertV2(eService, logger);
+      }
+    )
     .with(
       {
         type: P.union(
-          "EServiceDescriptorAdded",
           "EServiceDescriptorActivated",
           "EServiceDescriptorArchived",
           "EServiceDescriptorPublished",

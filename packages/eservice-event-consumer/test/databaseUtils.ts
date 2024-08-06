@@ -45,7 +45,16 @@ export const findByEserviceIdAndProducerIdAndDescriptorId = async (
   return result;
 };
 
-export const insertEservice = async (
+export const getCountByEserviceId = async (eServiceId: string) => {
+  const result = await postgresDB.one(
+    "SELECT COUNT(*) FROM dev_interop.eservice WHERE eservice_id = $1",
+    [eServiceId]
+  );
+
+  return parseInt(result.count);
+};
+
+export const insertEserviceDescriptor = async (
   eServiceId: string,
   descriptorId: string,
   producerId: string,

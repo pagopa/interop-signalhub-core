@@ -19,6 +19,7 @@ import {
   EServiceV1,
   EServiceV2,
 } from "@pagopa/interop-outbound-models";
+import { z } from "zod";
 
 export const { postgresDB } = setupTestContainersVitest(
   inject("signalHubStoreConfig")
@@ -34,6 +35,7 @@ export const eServiceService = eServiceServiceBuilder(
 );
 
 export const generateID = (): string => randomUUID();
+export const incrementVersion = (version: number): number => version + 1;
 
 const descriptor: EServiceDescriptorV1 = {
   id: generateID(),
@@ -83,21 +85,6 @@ export const createEServiceV1 = (
   technology: EServiceTechnologyV1.REST,
   ...partialEservice,
   descriptors: [descriptorItem || descriptor],
-});
-
-export const createEServiceV2 = (
-  partialEService?: Partial<EServiceV2>,
-  descriptorsItem?: EServiceDescriptorV2
-): EServiceV2 => ({
-  id: generateID(),
-  producerId: generateID(),
-  descriptors: descriptorsItem ? [descriptorsItem] : [],
-  createdAt: 1 as any,
-  description: "eService test description",
-  name: "eService test name",
-  mode: EServiceModeV2.RECEIVE,
-  technology: EServiceTechnologyV2.REST,
-  ...partialEService,
 });
 
 export const createEserviceAddedEventV1 = (
@@ -185,6 +172,102 @@ export const createEserviceAddedEventV2 = (
     timestamp: new Date(),
     version: version || 1,
     data: {
+      eservice: eServiceV2,
+    },
+  };
+};
+
+export const createEServiceDescriptorAddedEventV2 = (
+  eServiceV2: EServiceV2,
+  descriptorId: string,
+  stream_id?: string,
+  version?: number
+): EServiceEventV2 => {
+  return {
+    type: "EServiceDescriptorAdded",
+    event_version: 2,
+    stream_id: stream_id || generateID(),
+    timestamp: new Date(),
+    version: version || 1,
+    data: {
+      descriptorId: descriptorId,
+      eservice: eServiceV2,
+    },
+  };
+};
+
+export const createEServiceWithDescriptorsDeletedEventV2 = (
+  eServiceV2: EServiceV2,
+  stream_id?: string,
+  version?: number
+): EServiceEventV2 => {
+  return {
+    type: "EServiceDeleted",
+    event_version: 2,
+    stream_id: stream_id || generateID(),
+    timestamp: new Date(),
+    version: version || 1,
+    data: {
+      eserviceId: eServiceV2.id,
+      eservice: eServiceV2,
+    },
+  };
+};
+
+export const createV2Event = (
+  eServiceId: string,
+  descriptorId: string,
+  producerId: string,
+  eServiceDescriptorState: EServiceDescriptorStateV2,
+  descriptors?: EServiceDescriptorV2[]
+): EServiceV2 => ({
+  id: eServiceId,
+  producerId,
+  createdAt: 1n,
+  description: "eService test description",
+  mode: EServiceModeV2.RECEIVE,
+  name: "eService test name",
+  technology: EServiceTechnologyV2.REST,
+
+  descriptors: descriptors
+    ? descriptors
+    : [
+        getDescriptorV2({
+          id: descriptorId,
+          state: eServiceDescriptorState,
+        }),
+      ],
+});
+
+export const EServiceEventV2UpdateType = z.union([
+  z.literal("EServiceDescriptorAdded"),
+  z.literal("EServiceDescriptorActivated"),
+  z.literal("EServiceDescriptorArchived"),
+  z.literal("EServiceDescriptorPublished"),
+  z.literal("EServiceDescriptorSuspended"),
+  z.literal("EServiceDraftDescriptorUpdated"),
+  z.literal("EServiceDraftDescriptorDeleted"),
+]);
+
+export type EServiceEventV2UpdateType = z.infer<
+  typeof EServiceEventV2UpdateType
+>;
+
+export const createEServiceDescriptorUpdatedEventV2 = (
+  type: EServiceEventV2UpdateType,
+  eServiceV2: EServiceV2,
+  descriptorId: string,
+  stream_id?: string,
+  version?: number
+): EServiceEventV2 => {
+  return {
+    type: type,
+    event_version: 2,
+    stream_id: stream_id || generateID(),
+    timestamp: new Date(),
+    version: version || 1,
+    data: {
+      descriptorId: descriptorId,
       eservice: eServiceV2,
     },
   };

@@ -84,6 +84,7 @@ export function eServiceServiceBuilder(
         `insert or update event: ${JSON.stringify(eService, null, 2)}`
       );
 
+      console.log("Eservice entity", eService);
       for (let i = 0; i < eService.descriptors.length; i++) {
         const descriptor = eService.descriptors[i];
 
