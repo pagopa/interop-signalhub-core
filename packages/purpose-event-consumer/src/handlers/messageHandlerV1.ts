@@ -78,7 +78,7 @@ export const toPurposeV1Entity = (
   streamId: string,
   version: number
 ): PurposeEntity => {
-  const { versionId, state } = toPurposeVersionV1ToEntity(purpose.versions);
+  const { versionId, state } = toPurposeVersionV1Entity(purpose.versions);
   return {
     purposeId: purpose.id,
     eserviceId: purpose.eserviceId,
@@ -89,7 +89,7 @@ export const toPurposeV1Entity = (
     eventVersionId: version,
   };
 };
-const toPurposeVersionV1ToEntity = (
+const toPurposeVersionV1Entity = (
   purposeVersions: PurposeVersionV1[]
 ): { versionId: string; state: string } => {
   if (
