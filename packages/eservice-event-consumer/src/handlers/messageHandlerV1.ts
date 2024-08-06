@@ -112,7 +112,7 @@ export async function handleMessageV1(
           throw new Error("Missing eservice data");
         }
 
-        eServiceService.deleteDescriptor(
+        await eServiceService.deleteDescriptor(
           evt.data.eservice?.id,
           evt.data.descriptorId,
           evt.stream_id,

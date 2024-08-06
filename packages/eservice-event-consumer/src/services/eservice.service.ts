@@ -84,7 +84,9 @@ export function eServiceServiceBuilder(
         `insert or update event: ${JSON.stringify(eService, null, 2)}`
       );
 
-      eService.descriptors.forEach(async (descriptor) => {
+      for (let i = 0; i < eService.descriptors.length; i++) {
+        const descriptor = eService.descriptors[i];
+
         const eventWasProcessed = await eServiceRepository.eventWasProcessed(
           descriptor.descriptor_id,
           eService.event_stream_id,
@@ -108,7 +110,7 @@ export function eServiceServiceBuilder(
           eService.event_stream_id,
           eService.event_version_id
         );
-      });
+      }
     },
 
     async delete(eServiceId: string, logger: Logger): Promise<void> {

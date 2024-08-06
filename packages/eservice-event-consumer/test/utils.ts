@@ -5,12 +5,19 @@ import { eServiceRepository } from "../src/repositories/eservice.repository.js";
 import { eServiceProducerRepository } from "../src/repositories/eServiceProducer.repository.js";
 import { randomUUID } from "crypto";
 import {
+  AgreementApprovalPolicyV2,
   EServiceDescriptorStateV1,
+  EServiceDescriptorStateV2,
   EServiceDescriptorV1,
+  EServiceDescriptorV2,
   EServiceEventV1,
+  EServiceEventV2,
   EServiceModeV1,
+  EServiceModeV2,
   EServiceTechnologyV1,
+  EServiceTechnologyV2,
   EServiceV1,
+  EServiceV2,
 } from "@pagopa/interop-outbound-models";
 
 export const { postgresDB } = setupTestContainersVitest(
@@ -40,6 +47,23 @@ const descriptor: EServiceDescriptorV1 = {
   docs: [],
 };
 
+export const getDescriptorV2 = (
+  partialDescriptorV2?: Partial<EServiceDescriptorV2>
+): EServiceDescriptorV2 => ({
+  id: generateID(),
+  agreementApprovalPolicy: AgreementApprovalPolicyV2.AUTOMATIC,
+  audience: ["test.audience"],
+  createdAt: 1n,
+  dailyCallsPerConsumer: 100,
+  dailyCallsTotal: 100,
+  docs: [],
+  serverUrls: ["http://test.com"],
+  state: EServiceDescriptorStateV2.DRAFT,
+  version: 1n,
+  voucherLifespan: 100,
+  ...partialDescriptorV2,
+});
+
 export const createEserviceDescriptorV1 = (
   partialEserviceDescriptorV1?: Partial<EServiceDescriptorV1>
 ): EServiceDescriptorV1 => ({
@@ -47,8 +71,9 @@ export const createEserviceDescriptorV1 = (
   ...partialEserviceDescriptorV1,
 });
 
-export const createEserviceV1 = (
-  partialEservice?: Partial<EServiceV1>
+export const createEServiceV1 = (
+  partialEservice?: Partial<EServiceV1>,
+  descriptorItem?: EServiceDescriptorV1
 ): EServiceV1 => ({
   id: generateID(),
   producerId: generateID(),
@@ -57,7 +82,22 @@ export const createEserviceV1 = (
   mode: EServiceModeV1.RECEIVE,
   technology: EServiceTechnologyV1.REST,
   ...partialEservice,
-  descriptors: [descriptor],
+  descriptors: [descriptorItem || descriptor],
+});
+
+export const createEServiceV2 = (
+  partialEService?: Partial<EServiceV2>,
+  descriptorsItem?: EServiceDescriptorV2
+): EServiceV2 => ({
+  id: generateID(),
+  producerId: generateID(),
+  descriptors: descriptorsItem ? [descriptorsItem] : [],
+  createdAt: 1 as any,
+  description: "eService test description",
+  name: "eService test name",
+  mode: EServiceModeV2.RECEIVE,
+  technology: EServiceTechnologyV2.REST,
+  ...partialEService,
 });
 
 export const createEserviceAddedEventV1 = (
@@ -111,6 +151,41 @@ export const createEserviceDescriptorUpdatedEventV1 = (
     data: {
       eserviceId: eServiceId,
       eserviceDescriptor: descriptor,
+    },
+  };
+};
+
+export const createEServiceWithDescriptorsDeletedEventV1 = (
+  eserviceV1: EServiceV1,
+  stream_id?: string,
+  version?: number
+): EServiceEventV1 => {
+  return {
+    type: "EServiceWithDescriptorsDeleted",
+    event_version: 1,
+    stream_id: stream_id || generateID(),
+    timestamp: new Date(),
+    version: version || 1,
+    data: {
+      descriptorId: eserviceV1.descriptors[0].id,
+      eservice: eserviceV1,
+    },
+  };
+};
+
+export const createEserviceAddedEventV2 = (
+  eServiceV2: EServiceV2,
+  stream_id?: string,
+  version?: number
+): EServiceEventV2 => {
+  return {
+    type: "EServiceAdded",
+    event_version: 2,
+    stream_id: stream_id || generateID(),
+    timestamp: new Date(),
+    version: version || 1,
+    data: {
+      eservice: eServiceV2,
     },
   };
 };

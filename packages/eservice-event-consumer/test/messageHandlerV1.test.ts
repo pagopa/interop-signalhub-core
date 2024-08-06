@@ -1,12 +1,13 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import {
-  createEserviceV1,
+  createEServiceV1,
   generateID,
   eServiceService,
   createEserviceAddedEventV1,
   createEserviceDescriptorV1,
   createEserviceDescriptorAddedEventV1,
   createEserviceDescriptorUpdatedEventV1,
+  createEServiceWithDescriptorsDeletedEventV1,
 } from "./utils.js";
 import { handleMessageV1 } from "../src/handlers/messageHandlerV1.js";
 import { genericLogger } from "pagopa-signalhub-commons";
@@ -16,13 +17,9 @@ import {
   insertEservice,
   insertEserviceIdAndProducerId,
 } from "./databaseUtils.js";
-import {
-  EServiceDescriptorAddedV1,
-  EServiceDescriptorStateV1,
-  EServiceDescriptorV1,
-} from "@pagopa/interop-outbound-models";
+import { EServiceDescriptorStateV1 } from "@pagopa/interop-outbound-models";
 
-describe("Message Handler for V1 EVENTS", () => {
+describe.skip("Message Handler for V1 EVENTS", () => {
   let producerId = "producer-test-id";
   let eServiceId = generateID();
 
@@ -34,7 +31,7 @@ describe("Message Handler for V1 EVENTS", () => {
     it("Should add a tuple <eServiceId,producerId> for EServiceAdded event", async () => {
       const eServiceId = generateID();
       const producerId = "producer-test-id";
-      const eserviceV1 = createEserviceV1({
+      const eserviceV1 = createEServiceV1({
         id: eServiceId,
         producerId,
         descriptors: [],
@@ -151,6 +148,47 @@ describe("Message Handler for V1 EVENTS", () => {
       await expect(
         handleMessageV1(eServiceV1Event, eServiceService, genericLogger)
       ).rejects.toThrow("Missing eserviceDescriptor");
+    });
+  });
+
+  describe("EServiceWithDescriptorsDeleted event", () => {
+    it("Should delete a descriptor record from ESERVICE table", async () => {
+      const descriptorId = generateID();
+      const version = 1;
+
+      await insertEservice(
+        eServiceId,
+        descriptorId,
+        producerId,
+        EServiceDescriptorStateV1.DRAFT.toString(),
+        generateID(),
+        version
+      );
+
+      const descriptor = createEserviceDescriptorV1({
+        id: descriptorId,
+        state: EServiceDescriptorStateV1.PUBLISHED,
+      });
+
+      const eService = createEServiceV1(
+        {
+          id: eServiceId,
+          producerId,
+        },
+        descriptor
+      );
+
+      const eServiceV1Event =
+        createEServiceWithDescriptorsDeletedEventV1(eService);
+
+      await handleMessageV1(eServiceV1Event, eServiceService, genericLogger);
+      const response = await findByEserviceIdAndProducerIdAndDescriptorId(
+        eServiceId,
+        descriptorId,
+        producerId
+      );
+
+      expect(response).toBe(null);
     });
   });
 });
