@@ -37,7 +37,7 @@ export async function processMessage({
     .with(
       { event_version: 2 },
       (_event) => handleMessageV2
-      //handleMessageV2(event, agreementService, logger)
+      // handleMessageV2(event, agreementService, logger)
     )
     .exhaustive();
 

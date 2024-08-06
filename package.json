@@ -19,6 +19,7 @@
     "test:persister": "turbo test --filter pagopa-signalhub-persister",
     "test:updater": "turbo test --filter  pagopa-signalhub-batch-update",
     "test:cleaner": "turbo test --filter pagopa-signalhub-batch-cleanup",
+    "test:event:eservice": "turbo test --filter pagoppa-signalhub-eservice-event-consumer",
     "test:event:purpose": "turbo test --filter pagoppa-signalhub-purpose-event-consumer",
     "test:event:agreement": "turbo test --filter pagoppa-signalhub-agreement-event-consumer",
     "build": "turbo build",

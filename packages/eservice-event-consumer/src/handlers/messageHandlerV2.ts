@@ -12,27 +12,10 @@ export async function handleMessageV2(
   await match(event)
     .with(
       {
-        type: "EServiceAdded",
-      },
-      async (evt) => {
-        const { eservice } = evt.data;
-
-        if (!eservice) {
-          throw new Error("Missing eservice data");
-        }
-        const eService = fromEserviceEventV2ToEserviceEntity(
-          eservice,
-          evt.stream_id,
-          evt.version
-        );
-
-        eServiceService.upsertV2(eService, logger);
-      }
-    )
-    .with(
-      {
         type: P.union(
+          "EServiceCloned",
           "EServiceDescriptorAdded",
+          "EServiceAdded",
           "EServiceDescriptorActivated",
           "EServiceDescriptorArchived",
           "EServiceDescriptorPublished",
@@ -53,28 +36,10 @@ export async function handleMessageV2(
           evt.version
         );
 
-        eServiceService.upsertV2(eService, logger);
+        await eServiceService.upsertV2(eService, logger);
       }
     )
-    .with(
-      {
-        type: "EServiceCloned",
-      },
-      async (evt) => {
-        const { eservice } = evt.data;
 
-        if (!eservice) {
-          throw new Error("Missing eservice data");
-        }
-        const eService = fromEserviceEventV2ToEserviceEntity(
-          eservice,
-          evt.stream_id,
-          evt.version
-        );
-
-        eServiceService.upsertV2(eService, logger);
-      }
-    )
     .with(
       {
         type: "EServiceDeleted",
@@ -82,7 +47,7 @@ export async function handleMessageV2(
       async (evt) => {
         const { eserviceId } = evt.data;
 
-        eServiceService.delete(eserviceId, logger);
+        await eServiceService.delete(eserviceId, logger);
       }
     )
 
@@ -94,8 +59,6 @@ export async function handleMessageV2(
         logger.debug(`Event type ${evt.type} not relevant`);
         const { eservice } = evt.data;
 
-        eservice?.descriptors;
-
         if (!eservice) {
           throw new Error("Missing eservice data");
         }
@@ -105,7 +68,7 @@ export async function handleMessageV2(
           evt.version
         );
 
-        eServiceService.upsertV2(eService, logger);
+        await eServiceService.upsertV2(eService, logger);
       }
     )
     .with(
@@ -134,17 +97,15 @@ export const fromEserviceEventV2ToEserviceEntity = (
   eService: EServiceV2,
   streamId: string,
   version: number
-): EserviceV2Entity => {
-  return {
-    eservice_id: eService.id,
-    producer_id: eService.producerId,
+): EserviceV2Entity => ({
+  eservice_id: eService.id,
+  producer_id: eService.producerId,
 
-    descriptors: eService.descriptors.map((descriptor) => ({
-      descriptor_id: descriptor.id,
-      state: descriptor.state as unknown as string, // TODO: to fix
-    })),
+  descriptors: eService.descriptors.map((descriptor) => ({
+    descriptor_id: descriptor.id,
+    state: descriptor.state as unknown as string, // TODO: to fix
+  })),
 
-    event_stream_id: streamId,
-    event_version_id: version,
-  };
-};
+  event_stream_id: streamId,
+  event_version_id: version,
+});
