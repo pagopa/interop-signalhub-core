@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { genericLogger } from "pagopa-signalhub-commons";
-import { PurposeStateV1, PurposeV1 } from "@pagopa/interop-outbound-models";
+import {
+  PurposeStateV1,
+  PurposeV1,
+  PurposeVersionV1,
+} from "@pagopa/interop-outbound-models";
 import { truncatePurposeTable } from "pagopa-signalhub-commons-test";
 import { handleMessageV1 } from "../src/handlers/index.js";
 import {
@@ -9,8 +13,8 @@ import {
   createAPurposeVersionEventV1,
   fromEventToEntity,
   generateId,
-  getMockPurposeV1,
-  getMockPurposeVersionV1,
+  getMockPurpose,
+  getMockPurposeVersion,
   incrementVersion,
   postgresDB,
   purposeService,
@@ -19,8 +23,8 @@ import { getAPurposeEntityBy } from "./databaseUtils.js";
 
 describe("Message Handler for V1 EVENTS", () => {
   beforeEach(() => truncatePurposeTable(postgresDB));
-  const mockPurposeV1 = getMockPurposeV1();
-  const mockPurposeVersionV1 = getMockPurposeVersionV1();
+  const mockPurposeV1 = getMockPurpose() as PurposeV1;
+  const mockPurposeVersionV1 = getMockPurposeVersion() as PurposeVersionV1;
 
   it("Should ignore these events: PurposeCreated, PurposeUpdated, PurposeVersionWaitedForApproval, PurposeVersionCreated, PurposeVersionUpdated, PurposeVersionDeleted, PurposeVersionRejected, PurposeDeleted", async () => {
     const eventTypes = [

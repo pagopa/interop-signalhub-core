@@ -10,6 +10,7 @@ import {
 import { P, match } from "ts-pattern";
 import { PurposeEntity } from "../models/domain/model.js";
 import { PurposeService } from "../services/purpose.service.js";
+import { isPurposeWithoutVersions } from "../utils/index.js";
 
 export async function handleMessageV1(
   event: PurposeEventV1,
@@ -101,8 +102,6 @@ const toPurposeVersionV1Entity = (
         state: lastVersion.state.toString(),
       };
     });
-const isPurposeWithoutVersions = (purpose: PurposeV1): boolean =>
-  Array.isArray(purpose.versions) && purpose.versions.length === 0;
 
 function getVersionBy(
   purposeState: PurposeStateV1,
