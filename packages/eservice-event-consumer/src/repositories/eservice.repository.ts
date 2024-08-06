@@ -39,6 +39,7 @@ export const eServiceRepository = (db: DB): IEserviceRepository => ({
         "select event_stream_id, event_version_id from dev_interop.eservice a where a.event_stream_id = $1 AND a.event_version_id = $2 AND a.descriptor_id = $3",
         [streamId, versionId, descriptorId]
       );
+
       return response ? true : false;
     } catch (error) {
       throw genericInternalError(`Error eventWasProcessed:" ${error} `);
@@ -78,12 +79,13 @@ export const eServiceRepository = (db: DB): IEserviceRepository => ({
     try {
       const tmstLastEdit = getCurrentDate();
       const { descriptor_id, state } = eServiceDescriptor;
+
       await db.oneOrNone(
         `INSERT INTO DEV_INTEROP.eservice(eservice_id, producer_id, descriptor_id, state, event_stream_id, event_version_id)
              VALUES($1, $2, $3, $4, $5, $6)
              ON CONFLICT (eservice_id, descriptor_id)
              DO UPDATE SET
-                producer_id = COALESCE(EXCLUDED.producer_id, DEV_INTEROP.eservice.producer_id),
+                producer_id = EXCLUDED.producer_id,
                 state = EXCLUDED.state,
                 event_stream_id = EXCLUDED.event_stream_id,
                 event_version_id = EXCLUDED.event_version_id,

@@ -24,7 +24,7 @@ export async function handleMessageV1(
 
         const { eservice } = evt.data;
 
-        eServiceService.addEserviceProducer(
+        await eServiceService.addEserviceProducer(
           eservice.id,
           eservice.producerId,
           evt.stream_id,
@@ -35,7 +35,7 @@ export async function handleMessageV1(
     )
     .with(
       {
-        type: "EServiceDescriptorAdded",
+        type: P.union("EServiceDescriptorAdded", "EServiceDescriptorUpdated"),
       },
       async (evt) => {
         const { eserviceId, eserviceDescriptor } = evt.data;
@@ -44,63 +44,23 @@ export async function handleMessageV1(
           throw new Error("Missing eserviceDescriptor");
         }
 
-        const eService = fromEserviceEventToEserviceEntity(
+        const eService = fromEserviceEventV1ToEserviceEntity(
           eserviceId,
           [eserviceDescriptor],
           evt.stream_id,
           evt.version
         );
 
-        eServiceService.upsert(eService, logger);
-      }
-    )
-    .with(
-      {
-        type: "EServiceUpdated",
-      },
-      async (evt) => {
-        if (!evt.data.eservice) {
-          throw new Error("Missing eservice data");
-        }
-
-        const eService = fromEserviceEventToEserviceEntity(
-          evt.data.eservice?.id,
-          evt.data.eservice?.descriptors,
-          evt.stream_id,
-          evt.version
-        );
-
-        eServiceService.upsert(eService, logger);
+        await eServiceService.upsertV1(eService, logger);
       }
     )
 
-    .with(
-      {
-        type: "EServiceDescriptorUpdated",
-      },
-      async (evt) => {
-        const { eserviceId, eserviceDescriptor } = evt.data;
-
-        if (!eserviceDescriptor) {
-          throw new Error("Missing eserviceDescriptor");
-        }
-
-        const eService = fromEserviceEventToEserviceEntity(
-          eserviceId,
-          [eserviceDescriptor],
-          evt.stream_id,
-          evt.version
-        );
-
-        eServiceService.upsert(eService, logger);
-      }
-    )
     .with(
       {
         type: "EServiceDeleted",
       },
       async (evt) => {
-        eServiceService.delete(evt.data.eserviceId, logger);
+        await eServiceService.delete(evt.data.eserviceId, logger);
       }
     )
     .with(
@@ -112,7 +72,7 @@ export async function handleMessageV1(
           throw new Error("Missing eservice data");
         }
 
-        eServiceService.deleteDescriptor(
+        await eServiceService.deleteDescriptor(
           evt.data.eservice?.id,
           evt.data.descriptorId,
           evt.stream_id,
@@ -123,7 +83,7 @@ export async function handleMessageV1(
     )
     .with(
       {
-        type: "ClonedEServiceAdded",
+        type: P.union("EServiceUpdated", "ClonedEServiceAdded"),
       },
       async (evt) => {
         // viene clonato l'eservice con tutti i suoi descrittori?
@@ -131,14 +91,14 @@ export async function handleMessageV1(
           throw new Error("Missing eservice data");
         }
 
-        const eService = fromEserviceEventToEserviceEntity(
+        const eService = fromEserviceEventV1ToEserviceEntity(
           evt.data.eservice?.id,
           evt.data.eservice?.descriptors,
           evt.stream_id,
           evt.version
         );
 
-        eServiceService.upsert(eService, logger);
+        await eServiceService.upsertV1(eService, logger);
       }
     )
     .with(
@@ -158,20 +118,18 @@ export async function handleMessageV1(
     .exhaustive();
 }
 
-export const fromEserviceEventToEserviceEntity = (
+export const fromEserviceEventV1ToEserviceEntity = (
   eServiceId: string,
   descriptorsData: EServiceDescriptorV1[],
   streamId: string,
   version: number
-): EserviceEntity => {
-  return {
-    eservice_id: eServiceId,
-    descriptors: descriptorsData.map((descriptor) => ({
-      descriptor_id: descriptor.id,
-      state: descriptor.state as unknown as string, // TODO: to fix
-    })),
+): EserviceEntity => ({
+  eservice_id: eServiceId,
+  descriptors: descriptorsData.map((descriptor) => ({
+    descriptor_id: descriptor.id,
+    state: descriptor.state as unknown as string, // TODO: to fix
+  })),
 
-    event_stream_id: streamId,
-    event_version_id: version,
-  };
-};
+  event_stream_id: streamId,
+  event_version_id: version,
+});

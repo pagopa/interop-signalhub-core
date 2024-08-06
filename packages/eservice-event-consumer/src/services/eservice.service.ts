@@ -1,13 +1,44 @@
 import { Logger } from "pagopa-signalhub-commons";
+import { EServiceDescriptorV2 } from "@pagopa/interop-outbound-models";
 import { IEserviceRepository } from "../repositories/eservice.repository.js";
+/* eslint-disable functional/no-method-signature */
+
 import { EserviceEntity, EserviceV2Entity } from "../models/domain/model.js";
 import { IEserviceProduceRepository } from "../repositories/eServiceProducer.repository.js";
-import { EServiceDescriptorV2 } from "@pagopa/interop-outbound-models";
 
+export interface IEServiceService {
+  addEserviceProducer(
+    eServiceId: string,
+    producerId: string,
+    eventStreamId: string,
+    eventVersionId: number,
+    logger: Logger
+  ): Promise<void>;
+  upsertV1(eService: EserviceEntity, logger: Logger): Promise<void>;
+  upsertV2(eService: EserviceV2Entity, logger: Logger): Promise<void>;
+  delete(eServiceId: string, logger: Logger): Promise<void>;
+  deleteDescriptor(
+    eServiceId: string,
+    descriptorId: string,
+    eventStreamId: string,
+    eventVersionId: number,
+    logger: Logger
+  ): Promise<void>;
+  deleteDescritorV2(
+    eServiceId: string,
+    descriptors: EServiceDescriptorV2[],
+    logger: Logger
+  ): Promise<void>;
+}
 export function eServiceServiceBuilder(
   eServiceRepository: IEserviceRepository,
   eServiceProducerRepository: IEserviceProduceRepository
-) {
+): IEServiceService {
+  /**
+   * This method will be used just for V1 version of event messages
+   * to add a new eservice producer on producer_table
+   */
+
   return {
     async addEserviceProducer(
       eServiceId: string,
@@ -38,7 +69,7 @@ export function eServiceServiceBuilder(
       );
     },
 
-    async upsert(eService: EserviceEntity, logger: Logger): Promise<void> {
+    async upsertV1(eService: EserviceEntity, logger: Logger): Promise<void> {
       logger.debug(
         `insert or update event: ${JSON.stringify(eService, null, 2)}`
       );
@@ -48,9 +79,7 @@ export function eServiceServiceBuilder(
           eService.eservice_id
         );
 
-      // TODO GESTIONE SE NON ESISTE
-
-      eService.descriptors.forEach(async (descriptor) => {
+      for (const descriptor of eService.descriptors) {
         const eventWasProcessed = await eServiceRepository.eventWasProcessed(
           descriptor.descriptor_id,
           eService.event_stream_id,
@@ -67,6 +96,7 @@ export function eServiceServiceBuilder(
         logger.debug(
           `upserting descriptor: ${JSON.stringify(descriptor, null, 2)}`
         );
+
         await eServiceRepository.upsertDescriptor(
           eService.eservice_id,
           producerId,
@@ -74,7 +104,7 @@ export function eServiceServiceBuilder(
           eService.event_stream_id,
           eService.event_version_id
         );
-      });
+      }
     },
 
     async upsertV2(eService: EserviceV2Entity, logger: Logger): Promise<void> {
@@ -82,7 +112,7 @@ export function eServiceServiceBuilder(
         `insert or update event: ${JSON.stringify(eService, null, 2)}`
       );
 
-      eService.descriptors.forEach(async (descriptor) => {
+      for (const descriptor of eService.descriptors) {
         const eventWasProcessed = await eServiceRepository.eventWasProcessed(
           descriptor.descriptor_id,
           eService.event_stream_id,
@@ -106,7 +136,7 @@ export function eServiceServiceBuilder(
           eService.event_stream_id,
           eService.event_version_id
         );
-      });
+      }
     },
 
     async delete(eServiceId: string, logger: Logger): Promise<void> {
