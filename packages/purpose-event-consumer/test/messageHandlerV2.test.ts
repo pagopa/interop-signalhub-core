@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { genericLogger } from "pagopa-signalhub-commons";
 import {
+  PurposeEventV2,
   PurposeStateV2,
   PurposeV2,
   PurposeVersionV2,
@@ -339,5 +340,36 @@ describe("Message Handler for V2 EVENTS", () => {
       purposeEventV2
     );
     expect(actualPurpose).toStrictEqual(expectedPurpose);
+  });
+  it("Should throw an error if a purpose (event.data) is missing", async () => {
+    const purposeEventV2: PurposeEventV2 = {
+      type: "PurposeActivated",
+      data: {
+        purpose: undefined,
+      },
+      event_version: 2,
+      stream_id: generateId(),
+      version: 1,
+      timestamp: new Date(),
+    };
+    await expect(
+      handleMessageV2(purposeEventV2, purposeService, genericLogger)
+    ).rejects.toThrow("Missing purpose");
+  });
+
+  it("Should throw an error if versions[] has no valid state", async () => {
+    const aDraftVersion = {
+      ...mockPurposeVersionV2,
+      state: PurposeStateV2.DRAFT,
+    };
+    const purposeV2: PurposeV2 = {
+      ...mockPurposeV2,
+      versions: [aDraftVersion],
+    };
+    const purposeEventV2 = createAPurposeEventV2("PurposeActivated", purposeV2);
+
+    await expect(
+      handleMessageV2(purposeEventV2, purposeService, genericLogger)
+    ).rejects.toThrow("No version in a valida state in versions");
   });
 });

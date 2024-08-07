@@ -10,7 +10,6 @@ import {
 import { P, match } from "ts-pattern";
 import { PurposeService } from "../services/purpose.service.js";
 import { PurposeEntity } from "../models/domain/model.js";
-import { isPurposeWithoutVersions } from "../utils/index.js";
 
 export async function handleMessageV2(
   event: PurposeEventV2,
@@ -38,8 +37,8 @@ export async function handleMessageV2(
         if (!evt.data.purpose) {
           throw new Error("Missing purpose");
         }
-        if (isPurposeWithoutVersions(evt.data.purpose)) {
-          return;
+        if (hasPurposeVersionInAValidState(evt.data.purpose.versions)) {
+          throw new Error("No valid version in versions");
         }
         await purposeService.upsert(
           toPurposeV2Entity(evt, evt.data.purpose),
@@ -73,20 +72,23 @@ export const toPurposeV2Entity = (
   purpose: PurposeV2
 ): PurposeEntity => {
   const { stream_id: streamId, version } = event;
-  const { versionId, state } = toPurposeVersionV2Entity(purpose.versions);
+  const validVersion = validVersionInVersionsV2(purpose.versions);
+  if (!validVersion) {
+    throw new Error("No valid version in versions");
+  }
   return {
     purposeId: purpose.id,
     eserviceId: purpose.eserviceId,
     consumerId: purpose.consumerId,
-    purposeState: state,
-    purposeVersionId: versionId,
+    purposeState: validVersion.state,
+    purposeVersionId: validVersion.versionId,
     eventStreamId: streamId,
     eventVersionId: version,
   };
 };
-const toPurposeVersionV2Entity = (
+const validVersionInVersionsV2 = (
   purposeVersions: PurposeVersionV2[]
-): { versionId: string; state: string } =>
+): { versionId: string; state: string } | undefined =>
   match(purposeVersions)
     .when(
       (versions) =>
@@ -103,13 +105,7 @@ const toPurposeVersionV2Entity = (
         versions.some((version) => version.state === PurposeStateV2.ARCHIVED),
       () => getVersionBy(PurposeStateV2.ARCHIVED, purposeVersions)
     )
-    .otherwise(() => {
-      const { length: l, [l - 1]: lastVersion } = purposeVersions;
-      return {
-        versionId: lastVersion.id,
-        state: lastVersion.state.toString(),
-      };
-    });
+    .otherwise(() => undefined);
 
 function getVersionBy(
   purposeState: PurposeStateV2,
@@ -125,3 +121,7 @@ function getVersionBy(
       return { ...obj, versionId: id, state: state.toString() };
     }, {} as { versionId: string; state: string });
 }
+
+const hasPurposeVersionInAValidState = (
+  versions: PurposeVersionV2[]
+): boolean => !validVersionInVersionsV2(versions);

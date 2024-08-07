@@ -1,8 +1,4 @@
-import {
-  PurposeEvent,
-  PurposeV1,
-  PurposeV2,
-} from "@pagopa/interop-outbound-models";
+import { PurposeEvent } from "@pagopa/interop-outbound-models";
 import { Logger, logger } from "pagopa-signalhub-commons";
 
 export const buildLoggerInstance = (
@@ -17,7 +13,3 @@ export const buildLoggerInstance = (
     streamId: purposeEvent.stream_id,
     correlationId,
   });
-
-export const isPurposeWithoutVersions = (
-  purpose: PurposeV1 | PurposeV2
-): boolean => Array.isArray(purpose.versions) && purpose.versions.length === 0;

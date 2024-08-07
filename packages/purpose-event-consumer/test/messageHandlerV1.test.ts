@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { genericLogger } from "pagopa-signalhub-commons";
 import {
+  PurposeEventV1,
   PurposeStateV1,
   PurposeV1,
   PurposeVersionV1,
@@ -68,7 +69,7 @@ describe("Message Handler for V1 EVENTS", () => {
     }
   });
 
-  it("Should activate  a purpose for a PurposeVersionActivated event", async () => {
+  it("Should activate a purpose for a PurposeVersionActivated event", async () => {
     const anActiveVersion = {
       ...mockPurposeVersionV1,
       state: PurposeStateV1.ACTIVE,
@@ -297,5 +298,40 @@ describe("Message Handler for V1 EVENTS", () => {
       purposeEventV1
     );
     expect(actualPurpose).toStrictEqual(expectedPurpose);
+  });
+
+  it("Should throw an error if a purpose (event.data) is missing", async () => {
+    const purposeEventV1: PurposeEventV1 = {
+      type: "PurposeVersionActivated",
+      data: {
+        purpose: undefined,
+      },
+      event_version: 1,
+      stream_id: generateId(),
+      version: 1,
+      timestamp: new Date(),
+    };
+    await expect(
+      handleMessageV1(purposeEventV1, purposeService, genericLogger)
+    ).rejects.toThrow("Missing purpose");
+  });
+
+  it("Should throw an error if versions[] has no valid state", async () => {
+    const aDraftVersion = {
+      ...mockPurposeVersionV1,
+      state: PurposeStateV1.DRAFT,
+    };
+    const purposeV1: PurposeV1 = {
+      ...mockPurposeV1,
+      versions: [aDraftVersion],
+    };
+    const purposeEventV1 = createAPurposeEventV1(
+      "PurposeVersionSuspended",
+      purposeV1
+    );
+
+    await expect(
+      handleMessageV1(purposeEventV1, purposeService, genericLogger)
+    ).rejects.toThrow("No version in a valida state in versions");
   });
 });
