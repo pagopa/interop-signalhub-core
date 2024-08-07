@@ -10,8 +10,8 @@ import {
 import { P, match } from "ts-pattern";
 import { PurposeEntity } from "../models/domain/model.js";
 import { PurposeService } from "../services/purpose.service.js";
-import { config } from "../config/env.js";
 import { kafkaInvalidVersion } from "../models/domain/errors.js";
+import { config } from "../config/env.js";
 
 export async function handleMessageV1(
   event: PurposeEventV1,
