@@ -1,7 +1,4 @@
-import {
-  correlationId,
-  kafkaMissingMessageValue,
-} from "pagopa-signalhub-commons";
+import { kafkaMissingMessageValue } from "pagopa-signalhub-commons";
 import { runConsumer } from "kafka-connector";
 import { EachMessagePayload } from "kafkajs";
 import { match } from "ts-pattern";
@@ -18,32 +15,32 @@ export async function processMessage({
   message,
   partition,
 }: EachMessagePayload): Promise<void> {
-  if (!message.value) {
-    throw kafkaMissingMessageValue(config.kafkaTopic);
+  try {
+    if (!message.value) {
+      throw kafkaMissingMessageValue(config.kafkaTopic);
+    }
+    const eserviceEvent = decodeOutboundEServiceEvent(message.value.toString());
+
+    const logger = buildLoggerInstance(serviceName, eserviceEvent);
+    logger.info(
+      `Processing message event: ${eserviceEvent.stream_id}/${eserviceEvent.version}`
+    );
+
+    await match(eserviceEvent)
+      .with({ event_version: 1 }, (event) =>
+        handleMessageV1(event, eServiceService, logger)
+      )
+      .with({ event_version: 2 }, (event) =>
+        handleMessageV2(event, eServiceService, logger)
+      )
+      .exhaustive();
+
+    logger.info(
+      `Message was processed. Partition number: ${partition}. Offset: ${message.offset}`
+    );
+  } catch (error) {
+    throw error;
   }
-  const eserviceEvent = decodeOutboundEServiceEvent(message.value.toString());
-
-  const logger = buildLoggerInstance(
-    serviceName,
-    eserviceEvent,
-    correlationId()
-  );
-  logger.info(
-    `Processing message event: ${eserviceEvent.stream_id}/${eserviceEvent.version}`
-  );
-
-  await match(eserviceEvent)
-    .with({ event_version: 1 }, (event) =>
-      handleMessageV1(event, eServiceService, logger)
-    )
-    .with({ event_version: 2 }, (event) =>
-      handleMessageV2(event, eServiceService, logger)
-    )
-    .exhaustive();
-
-  logger.info(
-    `Message was processed. Partition number: ${partition}. Offset: ${message.offset}`
-  );
 }
 
 await runConsumer(config, [config.kafkaTopic], processMessage);

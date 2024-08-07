@@ -4,7 +4,7 @@ import { Logger, logger } from "pagopa-signalhub-commons";
 export const buildLoggerInstance = (
   serviceName: string,
   eserviceEvent: EServiceEvent,
-  correlationId: string
+  correlationId?: string
 ): Logger =>
   logger({
     serviceName,
