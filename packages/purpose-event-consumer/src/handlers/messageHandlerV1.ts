@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Logger } from "pagopa-signalhub-commons";
+import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import {
   PurposeEventV1,
   PurposeStateV1,
@@ -10,6 +10,7 @@ import {
 import { P, match } from "ts-pattern";
 import { PurposeEntity } from "../models/domain/model.js";
 import { PurposeService } from "../services/purpose.service.js";
+import { config } from "../config/env.js";
 
 export async function handleMessageV1(
   event: PurposeEventV1,
@@ -27,7 +28,7 @@ export async function handleMessageV1(
       },
       async (evt) => {
         if (!evt.data.purpose) {
-          throw new Error("Missing purpose");
+          throw kafkaMessageMissingData(config.kafkaTopic, event.type);
         }
         if (purposeHasNoVersionInAValidState(evt.data.purpose.versions)) {
           throw new Error("No version in a valida state in versions");
