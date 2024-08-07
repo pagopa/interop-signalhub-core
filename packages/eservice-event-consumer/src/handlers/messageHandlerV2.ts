@@ -149,4 +149,4 @@ export const fromEserviceEventV2ToEserviceEntity = (
 const getFilteredDescriptors = (
   descriptorId: string,
   descriptors: EServiceDescriptorV2[]
-): EServiceDescriptorV2[] => descriptors.filter((d) => d.id !== descriptorId);
+): EServiceDescriptorV2[] => descriptors.filter((d) => d.id === descriptorId);
