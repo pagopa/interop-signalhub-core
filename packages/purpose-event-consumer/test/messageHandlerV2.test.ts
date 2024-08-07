@@ -370,6 +370,6 @@ describe("Message Handler for V2 EVENTS", () => {
 
     await expect(
       handleMessageV2(purposeEventV2, purposeService, genericLogger)
-    ).rejects.toThrow("No version in a valida state in versions");
+    ).rejects.toThrow("No version in a valid state in versions");
   });
 });

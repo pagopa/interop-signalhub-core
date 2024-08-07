@@ -38,7 +38,7 @@ export async function handleMessageV2(
           throw new Error("Missing purpose");
         }
         if (hasPurposeVersionInAValidState(evt.data.purpose.versions)) {
-          throw new Error("No valid version in versions");
+          throw new Error("No version in a valid state in versions");
         }
         await purposeService.upsert(
           toPurposeV2Entity(evt, evt.data.purpose),
