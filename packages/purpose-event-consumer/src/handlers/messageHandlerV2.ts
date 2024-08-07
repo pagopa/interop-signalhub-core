@@ -61,7 +61,7 @@ export async function handleMessageV2(
         ),
       },
       async () => {
-        logger.debug(`Event type not relevant`);
+        logger.debug(`Skip event (not relevant)`);
       }
     )
     .exhaustive();

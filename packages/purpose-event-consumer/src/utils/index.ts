@@ -3,8 +3,7 @@ import { Logger, logger } from "pagopa-signalhub-commons";
 
 export const buildLoggerInstance = (
   serviceName: string,
-  purposeEvent: PurposeEvent,
-  correlationId: string
+  purposeEvent: PurposeEvent
 ): Logger =>
   logger({
     serviceName,
@@ -12,5 +11,4 @@ export const buildLoggerInstance = (
     eventVersion: purposeEvent.event_version,
     streamId: purposeEvent.stream_id,
     version: purposeEvent.version,
-    correlationId,
   });

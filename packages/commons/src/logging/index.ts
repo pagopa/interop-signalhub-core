@@ -31,6 +31,7 @@ const logFormat = (
     eventType,
     eventVersion,
     streamId,
+    version,
   }: LoggerMetadata
 ) => {
   const serviceLogPart = serviceName ? `[${serviceName}]` : undefined;
@@ -44,6 +45,7 @@ const logFormat = (
   const eventTypePart = eventType ? `[ET=${eventType}]` : undefined;
   const eventVersionPart = eventVersion ? `[EV=${eventVersion}]` : undefined;
   const streamIdPart = streamId ? `[SID=${streamId}]` : undefined;
+  const versionIdPart = version ? `[VID=${version}]` : undefined;
 
   const firstPart = [timestamp, level.toUpperCase(), serviceLogPart]
     .filter((e) => e !== undefined)
@@ -56,6 +58,7 @@ const logFormat = (
     eventTypePart,
     eventVersionPart,
     streamIdPart,
+    versionIdPart,
   ]
     .filter((e) => e !== undefined)
     .join(" ");

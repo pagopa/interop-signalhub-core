@@ -12,10 +12,12 @@ export function purposeServiceBuilder(purposeRepository: IPurposeRepository) {
         purpose.eventVersionId
       );
       if (eventWasProcessed) {
-        logger.debug(`Idempotence: skip event already processed`);
+        logger.debug(`Skip event (idempotence)`);
         return;
       }
-      logger.debug(`Saving event`);
+      logger.debug(
+        `Saving event: (stato: ${purpose.purposeState}, e-service: ${purpose.eserviceId}, consumerId: ${purpose.consumerId})`
+      );
       await purposeRepository.upsert(purpose);
     },
     async delete(

@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import { correlationId } from "pagopa-signalhub-commons";
 import { runConsumer } from "kafka-connector";
 import { EachMessagePayload } from "kafkajs";
 import { match } from "ts-pattern";
@@ -21,11 +20,7 @@ export async function processMessage({
   }
   const purposeEvent = decodeOutboundPurposeEvent(message.value.toString());
 
-  const logger = buildLoggerInstance(
-    serviceName,
-    purposeEvent,
-    correlationId()
-  );
+  const logger = buildLoggerInstance(serviceName, purposeEvent);
   await match(purposeEvent)
     .with({ event_version: 1 }, (event) =>
       handleMessageV1(event, purposeService, logger)
