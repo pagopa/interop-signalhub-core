@@ -60,12 +60,17 @@ export async function handleMessageV2(
         );
       }
     )
-    .with({ type: "AgreementConsumerDocumentAdded" }, async (evt) => {
-      logger.debug(`Event type ${evt.type} not relevant`);
-    })
-    .with({ type: "AgreementConsumerDocumentRemoved" }, async (evt) => {
-      logger.debug(`Event type ${evt.type} not relevant`);
-    })
+    .with(
+      {
+        type: P.union(
+          "AgreementConsumerDocumentAdded",
+          "AgreementConsumerDocumentRemoved"
+        ),
+      },
+      async () => {
+        logger.debug(`Skip event (not relevant)`);
+      }
+    )
     .exhaustive();
 }
 

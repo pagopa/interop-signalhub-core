@@ -9,27 +9,31 @@ export function agreementServiceBuilder(
 ) {
   return {
     async update(agreement: AgreementEntity, logger: Logger): Promise<void> {
-      logger.debug(`updating event: ${JSON.stringify(agreement)}`);
       const eventWasProcessed = await agreementRepository.eventWasProcessed(
         agreement.event_stream_id,
         agreement.event_version_id
       );
-      logger.debug(`event was already processed: ${eventWasProcessed}`);
       if (eventWasProcessed) {
+        logger.info(`Skip event (idempotence)`);
         return;
       }
+      logger.info(
+        `Saving event (update) state: ${agreement.state}, e-service: ${agreement.eservice_id}, consumerId: ${agreement.consumer_id}`
+      );
       await agreementRepository.update(agreement);
     },
     async insert(agreement: AgreementEntity, logger: Logger): Promise<void> {
-      logger.debug(`inserting event: ${JSON.stringify(agreement, null, 2)}`);
       const eventWasProcessed = await agreementRepository.eventWasProcessed(
         agreement.event_stream_id,
         agreement.event_version_id
       );
-      logger.debug(`event was already processed: ${eventWasProcessed}`);
       if (eventWasProcessed) {
+        logger.info(`Skip event (idempotence)`);
         return;
       }
+      logger.info(
+        `Saving event (insert) state: ${agreement.state}, e-service: ${agreement.eservice_id}, consumerId: ${agreement.consumer_id}`
+      );
       await agreementRepository.insert(agreement);
     },
     async delete(
@@ -38,7 +42,7 @@ export function agreementServiceBuilder(
       logger: Logger
     ): Promise<void> {
       // some business logic
-      logger.info(`deleting event: ${agreementId}`);
+      logger.info(`Deleting event: ${agreementId}`);
       await agreementRepository.delete(agreementId, streamId);
     },
   };
