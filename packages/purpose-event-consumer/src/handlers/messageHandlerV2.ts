@@ -11,6 +11,7 @@ import { P, match } from "ts-pattern";
 import { PurposeService } from "../services/purpose.service.js";
 import { PurposeEntity } from "../models/domain/model.js";
 import { config } from "../config/env.js";
+import { kafkaInvalidVersion } from "../models/domain/errors.js";
 
 export async function handleMessageV2(
   event: PurposeEventV2,
@@ -39,7 +40,7 @@ export async function handleMessageV2(
           throw kafkaMessageMissingData(config.kafkaTopic, event.type);
         }
         if (hasPurposeVersionInAValidState(evt.data.purpose.versions)) {
-          throw new Error("No version in a valid state in versions");
+          throw kafkaInvalidVersion();
         }
         await purposeService.upsert(
           toPurposeV2Entity(evt, evt.data.purpose),
@@ -75,7 +76,7 @@ export const toPurposeV2Entity = (
   const { stream_id: streamId, version } = event;
   const validVersion = validVersionInVersionsV2(purpose.versions);
   if (!validVersion) {
-    throw new Error("No valid version in versions");
+    throw kafkaInvalidVersion();
   }
   return {
     purposeId: purpose.id,
