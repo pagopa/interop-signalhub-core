@@ -26,10 +26,6 @@ export async function processMessage({
     purposeEvent,
     correlationId()
   );
-  logger.info(
-    `Processing message event: ${purposeEvent.stream_id}/${purposeEvent.version}`
-  );
-
   await match(purposeEvent)
     .with({ event_version: 1 }, (event) =>
       handleMessageV1(event, purposeService, logger)
@@ -40,7 +36,7 @@ export async function processMessage({
     .exhaustive();
 
   logger.info(
-    `Message was processed. Partition number: ${partition}. Offset: ${message.offset}`
+    `Message was processed. Partition number: [${partition}] Offset: [${message.offset}]`
   );
 }
 

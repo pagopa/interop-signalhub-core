@@ -11,5 +11,6 @@ export const buildLoggerInstance = (
     eventType: purposeEvent.type,
     eventVersion: purposeEvent.event_version,
     streamId: purposeEvent.stream_id,
+    version: purposeEvent.version,
     correlationId,
   });

@@ -9,6 +9,7 @@ export type LoggerMetadata = {
   eventType?: string;
   eventVersion?: number;
   streamId?: string;
+  version?: number;
 };
 
 export const parsedLoggerConfig = LoggerConfig.safeParse(process.env);
