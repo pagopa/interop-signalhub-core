@@ -86,7 +86,6 @@ export async function handleMessageV1(
         type: P.union("EServiceUpdated", "ClonedEServiceAdded"),
       },
       async (evt) => {
-        // viene clonato l'eservice con tutti i suoi descrittori?
         if (!evt.data.eservice) {
           throw new Error("Missing eservice data");
         }
