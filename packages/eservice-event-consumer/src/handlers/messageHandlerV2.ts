@@ -1,4 +1,8 @@
-import { EServiceEventV2, EServiceV2 } from "@pagopa/interop-outbound-models";
+import {
+  EServiceDescriptorV2,
+  EServiceEventV2,
+  EServiceV2,
+} from "@pagopa/interop-outbound-models";
 import { Logger } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
 import { EserviceV2Entity } from "../models/domain/model.js";
@@ -13,14 +17,8 @@ export async function handleMessageV2(
     .with(
       {
         type: P.union(
-          "EServiceCloned",
-          "EServiceDescriptorAdded",
           "EServiceAdded",
-          "EServiceDescriptorActivated",
-          "EServiceDescriptorArchived",
-          "EServiceDescriptorPublished",
-          "EServiceDescriptorSuspended",
-          "EServiceDraftDescriptorUpdated",
+          "EServiceCloned",
           "DraftEServiceUpdated"
         ),
       },
@@ -30,6 +28,44 @@ export async function handleMessageV2(
         if (!eservice) {
           throw new Error("Missing eservice data");
         }
+        const eService = fromEserviceEventV2ToEserviceEntity(
+          eservice,
+          evt.stream_id,
+          evt.version
+        );
+
+        await eServiceService.upsertV2(eService, logger);
+      }
+    )
+
+    .with(
+      {
+        type: P.union(
+          // "EServiceCloned",
+          "EServiceDescriptorAdded",
+          // "EServiceAdded",
+          "EServiceDescriptorActivated",
+          "EServiceDescriptorArchived",
+          "EServiceDescriptorPublished",
+          "EServiceDescriptorSuspended",
+          "EServiceDraftDescriptorUpdated"
+          // "DraftEServiceUpdated"
+        ),
+      },
+      async (evt) => {
+        const { eservice, descriptorId } = evt.data;
+
+        if (!eservice) {
+          throw new Error("Missing eservice data");
+        }
+
+        // Get only descriptors that need to be updated
+        // eslint-disable-next-line functional/immutable-data
+        eservice.descriptors = getFilteredDescriptors(
+          descriptorId,
+          eservice.descriptors
+        );
+
         const eService = fromEserviceEventV2ToEserviceEntity(
           eservice,
           evt.stream_id,
@@ -109,3 +145,8 @@ export const fromEserviceEventV2ToEserviceEntity = (
   event_stream_id: streamId,
   event_version_id: version,
 });
+
+const getFilteredDescriptors = (
+  descriptorId: string,
+  descriptors: EServiceDescriptorV2[]
+): EServiceDescriptorV2[] => descriptors.filter((d) => d.id !== descriptorId);
