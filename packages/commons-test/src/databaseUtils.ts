@@ -1,5 +1,8 @@
 import { DB, Signal, SignalPayload } from "pagopa-signalhub-commons";
 
+export async function truncatePurposeTable(db: DB): Promise<void> {
+  await db.none("truncate dev_interop.purpose;");
+}
 export async function truncateAgreementTable(db: DB): Promise<void> {
   await db.none("truncate dev_interop.agreement;");
 }

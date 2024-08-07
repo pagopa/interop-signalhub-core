@@ -6,6 +6,7 @@ export interface IPurposeRepository {
   eventWasProcessed(streamId: string, version: number): Promise<boolean>;
   insert(purpose: PurposeEntity): Promise<void>;
   update(purpose: PurposeEntity): Promise<void>;
+  upsert(purpose: PurposeEntity): Promise<void>;
   delete(purposeId: string, streamId: string): Promise<void>;
 }
 
@@ -27,20 +28,20 @@ export const purposeRepository = (db: DB): IPurposeRepository => ({
       const {
         purposeId,
         purposeVersionId,
+        purposeState,
         eserviceId,
         consumerId,
-        purposeState,
         eventStreamId,
         eventVersionId,
       } = purpose;
       await db.oneOrNone(
-        "INSERT INTO dev_interop.purpose(purpose_id, eservice_id, consumer_id, descriptor_id, state, event_stream_id, event_version_id) VALUES($1, $2, $3, $4, $5, $6, $7)",
+        "INSERT INTO dev_interop.purpose(purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id, event_stream_id, event_version_id) VALUES($1, $2, $3, $4, $5, $6, $7)",
         [
           purposeId,
           purposeVersionId,
+          purposeState,
           eserviceId,
           consumerId,
-          purposeState,
           eventStreamId,
           eventVersionId,
         ]
@@ -50,6 +51,43 @@ export const purposeRepository = (db: DB): IPurposeRepository => ({
     }
   },
 
+  async upsert(purpose: PurposeEntity): Promise<void> {
+    try {
+      const tmstLastEdit = getCurrentDate();
+      const {
+        purposeId,
+        purposeVersionId,
+        eserviceId,
+        consumerId,
+        purposeState,
+        eventStreamId,
+        eventVersionId,
+      } = purpose;
+      await db.oneOrNone(
+        `INSERT INTO dev_interop.purpose(purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id, event_stream_id, event_version_id) 
+          VALUES($1, $2, $3, $4, $5, $6, $7) 
+          ON CONFLICT (purpose_id) 
+          DO UPDATE SET 
+          purpose_version_id = EXCLUDED.purpose_version_id,
+          purpose_state = EXCLUDED.purpose_state,
+          event_stream_id = EXCLUDED.event_stream_id,
+          event_version_id = EXCLUDED.event_version_id,
+          tmst_last_edit= EXCLUDED.tmst_last_edit`,
+        [
+          purposeId,
+          purposeVersionId,
+          purposeState,
+          eserviceId,
+          consumerId,
+          eventStreamId,
+          eventVersionId,
+          tmstLastEdit,
+        ]
+      );
+    } catch (error) {
+      throw genericInternalError(`Error updatePurpose:" ${error} `);
+    }
+  },
   async update(purpose: PurposeEntity): Promise<void> {
     try {
       const tmstLastEdit = getCurrentDate();
@@ -63,7 +101,7 @@ export const purposeRepository = (db: DB): IPurposeRepository => ({
         eventVersionId,
       } = purpose;
       await db.none(
-        "update dev_interop.purpose set purpose_id = $1, eservice_id = $2, consumer_id = $3, descriptor_id = $4, state = $5, event_stream_id = $6, event_version_id =$7, tmst_last_edit = $8  where purpose_id = $1 and event_stream_id = $6",
+        "update dev_interop.purpose set purpose_id = $1, purpose_version_id = $2, eservice_id = $3, consumer_id = $4, purpose_state = $5, event_stream_id = $6, event_version_id =$7, tmst_last_edit = $8  where purpose_id = $1 and purpose_version_id = $2 and event_stream_id = $6",
         [
           purposeId,
           purposeVersionId,
