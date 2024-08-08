@@ -7,15 +7,17 @@ import { IPurposeRepository } from "../repositories/index.js";
 export function purposeServiceBuilder(purposeRepository: IPurposeRepository) {
   return {
     async upsert(purpose: PurposeEntity, logger: Logger): Promise<void> {
-      logger.debug(`upserting event: ${JSON.stringify(purpose)}`);
       const eventWasProcessed = await purposeRepository.eventWasProcessed(
         purpose.eventStreamId,
         purpose.eventVersionId
       );
-      logger.debug(`event was already processed: ${eventWasProcessed}`);
       if (eventWasProcessed) {
+        logger.debug(`Skip event (idempotence)`);
         return;
       }
+      logger.debug(
+        `Saving event: (stato: ${purpose.purposeState}, e-service: ${purpose.eserviceId}, consumerId: ${purpose.consumerId})`
+      );
       await purposeRepository.upsert(purpose);
     },
     async delete(
@@ -23,7 +25,7 @@ export function purposeServiceBuilder(purposeRepository: IPurposeRepository) {
       streamId: string,
       logger: Logger
     ): Promise<void> {
-      logger.info(`deleting event: ${purposeId}`);
+      logger.info(`Deleting event: ${purposeId}`);
       await purposeRepository.delete(purposeId, streamId);
     },
   };
