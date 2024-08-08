@@ -15,6 +15,13 @@ export interface IEServiceService {
     logger: Logger
   ): Promise<void>;
   upsertV1(eService: EserviceEntity, logger: Logger): Promise<void>;
+  insertEserviceAndProducerId(
+    eService: EserviceEntity,
+    producerId: string,
+    eventStreamId: string,
+    eventVersionId: number,
+    logger: Logger
+  ): Promise<void>;
   upsertV2(eService: EserviceV2Entity, logger: Logger): Promise<void>;
   delete(eServiceId: string, logger: Logger): Promise<void>;
   deleteDescriptor(
@@ -50,6 +57,8 @@ export function eServiceServiceBuilder(
       logger.debug(
         `Ad new eservice event: with eServiceId  ${eServiceId} and producerId ${producerId}`
       );
+
+      console.log("EServiceId", eServiceId, "producerId", producerId);
 
       const eventWasProcessed =
         await eServiceProducerRepository.eventWasProcessed(
@@ -105,6 +114,32 @@ export function eServiceServiceBuilder(
           eService.event_version_id
         );
       }
+    },
+
+    /**
+     * This method add a procuderId on eservice_producer table, after that insert new eservice
+     * @param eService
+     * @param producerId
+     * @param eventStreamId
+     * @param eventVersionId
+     * @param logger
+     */
+    async insertEserviceAndProducerId(
+      eService: EserviceEntity,
+      producerId: string,
+      eventStreamId: string,
+      eventVersionId: number,
+      logger: Logger
+    ): Promise<void> {
+      await this.addEserviceProducer(
+        eService.eservice_id,
+        producerId,
+        eventStreamId,
+        eventVersionId,
+        logger
+      );
+
+      await this.upsertV1(eService, logger);
     },
 
     async upsertV2(eService: EserviceV2Entity, logger: Logger): Promise<void> {

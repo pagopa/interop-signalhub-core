@@ -44,6 +44,7 @@ export async function handleMessageV1(
           throw new Error("Missing eserviceDescriptor");
         }
 
+        console.log("eserviceId::", eserviceId);
         const eService = fromEserviceEventV1ToEserviceEntity(
           eserviceId,
           [eserviceDescriptor],
@@ -83,7 +84,7 @@ export async function handleMessageV1(
     )
     .with(
       {
-        type: P.union("EServiceUpdated", "ClonedEServiceAdded"),
+        type: "ClonedEServiceAdded",
       },
       async (evt) => {
         if (!evt.data.eservice) {
@@ -97,12 +98,19 @@ export async function handleMessageV1(
           evt.version
         );
 
-        await eServiceService.upsertV1(eService, logger);
+        await eServiceService.insertEserviceAndProducerId(
+          eService,
+          evt.data.eservice.producerId,
+          evt.stream_id,
+          evt.version,
+          logger
+        );
       }
     )
     .with(
       {
         type: P.union(
+          "EServiceUpdated",
           "EServiceDocumentAdded",
           "EServiceDocumentDeleted",
           "EServiceDocumentUpdated",
