@@ -44,7 +44,6 @@ export async function handleMessageV1(
           throw new Error("Missing eserviceDescriptor");
         }
 
-        console.log("eserviceId::", eserviceId);
         const eService = fromEserviceEventV1ToEserviceEntity(
           eserviceId,
           [eserviceDescriptor],

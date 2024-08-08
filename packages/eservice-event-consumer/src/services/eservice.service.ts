@@ -58,8 +58,6 @@ export function eServiceServiceBuilder(
         `Ad new eservice event: with eServiceId  ${eServiceId} and producerId ${producerId}`
       );
 
-      console.log("EServiceId", eServiceId, "producerId", producerId);
-
       const eventWasProcessed =
         await eServiceProducerRepository.eventWasProcessed(
           eventStreamId,
@@ -118,11 +116,6 @@ export function eServiceServiceBuilder(
 
     /**
      * This method add a procuderId on eservice_producer table, after that insert new eservice
-     * @param eService
-     * @param producerId
-     * @param eventStreamId
-     * @param eventVersionId
-     * @param logger
      */
     async insertEserviceAndProducerId(
       eService: EserviceEntity,
