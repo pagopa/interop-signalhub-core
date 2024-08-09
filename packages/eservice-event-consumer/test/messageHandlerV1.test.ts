@@ -55,7 +55,7 @@ describe("Message Handler for V1 EVENTS", () => {
 
       await expect(
         handleMessageV1(eServiceV1Event, eServiceService, genericLogger)
-      ).rejects.toThrow("Missing eservice data");
+      ).rejects.toThrow(/Missing data in kafka message/i);
     });
   });
 
@@ -96,7 +96,7 @@ describe("Message Handler for V1 EVENTS", () => {
 
       await expect(
         handleMessageV1(eServiceV1Event, eServiceService, genericLogger)
-      ).rejects.toThrow("Missing eserviceDescriptor");
+      ).rejects.toThrow(/Missing data in kafka message/i);
     });
   });
 
@@ -147,7 +147,7 @@ describe("Message Handler for V1 EVENTS", () => {
 
       await expect(
         handleMessageV1(eServiceV1Event, eServiceService, genericLogger)
-      ).rejects.toThrow("Missing eserviceDescriptor");
+      ).rejects.toThrow(/Missing data in kafka message/i);
     });
   });
 

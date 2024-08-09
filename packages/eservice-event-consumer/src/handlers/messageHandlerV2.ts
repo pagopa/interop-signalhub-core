@@ -3,10 +3,11 @@ import {
   EServiceEventV2,
   EServiceV2,
 } from "@pagopa/interop-outbound-models";
-import { Logger } from "pagopa-signalhub-commons";
+import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
 import { EserviceV2Entity } from "../models/domain/model.js";
 import { EServiceService } from "../services/eservice.service.js";
+import { config } from "../config/env.js";
 
 export async function handleMessageV2(
   event: EServiceEventV2,
@@ -26,7 +27,7 @@ export async function handleMessageV2(
         const { eservice } = evt.data;
 
         if (!eservice) {
-          throw new Error("Missing eservice data");
+          throw kafkaMessageMissingData(config.kafkaTopic, event.type);
         }
         const eService = fromEserviceEventV2ToEserviceEntity(
           eservice,
@@ -41,22 +42,19 @@ export async function handleMessageV2(
     .with(
       {
         type: P.union(
-          // "EServiceCloned",
           "EServiceDescriptorAdded",
-          // "EServiceAdded",
           "EServiceDescriptorActivated",
           "EServiceDescriptorArchived",
           "EServiceDescriptorPublished",
           "EServiceDescriptorSuspended",
           "EServiceDraftDescriptorUpdated"
-          // "DraftEServiceUpdated"
         ),
       },
       async (evt) => {
         const { eservice, descriptorId } = evt.data;
 
         if (!eservice) {
-          throw new Error("Missing eservice data");
+          throw kafkaMessageMissingData(config.kafkaTopic, event.type);
         }
 
         // Get only descriptors that need to be updated
@@ -96,7 +94,7 @@ export async function handleMessageV2(
         const { eservice } = evt.data;
 
         if (!eservice) {
-          throw new Error("Missing eservice data");
+          throw kafkaMessageMissingData(config.kafkaTopic, event.type);
         }
         const eService = fromEserviceEventV2ToEserviceEntity(
           eservice,

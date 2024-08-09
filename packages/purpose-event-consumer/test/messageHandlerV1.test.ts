@@ -313,7 +313,7 @@ describe("Message Handler for V1 EVENTS", () => {
     };
     await expect(
       handleMessageV1(purposeEventV1, purposeService, genericLogger)
-    ).rejects.toThrow("Missing purpose");
+    ).rejects.toThrow(/Missing data in kafka message/i);
   });
 
   it("Should throw an error if versions[] has no valid state", async () => {
@@ -332,6 +332,6 @@ describe("Message Handler for V1 EVENTS", () => {
 
     await expect(
       handleMessageV1(purposeEventV1, purposeService, genericLogger)
-    ).rejects.toThrow("No version in a valida state in versions");
+    ).rejects.toThrow(/Missing valid version within versions Array/i);
   });
 });

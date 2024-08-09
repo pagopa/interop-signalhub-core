@@ -3,6 +3,7 @@ import { runConsumer } from "kafka-connector";
 import { EachMessagePayload } from "kafkajs";
 import { match } from "ts-pattern";
 import { decodeOutboundAgreementEvent } from "@pagopa/interop-outbound-models";
+import { kafkaMissingMessageValue } from "pagopa-signalhub-commons";
 import { config } from "./config/env.js";
 import { handleMessageV1, handleMessageV2 } from "./handlers/index.js";
 import { serviceBuilder } from "./services/service.builder.js";
@@ -16,7 +17,7 @@ export async function processMessage({
   partition,
 }: EachMessagePayload): Promise<void> {
   if (!message.value) {
-    throw new Error("Invalid message: missing value");
+    throw kafkaMissingMessageValue(config.kafkaTopic);
   }
   const agreementEvent = decodeOutboundAgreementEvent(message.value.toString());
 
