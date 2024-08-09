@@ -42,7 +42,6 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."agreement" (
     tmst_insert     TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     tmst_last_edit  TIMESTAMPTZ,
     UNIQUE (event_stream_id, event_version_id),
-    -- UNIQUE (eservice_id, consumer_id, state),
     PRIMARY KEY (agreement_id)
 );
 CREATE INDEX IF NOT EXISTS AGREEMENT_INDEX_ESERVICE_AND_CONSUMER_AND_STATE ON "dev_interop"."agreement"(eservice_id, consumer_id, state);

@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import { kafkaMissingMessageValue } from "pagopa-signalhub-commons";
 import { runConsumer } from "kafka-connector";
 import { EachMessagePayload } from "kafkajs";
 import { match } from "ts-pattern";
@@ -16,8 +17,9 @@ export async function processMessage({
   partition,
 }: EachMessagePayload): Promise<void> {
   if (!message.value) {
-    throw new Error("Invalid message: missing value");
+    throw kafkaMissingMessageValue(config.kafkaTopic);
   }
+
   const purposeEvent = decodeOutboundPurposeEvent(message.value.toString());
 
   const logger = buildLoggerInstance(serviceName, purposeEvent);
