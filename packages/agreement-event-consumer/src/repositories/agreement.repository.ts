@@ -23,16 +23,16 @@ export const agreementRepository = (db: DB): IAgreementRepository => ({
   },
 
   async insert(agreement: AgreementEntity): Promise<void> {
+    const {
+      agreement_id,
+      eservice_id,
+      consumer_id,
+      descriptor_id,
+      state,
+      event_stream_id,
+      event_version_id,
+    } = agreement;
     try {
-      const {
-        agreement_id,
-        eservice_id,
-        consumer_id,
-        descriptor_id,
-        state,
-        event_stream_id,
-        event_version_id,
-      } = agreement;
       await db.oneOrNone(
         "INSERT INTO dev_interop.agreement(agreement_id, eservice_id, consumer_id, descriptor_id, state, event_stream_id, event_version_id) VALUES($1, $2, $3, $4, $5, $6, $7)",
         [
@@ -46,22 +46,24 @@ export const agreementRepository = (db: DB): IAgreementRepository => ({
         ]
       );
     } catch (error) {
-      throw genericInternalError(`Error insertAgreement:" ${error} `);
+      throw genericInternalError(
+        `Error insertAgreement: id: ${agreement_id}, eservice_id: ${eservice_id}, consumer_id: ${consumer_id}, descriptor_id: ${descriptor_id}, state: ${state}, event_stream_id: ${event_stream_id}, event_version_id: ${event_version_id} -  ${error} `
+      );
     }
   },
 
   async update(agreement: AgreementEntity): Promise<void> {
+    const tmstLastEdit = getCurrentDate();
+    const {
+      agreement_id,
+      eservice_id,
+      consumer_id,
+      descriptor_id,
+      state,
+      event_stream_id,
+      event_version_id,
+    } = agreement;
     try {
-      const tmstLastEdit = getCurrentDate();
-      const {
-        agreement_id,
-        eservice_id,
-        consumer_id,
-        descriptor_id,
-        state,
-        event_stream_id,
-        event_version_id,
-      } = agreement;
       await db.none(
         "update dev_interop.agreement set agreement_id = $1, eservice_id = $2, consumer_id = $3, descriptor_id = $4, state = $5, event_stream_id = $6, event_version_id =$7, tmst_last_edit = $8  where agreement_id = $1 and event_stream_id = $6",
         [
@@ -76,7 +78,9 @@ export const agreementRepository = (db: DB): IAgreementRepository => ({
         ]
       );
     } catch (error) {
-      throw genericInternalError(`Error updateAgreement:" ${error} `);
+      throw genericInternalError(
+        `Error updateAgreement: id: ${agreement_id}, eservice_id: ${eservice_id}, consumer_id: ${consumer_id}, descriptor_id: ${descriptor_id}, state: ${state}, event_stream_id: ${event_stream_id}, event_version_id: ${event_version_id} -  ${error} `
+      );
     }
   },
   async delete(agreementId: string, streamId: string): Promise<void> {

@@ -55,18 +55,19 @@ export async function handleMessageV1(
         logger
       );
     })
-    .with({ type: "AgreementContractAdded" }, async (evt) => {
-      logger.debug(`Event type ${evt.type} not relevant`);
-    })
-    .with({ type: "AgreementConsumerDocumentAdded" }, async (evt) => {
-      logger.debug(`Event type ${evt.type} not relevant`);
-    })
-    .with({ type: "AgreementConsumerDocumentRemoved" }, async (evt) => {
-      logger.debug(`Event type ${evt.type} not relevant`);
-    })
-    .with({ type: "VerifiedAttributeUpdated" }, async (evt) => {
-      logger.debug(`Event type ${evt.type} not relevant`);
-    })
+    .with(
+      {
+        type: P.union(
+          "AgreementContractAdded",
+          "AgreementConsumerDocumentAdded",
+          "AgreementConsumerDocumentRemoved",
+          "VerifiedAttributeUpdated"
+        ),
+      },
+      async () => {
+        logger.debug(`Skip event (not relevant)`);
+      }
+    )
     .exhaustive();
 }
 

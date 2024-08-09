@@ -1,8 +1,5 @@
 /* eslint-disable no-console */
-import {
-  correlationId,
-  kafkaMissingMessageValue,
-} from "pagopa-signalhub-commons";
+import { kafkaMissingMessageValue } from "pagopa-signalhub-commons";
 import { runConsumer } from "kafka-connector";
 import { EachMessagePayload } from "kafkajs";
 import { match } from "ts-pattern";
@@ -25,15 +22,7 @@ export async function processMessage({
 
   const purposeEvent = decodeOutboundPurposeEvent(message.value.toString());
 
-  const logger = buildLoggerInstance(
-    serviceName,
-    purposeEvent,
-    correlationId()
-  );
-  logger.info(
-    `Processing message event: ${purposeEvent.stream_id}/${purposeEvent.version}`
-  );
-
+  const logger = buildLoggerInstance(serviceName, purposeEvent);
   await match(purposeEvent)
     .with({ event_version: 1 }, (event) =>
       handleMessageV1(event, purposeService, logger)
@@ -44,7 +33,7 @@ export async function processMessage({
     .exhaustive();
 
   logger.info(
-    `Message was processed. Partition number: ${partition}. Offset: ${message.offset}`
+    `Message was processed. Partition number: [${partition}] Offset: [${message.offset}]`
   );
 }
 

@@ -62,8 +62,8 @@ export async function handleMessageV2(
           "PurposeCloned"
         ),
       },
-      async (evt) => {
-        logger.debug(`Event type ${evt.type} not relevant`);
+      async () => {
+        logger.debug(`Skip event (not relevant)`);
       }
     )
     .exhaustive();
