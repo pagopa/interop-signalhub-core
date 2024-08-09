@@ -137,7 +137,9 @@ const errorCodes = {
   missingHeader: "9994",
   badRequestError: "9999",
   jwtNotPresent: "10000",
+  kafkaMessageValueError: "9996",
   kafkaMessageProcessError: "9997",
+  kafkaMessageMissingData: "9998",
 } as const;
 
 export type CommonErrorCodes = keyof typeof errorCodes;
@@ -240,6 +242,24 @@ export function kafkaMessageProcessError(
     detail: `Error while handling kafka message from topic : ${topic} - partition ${partition} - offset ${offset}. ${
       error ? parseErrorMessage(error) : ""
     }`,
+  });
+}
+
+export function kafkaMissingMessageValue(
+  topic: string
+): InternalError<CommonErrorCodes> {
+  return new InternalError({
+    code: "kafkaMessageValueError",
+    detail: `Missing value message in kafka message from topic: ${topic}`,
+  });
+}
+export function kafkaMessageMissingData(
+  topic: string,
+  eventType: string
+): InternalError<CommonErrorCodes> {
+  return new InternalError({
+    code: "kafkaMessageMissingData",
+    detail: `Missing data in kafka message from topic: ${topic} and event type: ${eventType}`,
   });
 }
 

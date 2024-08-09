@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Logger } from "pagopa-signalhub-commons";
+import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import { AgreementV2, AgreementEventV2 } from "@pagopa/interop-outbound-models";
 
 import { P, match } from "ts-pattern";
 import { AgreementService } from "../services/agreement.service.js";
 import { AgreementEntity } from "../models/domain/model.js";
+import { config } from "../config/env.js";
 
 export async function handleMessageV2(
   event: AgreementEventV2,
@@ -17,7 +18,12 @@ export async function handleMessageV2(
     .with({ type: "AgreementAdded" }, async (evt) => {
       // Added Agreement
       await agreementService.insert(
-        toAgreementEntity(evt.data.agreement, evt.stream_id, evt.version),
+        toAgreementEntity(
+          evt.data.agreement,
+          evt.stream_id,
+          evt.version,
+          event.type
+        ),
         logger
       );
     })
@@ -44,7 +50,12 @@ export async function handleMessageV2(
 
       async (evt) => {
         await agreementService.update(
-          toAgreementEntity(evt.data.agreement, evt.stream_id, evt.version),
+          toAgreementEntity(
+            evt.data.agreement,
+            evt.stream_id,
+            evt.version,
+            event.type
+          ),
           logger
         );
       }
@@ -85,10 +96,11 @@ const toAgreementId = (agreement: AgreementV2 | undefined): string => {
 const toAgreementEntity = (
   agreement: AgreementV2 | undefined,
   streamId: string,
-  version: number
+  version: number,
+  eventType: string
 ): AgreementEntity => {
   if (!agreement) {
-    throw new Error("Invalid agreement");
+    throw kafkaMessageMissingData(config.kafkaTopic, eventType);
   }
   return {
     agreement_id: agreement.id,

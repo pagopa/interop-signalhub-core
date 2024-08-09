@@ -2,10 +2,11 @@ import {
   EServiceDescriptorV1,
   EServiceEventV1,
 } from "@pagopa/interop-outbound-models";
-import { Logger } from "pagopa-signalhub-commons";
+import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
 import { EServiceService } from "../services/eservice.service.js";
 import { EserviceEntity } from "../models/domain/model.js";
+import { config } from "../config/env.js";
 
 export async function handleMessageV1(
   event: EServiceEventV1,
@@ -19,7 +20,7 @@ export async function handleMessageV1(
       },
       async (evt) => {
         if (!evt.data.eservice) {
-          throw new Error("Missing eservice data");
+          throw kafkaMessageMissingData(config.kafkaTopic, event.type);
         }
 
         const { eservice } = evt.data;
@@ -41,7 +42,7 @@ export async function handleMessageV1(
         const { eserviceId, eserviceDescriptor } = evt.data;
 
         if (!eserviceDescriptor) {
-          throw new Error("Missing eserviceDescriptor");
+          throw kafkaMessageMissingData(config.kafkaTopic, event.type);
         }
 
         const eService = fromEserviceEventV1ToEserviceEntity(
@@ -69,7 +70,7 @@ export async function handleMessageV1(
       },
       async (evt) => {
         if (!evt.data.eservice) {
-          throw new Error("Missing eservice data");
+          throw kafkaMessageMissingData(config.kafkaTopic, event.type);
         }
 
         await eServiceService.deleteDescriptor(
