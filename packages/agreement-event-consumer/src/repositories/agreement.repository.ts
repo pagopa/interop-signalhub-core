@@ -13,7 +13,7 @@ export const agreementRepository = (db: DB): IAgreementRepository => ({
   async eventWasProcessed(streamId, versionId): Promise<boolean> {
     try {
       const response = await db.oneOrNone(
-        "select event_stream_id, event_version_id from dev_interop.agreement a where a.event_stream_id = $1 AND a.event_version_id = $2",
+        "select event_stream_id, event_version_id from dev_interop.agreement a where a.event_stream_id = $1 AND a.event_version_id >= $2",
         [streamId, versionId]
       );
       return response ? true : false;

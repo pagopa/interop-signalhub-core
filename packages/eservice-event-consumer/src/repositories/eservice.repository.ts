@@ -36,7 +36,7 @@ export const eServiceRepository = (db: DB): IEserviceRepository => ({
   async eventWasProcessed(descriptorId, streamId, versionId): Promise<boolean> {
     try {
       const response = await db.oneOrNone(
-        "select event_stream_id, event_version_id from dev_interop.eservice a where a.event_stream_id = $1 AND a.event_version_id = $2 AND a.descriptor_id = $3",
+        "select event_stream_id, event_version_id from dev_interop.eservice a where a.event_stream_id = $1 AND a.event_version_id >= $2 AND a.descriptor_id = $3",
         [streamId, versionId, descriptorId]
       );
 
