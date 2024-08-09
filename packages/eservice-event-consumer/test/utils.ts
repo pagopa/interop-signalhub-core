@@ -136,6 +136,21 @@ export const createEserviceDescriptorUpdatedEventV1 = (
   },
 });
 
+export const createEServiceClonedEventV1 = (
+  eServiceV1: EServiceV1,
+  stream_id?: string,
+  version?: number
+): EServiceEventV1 => ({
+  type: "ClonedEServiceAdded",
+  event_version: 1,
+  stream_id: stream_id || generateID(),
+  timestamp: new Date(),
+  version: version || 1,
+  data: {
+    eservice: eServiceV1,
+  },
+});
+
 export const createEServiceWithDescriptorsDeletedEventV1 = (
   eserviceV1: EServiceV1,
   stream_id?: string,

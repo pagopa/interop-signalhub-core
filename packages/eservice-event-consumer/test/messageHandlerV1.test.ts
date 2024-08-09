@@ -11,6 +11,7 @@ import {
   createEserviceDescriptorAddedEventV1,
   createEserviceDescriptorUpdatedEventV1,
   createEServiceWithDescriptorsDeletedEventV1,
+  createEServiceClonedEventV1,
 } from "./utils.js";
 import {
   findByEserviceIdAndProducerIdAndDescriptorId,
@@ -97,6 +98,49 @@ describe("Message Handler for V1 EVENTS", () => {
       await expect(
         handleMessageV1(eServiceV1Event, eServiceService, genericLogger)
       ).rejects.toThrow(/Missing data in kafka message/i);
+    });
+  });
+
+  describe("EserviceDescriptorCloned Event", () => {
+    it("Should add a new record on both ESERVICE table and ESERVICE_PRODUCER table", async () => {
+      const descriptorId = generateID();
+      const eServiceId = generateID();
+
+      const producerId = "new-producer-id";
+
+      const descriptor = createEserviceDescriptorV1({
+        id: descriptorId,
+        state: EServiceDescriptorStateV1.PUBLISHED,
+      });
+
+      const eService = createEServiceV1(
+        {
+          id: eServiceId,
+          producerId,
+        },
+        descriptor
+      );
+
+      const eServiceV1Event = createEServiceClonedEventV1(eService);
+
+      await handleMessageV1(eServiceV1Event, eServiceService, genericLogger);
+
+      const produecerIdResult = await findProducerIdByEserviceId(eServiceId);
+
+      // Check if ESERVICE_PRODUCER record has been inserted on DB
+      expect(produecerIdResult?.producerId).toBe(producerId);
+      const response = await findByEserviceIdAndProducerIdAndDescriptorId(
+        eServiceId,
+        descriptorId,
+        producerId
+      );
+
+      expect(response?.state).toEqual(
+        EServiceDescriptorStateV1.PUBLISHED.toString()
+      );
+      expect(response?.eservice_id).toEqual(eServiceId);
+      expect(response?.descriptor_id).toEqual(descriptorId);
+      expect(response?.producer_id).toEqual(producerId);
     });
   });
 
