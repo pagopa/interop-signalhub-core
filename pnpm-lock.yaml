@@ -21,8 +21,8 @@ importers:
   packages/agreement-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^1.0.3
+        version: 1.0.3
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -244,8 +244,8 @@ importers:
   packages/eservice-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^1.0.3
+        version: 1.0.3
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -517,8 +517,8 @@ importers:
   packages/purpose-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^1.0.3
+        version: 1.0.3
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -2488,6 +2488,14 @@ packages:
       '@protobuf-ts/runtime': 2.9.4
       ts-pattern: 5.2.0
       zod: 3.23.8
+
+  /@pagopa/interop-outbound-models@1.0.3:
+    resolution: {integrity: sha512-ENUWBjKnUIHKzchN7cvs2s/uS0yWW8suoUh+/Ziw+DJQus7jz89DCMa7PMhl6gLijGm8PM3QcNqyP2V6qm5/Eg==}
+    dependencies:
+      '@protobuf-ts/runtime': 2.9.4
+      ts-pattern: 5.2.0
+      zod: 3.23.8
+    dev: false
 
   /@protobuf-ts/runtime@2.9.4:
     resolution: {integrity: sha512-vHRFWtJJB/SiogWDF0ypoKfRIZ41Kq+G9cEFj6Qm1eQaAhJ1LDFvgZ7Ja4tb3iLOQhz0PaoPnnOijF1qmEqTxg==}
