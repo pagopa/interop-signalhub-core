@@ -17,10 +17,7 @@ export const { cleanup, postgresDB, sqsClient } = setupTestContainersVitest(
 export const signalService = signalServiceBuilder(postgresDB);
 export const quequeService = quequeServiceBuilder(sqsClient);
 export const interopApiClient = interopApiClientServiceBuilder();
-export const interopService = interopServiceBuilder(
-  postgresDB,
-  interopApiClient
-);
+export const interopService = interopServiceBuilder(postgresDB);
 
 export const aValidMockAgreement = {
   consumerId: signalProducer.id,
