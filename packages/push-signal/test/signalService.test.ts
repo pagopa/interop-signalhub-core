@@ -1,11 +1,12 @@
 import { genericLogger } from "pagopa-signalhub-commons";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { createSignal, writeSignal } from "pagopa-signalhub-commons-test";
 import { signalIdDuplicatedForEserviceId } from "../src/models/domain/errors.js";
-import { postgresDB, signalService } from "./utils.js";
+import { cleanup, postgresDB, signalService } from "./utils.js";
 
 describe("Store service", () => {
   describe("verifySignalDuplicated", () => {
+    beforeEach(cleanup);
     it("If signal not exist on db should not throw an error", async () => {
       const signalId = 1;
       const eserviceId = "test-eservice-id";

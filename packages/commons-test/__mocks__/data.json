@@ -91,12 +91,12 @@
             "id": "5f829ad2-8f09-4c4f-9ae9-6307dd96834f",
             "eservice": "31b4e4e6-855d-42fa-9705-28bc7f8545ff",
             "descriptor": "4d24ad97-4b0e-446a-8161-4f66fa6b6cf1",
-            "purpose": "-",
+            "purpose": "e78d1ea9-e9ac-4a35-a4d1-ba7e3b564dd6",
             "state": "ACTIVE"
           },
           {
             "name": "pull",
-            "id": "9d1ea147-7750-4aec-98f1-9daeab07f294",
+            "id": "e9237383-60aa-4371-a8fb-fc9c4c4b5d88",
             "eservice": "9d1ea147-7750-4aec-98f1-9daeab07f294",
             "descriptor": "-",
             "purpose": "881ba6a2-c31b-4613-939f-c9122d555fd7",

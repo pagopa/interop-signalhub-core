@@ -21,7 +21,7 @@ export function interopServiceBuilder(db: DB) {
       purposeId: string,
       logger: Logger
     ): Promise<string> {
-      const state = "2";
+      const state = "ACTIVE";
       const consumerId = await purposeRepository(db).findBy(purposeId, state);
       logger.debug(
         `InteropService::getOrganizationFromPurpose consumerId: ${consumerId}`
@@ -36,7 +36,7 @@ export function interopServiceBuilder(db: DB) {
       eserviceId: string,
       logger: Logger
     ): Promise<void> {
-      const state = "1";
+      const state = "PUBLISHED";
       const eserviceOwned = await eserviceRepository(db).findBy(
         producerId,
         eserviceId,

@@ -7,7 +7,6 @@ import { inject } from "vitest";
 import { quequeServiceBuilder } from "../src/services/queque.service.js";
 import { signalServiceBuilder } from "../src/services/signal.service.js";
 import { interopServiceBuilder } from "../src/services/interop.service.js";
-import { interopApiClientServiceBuilder } from "../src/services/interopApiClient.service.js";
 
 export const { cleanup, postgresDB, sqsClient } = setupTestContainersVitest(
   inject("signalHubStoreConfig"),
@@ -16,7 +15,6 @@ export const { cleanup, postgresDB, sqsClient } = setupTestContainersVitest(
 
 export const signalService = signalServiceBuilder(postgresDB);
 export const quequeService = quequeServiceBuilder(sqsClient);
-export const interopApiClient = interopApiClientServiceBuilder();
 export const interopService = interopServiceBuilder(postgresDB);
 
 export const aValidMockAgreement = {

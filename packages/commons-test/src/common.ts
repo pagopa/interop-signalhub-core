@@ -21,7 +21,11 @@ function getActors() {
   const purposeIdDifferentFromEservicePushSignals =
     signalProducer.agreements[1].purpose;
 
-  const authorizedPurposeId = signalProducer.agreements[0].purpose;
+  const authorizedPurposeIdForPushSignals =
+    signalProducer.agreements[0].purpose;
+
+  const authorizedPurposeIdForPullSignals =
+    signalConsumer.agreements[1].purpose;
   return {
     signalProducer,
     signalConsumer,
@@ -32,7 +36,8 @@ function getActors() {
     eserviceIdNotPublished,
     eserviceIdPublishedByAnotherOrganization,
     purposeIdDifferentFromEservicePushSignals,
-    authorizedPurposeId,
+    authorizedPurposeIdForPushSignals,
+    authorizedPurposeIdForPullSignals,
   };
 }
 
@@ -46,5 +51,6 @@ export const {
   eserviceIdNotPublished,
   eserviceIdPublishedByAnotherOrganization,
   purposeIdDifferentFromEservicePushSignals,
-  authorizedPurposeId,
+  authorizedPurposeIdForPushSignals,
+  authorizedPurposeIdForPullSignals,
 } = getActors();

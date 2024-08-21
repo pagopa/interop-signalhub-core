@@ -10,12 +10,7 @@ export const purposeRepository = (db: DB): IPurposeRepository => ({
       return await db.oneOrNone(
         "SELECT consumer_id FROM DEV_INTEROP.purpose WHERE purpose_id = $1 AND purpose_state = $2",
         [purposeId, state],
-        (result) => {
-          if (result) {
-            return result.consumer_id;
-          }
-          return null;
-        }
+        (rs) => (rs ? rs.consumer_id : null)
       );
     } catch (error: unknown) {
       throw genericError(`Error eserviceRepository::findBy ${error}`);
