@@ -5,6 +5,8 @@ import {
   dataResetForSignalProducers,
   eserviceIdPushSignals,
   authorizedPurposeIdForPushSignals,
+  eserviceIdPublishedByAnotherOrganization,
+  eserviceIdNotPublished,
 } from "pagopa-signalhub-commons-test";
 import { interopService, postgresDB } from "./utils.js";
 
@@ -22,20 +24,39 @@ describe("PDND Interoperability service", () => {
     ).resolves.not.toThrow();
   });
 
-  it("should deny permission to a signal producer without a purpose and for e-service push", async () => {
+  it("should deny permission to a signals producer without a purpose for e-service push", async () => {
     const purposeId = "some-non-existent-purpose-id";
-    const eserviceId = "some-eservice-id";
+    const eserviceId = "";
 
     await expect(
       interopService.verifyAuthorization(purposeId, eserviceId, genericLogger)
     ).rejects.toThrowError(operationForbidden);
   });
 
-  it.skip("should deny permission to a signal producer with a valid purpose but without a valid agreement for e-service push", async () => {
-    expect(true).toBe(true);
+  it("should deny permission to a signals producer with a valid purpose and non existent e-service", async () => {
+    const purposeId = authorizedPurposeIdForPushSignals;
+    const eserviceId = "some-non-existent-eservice-id";
+
+    await expect(
+      interopService.verifyAuthorization(purposeId, eserviceId, genericLogger)
+    ).rejects.toThrowError(operationForbidden);
   });
 
-  it.skip("should deny permission to a signal producer that is not owner of the e-service", async () => {
-    expect(true).toBe(true);
+  it("should deny permission to a signals producer with a valid purpose and e-service state != PUBLISHED", async () => {
+    const purposeId = authorizedPurposeIdForPushSignals;
+    const eserviceId = eserviceIdNotPublished;
+
+    await expect(
+      interopService.verifyAuthorization(purposeId, eserviceId, genericLogger)
+    ).rejects.toThrowError(operationForbidden);
+  });
+
+  it("should deny permission to a signals producer that is not owner of the e-service", async () => {
+    const purposeId = authorizedPurposeIdForPushSignals;
+    const eserviceId = eserviceIdPublishedByAnotherOrganization;
+
+    await expect(
+      interopService.verifyAuthorization(purposeId, eserviceId, genericLogger)
+    ).rejects.toThrowError(operationForbidden);
   });
 });
