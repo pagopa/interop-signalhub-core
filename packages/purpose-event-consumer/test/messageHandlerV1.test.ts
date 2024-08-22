@@ -12,7 +12,7 @@ import {
   createAndWriteAPurposeEventV1,
   createAPurposeEventV1,
   createAPurposeVersionEventV1,
-  fromEventToEntity,
+  fromEventV1ToEntity,
   generateId,
   getMockPurpose,
   getMockPurposeVersion,
@@ -86,7 +86,7 @@ describe("Message Handler for V1 EVENTS", () => {
     await handleMessageV1(purposeEventV1, purposeService, genericLogger);
 
     const actualPurpose = await getAPurposeEntityBy(mockPurposeV1.id);
-    const expectedPurpose = fromEventToEntity(
+    const expectedPurpose = fromEventV1ToEntity(
       purposeV1,
       anActiveVersion,
       purposeEventV1
@@ -115,7 +115,7 @@ describe("Message Handler for V1 EVENTS", () => {
     await handleMessageV1(purposeEventV1, purposeService, genericLogger);
 
     const actualPurpose = await getAPurposeEntityBy(mockPurposeV1.id);
-    const expectedPurpose = fromEventToEntity(
+    const expectedPurpose = fromEventV1ToEntity(
       purposeV1,
       anActiveVersion,
       purposeEventV1
@@ -144,7 +144,7 @@ describe("Message Handler for V1 EVENTS", () => {
     await handleMessageV1(purposeEventV1, purposeService, genericLogger);
 
     const actualPurpose = await getAPurposeEntityBy(mockPurposeV1.id);
-    const expectedPurpose = fromEventToEntity(
+    const expectedPurpose = fromEventV1ToEntity(
       purposeV1,
       aSuspendedVersion,
       purposeEventV1
@@ -183,7 +183,7 @@ describe("Message Handler for V1 EVENTS", () => {
     await handleMessageV1(purposeEventV1, purposeService, genericLogger);
 
     const actualPurpose = await getAPurposeEntityBy(mockPurposeV1.id);
-    const expectedPurpose = fromEventToEntity(
+    const expectedPurpose = fromEventV1ToEntity(
       purposeV1,
       anActiveVersion,
       purposeEventV1
@@ -226,7 +226,7 @@ describe("Message Handler for V1 EVENTS", () => {
     await handleMessageV1(purposeEventV1, purposeService, genericLogger);
 
     const actualPurpose = await getAPurposeEntityBy(mockPurposeV1.id);
-    const expectedPurpose = fromEventToEntity(
+    const expectedPurpose = fromEventV1ToEntity(
       purposeSuspendedV1,
       aSuspendedVersion,
       purposeEventV1
@@ -259,7 +259,7 @@ describe("Message Handler for V1 EVENTS", () => {
     await handleMessageV1(purposeEventV1, purposeService, genericLogger);
 
     const actualPurpose = await getAPurposeEntityBy(mockPurposeV1.id);
-    const expectedPurpose = fromEventToEntity(
+    const expectedPurpose = fromEventV1ToEntity(
       purposeV1,
       anActiveVersion,
       purposeEventV1
@@ -292,7 +292,7 @@ describe("Message Handler for V1 EVENTS", () => {
     await handleMessageV1(purposeEventV1, purposeService, genericLogger);
 
     const actualPurpose = await getAPurposeEntityBy(mockPurposeV1.id);
-    const expectedPurpose = fromEventToEntity(
+    const expectedPurpose = fromEventV1ToEntity(
       purposeV1,
       anArchivedVersion,
       purposeEventV1
