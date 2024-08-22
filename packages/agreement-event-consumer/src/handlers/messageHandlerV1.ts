@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
-import { AgreementV1, AgreementEventV1 } from "@pagopa/interop-outbound-models";
+import {
+  AgreementV1,
+  AgreementEventV1,
+  AgreementStateV1,
+} from "@pagopa/interop-outbound-models";
 
 import { P, match } from "ts-pattern";
 import { AgreementService } from "../services/agreement.service.js";
@@ -85,7 +89,7 @@ export const toAgreementEntity = (
     eservice_id: agreement.eserviceId,
     descriptor_id: agreement.descriptorId,
     consumer_id: agreement.consumerId,
-    state: agreement.state.toString(),
+    state: AgreementStateV1[agreement.state],
     event_stream_id: streamId,
     event_version_id: version,
   };
