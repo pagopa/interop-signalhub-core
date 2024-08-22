@@ -1,6 +1,5 @@
 import { DB, createDbInstance } from "pagopa-signalhub-commons";
 import { config } from "../config/env.js";
-import { interopApiClientServiceBuilder } from "./interopApiClient.service.js";
 import { interopServiceBuilder, InteropService } from "./interop.service.js";
 import { SignalService, signalServiceBuilder } from "./signal.service.js";
 export function serviceBuilder(): {
@@ -16,10 +15,7 @@ export function serviceBuilder(): {
     useSSL: config.signalhubStoreDbUseSSL,
   });
   const signalService = signalServiceBuilder(db);
-  const interopService = interopServiceBuilder(
-    db,
-    interopApiClientServiceBuilder()
-  );
+  const interopService = interopServiceBuilder(db);
   return {
     signalService,
     interopService,
