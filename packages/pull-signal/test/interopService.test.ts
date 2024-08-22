@@ -1,16 +1,16 @@
-import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { genericLogger, operationForbidden } from "pagopa-signalhub-commons";
+
 import {
+  authorizedPurposeIdForPullSignals,
   dataPreparationForSignalConsumers,
   dataResetForSignalConsumers,
   eserviceIdPushSignals,
+  eServiceWithNotActiveAgreement,
+  insertNotActivePurpose,
+  signalConsumer,
 } from "pagopa-signalhub-commons-test";
-import {
-  aValidMockAgreement,
-  interopApiClient,
-  interopService,
-  postgresDB,
-} from "./utils";
+import { interopService, postgresDB } from "./utils";
 
 describe("PDND Interoperability service", () => {
   beforeAll(async () => {
@@ -18,52 +18,47 @@ describe("PDND Interoperability service", () => {
     await dataPreparationForSignalConsumers(postgresDB);
   });
 
-  beforeEach(() => {
-    vi.clearAllMocks(); // clear the mock to avoid side effects and start the count with 0 for every test
-  });
-
-  it("should give permission to a signals consumer for pull signals", async () => {
-    vi.spyOn(interopApiClient, "getAgreementByPurposeId").mockResolvedValue(
-      aValidMockAgreement
-    );
-    const purposeId = "some-purpose-id";
+  it("should give permission to a signals consumer to pull a signal", async () => {
+    const purposeId = authorizedPurposeIdForPullSignals;
     const eserviceId = eserviceIdPushSignals;
 
     await expect(
       interopService.verifyAuthorization(purposeId, eserviceId, genericLogger)
     ).resolves.not.toThrow();
-    expect(interopApiClient.getAgreementByPurposeId).toHaveBeenCalledWith(
-      purposeId
-    );
   });
 
-  it("should deny permission to a signal consumer with no agreement for e-service pull", async () => {
-    const anInvalidMockAgreement = null;
-    vi.spyOn(interopApiClient, "getAgreementByPurposeId").mockResolvedValue(
-      anInvalidMockAgreement
-    );
-    const purposeId = "some-purpose-id";
-    const eserviceId = "some-eservice-id";
+  it("Should deny permission to a signal consumer without purpose available", async () => {
+    const purposeId = "wrong-purpose-id";
+    const eServiceId = eserviceIdPushSignals;
 
     await expect(
-      interopService.verifyAuthorization(purposeId, eserviceId, genericLogger)
+      interopService.verifyAuthorization(purposeId, eServiceId, genericLogger)
     ).rejects.toThrowError(operationForbidden);
-    expect(interopApiClient.getAgreementByPurposeId).toHaveBeenCalledWith(
-      purposeId
-    );
   });
-  it.skip("should deny permission to a signal consumer that is not a consumer of the e-service", async () => {
-    vi.spyOn(interopApiClient, "getAgreementByPurposeId").mockResolvedValue(
-      aValidMockAgreement
+
+  it("should deny permission to a signal consumer with purpose != ACTIVE", async () => {
+    const purposeId = "purpose-id-not-active";
+    const eServiceId = eserviceIdPushSignals;
+    const consumerId = signalConsumer.id;
+
+    await insertNotActivePurpose(
+      postgresDB,
+      purposeId,
+      eServiceId,
+      consumerId,
+      "DRAFT"
     );
-    const purposeId = "some-purpose-id";
-    const eserviceId = "e-service-not-valid";
 
     await expect(
-      interopService.verifyAuthorization(purposeId, eserviceId, genericLogger)
+      interopService.verifyAuthorization(purposeId, eServiceId, genericLogger)
     ).rejects.toThrowError(operationForbidden);
-    expect(interopApiClient.getAgreementByPurposeId).toHaveBeenCalledWith(
-      purposeId
-    );
+  });
+
+  it("should deny permission to a signal consumer for an agreement != ACTIVE", async () => {
+    const purposeId = authorizedPurposeIdForPullSignals;
+    const eServiceId = eServiceWithNotActiveAgreement;
+    await expect(
+      interopService.verifyAuthorization(purposeId, eServiceId, genericLogger)
+    ).rejects.toThrowError(operationForbidden);
   });
 });

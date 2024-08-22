@@ -1,13 +1,9 @@
 import { DB, Logger, operationForbidden } from "pagopa-signalhub-commons";
 import { agreementRepository } from "../repositories/agreement.repository.js";
-import { Agreement } from "../model/domain/models.js";
-import { InteropApiClientService } from "./interopApiClient.service.js";
+import { purposeRepository } from "../repositories/index.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function interopServiceBuilder(
-  db: DB,
-  interopApiClient: InteropApiClientService
-) {
+export function interopServiceBuilder(db: DB) {
   return {
     async verifyAuthorization(
       purposeId: string,
@@ -15,20 +11,11 @@ export function interopServiceBuilder(
       logger: Logger
     ): Promise<void> {
       logger.debug(`InteropService::verifyAuthorization BEGIN`);
-      const agreement = await this.consumerHasValidAgreement(purposeId);
-      const { consumerId } = agreement;
+      const consumerId = await this.getConsumerIdByPurpose(purposeId, logger);
       await this.consumerCanAccessToEservice(consumerId, eserviceId, logger);
       logger.debug(`InteropService::verifyAuthorization END`);
     },
-    async consumerHasValidAgreement(purposeId: string): Promise<Agreement> {
-      const agreement = await interopApiClient.getAgreementByPurposeId(
-        purposeId
-      );
-      if (!agreement) {
-        throw operationForbidden;
-      }
-      return agreement as unknown as Agreement; // TODO fix this
-    },
+
     async consumerCanAccessToEservice(
       consumerId: string,
       eserviceId: string,
@@ -43,10 +30,26 @@ export function interopServiceBuilder(
         eserviceId,
         state
       );
+
       if (eserviceConsumed) {
         return;
       }
       throw operationForbidden;
+    },
+
+    async getConsumerIdByPurpose(
+      purposeId: string,
+      logger: Logger
+    ): Promise<string> {
+      const state = "ACTIVE";
+      const consumerId = await purposeRepository(db).findBy(purposeId, state);
+      logger.debug(
+        `InteropService::getConsumerIdByPuropose consumerId: ${consumerId}`
+      );
+      if (!consumerId) {
+        throw operationForbidden;
+      }
+      return consumerId;
     },
   };
 }
