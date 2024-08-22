@@ -25,7 +25,7 @@ export function purposeServiceBuilder(purposeRepository: IPurposeRepository) {
       streamId: string,
       logger: Logger
     ): Promise<void> {
-      logger.info(`Deleting event: ${purposeId}`);
+      logger.info(`Deleting purpose id: ${purposeId}`);
       await purposeRepository.delete(purposeId, streamId);
     },
   };

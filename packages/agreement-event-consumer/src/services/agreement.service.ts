@@ -42,7 +42,7 @@ export function agreementServiceBuilder(
       logger: Logger
     ): Promise<void> {
       // some business logic
-      logger.info(`Deleting event: ${agreementId}`);
+      logger.info(`Deleting agreement id: ${agreementId}`);
       await agreementRepository.delete(agreementId, streamId);
     },
   };
