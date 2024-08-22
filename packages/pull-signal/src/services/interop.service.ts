@@ -30,6 +30,7 @@ export function interopServiceBuilder(db: DB) {
         eserviceId,
         state
       );
+
       if (eserviceConsumed) {
         return;
       }
