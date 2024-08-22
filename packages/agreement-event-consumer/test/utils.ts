@@ -10,6 +10,7 @@ import {
   AgreementV2,
 } from "@pagopa/interop-outbound-models";
 import { z } from "zod";
+import { match } from "ts-pattern";
 import { agreementRepository } from "../src/repositories/index.js";
 import { agreementServiceBuilder } from "../src/services/index.js";
 import { AgreementEntity } from "../src/models/domain/model.js";
@@ -265,7 +266,16 @@ export const fromEventToEntity = (
   eservice_id: agreement.eserviceId,
   descriptor_id: agreement.descriptorId,
   consumer_id: agreement.consumerId,
-  state: agreement.state.toString(),
+  state: getAgreementState(event, agreement),
   event_stream_id: event.stream_id,
   event_version_id: event.version,
 });
+
+const getAgreementState = (
+  event: AgreementEventV1 | AgreementEventV2,
+  agreement: AgreementV1 | AgreementV2
+): string =>
+  match(event)
+    .with({ event_version: 1 }, () => AgreementStateV1[agreement.state])
+    .with({ event_version: 2 }, () => AgreementStateV2[agreement.state])
+    .exhaustive();
