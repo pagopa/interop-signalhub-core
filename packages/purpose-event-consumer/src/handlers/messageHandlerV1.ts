@@ -112,7 +112,7 @@ const getVersionBy = (
     .filter((version) => version.state === purposeState)
     .reduce((obj, version) => {
       const { id, state } = version;
-      return { ...obj, versionId: id, state: state.toString() };
+      return { ...obj, versionId: id, state: PurposeStateV1[state] };
     }, {} as { versionId: string; state: string });
 
 const purposeHasNoVersionInAValidState = (
