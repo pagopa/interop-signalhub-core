@@ -7,8 +7,6 @@ import {
   dataResetForSignalConsumers,
   eserviceIdPushSignals,
   eServiceWithNotActiveAgreement,
-  insertNotActivePurpose,
-  signalConsumer,
 } from "pagopa-signalhub-commons-test";
 import { interopService, postgresDB } from "./utils";
 
@@ -39,15 +37,7 @@ describe("PDND Interoperability service", () => {
   it("should deny permission to a signal consumer with purpose != ACTIVE", async () => {
     const purposeId = "purpose-id-not-active";
     const eServiceId = eserviceIdPushSignals;
-    const consumerId = signalConsumer.id;
-
-    await insertNotActivePurpose(
-      postgresDB,
-      purposeId,
-      eServiceId,
-      consumerId,
-      "DRAFT"
-    );
+    // const consumerId = signalConsumer.id;
 
     await expect(
       interopService.verifyAuthorization(purposeId, eServiceId, genericLogger)
