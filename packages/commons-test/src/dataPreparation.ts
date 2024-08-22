@@ -22,42 +22,43 @@ async function setupEserviceTable(db: DB): Promise<void> {
   }
 }
 async function setupPurposeTableForProducers(db: DB): Promise<void> {
-  const allProducers = [signalProducer, eserviceProducer];
+  const producers = [signalProducer, eserviceProducer];
   // eslint-disable-next-line functional/no-let
-  for (const producer of allProducers) {
-    const { id, agreements } = producer;
-    for (const agreement of agreements.filter(
+
+  for (const producer of producers) {
+    const { id: consumerId, purposes } = producer;
+    for (const purpose of purposes.filter(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (e: any) => !("skip_insert" in e)
     )) {
-      const { purpose, eservice } = agreement;
-      const purposeVersion = -1;
-      const purposeState = "ACTIVE";
+      const { state, version, eservice, id } = purpose;
+
       const query = {
-        text: "INSERT INTO DEV_INTEROP.purpose (purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id) values ($1, $2, $3, $4, $5)",
-        values: [purpose, purposeVersion, purposeState, eservice, id],
+        text: "INSERT INTO DEV_INTEROP.purpose(purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id) values ($1, $2, $3, $4, $5)",
+        values: [id, version, state, eservice, consumerId],
       };
       await db.none(query);
     }
   }
 }
+
 async function setupPurposeTableForConsumers(db: DB): Promise<void> {
-  const { id, agreements } = signalConsumer;
+  const { id: consumerId, purposes } = signalConsumer;
   // eslint-disable-next-line functional/no-let
-  for (const agreement of agreements.filter(
+  for (const purpose of purposes.filter(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (e: any) => !("skip_insert" in e)
   )) {
-    const { purpose, eservice } = agreement;
-    const purposeVersion = -1;
-    const purposeState = "ACTIVE";
+    const { id, version, state, eservice } = purpose;
+
     const query = {
       text: "INSERT INTO DEV_INTEROP.purpose (purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id) values ($1, $2, $3, $4, $5)",
-      values: [purpose, purposeVersion, purposeState, eservice, id],
+      values: [id, version, state, eservice, consumerId],
     };
     await db.none(query);
   }
 }
+
 async function setupAgreementTable(db: DB): Promise<void> {
   const { id, agreements } = signalConsumer;
   // eslint-disable-next-line functional/no-let

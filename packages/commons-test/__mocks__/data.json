@@ -60,6 +60,21 @@
             "state": "ACTIVE",
             "skip_insert": true
           }
+        ],
+
+        "purposes": [
+          {
+            "id": "881ba6a2-c31b-4613-939f-c9122d555fd7",
+            "eservice": "bce1bb3-b779-4813-aafe-b1c93bc65a83",
+            "state": "ACTIVE",
+            "version": -1
+          },
+          {
+            "id": "49389d39-2819-468a-aa1c-cabc6c686a05",
+            "eservice": "518dfe92-e0cc-47a2-b1c4-02ede0d3497a",
+            "state": "ACTIVE",
+            "version": -1
+          }
         ]
       }
     },
@@ -75,7 +90,8 @@
             "state": "PUBLISHED"
           }
         ],
-        "agreements": []
+        "agreements": [],
+        "purposes": []
       }
     }
   ],
@@ -109,6 +125,26 @@
             "descriptor": "4d24ad97-4b0e-446a-8161-4f66fa6b6cf11",
             "purpose": "e78d1ea9-e9ac-4a35-a4d1-ba7e3b564dd61",
             "state": "DRAFT"
+          }
+        ],
+        "purposes": [
+          {
+            "id": "e78d1ea9-e9ac-4a35-a4d1-ba7e3b564dd6",
+            "eservice": "31b4e4e6-855d-42fa-9705-28bc7f8545ff",
+            "state": "ACTIVE",
+            "version": -1
+          },
+          {
+            "id": "881ba6a2-c31b-4613-939f-c9122d555fd7",
+            "eservice": "9d1ea147-7750-4aec-98f1-9daeab07f294",
+            "state": "ACTIVE",
+            "version": -1
+          },
+          {
+            "id": "78d1ea9-e9ac-4a35-a4d1-ba7e3b564dd61",
+            "eservice": "31b4e4e6-855d-42fa-9705-28bc7f8545ff1",
+            "state": "ACTIVE",
+            "version": -1
           }
         ]
       }
