@@ -17,7 +17,8 @@ export const eserviceRepository = (db: DB): IEserviceRepository => ({
     try {
       return await db.oneOrNone(
         "SELECT eservice_id FROM DEV_INTEROP.eservice WHERE producer_id = $1 AND eservice_id = $2 AND state = $3",
-        [producerId, eserviceId, state]
+        [producerId, eserviceId, state],
+        (rs) => (rs ? rs.eservice_id : null)
       );
     } catch (error: unknown) {
       throw genericError(`Error eserviceRepository::findBy ${error}`);

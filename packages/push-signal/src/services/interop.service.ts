@@ -1,12 +1,8 @@
 import { DB, Logger, operationForbidden } from "pagopa-signalhub-commons";
-import { Agreement } from "../models/domain/models.js";
 import { eserviceRepository } from "../repositories/eservice.repository.js";
-import { InteropApiClientService } from "./interopApiClient.service.js";
+import { purposeRepository } from "../repositories/purpose.repository.js";
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function interopServiceBuilder(
-  db: DB,
-  interopApiClient: InteropApiClientService
-) {
+export function interopServiceBuilder(db: DB) {
   return {
     async verifyAuthorization(
       purposeId: string,
@@ -14,27 +10,26 @@ export function interopServiceBuilder(
       logger: Logger
     ): Promise<void> {
       logger.debug(`InteropService::verifyAuthorization BEGIN`);
-      const agreement = await this.producerHasValidAgreement(purposeId, logger);
-      const { consumerId: producerId } = agreement;
-      await this.canProducerDepositSignal(producerId, eserviceId, logger);
+      const organizationId = await this.getOrganizationFromPurpose(
+        purposeId,
+        logger
+      );
+      await this.canProducerDepositSignal(organizationId, eserviceId, logger);
       logger.debug(`InteropService::verifyAuthorization END`);
     },
-    async producerHasValidAgreement(
+    async getOrganizationFromPurpose(
       purposeId: string,
       logger: Logger
-    ): Promise<Agreement> {
-      const agreement = await interopApiClient.getAgreementByPurposeId(
-        purposeId
-      );
+    ): Promise<string> {
+      const state = "ACTIVE";
+      const consumerId = await purposeRepository(db).findBy(purposeId, state);
       logger.debug(
-        `InteropService::producerHasValidAgreement agreement: ${JSON.stringify(
-          agreement
-        )}`
+        `InteropService::getOrganizationFromPurpose consumerId: ${consumerId}`
       );
-      if (!agreement) {
+      if (!consumerId) {
         throw operationForbidden;
       }
-      return agreement as unknown as Agreement; // TODO fix this
+      return consumerId;
     },
     async canProducerDepositSignal(
       producerId: string,
