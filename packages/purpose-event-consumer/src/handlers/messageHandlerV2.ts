@@ -18,8 +18,6 @@ export async function handleMessageV2(
   purposeService: PurposeService,
   logger: Logger
 ): Promise<void> {
-  logger.info(`Processing event version: ${event.event_version}`);
-
   await match(event)
     .with(
       {
