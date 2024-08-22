@@ -145,6 +145,12 @@
             "eservice": "31b4e4e6-855d-42fa-9705-28bc7f8545ff1",
             "state": "ACTIVE",
             "version": -1
+          },
+          {
+            "id": "purpose-id-not-active",
+            "eservice": "31b4e4e6-855d-42fa-9705-28bc7f8545ff",
+            "state": "DRAFT",
+            "version": -1
           }
         ]
       }

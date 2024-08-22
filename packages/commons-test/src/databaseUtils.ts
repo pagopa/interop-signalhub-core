@@ -69,23 +69,6 @@ export async function writeSignals(
   return ids;
 }
 
-export async function insertNotActivePurpose(
-  db: DB,
-  purposeId: string,
-  eServiceId: string,
-  consumerId: string,
-  purposeState: string
-): Promise<void> {
-  const purposeVersion = -1;
-
-  const query = {
-    text: "INSERT INTO DEV_INTEROP.purpose (purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id) values ($1, $2, $3, $4, $5)",
-    values: [purposeId, purposeVersion, purposeState, eServiceId, consumerId],
-  };
-
-  await db.none(query);
-}
-
 export const createSignal = (partialSignal?: Partial<Signal>): Signal => ({
   ...createSignalPayload(),
   correlationId: `correlation-id-test-${getRandomInt()}`,
