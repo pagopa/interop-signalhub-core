@@ -1,6 +1,5 @@
 import {
   EServiceDescriptorStateV2,
-  EServiceDescriptorV2,
   EServiceEventV2,
   EServiceV2,
 } from "@pagopa/interop-outbound-models";
@@ -22,28 +21,7 @@ export async function handleMessageV2(
           "EServiceAdded",
           "EServiceCloned",
           "DraftEServiceUpdated",
-          "EServiceDraftDescriptorDeleted"
-        ),
-      },
-      async (evt) => {
-        const { eservice } = evt.data;
-
-        if (!eservice) {
-          throw kafkaMessageMissingData(config.kafkaTopic, event.type);
-        }
-        const eService = fromEserviceEventV2ToEserviceEntity(
-          eservice,
-          evt.stream_id,
-          evt.version
-        );
-
-        await eServiceService.upsertV2(eService, logger);
-      }
-    )
-
-    .with(
-      {
-        type: P.union(
+          "EServiceDraftDescriptorDeleted",
           "EServiceDescriptorAdded",
           "EServiceDescriptorActivated",
           "EServiceDescriptorArchived",
@@ -53,19 +31,11 @@ export async function handleMessageV2(
         ),
       },
       async (evt) => {
-        const { eservice, descriptorId } = evt.data;
+        const { eservice } = evt.data;
 
         if (!eservice) {
           throw kafkaMessageMissingData(config.kafkaTopic, event.type);
         }
-
-        // Get only descriptors that need to be updated
-        // eslint-disable-next-line functional/immutable-data
-        eservice.descriptors = getFilteredDescriptors(
-          descriptorId,
-          eservice.descriptors
-        );
-
         const eService = fromEserviceEventV2ToEserviceEntity(
           eservice,
           evt.stream_id,
@@ -125,8 +95,3 @@ export const fromEserviceEventV2ToEserviceEntity = (
   event_stream_id: streamId,
   event_version_id: version,
 });
-
-const getFilteredDescriptors = (
-  descriptorId: string,
-  descriptors: EServiceDescriptorV2[]
-): EServiceDescriptorV2[] => descriptors.filter((d) => d.id === descriptorId);
