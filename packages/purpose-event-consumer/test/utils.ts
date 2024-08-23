@@ -295,33 +295,28 @@ export async function createAndWriteAPurposeEventV2(
   return { purposeV2, purposeEventV2 };
 }
 
-export const fromEventV1ToEntity = (
-  purpose: PurposeV1,
-  version: PurposeVersionV1,
-  event: PurposeEventV1
+export const fromEventToEntity = (
+  purpose: PurposeV1 | PurposeV2,
+  version: PurposeVersionV1 | PurposeVersionV2,
+  event: PurposeEventV1 | PurposeEventV2
 ): PurposeEntity => ({
   purposeId: purpose.id,
   purposeVersionId: version.id,
-  purposeState: PurposeStateV1[version.state],
+  purposeState: getPurposeState(event, version),
   eserviceId: purpose.eserviceId,
   consumerId: purpose.consumerId,
   eventStreamId: event.stream_id,
   eventVersionId: event.version,
 });
 
-export const fromEventV2ToEntity = (
-  purpose: PurposeV2,
-  version: PurposeVersionV2,
-  event: PurposeEventV2
-): PurposeEntity => ({
-  purposeId: purpose.id,
-  purposeVersionId: version.id,
-  purposeState: PurposeStateV2[version.state],
-  eserviceId: purpose.eserviceId,
-  consumerId: purpose.consumerId,
-  eventStreamId: event.stream_id,
-  eventVersionId: event.version,
-});
+const getPurposeState = (
+  event: PurposeEventV1 | PurposeEventV2,
+  version: PurposeVersionV1 | PurposeVersionV2
+): string =>
+  match(event)
+    .with({ event_version: 1 }, () => PurposeStateV1[version.state])
+    .with({ event_version: 2 }, () => PurposeStateV2[version.state])
+    .exhaustive();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const toPurposeEntity = (purpose: any): PurposeEntity => ({
