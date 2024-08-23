@@ -85,8 +85,8 @@ describe("Message Handler for V1 EVENTS", () => {
       expect(result?.producer_id).toEqual(producerId);
       expect(result?.descriptor_id).toEqual(descriptorId);
       expect(result?.state).toEqual(
-        EServiceDescriptorStateV1.PUBLISHED.toString()
-      ); // TODO: Change handling of State from string to num on DB
+        EServiceDescriptorStateV1[EServiceDescriptorStateV1.PUBLISHED]
+      );
     });
 
     it("Should throw an error if eserviceDescriptor data is missing", async () => {
@@ -125,10 +125,10 @@ describe("Message Handler for V1 EVENTS", () => {
 
       await handleMessageV1(eServiceV1Event, eServiceService, genericLogger);
 
-      const produecerIdResult = await findProducerIdByEserviceId(eServiceId);
+      const producerIdResult = await findProducerIdByEserviceId(eServiceId);
 
       // Check if ESERVICE_PRODUCER record has been inserted on DB
-      expect(produecerIdResult?.producerId).toBe(producerId);
+      expect(producerIdResult?.producerId).toBe(producerId);
       const response = await findByEserviceIdAndProducerIdAndDescriptorId(
         eServiceId,
         descriptorId,
@@ -136,7 +136,7 @@ describe("Message Handler for V1 EVENTS", () => {
       );
 
       expect(response?.state).toEqual(
-        EServiceDescriptorStateV1.PUBLISHED.toString()
+        EServiceDescriptorStateV1[EServiceDescriptorStateV1.PUBLISHED]
       );
       expect(response?.eservice_id).toEqual(eServiceId);
       expect(response?.descriptor_id).toEqual(descriptorId);
@@ -153,7 +153,7 @@ describe("Message Handler for V1 EVENTS", () => {
         eServiceId,
         descriptorId,
         producerId,
-        EServiceDescriptorStateV1.DRAFT.toString(),
+        EServiceDescriptorStateV1[EServiceDescriptorStateV1.DRAFT],
         generateID(),
         version
       );
@@ -176,7 +176,7 @@ describe("Message Handler for V1 EVENTS", () => {
       );
 
       expect(response?.state).toEqual(
-        EServiceDescriptorStateV1.PUBLISHED.toString()
+        EServiceDescriptorStateV1[EServiceDescriptorStateV1.PUBLISHED]
       );
       expect(response?.eservice_id).toEqual(eServiceId);
       expect(response?.descriptor_id).toEqual(descriptorId);

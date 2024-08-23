@@ -1,4 +1,5 @@
 import {
+  EServiceDescriptorStateV2,
   EServiceDescriptorV2,
   EServiceEventV2,
   EServiceV2,
@@ -20,7 +21,8 @@ export async function handleMessageV2(
         type: P.union(
           "EServiceAdded",
           "EServiceCloned",
-          "DraftEServiceUpdated"
+          "DraftEServiceUpdated",
+          "EServiceDraftDescriptorDeleted"
         ),
       },
       async (evt) => {
@@ -87,26 +89,6 @@ export async function handleMessageV2(
 
     .with(
       {
-        type: "EServiceDraftDescriptorDeleted",
-      },
-      async (evt) => {
-        logger.debug(`Event type ${evt.type} not relevant`);
-        const { eservice } = evt.data;
-
-        if (!eservice) {
-          throw kafkaMessageMissingData(config.kafkaTopic, event.type);
-        }
-        const eService = fromEserviceEventV2ToEserviceEntity(
-          eservice,
-          evt.stream_id,
-          evt.version
-        );
-
-        await eServiceService.upsertV2(eService, logger);
-      }
-    )
-    .with(
-      {
         type: P.union(
           "EServiceDescriptionUpdated",
           "EServiceDescriptorDocumentAdded",
@@ -120,8 +102,8 @@ export async function handleMessageV2(
           "EServiceDescriptorQuotasUpdated"
         ),
       },
-      async (evt) => {
-        logger.debug(`Event type ${evt.type} not relevant`);
+      async () => {
+        logger.debug(`Skip event (not relevant)`);
       }
     )
     .exhaustive();
@@ -137,7 +119,7 @@ export const fromEserviceEventV2ToEserviceEntity = (
 
   descriptors: eService.descriptors.map((descriptor) => ({
     descriptor_id: descriptor.id,
-    state: descriptor.state as unknown as string, // TODO: to fix
+    state: EServiceDescriptorStateV2[descriptor.state],
   })),
 
   event_stream_id: streamId,

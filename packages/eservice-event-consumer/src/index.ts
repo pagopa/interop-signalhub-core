@@ -21,10 +21,6 @@ export async function processMessage({
   const eserviceEvent = decodeOutboundEServiceEvent(message.value.toString());
 
   const logger = buildLoggerInstance(serviceName, eserviceEvent);
-  logger.info(
-    `Processing message event: ${eserviceEvent.stream_id}/${eserviceEvent.version}`
-  );
-
   await match(eserviceEvent)
     .with({ event_version: 1 }, (event) =>
       handleMessageV1(event, eServiceService, logger)
