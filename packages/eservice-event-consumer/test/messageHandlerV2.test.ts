@@ -126,7 +126,7 @@ describe("Message Handler for V2 EVENTS", () => {
         expect(result?.descriptor_id).toEqual(descriptorId);
         expect(result?.producer_id).toEqual(producerId);
         expect(result?.state).toEqual(
-          EServiceDescriptorStateV2.PUBLISHED.toString()
+          EServiceDescriptorStateV2[EServiceDescriptorStateV2.PUBLISHED]
         );
       });
     });
@@ -176,7 +176,7 @@ describe("Message Handler for V2 EVENTS", () => {
         expect(result?.descriptor_id).toEqual(descriptorId);
         expect(result?.producer_id).toEqual(producerId);
         expect(result?.state).toEqual(
-          EServiceDescriptorStateV2.ARCHIVED.toString()
+          EServiceDescriptorStateV2[EServiceDescriptorStateV2.ARCHIVED]
         );
       });
     });

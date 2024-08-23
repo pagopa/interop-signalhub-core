@@ -1,4 +1,5 @@
 import {
+  EServiceDescriptorStateV1,
   EServiceDescriptorV1,
   EServiceEventV1,
 } from "@pagopa/interop-outbound-models";
@@ -118,8 +119,8 @@ export async function handleMessageV1(
         ),
       },
 
-      async (evt) => {
-        logger.debug(`Event type ${evt.type} not relevant`);
+      async () => {
+        logger.debug(`Skip event (not relevant)`);
       }
     )
     .exhaustive();
@@ -134,7 +135,7 @@ export const fromEserviceEventV1ToEserviceEntity = (
   eservice_id: eServiceId,
   descriptors: descriptorsData.map((descriptor) => ({
     descriptor_id: descriptor.id,
-    state: descriptor.state as unknown as string, // TODO: to fix
+    state: EServiceDescriptorStateV1[descriptor.state],
   })),
 
   event_stream_id: streamId,

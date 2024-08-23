@@ -55,7 +55,7 @@ export function eServiceServiceBuilder(
       logger: Logger
     ): Promise<void> {
       logger.debug(
-        `Ad new eservice event: with eServiceId  ${eServiceId} and producerId ${producerId}`
+        `Saving (insert) event: eServiceId  ${eServiceId}, producerId ${producerId}`
       );
 
       const eventWasProcessed =
@@ -63,9 +63,9 @@ export function eServiceServiceBuilder(
           eventStreamId,
           eventVersionId
         );
-      logger.debug(`event was already processed: ${eventWasProcessed}`);
 
       if (eventWasProcessed) {
+        logger.debug(`Skip event (idempotence)`);
         return;
       }
       await eServiceProducerRepository.insert(
@@ -78,7 +78,7 @@ export function eServiceServiceBuilder(
 
     async upsertV1(eService: EserviceEntity, logger: Logger): Promise<void> {
       logger.debug(
-        `insert or update event: ${JSON.stringify(eService, null, 2)}`
+        `Saving (upsert) event: ${JSON.stringify(eService, null, 2)}`
       );
 
       const producerId =
@@ -93,15 +93,14 @@ export function eServiceServiceBuilder(
           eService.event_version_id
         );
 
-        logger.debug(`event was already processed: ${eventWasProcessed}`);
-
         if (eventWasProcessed) {
+          logger.debug(`Skip event (idempotence)`);
           return;
         }
 
         // TODO: Add check for STATE ARCHIVE
         logger.debug(
-          `upserting descriptor: ${JSON.stringify(descriptor, null, 2)}`
+          `Saving (upsert) descriptor: ${JSON.stringify(descriptor, null, 2)}`
         );
 
         await eServiceRepository.upsertDescriptor(
@@ -137,7 +136,7 @@ export function eServiceServiceBuilder(
 
     async upsertV2(eService: EserviceV2Entity, logger: Logger): Promise<void> {
       logger.debug(
-        `insert or update event: ${JSON.stringify(eService, null, 2)}`
+        `Saving (upsert) event: ${JSON.stringify(eService, null, 2)}`
       );
 
       for (const descriptor of eService.descriptors) {
@@ -147,15 +146,14 @@ export function eServiceServiceBuilder(
           eService.event_version_id
         );
 
-        logger.debug(`event was already processed: ${eventWasProcessed}`);
-
         if (eventWasProcessed) {
+          logger.debug(`Skip event (idempotence)`);
           return;
         }
 
         // TODO: Add check for STATE ARCHIVE
         logger.debug(
-          `upserting descriptor: ${JSON.stringify(descriptor, null, 2)}`
+          `Saving (upsert) descriptor: ${JSON.stringify(descriptor, null, 2)}`
         );
         await eServiceRepository.upsertDescriptor(
           eService.eservice_id,
@@ -168,7 +166,7 @@ export function eServiceServiceBuilder(
     },
 
     async delete(eServiceId: string, logger: Logger): Promise<void> {
-      logger.debug(`delete eService: with ${eServiceId}`);
+      logger.debug(`delete e-service, id: ${eServiceId}`);
 
       await eServiceRepository.delete(eServiceId);
     },
@@ -180,7 +178,7 @@ export function eServiceServiceBuilder(
       logger: Logger
     ): Promise<void> {
       logger.debug(
-        `delete eService: with ${eServiceId} and descriptorId: ${descriptorId}`
+        `delete e-service,  id: ${eServiceId}, descriptorId: ${descriptorId}`
       );
 
       const eventWasProcessed = await eServiceRepository.eventWasProcessed(
@@ -188,9 +186,9 @@ export function eServiceServiceBuilder(
         eventStreamId,
         eventVersionId
       );
-      logger.debug(`event was already processed: ${eventWasProcessed}`);
 
       if (eventWasProcessed) {
+        logger.debug(`Skip event (idempotence)`);
         return;
       }
 
@@ -202,7 +200,7 @@ export function eServiceServiceBuilder(
       descriptors: EServiceDescriptorV2[],
       logger: Logger
     ): Promise<void> {
-      logger.debug(`delete descriptors: with ${descriptors}`);
+      logger.debug(`delete descriptors: ${descriptors}`);
 
       descriptors.forEach(async (descriptor) => {
         await eServiceRepository.deleteDescriptor(eServiceId, descriptor.id);

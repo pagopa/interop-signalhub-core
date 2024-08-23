@@ -3,15 +3,14 @@ import { Logger, logger } from "pagopa-signalhub-commons";
 
 export const buildLoggerInstance = (
   serviceName: string,
-  eserviceEvent: EServiceEvent,
-  correlationId?: string
+  eserviceEvent: EServiceEvent
 ): Logger =>
   logger({
     serviceName,
     eventType: eserviceEvent.type,
     eventVersion: eserviceEvent.event_version,
     streamId: eserviceEvent.stream_id,
-    correlationId,
+    version: eserviceEvent.version,
   });
 
 export function getSemanticMajorVersion(version: string): number | null {
