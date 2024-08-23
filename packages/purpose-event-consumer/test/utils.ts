@@ -302,12 +302,21 @@ export const fromEventToEntity = (
 ): PurposeEntity => ({
   purposeId: purpose.id,
   purposeVersionId: version.id,
-  purposeState: version.state.toString(),
+  purposeState: getPurposeState(event, version),
   eserviceId: purpose.eserviceId,
   consumerId: purpose.consumerId,
   eventStreamId: event.stream_id,
   eventVersionId: event.version,
 });
+
+const getPurposeState = (
+  event: PurposeEventV1 | PurposeEventV2,
+  version: PurposeVersionV1 | PurposeVersionV2
+): string =>
+  match(event)
+    .with({ event_version: 1 }, () => PurposeStateV1[version.state])
+    .with({ event_version: 2 }, () => PurposeStateV2[version.state])
+    .exhaustive();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const toPurposeEntity = (purpose: any): PurposeEntity => ({
