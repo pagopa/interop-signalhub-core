@@ -93,20 +93,6 @@ aws_secret_access_key=test-aws-secret
 region=eu-south-1
 ```
 
-### Mockserver to simulate Interop API m2m
-
-```
-docker-compose up mockserver
-```
-
-To test:
-
-```
-curl -vv http://localhost:1080/1.0/events/eservices?limit=100&lastEventId=0
-```
-
-> NOTE: this repo is still a work in progress
-
 # Interop Signal-hub Monorepo
 
 ## How to start
@@ -198,18 +184,6 @@ You can even use a fake profile:
 aws_access_key_id=test-aws-key
 aws_secret_access_key=test-aws-secret
 region=eu-south-1
-```
-
-### Mockserver to simulate Interop API m2m
-
-```
-docker-compose up mockserver
-```
-
-To test:
-
-```
-curl -vv http://localhost:1080/1.0/events/eservices?limit=100&lastEventId=0
 ```
 
 ### Generate Open API

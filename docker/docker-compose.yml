@@ -42,25 +42,6 @@ services:
       - ./elasticmq/elasticmq.local.conf:/opt/elasticmq.conf
     restart: always
 
-  # Mockserver to simulate Interop API m2m
-  mockserver:
-    image: mockserver/mockserver:5.15.0@sha256:0f9ef78c94894ac3e70135d156193b25e23872575d58e2228344964273b4af6b
-    ports:
-      - 1080:1080
-    container_name: signal-hub-mockserver
-    environment:
-      - MOCKSERVER_INITIALIZATION_JSON_PATH=/config/webhook.json
-      - MOCKSERVER_ENABLE_CORS_FOR_ALL_RESPONSES=true
-      - MOCKSERVER_CORS_ALLOW_ORIGIN="*"
-      - MOCKSERVER_CORS_ALLOW_METHODS="CONNECT, DELETE, GET, HEAD, OPTIONS, POST, PUT, PATCH, TRACE"
-      - MOCKSERVER_CORS_ALLOW_HEADERS="Allow, Content-Encoding, Content-Length, Content-Type, ETag, Expires, Last-Modified, Location, Server, Vary, Authorization"
-      - MOCKSERVER_CORS_ALLOW_CREDENTIALS="true"
-      - MOCKSERVER_CORS_MAX_AGE_IN_SECONDS="300" \
-    volumes:
-      - "./mockserver:/config"
-    networks:
-      - develop-network
-
   zookeeper:
     image: zookeeper@sha256:c7a6a6ea6a1413ca3c13e987a4f9a1d6d2ba62b1837c3b356875842c64458b73
     networks:
