@@ -63,26 +63,6 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."purpose" (
 );
 CREATE INDEX IF NOT EXISTS PURPOSE_INDEX_ESERVICE_AND_CONSUMER_AND_STATE ON "dev_interop"."purpose"(purpose_id, consumer_id, purpose_state, eservice_id);
 
-CREATE TABLE IF NOT EXISTS "dev_interop"."tracing_batch" (
-    batch_id         SERIAL PRIMARY KEY,
-    state            VARCHAR (255) NOT NULL,
-    type             VARCHAR (50) NOT NULL,
-    last_event_id    BIGINT,
-    tmst_created     TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS "dev_interop"."dead_event" (
-    event_tmp_id        SERIAL PRIMARY KEY,
-    tmst_insert         TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    error_reason        VARCHAR(255) NOT NULL,
-    event_id            BIGINT NOT NULL,
-    event_type          VARCHAR (255) NOT NULL,
-    object_type         VARCHAR (255) NOT NULL,
-    descriptor_id       VARCHAR (255),
-    eservice_id         VARCHAR (255),
-    agreement_id        VARCHAR (255)
-);
-
 CREATE TABLE IF NOT EXISTS "dev_signalhub"."signal" (
     id             SERIAL PRIMARY KEY,
     correlation_id VARCHAR(255) NOT NULL,
