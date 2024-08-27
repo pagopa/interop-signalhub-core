@@ -2,13 +2,11 @@ import { z } from "zod";
 import {
   HTTPServerConfig,
   SignalHubStoreConfig,
-  InteropClientConfig,
   JWTConfig,
 } from "pagopa-signalhub-commons";
 
-const PullServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
-  .and(InteropClientConfig)
-  .and(JWTConfig);
+const PullServiceConfig =
+  HTTPServerConfig.and(SignalHubStoreConfig).and(JWTConfig);
 
 export type PullServiceConfig = z.infer<typeof PullServiceConfig>;
 
