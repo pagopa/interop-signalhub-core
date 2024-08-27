@@ -3,13 +3,11 @@ import {
   HTTPServerConfig,
   SignalHubStoreConfig,
   QuequeConfig,
-  InteropClientConfig,
   JWTConfig,
 } from "pagopa-signalhub-commons";
 
 const PushServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
   .and(QuequeConfig)
-  .and(InteropClientConfig)
   .and(JWTConfig);
 
 export type PushServiceConfig = z.infer<typeof PushServiceConfig>;
