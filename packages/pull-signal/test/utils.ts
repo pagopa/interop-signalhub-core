@@ -6,19 +6,13 @@ import { inject } from "vitest";
 import { SignalMessage, SignalResponse } from "pagopa-signalhub-commons";
 import { signalServiceBuilder } from "../src/services/signal.service";
 import { interopServiceBuilder } from "../src/services/interop.service";
-import { interopApiClientServiceBuilder } from "../src/services/interopApiClient.service";
 
 export const { cleanup, postgresDB, sqsClient } = setupTestContainersVitest(
   inject("signalHubStoreConfig"),
   inject("sqsConfig")
 );
 
-export const interopApiClient = interopApiClientServiceBuilder();
-
-export const interopService = interopServiceBuilder(
-  postgresDB,
-  interopApiClient
-);
+export const interopService = interopServiceBuilder(postgresDB);
 export const signalService = signalServiceBuilder(postgresDB);
 
 export const toSignal = (signal: SignalMessage): SignalResponse => {
