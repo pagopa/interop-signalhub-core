@@ -9,7 +9,6 @@ COPY pnpm-workspace.yaml /app/
 
 COPY ./packages/batch-cleanup/package.json /app/packages/batch-cleanup/package.json
 COPY ./packages/commons/package.json /app/packages/commons/package.json
-COPY ./packages/interop-client/package.json /app/packages/interop-client/package.json
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
@@ -17,7 +16,6 @@ COPY tsconfig.json /app/
 COPY turbo.json /app/
 COPY ./packages/batch-cleanup /app/packages/batch-cleanup
 COPY ./packages/commons /app/packages/commons
-COPY ./packages/interop-client /app/packages/interop-client
 
 RUN pnpm build && \
   rm -rf /app/node_modules/.modules.yaml && \
@@ -27,7 +25,6 @@ RUN pnpm build && \
   node_modules packages/batch-cleanup/node_modules \
   package*.json packages/batch-cleanup/package*.json \
   packages/commons \
-  packages/interop-client \
   packages/batch-cleanup/dist && \
   find /out -exec touch -h --date=@0 {} \;
 

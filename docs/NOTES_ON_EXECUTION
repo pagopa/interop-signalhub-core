@@ -10,21 +10,6 @@
 File ``.env` contains variables needed for application (local run)
 File `.env.test` contains variables needed for testing (does not introduce other variables: overwrites those in `.env`)
 
-#### module **interop-client**
-
-- is a client module, is a dependency, should not be started
-- contains the `buildJWT()` operation that signs the client assertion, uses KMS
-- depends on AWS KMS service, so
-- depends on AWS credentials
-- requires:
-  - authenticated AWS session (+ export profile)
-
-`~/.aws.config`
-`[PROFILE YOUR_AWS_PROFILE]`
-
-`export AWS_PROFILE=YOUR_AWS_PROFILE`
-`aws sso login`
-
 #### module **batch-cleanup**
 
 - no setup
@@ -44,7 +29,6 @@ Running elasticmq locally does not need variables
 
 #### module **pull**
 
-- depends on interop-client
 - needs:
   - authenticated AWS session (+ export profile)
 
@@ -54,7 +38,6 @@ For test execution:
 
 #### module **push**
 
-- depends on interop-client
 - depends on AWS SQS service
 - requires:
   - authenticated AWS session (+ export profile)
