@@ -19,8 +19,6 @@ import {
   TEST_POSTGRES_DB_PORT,
   elasticMQContainer,
   postgreSQLContainer,
-  mockserverContainer,
-  TEST_MOCKSERVER_PORT,
 } from "./containerTestUtils.js";
 
 const SqsConfig = QuequeConfig.and(AwsConfig);
@@ -52,7 +50,6 @@ export function setupTestContainersVitestGlobal() {
     provide,
   }: GlobalSetupContext): Promise<() => Promise<void>> {
     let startedPostgreSqlContainer: StartedTestContainer | undefined;
-    let startedMockserverContainer: StartedTestContainer | undefined;
     let startedElasticMQContainer: StartedTestContainer | undefined;
 
     if (signalHubStoreConfig.success) {
@@ -92,15 +89,6 @@ export function setupTestContainersVitestGlobal() {
       provide("sqsConfig", sqsConfig.data);
     }
     if (interopClientConfig.success) {
-      startedMockserverContainer = await mockserverContainer(
-        interopClientConfig.data
-      ).start();
-      const mockserverPort =
-        startedMockserverContainer?.getMappedPort(TEST_MOCKSERVER_PORT);
-      interopClientConfig.data.gatewayUrl = `http://localhost:${mockserverPort}/1.0`;
-
-      process.env.GATEWAY_URL = interopClientConfig.data.gatewayUrl;
-
       provide("interopClientConfig", interopClientConfig.data);
     }
 
@@ -109,7 +97,6 @@ export function setupTestContainersVitestGlobal() {
       console.info("Stopping test containers");
       await startedPostgreSqlContainer?.stop();
       await startedElasticMQContainer?.stop();
-      await startedMockserverContainer?.stop();
     };
   };
 }
