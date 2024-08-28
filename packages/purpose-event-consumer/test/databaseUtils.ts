@@ -1,9 +1,9 @@
 import { TableName } from "pagopa-signalhub-commons";
 import { PurposeEntity } from "../src/models/domain/model.js";
-import { postgresDB, toPurposeEntity } from "./utils.js";
 import { config } from "../src/config/env.js";
+import { postgresDB, toPurposeEntity } from "./utils.js";
 
-const purposeTable: TableName = `${config.signalhubStoreDbNameNamespace}_INTEROP.purpose`;
+const purposeTable: TableName = `${config.interopSchema}.purpose`;
 
 export const getAPurposeEntityBy = async (
   purposeId: string

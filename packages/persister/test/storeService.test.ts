@@ -4,13 +4,12 @@ import {
   notRecoverableMessageError,
   recoverableMessageError,
 } from "../src/models/domain/errors.js";
-
+import { config } from "../src/config/env.js";
 import {
   postgresDB,
   storeSignalService,
   wrongStoreSignalService,
 } from "./utils.js";
-import { config } from "../src/config/env.js";
 
 describe("Signal Store Service", () => {
   it("should throw an unrecoverable error if signal already exist on db", async () => {

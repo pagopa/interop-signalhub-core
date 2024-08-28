@@ -3,13 +3,13 @@ import {
   dataPreparation,
   dataPreparationCleanup,
 } from "pagopa-signalhub-commons-test";
-import { postgresDB } from "./utils.js";
 import { config } from "../src/config/env.js";
+import { postgresDB } from "./utils.js";
 
 beforeAll(async () => {
-  await dataPreparation(postgresDB, config.signalhubStoreDbNameNamespace);
+  await dataPreparation(postgresDB, config.interopSchema);
 });
 
 afterAll(async () => {
-  await dataPreparationCleanup(postgresDB);
+  await dataPreparationCleanup(postgresDB, config.interopSchema);
 });

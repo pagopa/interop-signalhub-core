@@ -5,6 +5,8 @@ import {
   createMultipleSignals,
   writeSignals,
 } from "pagopa-signalhub-commons-test";
+import { config } from "../src/config/env.js";
+
 import {
   cleanup,
   ONE_HOUR,
@@ -12,7 +14,6 @@ import {
   postgresDB,
   signalService,
 } from "./utils.js";
-import { config } from "../src/config/env.js";
 
 describe("Signal service", () => {
   afterEach(cleanup);

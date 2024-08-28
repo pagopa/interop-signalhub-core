@@ -8,6 +8,7 @@ import {
 } from "@pagopa/interop-outbound-models";
 import { truncatePurposeTable } from "pagopa-signalhub-commons-test";
 import { handleMessageV1 } from "../src/handlers/index.js";
+import { config } from "../src/config/env.js";
 import {
   createAndWriteAPurposeEventV1,
   createAPurposeEventV1,
@@ -21,7 +22,6 @@ import {
   purposeService,
 } from "./utils.js";
 import { getAPurposeEntityBy } from "./databaseUtils.js";
-import { config } from "../src/config/env.js";
 
 describe("Message Handler for V1 EVENTS", () => {
   beforeEach(() => truncatePurposeTable(postgresDB, config.interopSchema));

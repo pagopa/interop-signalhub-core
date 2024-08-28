@@ -87,6 +87,7 @@ export function setupTestContainersVitest(
     cleanup: async (): Promise<void> => {
       await truncateSignalTable(
         postgresDB!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
         signalHubStoreConfig?.signalHubSchema!
       );
       // TODO: clean queque messages

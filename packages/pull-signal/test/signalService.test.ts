@@ -6,7 +6,7 @@ import {
   writeSignals,
   createMultipleOrderedSignals,
 } from "pagopa-signalhub-commons-test";
-
+import { config } from "../src/config/env.js";
 import {
   cleanup,
   postgresDB,
@@ -15,7 +15,6 @@ import {
   toSignal,
   toSignals,
 } from "./utils.js";
-import { config } from "../src/config/env.js";
 
 describe("Pull Signal service", () => {
   afterEach(cleanup);
