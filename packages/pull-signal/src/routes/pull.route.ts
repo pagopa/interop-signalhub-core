@@ -15,28 +15,28 @@ export const pullRoutes = (
 ) => {
   const pullSignal: AppRouteImplementation<
     typeof contract.pullSignal
-  > = async ({ req }) => {
+  > = async ({ req, res }) => {
     const log = logger({
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
+      purposeId: req.ctx.sessionData.purposeId,
+      eserviceId: req.params.eserviceId,
     });
-    log.info(
-      `pullController BEGIN with params: ${JSON.stringify(
-        req.params
-      )}, query: ${JSON.stringify(req.query)}, session: ${JSON.stringify(
-        req.ctx.sessionData
-      )}`
-    );
     try {
       const { eserviceId } = req.params;
       const { purposeId } = req.ctx.sessionData;
       const { signalId, size } = req.query;
+
+      log.info(`Request ${req.method} ${req.url}`);
 
       await interopService.verifyAuthorization(purposeId, eserviceId, log);
 
       const { signals, nextSignalId, lastSignalId } =
         await signalService.getSignal(eserviceId, signalId, size, log);
       const status = nextSignalId ? 206 : 200;
+      log.info(
+        `Response status:${res.statusCode}, signals ${signals.length}, lastSignalId ${lastSignalId}`
+      );
       return {
         status,
         body: {
@@ -50,12 +50,13 @@ export const pullRoutes = (
         (err) =>
           match(err.code)
             .with("unauthorizedError", () => 401)
-            .with("operationForbidden", () => 403)
+            .with("operationPullForbidden", () => 403)
             .with("genericError", () => 500)
             .otherwise(() => 500),
         log,
         req.ctx.correlationId
       );
+      log.warn(`Response ${problem.status} - ${problem.title}`);
       switch (problem.status) {
         case 401:
           return {

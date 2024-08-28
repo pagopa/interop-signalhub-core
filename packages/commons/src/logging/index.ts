@@ -10,6 +10,8 @@ export type LoggerMetadata = {
   eventVersion?: number;
   streamId?: string;
   version?: number;
+  eserviceId?: string;
+  purposeId?: string;
 };
 
 export const parsedLoggerConfig = LoggerConfig.safeParse(process.env);
@@ -32,6 +34,8 @@ const logFormat = (
     eventVersion,
     streamId,
     version,
+    eserviceId,
+    purposeId,
   }: LoggerMetadata
 ) => {
   const serviceLogPart = serviceName ? `[${serviceName}]` : undefined;
@@ -46,6 +50,8 @@ const logFormat = (
   const eventVersionPart = eventVersion ? `[EV=${eventVersion}]` : undefined;
   const streamIdPart = streamId ? `[SID=${streamId}]` : undefined;
   const versionIdPart = version != null ? `[VID=${version}]` : undefined; // check for null and undefined
+  const eserviceIdPart = eserviceId ? `[EID=${eserviceId}]` : undefined;
+  const purposeIdPart = purposeId ? `[PRID=${purposeId}]` : undefined;
 
   const firstPart = [timestamp, level.toUpperCase(), serviceLogPart]
     .filter((e) => e !== undefined)
@@ -59,6 +65,8 @@ const logFormat = (
     eventVersionPart,
     streamIdPart,
     versionIdPart,
+    eserviceIdPart,
+    purposeIdPart,
   ]
     .filter((e) => e !== undefined)
     .join(" ");

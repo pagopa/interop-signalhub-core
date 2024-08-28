@@ -1,6 +1,7 @@
-import { DB, Logger, operationForbidden } from "pagopa-signalhub-commons";
+import { DB, Logger } from "pagopa-signalhub-commons";
 import { agreementRepository } from "../repositories/agreement.repository.js";
 import { purposeRepository } from "../repositories/index.js";
+import { operationPullForbidden } from "../model/domain/errors.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function interopServiceBuilder(db: DB) {
@@ -10,10 +11,10 @@ export function interopServiceBuilder(db: DB) {
       eserviceId: string,
       logger: Logger
     ): Promise<void> {
-      logger.debug(`InteropService::verifyAuthorization BEGIN`);
+      logger.info(`InteropService::verifyAuthorization BEGIN`);
       const consumerId = await this.getConsumerIdByPurpose(purposeId, logger);
       await this.consumerCanAccessToEservice(consumerId, eserviceId, logger);
-      logger.debug(`InteropService::verifyAuthorization END`);
+      logger.info(`InteropService::verifyAuthorization END`);
     },
 
     async consumerCanAccessToEservice(
@@ -22,7 +23,7 @@ export function interopServiceBuilder(db: DB) {
       logger: Logger
     ): Promise<void> {
       logger.info(
-        `InteropService::consumerCanAccessToEservice consumerId: ${consumerId} eserviceId: ${eserviceId}`
+        `InteropService::consumerCanAccessToEservice with consumerId: ${consumerId}`
       );
       const state = "ACTIVE";
       const eserviceConsumed = await agreementRepository(db).findBy(
@@ -31,23 +32,20 @@ export function interopServiceBuilder(db: DB) {
         state
       );
 
-      if (eserviceConsumed) {
-        return;
+      if (!eserviceConsumed) {
+        throw operationPullForbidden({ consumerId });
       }
-      throw operationForbidden;
     },
 
     async getConsumerIdByPurpose(
       purposeId: string,
       logger: Logger
     ): Promise<string> {
+      logger.info(`InteropService::getConsumerIdByPurpose`);
       const state = "ACTIVE";
       const consumerId = await purposeRepository(db).findBy(purposeId, state);
-      logger.debug(
-        `InteropService::getConsumerIdByPuropose consumerId: ${consumerId}`
-      );
       if (!consumerId) {
-        throw operationForbidden;
+        throw operationPullForbidden({ purposeId });
       }
       return consumerId;
     },
