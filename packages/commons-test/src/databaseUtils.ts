@@ -1,32 +1,57 @@
-import { DB, Signal, SignalPayload } from "pagopa-signalhub-commons";
+import {
+  DB,
+  DatabaseNameSpace,
+  Signal,
+  SignalPayload,
+  TableName,
+} from "pagopa-signalhub-commons";
 
-export async function truncatePurposeTable(db: DB): Promise<void> {
-  await db.none("truncate dev_interop.purpose;");
+export async function truncatePurposeTable(
+  db: DB,
+  dbNamespace: DatabaseNameSpace
+): Promise<void> {
+  const purposeTable: TableName = `${dbNamespace}_INTEROP.purpose`;
+  await db.none(`truncate ${purposeTable};`);
 }
-export async function truncateAgreementTable(db: DB): Promise<void> {
-  await db.none("truncate dev_interop.agreement;");
+export async function truncateAgreementTable(
+  db: DB,
+  dbNamespace: DatabaseNameSpace
+): Promise<void> {
+  const agreementTable: TableName = `${dbNamespace}_INTEROP.agreement`;
+  await db.none(`truncate ${agreementTable};`);
 }
-export async function truncateEserviceTable(db: DB): Promise<void> {
-  await db.none("truncate dev_interop.eservice;");
+export async function truncateEserviceTable(
+  db: DB,
+  dbNamespace: DatabaseNameSpace
+): Promise<void> {
+  const eserviceTable: TableName = `${dbNamespace}_INTEROP.eservice`;
+  await db.none(`truncate ${eserviceTable};`);
 }
 
-export async function truncateSignalTable(db: DB): Promise<void> {
-  await db.none("truncate dev_signalhub.signal;");
+export async function truncateSignalTable(
+  db: DB,
+  dbNamespace: DatabaseNameSpace
+): Promise<void> {
+  const signalTable: TableName = `${dbNamespace}_SIGNALHUB.signal`;
+  await db.none(`truncate ${signalTable};`);
 }
 
-export async function truncateDeadSignalTable(db: DB): Promise<void> {
-  await db.none("truncate dev_signalhub.dead_signal;");
-}
-export async function truncateTracingBatchCleanupTable(db: DB): Promise<void> {
-  await db.none("truncate dev_interop.tracing_batch_cleanup;");
+export async function truncateTracingBatchCleanupTable(
+  db: DB,
+  dbNamespace: DatabaseNameSpace
+): Promise<void> {
+  const tracingBatchCleanupTable: TableName = `${dbNamespace}_SIGNALHUB.tracing_batch_cleanup`;
+  await db.none(`truncate ${tracingBatchCleanupTable};`);
 }
 
 export async function writeSignal(
   signal: Partial<Signal>,
-  db: DB
+  db: DB,
+  dbNamespace: DatabaseNameSpace
 ): Promise<unknown> {
+  const signalTable: TableName = `${dbNamespace}_SIGNALHUB.signal`;
   return await db.oneOrNone(
-    "INSERT INTO DEV_SIGNALHUB.SIGNAL(correlation_id, signal_id,object_id,eservice_id, object_type, signal_type) VALUES($1, $2, $3, $4, $5, $6) RETURNING id",
+    `INSERT INTO ${signalTable}(correlation_id, signal_id,object_id,eservice_id, object_type, signal_type) VALUES($1, $2, $3, $4, $5, $6) RETURNING id`,
     [
       signal.correlationId,
       signal.signalId,
@@ -41,14 +66,17 @@ export async function writeSignal(
 
 export async function writeSignals(
   signals: Array<Partial<Signal>>,
-  db: DB
+  db: DB,
+  dbNamespace: DatabaseNameSpace
 ): Promise<number[]> {
+  const signalTable: TableName = `${dbNamespace}_SIGNALHUB.signal`;
+
   const ids: number[] = [];
   for (const signal of signals) {
     // eslint-disable-next-line functional/immutable-data
     ids.push(
       await db.oneOrNone(
-        "INSERT INTO DEV_SIGNALHUB.SIGNAL(correlation_id, signal_id,object_id,eservice_id, object_type, signal_type) VALUES($1, $2, $3, $4, $5, $6) RETURNING id",
+        `INSERT INTO ${signalTable}(correlation_id, signal_id,object_id,eservice_id, object_type, signal_type) VALUES($1, $2, $3, $4, $5, $6) RETURNING id`,
         [
           signal.correlationId,
           signal.signalId,
@@ -64,22 +92,22 @@ export async function writeSignals(
   return ids;
 }
 
-export async function insertNotActivePurpose(
-  db: DB,
-  purposeId: string,
-  eServiceId: string,
-  consumerId: string,
-  purposeState: string
-): Promise<void> {
-  const purposeVersion = -1;
+// export async function insertNotActivePurpose(
+//   db: DB,
+//   purposeId: string,
+//   eServiceId: string,
+//   consumerId: string,
+//   purposeState: string
+// ): Promise<void> {
+//   const purposeVersion = -1;
 
-  const query = {
-    text: "INSERT INTO DEV_INTEROP.purpose (purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id) values ($1, $2, $3, $4, $5)",
-    values: [purposeId, purposeVersion, purposeState, eServiceId, consumerId],
-  };
+//   const query = {
+//     text: "INSERT INTO DEV_INTEROP.purpose (purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id) values ($1, $2, $3, $4, $5)",
+//     values: [purposeId, purposeVersion, purposeState, eServiceId, consumerId],
+//   };
 
-  await db.none(query);
-}
+//   await db.none(query);
+// }
 
 export const createSignal = (partialSignal?: Partial<Signal>): Signal => ({
   ...createSignalPayload(),

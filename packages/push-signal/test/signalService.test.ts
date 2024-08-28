@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { createSignal, writeSignal } from "pagopa-signalhub-commons-test";
 import { signalIdDuplicatedForEserviceId } from "../src/models/domain/errors.js";
 import { cleanup, postgresDB, signalService } from "./utils.js";
+import { config } from "../src/config/env.js";
 
 describe("Store service", () => {
   describe("verifySignalDuplicated", () => {
@@ -23,7 +24,11 @@ describe("Store service", () => {
       const signalId = 1;
       const eserviceId = "test-eservice-id";
       const signal = createSignal({ signalId, eserviceId });
-      await writeSignal(signal, postgresDB);
+      await writeSignal(
+        signal,
+        postgresDB,
+        config.signalhubStoreDbNameNamespace
+      );
 
       await expect(
         signalService.verifySignalDuplicated(

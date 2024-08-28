@@ -4,9 +4,10 @@ import {
   dataPreparationCleanup,
 } from "pagopa-signalhub-commons-test";
 import { postgresDB } from "./utils.js";
+import { config } from "../src/config/env.js";
 
 beforeAll(async () => {
-  await dataPreparation(postgresDB);
+  await dataPreparation(postgresDB, config.signalhubStoreDbNameNamespace);
 });
 
 afterAll(async () => {

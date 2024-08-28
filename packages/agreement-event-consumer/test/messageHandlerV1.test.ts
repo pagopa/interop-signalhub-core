@@ -18,9 +18,13 @@ import {
   createAndWriteAnAgreementEventV1,
 } from "./utils.js";
 import { getAnAgreementEntityBy } from "./databaseUtils.js";
+import { config } from "../src/config/env.js";
 
 describe("Message Handler for V1 EVENTS", () => {
-  beforeEach(() => truncateAgreementTable(postgresDB));
+  console.log("CONFI", config);
+  beforeEach(() =>
+    truncateAgreementTable(postgresDB, config.signalhubStoreDbNameNamespace)
+  );
 
   it("Should add an agreement for an AgreementAdded event", async () => {
     const id = generateID();

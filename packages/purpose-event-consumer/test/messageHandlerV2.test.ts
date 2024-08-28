@@ -21,9 +21,12 @@ import {
   purposeService,
 } from "./utils.js";
 import { getAPurposeEntityBy } from "./databaseUtils.js";
+import { config } from "../src/config/env.js";
 
 describe("Message Handler for V2 EVENTS", () => {
-  beforeEach(() => truncatePurposeTable(postgresDB));
+  beforeEach(() =>
+    truncatePurposeTable(postgresDB, config.signalhubStoreDbNameNamespace)
+  );
   const mockPurposeV2 = {
     ...getMockPurpose(),
     isFreeOfCharge: false,

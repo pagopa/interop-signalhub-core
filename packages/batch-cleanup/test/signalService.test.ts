@@ -12,6 +12,7 @@ import {
   postgresDB,
   signalService,
 } from "./utils.js";
+import { config } from "../src/config/env.js";
 
 describe("Signal service", () => {
   afterEach(cleanup);
@@ -34,7 +35,12 @@ describe("Signal service", () => {
 
   it("should clean 0 signals if signal has been inserted now, if period retention is 1 hour", async () => {
     const periodRetentionSignalsInHours = 1;
-    await writeSignal(createSignal(), postgresDB);
+
+    await writeSignal(
+      createSignal(),
+      postgresDB,
+      config.signalhubStoreDbNameNamespace
+    );
     const { countDeleted } = await signalService.cleanup(
       periodRetentionSignalsInHours
     );
@@ -43,7 +49,11 @@ describe("Signal service", () => {
 
   it("should clean 1 signals if the signal has exceeded the limit period (one hour)", async () => {
     const periodRetentionSignalsInHours = 1;
-    await writeSignal(createSignal(), postgresDB);
+    await writeSignal(
+      createSignal(),
+      postgresDB,
+      config.signalhubStoreDbNameNamespace
+    );
     vi.useFakeTimers(); // tell vitest we use mocked time
     const anHourHasAlreadyPassed = new Date(
       new Date().getTime() + ONE_HOUR + ONE_MINUTE
@@ -60,7 +70,11 @@ describe("Signal service", () => {
   it("should clean multiple signals if the signals has exceeded the limit period (one hour)", async () => {
     const periodRetentionSignalsInHours = 1;
     const batchSignals = createMultipleSignals(10);
-    await writeSignals(batchSignals, postgresDB);
+    await writeSignals(
+      batchSignals,
+      postgresDB,
+      config.signalhubStoreDbNameNamespace
+    );
 
     vi.useFakeTimers(); // tell vitest we use mocked time
     const oneHourHasAlreadyPassed = new Date(
@@ -78,7 +92,11 @@ describe("Signal service", () => {
   it("should clean 0 signals if the signals has NOT exceeded the limit period (one hour)", async () => {
     const periodRetentionSignalsInHours = 1;
     const batchSignals = createMultipleSignals(10);
-    await writeSignals(batchSignals, postgresDB);
+    await writeSignals(
+      batchSignals,
+      postgresDB,
+      config.signalhubStoreDbNameNamespace
+    );
 
     const { countDeleted } = await signalService.cleanup(
       periodRetentionSignalsInHours
