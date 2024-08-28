@@ -57,5 +57,6 @@ type InteropDatabaseTable =
   | "agreement"
   | "eservice_producer";
 export type TableName =
-  | `${DatabaseNameSpace}_SIGNAL.signal`
+  | `${DatabaseNameSpace}_SIGNALHUB.signal`
+  | `${DatabaseNameSpace}_SIGNALHUB.dead_signal`
   | `${DatabaseNameSpace}_INTEROP.${InteropDatabaseTable}`;
