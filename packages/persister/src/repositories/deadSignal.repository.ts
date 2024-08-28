@@ -8,7 +8,7 @@ export interface IDeadSignalRepository {
 }
 
 export const deadSignalRepository = (db: DB): IDeadSignalRepository => {
-  const deadSignalTable: TableName = `${config.signalhubStoreDbNameNamespace}_SIGNALHUB.dead_signal`;
+  const deadSignalTable: TableName = `${config.signalHubSchema}.dead_signal`;
 
   return {
     async insertDeadSignal(deadSignal): Promise<number | null> {

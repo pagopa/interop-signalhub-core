@@ -10,7 +10,7 @@ export interface IAgreementRepository {
 }
 
 export const agreementRepository = (db: DB): IAgreementRepository => {
-  const agreementTable: TableName = `${config.signalhubStoreDbNameNamespace}_INTEROP.agreement`;
+  const agreementTable: TableName = `${config.interopSchema}.agreement`;
 
   return {
     async findBy(
