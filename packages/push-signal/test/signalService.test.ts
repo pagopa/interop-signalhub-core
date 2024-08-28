@@ -24,11 +24,7 @@ describe("Store service", () => {
       const signalId = 1;
       const eserviceId = "test-eservice-id";
       const signal = createSignal({ signalId, eserviceId });
-      await writeSignal(
-        signal,
-        postgresDB,
-        config.signalhubStoreDbNameNamespace
-      );
+      await writeSignal(signal, postgresDB, config.signalHubSchema);
 
       await expect(
         signalService.verifySignalDuplicated(

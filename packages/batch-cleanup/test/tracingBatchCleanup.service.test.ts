@@ -14,9 +14,6 @@ describe("TracingBatchCleanup service", () => {
   });
 
   beforeEach(() =>
-    truncateTracingBatchCleanupTable(
-      postgresDB,
-      config.signalhubStoreDbNameNamespace
-    )
+    truncateTracingBatchCleanupTable(postgresDB, config.signalHubSchema)
   );
 });

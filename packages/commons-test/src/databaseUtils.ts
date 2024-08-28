@@ -1,6 +1,7 @@
 import {
   DB,
-  DatabaseNameSpace,
+  InteropSchema,
+  SignalhubSchema,
   Signal,
   SignalPayload,
   TableName,
@@ -8,48 +9,48 @@ import {
 
 export async function truncatePurposeTable(
   db: DB,
-  dbNamespace: DatabaseNameSpace
+  schema: InteropSchema
 ): Promise<void> {
-  const purposeTable: TableName = `${dbNamespace}_INTEROP.purpose`;
+  const purposeTable: TableName = `${schema}.purpose`;
   await db.none(`truncate ${purposeTable};`);
 }
 export async function truncateAgreementTable(
   db: DB,
-  dbNamespace: DatabaseNameSpace
+  schema: InteropSchema
 ): Promise<void> {
-  const agreementTable: TableName = `${dbNamespace}_INTEROP.agreement`;
+  const agreementTable: TableName = `${schema}.agreement`;
   await db.none(`truncate ${agreementTable};`);
 }
 export async function truncateEserviceTable(
   db: DB,
-  dbNamespace: DatabaseNameSpace
+  schema: InteropSchema
 ): Promise<void> {
-  const eserviceTable: TableName = `${dbNamespace}_INTEROP.eservice`;
+  const eserviceTable: TableName = `${schema}.eservice`;
   await db.none(`truncate ${eserviceTable};`);
 }
 
 export async function truncateSignalTable(
   db: DB,
-  dbNamespace: DatabaseNameSpace
+  schema: SignalhubSchema
 ): Promise<void> {
-  const signalTable: TableName = `${dbNamespace}_SIGNALHUB.signal`;
+  const signalTable: TableName = `${schema}.signal`;
   await db.none(`truncate ${signalTable};`);
 }
 
 export async function truncateTracingBatchCleanupTable(
   db: DB,
-  dbNamespace: DatabaseNameSpace
+  schema: SignalhubSchema
 ): Promise<void> {
-  const tracingBatchCleanupTable: TableName = `${dbNamespace}_SIGNALHUB.tracing_batch_cleanup`;
+  const tracingBatchCleanupTable: TableName = `${schema}.tracing_batch_cleanup`;
   await db.none(`truncate ${tracingBatchCleanupTable};`);
 }
 
 export async function writeSignal(
   signal: Partial<Signal>,
   db: DB,
-  dbNamespace: DatabaseNameSpace
+  schema: SignalhubSchema
 ): Promise<unknown> {
-  const signalTable: TableName = `${dbNamespace}_SIGNALHUB.signal`;
+  const signalTable: TableName = `${schema}.signal`;
   return await db.oneOrNone(
     `INSERT INTO ${signalTable}(correlation_id, signal_id,object_id,eservice_id, object_type, signal_type) VALUES($1, $2, $3, $4, $5, $6) RETURNING id`,
     [
@@ -67,9 +68,9 @@ export async function writeSignal(
 export async function writeSignals(
   signals: Array<Partial<Signal>>,
   db: DB,
-  dbNamespace: DatabaseNameSpace
+  schema: SignalhubSchema
 ): Promise<number[]> {
-  const signalTable: TableName = `${dbNamespace}_SIGNALHUB.signal`;
+  const signalTable: TableName = `${schema}.signal`;
 
   const ids: number[] = [];
   for (const signal of signals) {

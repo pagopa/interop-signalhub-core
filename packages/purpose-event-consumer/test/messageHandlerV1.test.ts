@@ -24,9 +24,7 @@ import { getAPurposeEntityBy } from "./databaseUtils.js";
 import { config } from "../src/config/env.js";
 
 describe("Message Handler for V1 EVENTS", () => {
-  beforeEach(() =>
-    truncatePurposeTable(postgresDB, config.signalhubStoreDbNameNamespace)
-  );
+  beforeEach(() => truncatePurposeTable(postgresDB, config.interopSchema));
   const mockPurposeV1 = getMockPurpose() as PurposeV1;
   const mockPurposeVersionV1 = getMockPurposeVersion() as PurposeVersionV1;
 

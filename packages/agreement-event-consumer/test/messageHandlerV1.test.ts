@@ -22,9 +22,7 @@ import { config } from "../src/config/env.js";
 
 describe("Message Handler for V1 EVENTS", () => {
   console.log("CONFI", config);
-  beforeEach(() =>
-    truncateAgreementTable(postgresDB, config.signalhubStoreDbNameNamespace)
-  );
+  beforeEach(() => truncateAgreementTable(postgresDB, config.interopSchema));
 
   it("Should add an agreement for an AgreementAdded event", async () => {
     const id = generateID();
