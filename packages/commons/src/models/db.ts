@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { SnakeCase } from "../utils/index.js";
-import { DatabaseNameSpace } from "../index.js";
+import { InteropSchema, SignalhubSchema } from "../index.js";
 
 export const TracingBatch = z.object({
   batchId: z.string(),
@@ -61,6 +61,7 @@ type SignalHubDatabaseTable =
   | "signal"
   | "dead_signal"
   | "tracing_batch_cleanup";
+
 export type TableName =
-  | `${DatabaseNameSpace}_SIGNALHUB.${SignalHubDatabaseTable}`
-  | `${DatabaseNameSpace}_INTEROP.${InteropDatabaseTable}`;
+  | `${InteropSchema}.${InteropDatabaseTable}`
+  | `${SignalhubSchema}.${SignalHubDatabaseTable}`;
