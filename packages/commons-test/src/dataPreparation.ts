@@ -43,7 +43,7 @@ async function setupPurposeTableForProducers(
       const { state, version, eservice, id } = purpose;
 
       const query = {
-        text: `INSERT ${purposeTable}(purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id) values ($1, $2, $3, $4, $5)`,
+        text: `INSERT INTO ${purposeTable}(purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id) values ($1, $2, $3, $4, $5)`,
         values: [id, version, state, eservice, consumerId],
       };
       await db.none(query);

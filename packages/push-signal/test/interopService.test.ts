@@ -9,11 +9,12 @@ import {
   eserviceIdNotPublished,
 } from "pagopa-signalhub-commons-test";
 import { interopService, postgresDB } from "./utils.js";
+import { config } from "../src/config/env.js";
 
 describe("PDND Interoperability service", () => {
   beforeAll(async () => {
-    await dataResetForSignalProducers(postgresDB);
-    await dataPreparationForSignalProducers(postgresDB);
+    await dataResetForSignalProducers(postgresDB, config.interopSchema);
+    await dataPreparationForSignalProducers(postgresDB, config.interopSchema);
   });
 
   it("should give permission to a signals producer for pushing a signal", async () => {
