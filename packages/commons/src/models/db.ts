@@ -56,7 +56,11 @@ type InteropDatabaseTable =
   | "purpose"
   | "agreement"
   | "eservice_producer";
+
+type SignalHubDatabaseTable =
+  | "signal"
+  | "dead_signal"
+  | "tracing_batch_cleanup";
 export type TableName =
-  | `${DatabaseNameSpace}_SIGNALHUB.signal`
-  | `${DatabaseNameSpace}_SIGNALHUB.dead_signal`
+  | `${DatabaseNameSpace}_SIGNALHUB.${SignalHubDatabaseTable}`
   | `${DatabaseNameSpace}_INTEROP.${InteropDatabaseTable}`;
