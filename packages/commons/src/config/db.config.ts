@@ -7,6 +7,7 @@ export const SignalHubStoreConfig = z
     SH_DB_USERNAME: z.string(),
     SH_DB_PASSWORD: z.string(),
     SH_DB_PORT: z.coerce.number().min(1001),
+    SH_DB_NAME_NAMESPACE: z.enum(["dev", "uat", "prod"]),
     SH_DB_USE_SSL: z
       .enum(["true", "false"])
       .transform((value) => value === "true"),
@@ -18,6 +19,7 @@ export const SignalHubStoreConfig = z
     signalhubStoreDbPassword: encodeURIComponent(c.SH_DB_PASSWORD),
     signalhubStoreDbPort: c.SH_DB_PORT,
     signalhubStoreDbUseSSL: c.SH_DB_USE_SSL,
+    signalhubStoreDbNameNamespace: c.SH_DB_NAME_NAMESPACE,
   }));
 
 export type SignalHubStoreConfig = z.infer<typeof SignalHubStoreConfig>;
