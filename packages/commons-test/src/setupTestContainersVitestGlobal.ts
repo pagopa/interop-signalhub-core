@@ -10,7 +10,6 @@ import {
   QuequeConfig,
   SignalHubStoreConfig,
   AwsConfig,
-  InteropClientConfig,
 } from "pagopa-signalhub-commons";
 import { StartedTestContainer } from "testcontainers";
 import { z } from "zod";
@@ -28,7 +27,6 @@ declare module "vitest" {
   export interface ProvidedContext {
     signalHubStoreConfig: SignalHubStoreConfig;
     sqsConfig: SqsConfig;
-    interopClientConfig: InteropClientConfig;
   }
 }
 
@@ -44,7 +42,6 @@ export function setupTestContainersVitestGlobal() {
   dotenv();
   const signalHubStoreConfig = SignalHubStoreConfig.safeParse(process.env);
   const sqsConfig = SqsConfig.safeParse(process.env);
-  const interopClientConfig = InteropClientConfig.safeParse(process.env);
 
   return async function ({
     provide,
@@ -87,9 +84,6 @@ export function setupTestContainersVitestGlobal() {
       )}/000000000000/sqsLocalQueue`;
 
       provide("sqsConfig", sqsConfig.data);
-    }
-    if (interopClientConfig.success) {
-      provide("interopClientConfig", interopClientConfig.data);
     }
 
     return async (): Promise<void> => {

@@ -8,7 +8,6 @@ import {
   SQS,
   SignalHubStoreConfig,
   createDbInstance,
-  InteropClientConfig,
 } from "pagopa-signalhub-commons";
 import { SqsConfig, truncateSignalTable } from "./index.js";
 /**
@@ -49,23 +48,19 @@ export function setupTestContainersVitest(
 
 export function setupTestContainersVitest(
   signalHubStoreConfig?: SignalHubStoreConfig,
-  sqsConfig?: SqsConfig,
-  interopClientConfig?: InteropClientConfig
+  sqsConfig?: SqsConfig
 ): {
   postgresDB: DB;
   sqsClient: SQS.SQSClient;
-  interopClientConfig: InteropClientConfig;
   cleanup: () => Promise<void>;
 };
 
 export function setupTestContainersVitest(
   signalHubStoreConfig?: SignalHubStoreConfig,
-  sqsConfig?: SqsConfig,
-  interopClientConfig?: InteropClientConfig
+  sqsConfig?: SqsConfig
 ): {
   postgresDB?: DB;
   sqsClient?: SQS.SQSClient;
-  interopClientConfig?: InteropClientConfig;
   cleanup: () => Promise<void>;
 } {
   let postgresDB: DB | undefined;
@@ -89,7 +84,6 @@ export function setupTestContainersVitest(
   return {
     postgresDB,
     sqsClient,
-    interopClientConfig,
     cleanup: async (): Promise<void> => {
       await truncateSignalTable(postgresDB!);
       // TODO: clean queque messages
