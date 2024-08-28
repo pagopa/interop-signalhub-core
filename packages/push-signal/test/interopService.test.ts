@@ -8,8 +8,8 @@ import {
   eserviceIdPublishedByAnotherOrganization,
   eserviceIdNotPublished,
 } from "pagopa-signalhub-commons-test";
-import { interopService, postgresDB } from "./utils.js";
 import { config } from "../src/config/env.js";
+import { interopService, postgresDB } from "./utils.js";
 
 describe("PDND Interoperability service", () => {
   beforeAll(async () => {

@@ -9,7 +9,7 @@ export const getAPurposeEntityBy = async (
   purposeId: string
 ): Promise<PurposeEntity | null> => {
   const purpose = await postgresDB.oneOrNone(
-    "SELECT purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id, event_stream_id, event_version_id FROM ${purposeTable} p WHERE p.purpose_id = $1",
+    `SELECT purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id, event_stream_id, event_version_id FROM ${purposeTable} p WHERE p.purpose_id = $1`,
     [purposeId]
   );
   if (!purpose) {
