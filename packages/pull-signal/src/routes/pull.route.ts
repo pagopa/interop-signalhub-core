@@ -16,11 +16,11 @@ export const pullRoutes = (
   const pullSignal: AppRouteImplementation<
     typeof contract.pullSignal
   > = async ({ req }) => {
-    const loggerInstance = logger({
+    const log = logger({
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
     });
-    loggerInstance.info(
+    log.info(
       `pullController BEGIN with params: ${JSON.stringify(
         req.params
       )}, query: ${JSON.stringify(req.query)}, session: ${JSON.stringify(
@@ -32,19 +32,10 @@ export const pullRoutes = (
       const { purposeId } = req.ctx.sessionData;
       const { signalId, size } = req.query;
 
-      await interopService.verifyAuthorization(
-        purposeId,
-        eserviceId,
-        loggerInstance
-      );
+      await interopService.verifyAuthorization(purposeId, eserviceId, log);
 
       const { signals, nextSignalId, lastSignalId } =
-        await signalService.getSignal(
-          eserviceId,
-          signalId,
-          size,
-          loggerInstance
-        );
+        await signalService.getSignal(eserviceId, signalId, size, log);
       const status = nextSignalId ? 206 : 200;
       return {
         status,
@@ -62,7 +53,7 @@ export const pullRoutes = (
             .with("operationForbidden", () => 403)
             .with("genericError", () => 500)
             .otherwise(() => 500),
-        loggerInstance,
+        log,
         req.ctx.correlationId
       );
       switch (problem.status) {
