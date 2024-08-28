@@ -14,7 +14,7 @@ export interface ITracingBatchCleanupRepository {
 export const tracingBatchCleanupRepository = (
   db: DB
 ): ITracingBatchCleanupRepository => {
-  const tracingBatchCleanupTable: TableName = `${config.signalhubStoreDbNameNamespace}_SIGNALHUB.tracing_batch_cleanup`;
+  const tracingBatchCleanupTable: TableName = `${config.signalHubSchema}.tracing_batch_cleanup`;
   return {
     async insert(tmstStartAt: string): Promise<number> {
       try {
