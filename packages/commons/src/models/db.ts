@@ -51,7 +51,11 @@ export type ProducerEserviceEntity = SnakeCase<z.infer<typeof ProducerService>>;
 export type AgreementEntity = SnakeCase<z.infer<typeof Agreement>>;
 export type TracingBatchEntity = SnakeCase<z.infer<typeof TracingBatch>>;
 
-type InteropDatabaseTable = "eservice" | "purpose" | "agreement";
+type InteropDatabaseTable =
+  | "eservice"
+  | "purpose"
+  | "agreement"
+  | "eservice_producer";
 export type TableName =
   | `${DatabaseNameSpace}_SIGNAL.signal`
   | `${DatabaseNameSpace}_INTEROP.${InteropDatabaseTable}`;
