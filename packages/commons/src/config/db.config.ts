@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+const databaseNameSpace = z.enum(["DEV", "UAT", "PROD"]);
 export const SignalHubStoreConfig = z
   .object({
     SH_DB_HOST: z.string(),
@@ -7,7 +8,7 @@ export const SignalHubStoreConfig = z
     SH_DB_USERNAME: z.string(),
     SH_DB_PASSWORD: z.string(),
     SH_DB_PORT: z.coerce.number().min(1001),
-    SH_DB_NAME_NAMESPACE: z.enum(["dev", "uat", "prod"]),
+    SH_DB_NAME_NAMESPACE: databaseNameSpace,
     SH_DB_USE_SSL: z
       .enum(["true", "false"])
       .transform((value) => value === "true"),
@@ -23,3 +24,4 @@ export const SignalHubStoreConfig = z
   }));
 
 export type SignalHubStoreConfig = z.infer<typeof SignalHubStoreConfig>;
+export type DatabaseNameSpace = z.infer<typeof databaseNameSpace>;
