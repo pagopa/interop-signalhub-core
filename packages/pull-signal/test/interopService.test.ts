@@ -7,6 +7,7 @@ import {
   dataResetForSignalConsumers,
   eserviceIdPushSignals,
   eServiceWithNotActiveAgreement,
+  signalConsumer,
 } from "pagopa-signalhub-commons-test";
 import { operationPullForbidden } from "../src/model/domain/errors";
 import { interopService, postgresDB } from "./utils";
@@ -48,8 +49,9 @@ describe("PDND Interoperability service", () => {
   it("should deny permission to a signal consumer for an agreement != ACTIVE", async () => {
     const purposeId = authorizedPurposeIdForPullSignals;
     const eServiceId = eServiceWithNotActiveAgreement;
+    const consumerId = signalConsumer.id;
     await expect(
       interopService.verifyAuthorization(purposeId, eServiceId, genericLogger)
-    ).rejects.toThrowError(operationPullForbidden({ purposeId }));
+    ).rejects.toThrowError(operationPullForbidden({ consumerId }));
   });
 });

@@ -31,7 +31,6 @@ export function interopServiceBuilder(db: DB) {
         eserviceId,
         state
       );
-
       if (!eserviceConsumed) {
         throw operationPullForbidden({ consumerId });
       }
