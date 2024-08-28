@@ -6,7 +6,7 @@ export interface ISignalRepository {
 }
 
 export const signalRepository = (db: DB): ISignalRepository => {
-  const signalTable: TableName = `${config.signalhubStoreDbNameNamespace}_SIGNAL.signal`;
+  const signalTable: TableName = `${config.signalhubStoreDbNameNamespace}_SIGNALHUB.signal`;
 
   return {
     async findBy(signalId: number, eserviceId: string): Promise<number | null> {
