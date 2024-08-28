@@ -12,7 +12,7 @@ export interface IPurposeRepository {
 }
 
 export const purposeRepository = (db: DB): IPurposeRepository => {
-  const purposeTable: TableName = `${config.signalhubStoreDbNameNamespace}_INTEROP.purpose`;
+  const purposeTable: TableName = `${config.interopSchema}.purpose`;
 
   return {
     async eventWasProcessed(streamId, versionId): Promise<boolean> {

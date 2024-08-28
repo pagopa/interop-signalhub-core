@@ -10,7 +10,7 @@ export interface IEserviceRepository {
 }
 
 export const eserviceRepository = (db: DB): IEserviceRepository => {
-  const eServiceTable: TableName = `${config.signalhubStoreDbNameNamespace}_INTEROP.eservice`;
+  const eServiceTable: TableName = `${config.interopSchema}.eservice`;
 
   return {
     async findBy(
