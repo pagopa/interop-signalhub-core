@@ -35,7 +35,7 @@ export interface IEserviceRepository {
   deleteDescriptor(eserviceId: string, descriptorId: string): Promise<void>;
 }
 export const eServiceRepository = (db: DB): IEserviceRepository => {
-  const eServiceTable: TableName = `${config.signalhubStoreDbNameNamespace}_INTEROP.eservice`;
+  const eServiceTable: TableName = `${config.interopSchema}.eservice`;
 
   return {
     async eventWasProcessed(

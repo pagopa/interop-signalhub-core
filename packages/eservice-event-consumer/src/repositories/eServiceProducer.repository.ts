@@ -15,7 +15,7 @@ export interface IEserviceProduceRepository {
 export const eServiceProducerRepository = (
   db: DB
 ): IEserviceProduceRepository => {
-  const eServiceProducerTable: TableName = `${config.signalhubStoreDbNameNamespace}_INTEROP.eservice_producer`;
+  const eServiceProducerTable: TableName = `${config.interopSchema}.eservice_producer`;
 
   return {
     async eventWasProcessed(
