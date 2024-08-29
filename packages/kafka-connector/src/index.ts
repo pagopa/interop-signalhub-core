@@ -21,6 +21,7 @@ const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
 
 const processExit = (code: number = 1): void => {
   genericLogger.debug(`Process exit with code ${code}`);
+  process.exit(code);
 };
 
 async function oauthBearerTokenProvider(
