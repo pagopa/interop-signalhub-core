@@ -49,7 +49,7 @@ const getPublicKey = async (
       return key?.getPublicKey();
     } catch (error) {
       logger.debug(
-        `Authentication::getPublicKey failed: ${JSON.stringify(error, null, 2)}`
+        `Authentication::getPublicKey failed: ${JSON.stringify(error)}`
       );
       if (error && last) {
         throw error;

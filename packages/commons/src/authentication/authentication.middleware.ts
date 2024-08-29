@@ -57,7 +57,7 @@ export const authenticationMiddleware = async (
   });
 
   try {
-    log.info("Authentication BEGIN");
+    log.info("Authentication voucher");
     const headers = Headers.safeParse(req.headers);
 
     if (!headers.success) {
@@ -74,7 +74,6 @@ export const authenticationMiddleware = async (
             headers.authorization,
             log
           );
-          log.info("Authentication END");
           next();
         }
       )

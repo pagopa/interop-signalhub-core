@@ -27,6 +27,8 @@ function getActors() {
   const authorizedPurposeIdForPullSignals =
     signalConsumer.agreements[1].purpose;
 
+  const consumerAgreementDraftState = signalConsumer.agreements[2];
+
   const eServiceWithNotActiveAgreement = signalProducer.eservices[2].id;
   return {
     signalProducer,
@@ -41,6 +43,7 @@ function getActors() {
     purposeIdDifferentFromEservicePushSignals,
     authorizedPurposeIdForPushSignals,
     authorizedPurposeIdForPullSignals,
+    consumerAgreementDraftState,
   };
 }
 
@@ -57,4 +60,5 @@ export const {
   authorizedPurposeIdForPushSignals,
   authorizedPurposeIdForPullSignals,
   eServiceWithNotActiveAgreement,
+  consumerAgreementDraftState,
 } = getActors();

@@ -40,17 +40,32 @@ export function signalNotSendedToQueque(
     title: "Signal not sended to queque",
   });
 }
-
 export function operationPullForbidden({
   purposeId,
-  consumerId,
+  eserviceId,
 }: {
   purposeId?: string;
-  consumerId?: string;
+  eserviceId?: string;
 }): ApiError<ErrorCodes> {
   return new ApiError({
-    detail: `Insufficient privileges: subject with purpose ${purposeId} and consumer ${consumerId} cannot access to eservice`,
+    detail: `Insufficient privileges: no consumer found for subject with purpose ${purposeId} for e-service ${eserviceId}`,
     code: "operationPullForbidden",
-    title: "Insufficient privileges for operation pull signal",
+    title:
+      "Insufficient privileges for operation pull signal - No consumer found",
+  });
+}
+
+export function operationPullForbiddenWithWrongAgreement({
+  eservice,
+  agreement,
+}: {
+  eservice?: { id?: string };
+  agreement?: { id?: string; state?: string; consumerId?: string };
+}): ApiError<ErrorCodes> {
+  return new ApiError({
+    detail: `Insufficient privileges: invalid agreement: consumer ${agreement?.consumerId} with agreement ${agreement?.id}, state ${agreement?.state} cannot access to e-service ${eservice?.id}`,
+    code: "operationPullForbidden",
+    title:
+      "Insufficient privileges for operation pull signal - Invalid Agreement",
   });
 }
