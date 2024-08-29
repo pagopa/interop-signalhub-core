@@ -49,7 +49,7 @@ const logFormat = (
   const eventTypePart = eventType ? `[ET=${eventType}]` : undefined;
   const eventVersionPart = eventVersion ? `[EV=${eventVersion}]` : undefined;
   const streamIdPart = streamId ? `[SID=${streamId}]` : undefined;
-  const versionIdPart = version != null ? `[VID=${version}]` : undefined; // check for null and undefined
+  const versionIdPart = version != null ? `[VID=${version}]` : undefined; // avoid check for falsy, we need to log value 0
   const eserviceIdPart = eserviceId ? `[EID=${eserviceId}]` : undefined;
   const purposeIdPart = purposeId ? `[PRID=${purposeId}]` : undefined;
 
