@@ -15,37 +15,26 @@ export const pullRoutes = (
 ) => {
   const pullSignal: AppRouteImplementation<
     typeof contract.pullSignal
-  > = async ({ req }) => {
-    const loggerInstance = logger({
+  > = async ({ req, res }) => {
+    const log = logger({
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
     });
-    loggerInstance.info(
-      `pullController BEGIN with params: ${JSON.stringify(
-        req.params
-      )}, query: ${JSON.stringify(req.query)}, session: ${JSON.stringify(
-        req.ctx.sessionData
-      )}`
-    );
     try {
       const { eserviceId } = req.params;
       const { purposeId } = req.ctx.sessionData;
       const { signalId, size } = req.query;
 
-      await interopService.verifyAuthorization(
-        purposeId,
-        eserviceId,
-        loggerInstance
-      );
+      log.info(`Request ${req.method} ${req.url} for e-service ${eserviceId}`);
+
+      await interopService.verifyAuthorization(purposeId, eserviceId, log);
 
       const { signals, nextSignalId, lastSignalId } =
-        await signalService.getSignal(
-          eserviceId,
-          signalId,
-          size,
-          loggerInstance
-        );
+        await signalService.getSignal(eserviceId, signalId, size, log);
       const status = nextSignalId ? 206 : 200;
+      log.info(
+        `Response status:${res.statusCode}, signals ${signals.length}, lastSignalId ${lastSignalId}`
+      );
       return {
         status,
         body: {
@@ -59,12 +48,13 @@ export const pullRoutes = (
         (err) =>
           match(err.code)
             .with("unauthorizedError", () => 401)
-            .with("operationForbidden", () => 403)
+            .with("operationPullForbidden", () => 403)
             .with("genericError", () => 500)
             .otherwise(() => 500),
-        loggerInstance,
+        log,
         req.ctx.correlationId
       );
+      log.warn(`Response ${problem.status} - ${problem.title}`);
       switch (problem.status) {
         case 401:
           return {

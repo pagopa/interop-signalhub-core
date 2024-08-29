@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { genericLogger, operationForbidden } from "pagopa-signalhub-commons";
+import { genericLogger } from "pagopa-signalhub-commons";
 
 import {
   authorizedPurposeIdForPullSignals,
@@ -7,7 +7,9 @@ import {
   dataResetForSignalConsumers,
   eserviceIdPushSignals,
   eServiceWithNotActiveAgreement,
+  signalConsumer,
 } from "pagopa-signalhub-commons-test";
+import { operationPullForbidden } from "../src/model/domain/errors";
 import { interopService, postgresDB } from "./utils";
 
 describe("PDND Interoperability service", () => {
@@ -31,7 +33,7 @@ describe("PDND Interoperability service", () => {
 
     await expect(
       interopService.verifyAuthorization(purposeId, eServiceId, genericLogger)
-    ).rejects.toThrowError(operationForbidden);
+    ).rejects.toThrowError(operationPullForbidden({ purposeId }));
   });
 
   it("should deny permission to a signal consumer with purpose != ACTIVE", async () => {
@@ -41,14 +43,15 @@ describe("PDND Interoperability service", () => {
 
     await expect(
       interopService.verifyAuthorization(purposeId, eServiceId, genericLogger)
-    ).rejects.toThrowError(operationForbidden);
+    ).rejects.toThrowError(operationPullForbidden({ purposeId }));
   });
 
   it("should deny permission to a signal consumer for an agreement != ACTIVE", async () => {
     const purposeId = authorizedPurposeIdForPullSignals;
     const eServiceId = eServiceWithNotActiveAgreement;
+    const consumerId = signalConsumer.id;
     await expect(
       interopService.verifyAuthorization(purposeId, eServiceId, genericLogger)
-    ).rejects.toThrowError(operationForbidden);
+    ).rejects.toThrowError(operationPullForbidden({ consumerId }));
   });
 });
