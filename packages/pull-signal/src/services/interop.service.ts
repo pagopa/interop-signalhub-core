@@ -11,10 +11,11 @@ export function interopServiceBuilder(db: DB) {
       eserviceId: string,
       logger: Logger
     ): Promise<void> {
-      logger.info(`InteropService::verifyAuthorization BEGIN`);
+      logger.info(
+        `InteropService::verifyAuthorization with purposeId: ${purposeId}`
+      );
       const consumerId = await this.getConsumerIdByPurpose(purposeId, logger);
       await this.consumerCanAccessToEservice(consumerId, eserviceId, logger);
-      logger.info(`InteropService::verifyAuthorization END`);
     },
 
     async consumerCanAccessToEservice(

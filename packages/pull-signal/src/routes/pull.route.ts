@@ -19,15 +19,13 @@ export const pullRoutes = (
     const log = logger({
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
-      purposeId: req.ctx.sessionData.purposeId,
-      eserviceId: req.params.eserviceId,
     });
     try {
       const { eserviceId } = req.params;
       const { purposeId } = req.ctx.sessionData;
       const { signalId, size } = req.query;
 
-      log.info(`Request ${req.method} ${req.url}`);
+      log.info(`Request ${req.method} ${req.url} for e-service ${eserviceId}`);
 
       await interopService.verifyAuthorization(purposeId, eserviceId, log);
 
