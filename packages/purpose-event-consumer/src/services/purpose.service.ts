@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Logger } from "pagopa-signalhub-commons";
 import { PurposeEntity } from "../models/domain/model.js";
 import { IPurposeRepository } from "../repositories/index.js";
@@ -12,11 +11,11 @@ export function purposeServiceBuilder(purposeRepository: IPurposeRepository) {
         purpose.eventVersionId
       );
       if (eventWasProcessed) {
-        logger.debug(`Skip event (idempotence)`);
+        logger.info(`Skip event (idempotence)`);
         return;
       }
-      logger.debug(
-        `Saving event: (stato: ${purpose.purposeState}, e-service: ${purpose.eserviceId}, consumerId: ${purpose.consumerId})`
+      logger.info(
+        `Saving event (upsert) state: ${purpose.purposeState}, e-service: ${purpose.eserviceId}, consumerId: ${purpose.consumerId}`
       );
       await purposeRepository.upsert(purpose);
     },
@@ -25,7 +24,7 @@ export function purposeServiceBuilder(purposeRepository: IPurposeRepository) {
       streamId: string,
       logger: Logger
     ): Promise<void> {
-      logger.info(`Deleting purpose id: ${purposeId}`);
+      logger.info(`Deleting purpose with purposeId: ${purposeId}`);
       await purposeRepository.delete(purposeId, streamId);
     },
   };
