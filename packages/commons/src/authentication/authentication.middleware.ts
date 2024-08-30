@@ -34,7 +34,7 @@ export const authenticationMiddleware = async (
       authorizationHeader[0] !== "Bearer"
     ) {
       logger.warn(
-        `No authentication has been provided for this call ${req.method} ${req.url}`
+        `Authentication: no authentication has been provided for this call ${req.method} ${req.url}`
       );
       throw missingBearer;
     }
@@ -50,13 +50,14 @@ export const authenticationMiddleware = async (
     req.ctx.sessionData = readSessionDataFromJwtToken(jwtToken);
   };
 
-  const loggerInstance = logger({
+  const log = logger({
     serviceName: req.ctx?.serviceName,
     correlationId: req.ctx?.correlationId,
+    eserviceId: req.params.eserviceId,
   });
 
   try {
-    loggerInstance.info("Authentication BEGIN");
+    log.info("Authentication BEGIN");
     const headers = Headers.safeParse(req.headers);
 
     if (!headers.success) {
@@ -71,9 +72,9 @@ export const authenticationMiddleware = async (
         async (headers) => {
           await validateTokenAndAddSessionDataToContext(
             headers.authorization,
-            loggerInstance
+            log
           );
-          loggerInstance.info("Authentication END");
+          log.info("Authentication END");
           next();
         }
       )
@@ -83,7 +84,7 @@ export const authenticationMiddleware = async (
           "x-correlation-id": P._,
         },
         () => {
-          loggerInstance.warn(
+          log.warn(
             `No authentication has been provided for this call ${req.method} ${req.url}`
           );
 
@@ -96,7 +97,7 @@ export const authenticationMiddleware = async (
           "x-correlation-id": P.nullish,
         },
         () => {
-          loggerInstance.warn(
+          log.warn(
             `No authentication has been provided for this call ${req.method} ${req.url}`
           );
 
@@ -116,7 +117,7 @@ export const authenticationMiddleware = async (
           .with("operationForbidden", () => 403)
           .with("missingHeader", () => 400)
           .otherwise(() => 500),
-      loggerInstance,
+      log,
       req.ctx.correlationId
     );
 

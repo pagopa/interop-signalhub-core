@@ -41,15 +41,16 @@ const getPublicKey = async (
     last: i === jwkClient.length - 1,
   }));
   for (const { client, last } of clientList) {
-    logger.debug(`last: ${last}`);
     try {
       const decoded = jwt.decode(token, { complete: true });
       const header = decoded?.header as JwtHeader;
       const key = await client.getSigningKey(header.kid);
-      logger.debug(`key: ${JSON.stringify(key)}`);
+      logger.debug(`Authentication::getPublicKey kid: ${header.kid}`);
       return key?.getPublicKey();
     } catch (error) {
-      logger.debug(`err: ${JSON.stringify(error)}`);
+      logger.debug(
+        `Authentication::getPublicKey failed: ${JSON.stringify(error, null, 2)}`
+      );
       if (error && last) {
         throw error;
       }
@@ -80,7 +81,7 @@ export const validateToken = async (
         },
         function (err, _decoded) {
           if (err) {
-            logger.warn(`Token verification failed: ${err}`);
+            logger.warn(`Authentication::validateToken, failed: ${err}`);
             resolve({
               success: false,
               err,

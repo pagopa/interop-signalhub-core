@@ -15,8 +15,8 @@ export function signalServiceBuilder(db: DB) {
       lastSignalId: number | null;
       nextSignalId: number | null;
     }> {
-      logger.debug(
-        `SignalService::recover eserviceId: ${eserviceId}, signalId:   ${signalId}, limit: ${limit}`
+      logger.info(
+        `SignalService::getSignal, signalId: ${signalId}, limit: ${limit}`
       );
       const records = await signalRepository(db).getByEservice(
         eserviceId,
