@@ -10,8 +10,8 @@ import {
   signalConsumer,
 } from "pagopa-signalhub-commons-test";
 import {
-  operationPullForbidden,
-  operationPullForbiddenWithWrongAgreement,
+  operationPullForbiddenGeneric,
+  operationPullForbiddenWrongAgreement,
 } from "../src/model/domain/errors";
 
 import { config } from "../src/config/env.js";
@@ -28,7 +28,11 @@ describe("PDND Interoperability service", () => {
     const eserviceId = eserviceIdPushSignals;
 
     await expect(
-      interopService.verifyAuthorization(purposeId, eserviceId, genericLogger)
+      interopService.consumerIsAuthorizedToPullSignals(
+        purposeId,
+        eserviceId,
+        genericLogger
+      )
     ).resolves.not.toThrow();
   });
 
@@ -37,8 +41,14 @@ describe("PDND Interoperability service", () => {
     const eserviceId = eserviceIdPushSignals;
 
     await expect(
-      interopService.verifyAuthorization(purposeId, eserviceId, genericLogger)
-    ).rejects.toThrowError(operationPullForbidden({ eserviceId, purposeId }));
+      interopService.consumerIsAuthorizedToPullSignals(
+        purposeId,
+        eserviceId,
+        genericLogger
+      )
+    ).rejects.toThrowError(
+      operationPullForbiddenGeneric({ eserviceId, purposeId })
+    );
   });
 
   it("should deny permission to a signal consumer with purpose != ACTIVE", async () => {
@@ -47,8 +57,14 @@ describe("PDND Interoperability service", () => {
     // const consumerId = signalConsumer.id;
 
     await expect(
-      interopService.verifyAuthorization(purposeId, eserviceId, genericLogger)
-    ).rejects.toThrowError(operationPullForbidden({ purposeId, eserviceId }));
+      interopService.consumerIsAuthorizedToPullSignals(
+        purposeId,
+        eserviceId,
+        genericLogger
+      )
+    ).rejects.toThrowError(
+      operationPullForbiddenGeneric({ purposeId, eserviceId })
+    );
   });
 
   it("should deny permission to a signal consumer for an agreement != ACTIVE", async () => {
@@ -60,9 +76,13 @@ describe("PDND Interoperability service", () => {
       consumerId: signalConsumer.id,
     };
     await expect(
-      interopService.verifyAuthorization(purposeId, eserviceId, genericLogger)
+      interopService.consumerIsAuthorizedToPullSignals(
+        purposeId,
+        eserviceId,
+        genericLogger
+      )
     ).rejects.toThrowError(
-      operationPullForbiddenWithWrongAgreement({
+      operationPullForbiddenWrongAgreement({
         eservice: { id: eserviceId },
         agreement,
       })

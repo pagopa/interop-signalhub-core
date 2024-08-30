@@ -1,31 +1,21 @@
 import { DB, Logger } from "pagopa-signalhub-commons";
-import { agreementRepository } from "../repositories/agreement.repository.js";
-import { purposeRepository } from "../repositories/index.js";
 import {
-  operationPullForbidden,
-  operationPullForbiddenWithWrongAgreement,
+  operationPullForbiddenGeneric,
+  operationPullForbiddenWrongAgreement,
 } from "../model/domain/errors.js";
 import { interopRepository } from "../repositories/interop.repository.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function interopServiceBuilder(db: DB) {
   return {
-    async verifyAuthorization(
+    async consumerIsAuthorizedToPullSignals(
       purposeId: string,
       eserviceId: string,
       logger: Logger
     ): Promise<void> {
       logger.info(
-        `InteropService::verifyAuthorization with purposeId: ${purposeId}`
+        `InteropService::consumerIsAuthorizedToPullSignals with purposeId: ${purposeId}`
       );
-      await this.consumerHasValidAgreement(purposeId, eserviceId);
-      // const consumerId = await this.getConsumerIdByPurpose(purposeId, logger);
-      // await this.consumerCanAccessToEservice(consumerId, eserviceId, logger);
-    },
-    async consumerHasValidAgreement(
-      purposeId: string,
-      eserviceId: string
-    ): Promise<void> {
       const purposeState = "ACTIVE";
       const result = await interopRepository(db).findBy(
         eserviceId,
@@ -33,14 +23,14 @@ export function interopServiceBuilder(db: DB) {
         purposeState
       );
       if (result === null) {
-        throw operationPullForbidden({
+        throw operationPullForbiddenGeneric({
           eserviceId,
           purposeId,
         });
       }
       const { agreement } = result;
       if (!agreement?.id || agreement.state !== "ACTIVE") {
-        throw operationPullForbiddenWithWrongAgreement({
+        throw operationPullForbiddenWrongAgreement({
           eservice: { id: eserviceId },
           agreement: {
             id: agreement?.id,
@@ -49,29 +39,6 @@ export function interopServiceBuilder(db: DB) {
           },
         });
       }
-    },
-    async consumerCanAccessToEservice(
-      consumerId: string,
-      eserviceId: string
-    ): Promise<void> {
-      const state = "ACTIVE";
-      const eserviceConsumed = await agreementRepository(db).findBy(
-        consumerId,
-        eserviceId,
-        state
-      );
-      if (!eserviceConsumed) {
-        throw operationPullForbidden({});
-      }
-    },
-
-    async getConsumerIdByPurpose(purposeId: string): Promise<string> {
-      const state = "ACTIVE";
-      const consumerId = await purposeRepository(db).findBy(purposeId, state);
-      if (!consumerId) {
-        throw operationPullForbidden({});
-      }
-      return consumerId;
     },
   };
 }

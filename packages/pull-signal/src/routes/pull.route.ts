@@ -27,7 +27,11 @@ export const pullRoutes = (
 
       log.info(`Request ${req.method} ${req.url} for e-service ${eserviceId}`);
 
-      await interopService.verifyAuthorization(purposeId, eserviceId, log);
+      await interopService.consumerIsAuthorizedToPullSignals(
+        purposeId,
+        eserviceId,
+        log
+      );
 
       const { signals, nextSignalId, lastSignalId } =
         await signalService.getSignal(eserviceId, signalId, size, log);

@@ -40,22 +40,21 @@ export function signalNotSendedToQueque(
     title: "Signal not sended to queque",
   });
 }
-export function operationPullForbidden({
+export function operationPullForbiddenGeneric({
   purposeId,
   eserviceId,
 }: {
-  purposeId?: string;
-  eserviceId?: string;
+  purposeId: string;
+  eserviceId: string;
 }): ApiError<ErrorCodes> {
   return new ApiError({
-    detail: `Insufficient privileges: no consumer found for subject with purpose ${purposeId} for e-service ${eserviceId}`,
+    detail: `Insufficient privileges: cannot access to to e-service ${eserviceId}, with voucher's purpose ${purposeId} for e-service PULL, `,
     code: "operationPullForbidden",
-    title:
-      "Insufficient privileges for operation pull signal - No consumer found",
+    title: "Insufficient privileges for operation pull signal - Generic Error",
   });
 }
 
-export function operationPullForbiddenWithWrongAgreement({
+export function operationPullForbiddenWrongAgreement({
   eservice,
   agreement,
 }: {
