@@ -20,7 +20,6 @@ export const cleanupBuilder = async (
       countDeleted: null,
     };
     const tmstStartAt = new Date().toISOString();
-    logger.info(`cleanSignals started at: ${tmstStartAt}`);
 
     try {
       const batchId = await tracingBatchCleanupService.start(tmstStartAt);
@@ -50,7 +49,6 @@ export const cleanupBuilder = async (
         await tracingBatchCleanupService.end(tracingBatchCleanup);
       }
     } finally {
-      logger.info(`cleanSignals ended at: ${new Date().toISOString()}`);
       process.exit(0);
     }
   };
