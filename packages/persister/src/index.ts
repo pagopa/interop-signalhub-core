@@ -18,6 +18,8 @@ const db: DB = createDbInstance({
   useSSL: config.signalhubStoreDbUseSSL,
 });
 
+console.group("SQS client", sqsClient);
+
 await SQS.runConsumer(
   sqsClient,
   {

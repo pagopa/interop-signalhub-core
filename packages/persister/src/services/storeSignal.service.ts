@@ -24,12 +24,9 @@ export function storeSignalServiceBuilder(db: DB, logger: Logger) {
 
         /* it means that signal is already present on db */
         if (signalRecordId !== null) {
-          logger.info(`SignalId: ${signal.signalId} already exists`);
+          logger.warn(`SignalId: ${signal.signalId} already exists`);
           throw notRecoverableMessageError("duplicateSignal", signal);
         } else {
-          logger.info(
-            `Signal with signalId: ${signalMessage.signalId} not found on DB`
-          );
           const id = await signalRepositoryInstance.insertSignal(signal);
           logger.info(`Signal with id: ${id} has been inserted on DB`);
         }

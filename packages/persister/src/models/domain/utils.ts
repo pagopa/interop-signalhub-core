@@ -22,7 +22,7 @@ export function parseQueueMessageToSignal(
     );
   }
   const signalMessage = SignalMessage.safeParse(parsedMessage);
-  loggerInstance.info(
+  loggerInstance.debug(
     `Message from queue: ${JSON.stringify(parsedMessage, null, 2)}`
   );
 
