@@ -65,7 +65,7 @@ export function eServiceServiceBuilder(
         );
 
       if (eventWasProcessed) {
-        logger.debug(`Skip event (idempotence)`);
+        logger.info(`Skip event (idempotence)`);
         return;
       }
       await eServiceProducerRepository.insert(
@@ -94,7 +94,7 @@ export function eServiceServiceBuilder(
         );
 
         if (eventWasProcessed) {
-          logger.debug(`Skip event (idempotence)`);
+          logger.info(`Skip event (idempotence)`);
           return;
         }
 
@@ -147,12 +147,12 @@ export function eServiceServiceBuilder(
         );
 
         if (eventWasProcessed) {
-          logger.debug(`Skip event (idempotence)`);
+          logger.info(`Skip event (idempotence)`);
           return;
         }
 
         // TODO: Add check for STATE ARCHIVE
-        logger.debug(
+        logger.info(
           `Saving (upsert) descriptor: ${JSON.stringify(descriptor, null, 2)}`
         );
         await eServiceRepository.upsertDescriptor(
@@ -188,7 +188,7 @@ export function eServiceServiceBuilder(
       );
 
       if (eventWasProcessed) {
-        logger.debug(`Skip event (idempotence)`);
+        logger.info(`Skip event (idempotence)`);
         return;
       }
 
