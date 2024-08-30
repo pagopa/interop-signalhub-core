@@ -41,8 +41,7 @@ export function agreementServiceBuilder(
       streamId: string,
       logger: Logger
     ): Promise<void> {
-      // some business logic
-      logger.info(`Deleting agreement id: ${agreementId}`);
+      logger.info(`Deleting agreement with agreementId: ${agreementId}`);
       await agreementRepository.delete(agreementId, streamId);
     },
   };

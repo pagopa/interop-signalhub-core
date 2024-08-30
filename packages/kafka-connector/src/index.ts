@@ -20,7 +20,7 @@ const errorTypes = ["unhandledRejection", "uncaughtException"];
 const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
 
 const processExit = (code: number = 1): void => {
-  genericLogger.debug(`Process exit with code ${code}`);
+  genericLogger.info(`Process exit with code ${code}`);
   process.exit(code);
 };
 
@@ -79,7 +79,7 @@ export const initConsumer = async (
   topics: string[],
   consumerHandler: (payload: EachMessagePayload) => Promise<void>
 ): Promise<Consumer> => {
-  genericLogger.debug(
+  genericLogger.info(
     `Initializing kafka consumer, listening on topics: ${topics}`
   );
 
@@ -135,7 +135,7 @@ export const initConsumer = async (
   errorEventsListener(consumer);
 
   await consumer.connect();
-  genericLogger.debug("Consumer kafka is connected");
+  genericLogger.info("Consumer kafka is connected");
 
   const isTopicsAvailable = await validateTopicMetadata(kafka, topics);
   if (!isTopicsAvailable) {
@@ -172,11 +172,11 @@ export const initConsumer = async (
 const kafkaEventsListener = (consumer: Consumer): void => {
   if (genericLogger.isDebugEnabled()) {
     consumer.on(consumer.events.DISCONNECT, () => {
-      genericLogger.debug(`Consumer has disconnected.`);
+      genericLogger.info(`Consumer has disconnected.`);
     });
 
     consumer.on(consumer.events.STOP, (e) => {
-      genericLogger.debug(`Consumer has stopped ${JSON.stringify(e)}.`);
+      genericLogger.info(`Consumer has stopped ${JSON.stringify(e)}.`);
     });
   }
 
@@ -214,7 +214,7 @@ const errorEventsListener = (consumer: Consumer): void => {
     process.once(type, async () => {
       try {
         await consumer.disconnect().finally(() => {
-          genericLogger.debug("Consumer disconnected properly");
+          genericLogger.info("Consumer disconnected properly");
           processExit();
         });
       } finally {

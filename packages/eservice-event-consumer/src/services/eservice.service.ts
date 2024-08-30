@@ -54,8 +54,8 @@ export function eServiceServiceBuilder(
       eventVersionId: number,
       logger: Logger
     ): Promise<void> {
-      logger.debug(
-        `Saving (insert) event: eServiceId  ${eServiceId}, producerId ${producerId}`
+      logger.info(
+        `Saving event (insert) : eServiceId: ${eServiceId}, producerId: ${producerId}`
       );
 
       const eventWasProcessed =
@@ -65,7 +65,7 @@ export function eServiceServiceBuilder(
         );
 
       if (eventWasProcessed) {
-        logger.debug(`Skip event (idempotence)`);
+        logger.info(`Skip event (idempotence)`);
         return;
       }
       await eServiceProducerRepository.insert(
@@ -77,10 +77,6 @@ export function eServiceServiceBuilder(
     },
 
     async upsertV1(eService: EserviceEntity, logger: Logger): Promise<void> {
-      logger.debug(
-        `Saving (upsert) event: ${JSON.stringify(eService, null, 2)}`
-      );
-
       const producerId =
         await eServiceProducerRepository.findProducerIdByEserviceId(
           eService.eservice_id
@@ -94,13 +90,14 @@ export function eServiceServiceBuilder(
         );
 
         if (eventWasProcessed) {
-          logger.debug(`Skip event (idempotence)`);
+          logger.info(`Skip event (idempotence)`);
           return;
         }
 
         // TODO: Add check for STATE ARCHIVE
-        logger.debug(
-          `Saving (upsert) descriptor: ${JSON.stringify(descriptor, null, 2)}`
+        logger.info(
+          `Saving event (upsertV1) descriptor descriptorId: ${descriptor.descriptor_id}, producerId: ${producerId}, state: ${descriptor.state}
+          )}`
         );
 
         await eServiceRepository.upsertDescriptor(
@@ -135,10 +132,6 @@ export function eServiceServiceBuilder(
     },
 
     async upsertV2(eService: EserviceV2Entity, logger: Logger): Promise<void> {
-      logger.debug(
-        `Saving (upsert) event: ${JSON.stringify(eService, null, 2)}`
-      );
-
       for (const descriptor of eService.descriptors) {
         const eventWasProcessed = await eServiceRepository.eventWasProcessed(
           descriptor.descriptor_id,
@@ -147,13 +140,13 @@ export function eServiceServiceBuilder(
         );
 
         if (eventWasProcessed) {
-          logger.debug(`Skip event (idempotence)`);
+          logger.info(`Skip event (idempotence)`);
           return;
         }
 
         // TODO: Add check for STATE ARCHIVE
-        logger.debug(
-          `Saving (upsert) descriptor: ${JSON.stringify(descriptor, null, 2)}`
+        logger.info(
+          `Saving event (upsertV2) descriptor descriptorId: ${descriptor.descriptor_id}, producerId: ${eService.producer_id}, state: ${descriptor.state}`
         );
         await eServiceRepository.upsertDescriptor(
           eService.eservice_id,
@@ -166,7 +159,7 @@ export function eServiceServiceBuilder(
     },
 
     async delete(eServiceId: string, logger: Logger): Promise<void> {
-      logger.debug(`delete e-service, id: ${eServiceId}`);
+      logger.info(`delete e-service with eServiceId: ${eServiceId}`);
 
       await eServiceRepository.delete(eServiceId);
     },
@@ -177,8 +170,8 @@ export function eServiceServiceBuilder(
       eventVersionId: number,
       logger: Logger
     ): Promise<void> {
-      logger.debug(
-        `delete e-service,  id: ${eServiceId}, descriptorId: ${descriptorId}`
+      logger.info(
+        `delete e-service descriptor with eServiceId: ${eServiceId} and descriptorId: ${descriptorId}`
       );
 
       const eventWasProcessed = await eServiceRepository.eventWasProcessed(
@@ -188,7 +181,7 @@ export function eServiceServiceBuilder(
       );
 
       if (eventWasProcessed) {
-        logger.debug(`Skip event (idempotence)`);
+        logger.info(`Skip event (idempotence)`);
         return;
       }
 
@@ -200,9 +193,10 @@ export function eServiceServiceBuilder(
       descriptors: EServiceDescriptorV2[],
       logger: Logger
     ): Promise<void> {
-      logger.debug(`delete descriptors: ${descriptors}`);
-
       descriptors.forEach(async (descriptor) => {
+        logger.info(
+          `delete e-service descriptor with eServiceId: ${eServiceId} and descriptorId: ${descriptor.id}`
+        );
         await eServiceRepository.deleteDescriptor(eServiceId, descriptor.id);
       });
     },
