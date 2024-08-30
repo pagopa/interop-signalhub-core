@@ -22,14 +22,14 @@ export function processMessage(
         .with(
           P.instanceOf(NotRecoverableGenericMessageError),
           async (error) => {
-            logger.info(
-              `Not recoverable message: even impossibile to save, with error: ${error.code}`
+            logger.warn(
+              `Not recoverable message: event impossibile to save, with error: ${error.code}`
             );
           }
         )
 
         .with(P.instanceOf(NotRecoverableMessageError), async (error) => {
-          logger.info(
+          logger.warn(
             `Not recoverable message saved it on DEAD_SIGNAL with error: ${error.code}`
           );
           await storeSignalService.storeDeadSignal(error.signal);
@@ -40,7 +40,6 @@ export function processMessage(
         })
 
         .otherwise((_error: unknown) => {
-          logger.info("Generic error");
           throw error;
         });
     }
