@@ -1,53 +1,44 @@
 import { DB, Logger } from "pagopa-signalhub-commons";
-import { agreementRepository } from "../repositories/agreement.repository.js";
-import { purposeRepository } from "../repositories/index.js";
-import { operationPullForbidden } from "../model/domain/errors.js";
+import {
+  operationPullForbiddenGeneric,
+  operationPullForbiddenWrongAgreement,
+} from "../model/domain/errors.js";
+import { interopRepository } from "../repositories/interop.repository.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function interopServiceBuilder(db: DB) {
   return {
-    async verifyAuthorization(
+    async consumerIsAuthorizedToPullSignals(
       purposeId: string,
       eserviceId: string,
       logger: Logger
     ): Promise<void> {
       logger.info(
-        `InteropService::verifyAuthorization with purposeId: ${purposeId}`
+        `InteropService::consumerIsAuthorizedToPullSignals with purposeId: ${purposeId}`
       );
-      const consumerId = await this.getConsumerIdByPurpose(purposeId, logger);
-      await this.consumerCanAccessToEservice(consumerId, eserviceId, logger);
-    },
-
-    async consumerCanAccessToEservice(
-      consumerId: string,
-      eserviceId: string,
-      logger: Logger
-    ): Promise<void> {
-      logger.info(
-        `InteropService::consumerCanAccessToEservice with consumerId: ${consumerId}`
-      );
-      const state = "ACTIVE";
-      const eserviceConsumed = await agreementRepository(db).findBy(
-        consumerId,
+      const purposeState = "ACTIVE";
+      const result = await interopRepository(db).findBy(
         eserviceId,
-        state
+        purposeId,
+        purposeState
       );
-      if (!eserviceConsumed) {
-        throw operationPullForbidden({ consumerId });
+      if (result === null) {
+        throw operationPullForbiddenGeneric({
+          eserviceId,
+          purposeId,
+        });
       }
-    },
-
-    async getConsumerIdByPurpose(
-      purposeId: string,
-      logger: Logger
-    ): Promise<string> {
-      logger.info(`InteropService::getConsumerIdByPurpose`);
-      const state = "ACTIVE";
-      const consumerId = await purposeRepository(db).findBy(purposeId, state);
-      if (!consumerId) {
-        throw operationPullForbidden({ purposeId });
+      const { agreement } = result;
+      if (!agreement?.id || agreement.state !== "ACTIVE") {
+        throw operationPullForbiddenWrongAgreement({
+          eservice: { id: eserviceId },
+          agreement: {
+            id: agreement?.id,
+            state: agreement?.state,
+            consumerId: agreement?.consumerId,
+          },
+        });
       }
-      return consumerId;
     },
   };
 }
