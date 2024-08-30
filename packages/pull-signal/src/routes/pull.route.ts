@@ -37,7 +37,7 @@ export const pullRoutes = (
         await signalService.getSignal(eserviceId, signalId, size, log);
       const status = nextSignalId ? 206 : 200;
       log.info(
-        `Response status:${res.statusCode}, signals ${signals.length}, lastSignalId ${lastSignalId}`
+        `Response status: ${res.statusCode}, signals ${signals.length}, lastSignalId ${lastSignalId}`
       );
       return {
         status,

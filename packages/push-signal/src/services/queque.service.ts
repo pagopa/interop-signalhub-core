@@ -3,7 +3,7 @@ import { signalNotSendedToQueque } from "../models/domain/errors.js";
 import { config } from "../config/env.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function quequeServiceBuilder(sqsClient: SQS.SQSClient) {
+export function queueServiceBuilder(sqsClient: SQS.SQSClient) {
   return {
     async send(
       message: string,
@@ -11,11 +11,11 @@ export function quequeServiceBuilder(sqsClient: SQS.SQSClient) {
       queueUrl: string = config.queueUrl
     ): Promise<void> {
       try {
+        logger.info(`QuequeService::send message`);
         await SQS.sendMessage(sqsClient, queueUrl, message);
-        logger.debug(`QuequeService::send message: ${message}`);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
-        logger.error(`QuequeService::send ERROR: ${error}`);
+        logger.warn(`QuequeService::send message not sent: ${error}`);
         const { requestId } = error.$metadata;
         throw signalNotSendedToQueque(requestId, error);
       }
@@ -23,4 +23,4 @@ export function quequeServiceBuilder(sqsClient: SQS.SQSClient) {
   };
 }
 
-export type QuequeService = ReturnType<typeof quequeServiceBuilder>;
+export type QueueService = ReturnType<typeof queueServiceBuilder>;

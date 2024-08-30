@@ -11,8 +11,8 @@ export function signalServiceBuilder(db: DB) {
       eserviceId: string,
       logger: Logger
     ): Promise<void> {
-      logger.debug(
-        `StoreService::verifySignalDuplicated signald: ${signalId}, eserviceId: ${eserviceId}`
+      logger.info(
+        `SignalService::verifySignalDuplicated signald: ${signalId}, eserviceId: ${eserviceId}`
       );
       const signalIdPresent = await signalRepository(db).findBy(
         signalId,
