@@ -4,7 +4,7 @@ import {
   notRecoverableMessageError,
   recoverableMessageError,
 } from "../src/models/domain/errors.js";
-
+import { config } from "../src/config/env.js";
 import {
   postgresDB,
   storeSignalService,
@@ -14,7 +14,7 @@ import {
 describe("Signal Store Service", () => {
   it("should throw an unrecoverable error if signal already exist on db", async () => {
     const signal = createSignal({ signalId: 1 });
-    await writeSignal(signal, postgresDB);
+    await writeSignal(signal, postgresDB, config.signalHubSchema);
     await expect(storeSignalService.storeSignal(signal)).rejects.toThrowError(
       notRecoverableMessageError("duplicateSignal", signal)
     );
@@ -25,7 +25,7 @@ describe("Signal Store Service", () => {
   });
   it("should save a signal even if there's another signal", async () => {
     const oneSignal = createSignal({ signalId: 1 });
-    await writeSignal(oneSignal, postgresDB);
+    await writeSignal(oneSignal, postgresDB, config.signalHubSchema);
     const anotherSignal = createSignal();
     await expect(
       storeSignalService.storeSignal(anotherSignal)

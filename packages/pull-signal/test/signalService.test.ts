@@ -6,7 +6,7 @@ import {
   writeSignals,
   createMultipleOrderedSignals,
 } from "pagopa-signalhub-commons-test";
-
+import { config } from "../src/config/env.js";
 import {
   cleanup,
   postgresDB,
@@ -50,7 +50,8 @@ describe("Pull Signal service", () => {
   it("should get an empty signals list for a e-service different than requested", async () => {
     await writeSignals(
       [createSignal({ eserviceId: "an-eservice-id" })],
-      postgresDB
+      postgresDB,
+      config.signalHubSchema
     );
 
     const eserviceId = "another-eservice-id";
@@ -69,7 +70,7 @@ describe("Pull Signal service", () => {
   it("should get only one signal for an e-service", async () => {
     const eserviceId = "an-eservice-id";
     const signalPushed = createSignal({ eserviceId });
-    await writeSignals([signalPushed], postgresDB);
+    await writeSignals([signalPushed], postgresDB, config.signalHubSchema);
 
     const signalId = 0;
     const size = 10;
@@ -86,7 +87,7 @@ describe("Pull Signal service", () => {
   it("should get lastSignalId for one signal for an e-service", async () => {
     const eserviceId = "an-eservice-id";
     const signalPushed = createSignal({ eserviceId });
-    await writeSignals([signalPushed], postgresDB);
+    await writeSignals([signalPushed], postgresDB, config.signalHubSchema);
 
     const signalId = 0;
     const size = 10;
@@ -103,7 +104,7 @@ describe("Pull Signal service", () => {
   it("should get two signals for an e-service", async () => {
     const eserviceId = "an-eservice-id";
     const batchSignals = createMultipleSignals(2, { eserviceId });
-    await writeSignals(batchSignals, postgresDB);
+    await writeSignals(batchSignals, postgresDB, config.signalHubSchema);
 
     const signalId = 0;
     const size = 10;
@@ -121,7 +122,7 @@ describe("Pull Signal service", () => {
     const eserviceId = "an-eservice-id";
     const totalSignals = 5;
     const batchSignals = createMultipleSignals(totalSignals, { eserviceId });
-    await writeSignals(batchSignals, postgresDB);
+    await writeSignals(batchSignals, postgresDB, config.signalHubSchema);
 
     const signalId = 0;
     const size = 10;
@@ -141,7 +142,7 @@ describe("Pull Signal service", () => {
     const eserviceId = "an-eservice-id";
     const totalSignals = 10;
     const batchSignals = createMultipleSignals(totalSignals, { eserviceId });
-    await writeSignals(batchSignals, postgresDB);
+    await writeSignals(batchSignals, postgresDB, config.signalHubSchema);
 
     const signalId = 0;
     const size = 5;
@@ -161,7 +162,7 @@ describe("Pull Signal service", () => {
     const batchSignals = createMultipleOrderedSignals(totalSignals, {
       eserviceId,
     });
-    await writeSignals(batchSignals, postgresDB);
+    await writeSignals(batchSignals, postgresDB, config.signalHubSchema);
 
     const signalId = 10;
     const size = 10;
@@ -181,7 +182,7 @@ describe("Pull Signal service", () => {
     const batchSignals = createMultipleOrderedSignals(totalSignals, {
       eserviceId,
     });
-    await writeSignals(batchSignals, postgresDB);
+    await writeSignals(batchSignals, postgresDB, config.signalHubSchema);
 
     const signalId = 10;
     const size = 10;

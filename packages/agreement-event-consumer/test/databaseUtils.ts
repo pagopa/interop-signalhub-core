@@ -1,3 +1,4 @@
+import { InteropSchema, TableName } from "pagopa-signalhub-commons";
 import { AgreementEntity } from "../src/models/domain/model.js";
 import { postgresDB } from "./utils.js";
 
@@ -17,7 +18,8 @@ export const getAnAgreementEntityBy = async (
   };
 };
 export const writeAnAgreementEntity = async (
-  agreement: AgreementEntity
+  agreement: AgreementEntity,
+  schema: InteropSchema
 ): Promise<void> => {
   const {
     agreement_id,
@@ -28,8 +30,10 @@ export const writeAnAgreementEntity = async (
     event_stream_id,
     event_version_id,
   } = agreement;
+
+  const agreementTable: TableName = `${schema}.agreement`;
   await postgresDB.oneOrNone(
-    "INSERT INTO dev_interop.agreement(agreement_id, eservice_id, consumer_id, descriptor_id, state, event_stream_id, event_version_id) VALUES($1, $2, $3, $4, $5, $6, $7)",
+    `INSERT INTO ${agreementTable}(agreement_id, eservice_id, consumer_id, descriptor_id, state, event_stream_id, event_version_id) VALUES($1, $2, $3, $4, $5, $6, $7)`,
     [
       agreement_id,
       eservice_id,

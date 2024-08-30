@@ -85,7 +85,11 @@ export function setupTestContainersVitest(
     postgresDB,
     sqsClient,
     cleanup: async (): Promise<void> => {
-      await truncateSignalTable(postgresDB!);
+      await truncateSignalTable(
+        postgresDB!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+        signalHubStoreConfig?.signalHubSchema!
+      );
       // TODO: clean queque messages
     },
   };

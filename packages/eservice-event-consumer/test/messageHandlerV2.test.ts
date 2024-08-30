@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { EServiceDescriptorStateV2 } from "@pagopa/interop-outbound-models";
 import { genericLogger } from "pagopa-signalhub-commons";
 import { handleMessageV2 } from "../src/handlers/messageHandlerV2.js";
+import { config } from "../src/config/env.js";
 import {
   createEserviceAddedEventV2,
   createEServiceDescriptorAddedEventV2,
@@ -40,7 +41,8 @@ describe("Message Handler for V2 EVENTS", () => {
         const result = await findByEserviceIdAndProducerIdAndDescriptorId(
           eServiceId,
           descriptorId,
-          producerId
+          producerId,
+          config.interopSchema
         );
 
         expect(result).not.toBeNull();
@@ -72,7 +74,8 @@ describe("Message Handler for V2 EVENTS", () => {
         const result = await findByEserviceIdAndProducerIdAndDescriptorId(
           eServiceId,
           descriptorId,
-          producerId
+          producerId,
+          config.interopSchema
         );
 
         expect(result).not.toBeNull();
@@ -95,7 +98,8 @@ describe("Message Handler for V2 EVENTS", () => {
           producerId,
           EServiceDescriptorStateV2.DRAFT.toString(),
           generateID(),
-          initalVersion
+          initalVersion,
+          config.interopSchema
         );
 
         const eServiceV2 = createV2Event(
@@ -118,7 +122,8 @@ describe("Message Handler for V2 EVENTS", () => {
         const result = await findByEserviceIdAndProducerIdAndDescriptorId(
           eServiceId,
           descriptorId,
-          producerId
+          producerId,
+          config.interopSchema
         );
 
         expect(result).not.toBeNull();
@@ -145,7 +150,8 @@ describe("Message Handler for V2 EVENTS", () => {
           producerId,
           EServiceDescriptorStateV2.PUBLISHED.toString(),
           eventStreamId,
-          initalVersion
+          initalVersion,
+          config.interopSchema
         );
 
         const eServiceV2 = createV2Event(
@@ -168,7 +174,8 @@ describe("Message Handler for V2 EVENTS", () => {
         const result = await findByEserviceIdAndProducerIdAndDescriptorId(
           eServiceId,
           descriptorId,
-          producerId
+          producerId,
+          config.interopSchema
         );
 
         expect(result).not.toBeNull();
@@ -222,7 +229,8 @@ describe("Message Handler for V2 EVENTS", () => {
         const result = await findByEserviceIdAndProducerIdAndDescriptorId(
           eServiceId,
           descriptorId,
-          producerId
+          producerId,
+          config.interopSchema
         );
 
         expect(result).not.toBeNull();
@@ -254,7 +262,8 @@ describe("Message Handler for V2 EVENTS", () => {
         const response = await findByEserviceIdAndProducerIdAndDescriptorId(
           eServiceId,
           descriptorId,
-          producerId
+          producerId,
+          config.interopSchema
         );
 
         expect(response).toBe(null);
@@ -283,7 +292,8 @@ describe("Message Handler for V2 EVENTS", () => {
         producerId,
         descriptorVersion1.state.toString(),
         eventStreamId,
-        initialVersion
+        initialVersion,
+        config.interopSchema
       );
 
       // Added second eservice's descriptor
@@ -301,7 +311,8 @@ describe("Message Handler for V2 EVENTS", () => {
         producerId,
         descriptorVersion2.state.toString(),
         eventStreamId,
-        incrementVersion(initialVersion)
+        incrementVersion(initialVersion),
+        config.interopSchema
       );
 
       // Create event for the third descriptor
@@ -325,7 +336,10 @@ describe("Message Handler for V2 EVENTS", () => {
 
       await handleMessageV2(eServiceV2Event, eServiceService, genericLogger);
 
-      const eServiceCount = await getCountByEserviceId(eServiceId);
+      const eServiceCount = await getCountByEserviceId(
+        eServiceId,
+        config.interopSchema
+      );
       expect(eServiceCount).toBe(3);
     });
   });

@@ -1,6 +1,7 @@
 import { beforeEach } from "node:test";
 import { truncateTracingBatchCleanupTable } from "pagopa-signalhub-commons-test";
 import { describe, it, expect } from "vitest";
+import { config } from "../src/config/env";
 import { postgresDB, tracingBatchCleanupService } from "./utils";
 
 describe("TracingBatchCleanup service", () => {
@@ -12,5 +13,7 @@ describe("TracingBatchCleanup service", () => {
     expect(batchId).toBeGreaterThan(0);
   });
 
-  beforeEach(() => truncateTracingBatchCleanupTable(postgresDB));
+  beforeEach(() =>
+    truncateTracingBatchCleanupTable(postgresDB, config.signalHubSchema)
+  );
 });
