@@ -1,12 +1,12 @@
 import { DB, SQS, createDbInstance } from "pagopa-signalhub-commons";
 import { config } from "../config/env.js";
 import { signalServiceBuilder, SignalService } from "./signal.service.js";
-import { quequeServiceBuilder, QuequeService } from "./queque.service.js";
+import { queueServiceBuilder, QueueService } from "./queque.service.js";
 import { InteropService, interopServiceBuilder } from "./interop.service.js";
 export function serviceBuilder(): {
   signalService: SignalService;
   interopService: InteropService;
-  quequeService: QuequeService;
+  quequeService: QueueService;
 } {
   const db: DB = createDbInstance({
     username: config.signalhubStoreDbUsername,
@@ -20,7 +20,7 @@ export function serviceBuilder(): {
   const interopService = interopServiceBuilder(db);
 
   const sqsClient: SQS.SQSClient = SQS.instantiateClient();
-  const quequeService = quequeServiceBuilder(sqsClient);
+  const quequeService = queueServiceBuilder(sqsClient);
 
   return {
     signalService,

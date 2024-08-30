@@ -4,7 +4,7 @@ import { match } from "ts-pattern";
 import { contract } from "../contract/contract.js";
 import { SignalService } from "../services/signal.service.js";
 import { makeApiProblem } from "../models/domain/errors.js";
-import { QuequeService } from "../services/queque.service.js";
+import { QueueService } from "../services/queque.service.js";
 import { InteropService } from "../services/interop.service.js";
 import { toSignalMessage } from "../models/domain/toSignalMessage.js";
 
@@ -14,41 +14,37 @@ const s = initServer();
 export const pushRoutes = (
   signalService: SignalService,
   interopService: InteropService,
-  quequeService: QuequeService
+  quequeService: QueueService
 ) => {
   const pushSignal: AppRouteImplementation<
     typeof contract.pushSignal
-  > = async ({ body, req }) => {
-    const loggerInstance = logger({
+  > = async ({ body, req, res }) => {
+    const log = logger({
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
     });
-    loggerInstance.info(
-      `pushController BEGIN with body: ${JSON.stringify(
-        body
-      )}, session: ${JSON.stringify(req.ctx.sessionData)}`
-    );
     try {
       const { signalId, eserviceId } = body;
       const { purposeId } = req.ctx.sessionData;
 
-      await interopService.verifyAuthorization(
-        purposeId,
-        eserviceId,
-        loggerInstance
+      log.info(
+        `Request ${req.method} ${req.url} for e-service ${eserviceId}, signalId: ${signalId}`
       );
 
-      await signalService.verifySignalDuplicated(
-        signalId,
+      await interopService.producerIsAuthorizedToPushSignals(
+        purposeId,
         eserviceId,
-        loggerInstance
+        log
       );
+
+      await signalService.verifySignalDuplicated(signalId, eserviceId, log);
 
       const message = toSignalMessage(
         body as SignalPayload,
         req.ctx.correlationId
       );
-      await quequeService.send(message, loggerInstance);
+      await quequeService.send(message, log);
+      log.info(`Response status: ${res.statusCode}, signalId ${signalId}`);
       return {
         status: 200,
         body: {
@@ -63,14 +59,14 @@ export const pushRoutes = (
             .with("signalDuplicate", () => 400)
             .with("signalNotSended", () => 400)
             .with("unauthorizedError", () => 401)
-            .with("operationForbidden", () => 403)
+            .with("operationPushForbidden", () => 403)
             .with("genericError", () => 500)
             .otherwise(() => 500),
-        loggerInstance,
+        log,
         req.ctx.correlationId
       );
 
-      // eslint-disable-next-line sonarjs/no-small-switch
+      log.warn(`Response ${problem.status} - ${problem.title}`);
       switch (problem.status) {
         case 400:
           return {

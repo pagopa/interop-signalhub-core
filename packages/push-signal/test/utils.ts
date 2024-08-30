@@ -4,7 +4,7 @@ import {
 } from "pagopa-signalhub-commons-test";
 import { inject } from "vitest";
 
-import { quequeServiceBuilder } from "../src/services/queque.service.js";
+import { queueServiceBuilder } from "../src/services/queque.service.js";
 import { signalServiceBuilder } from "../src/services/signal.service.js";
 import { interopServiceBuilder } from "../src/services/interop.service.js";
 
@@ -14,7 +14,7 @@ export const { cleanup, postgresDB, sqsClient } = setupTestContainersVitest(
 );
 
 export const signalService = signalServiceBuilder(postgresDB);
-export const quequeService = quequeServiceBuilder(sqsClient);
+export const quequeService = queueServiceBuilder(sqsClient);
 export const interopService = interopServiceBuilder(postgresDB);
 
 export const aValidMockAgreement = {

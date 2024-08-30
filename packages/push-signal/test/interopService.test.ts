@@ -1,14 +1,19 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { genericLogger, operationForbidden } from "pagopa-signalhub-commons";
+import { genericLogger } from "pagopa-signalhub-commons";
 import {
   dataPreparationForSignalProducers,
   dataResetForSignalProducers,
   eserviceIdPushSignals,
   authorizedPurposeIdForPushSignals,
   eserviceIdPublishedByAnotherOrganization,
-  eserviceIdNotPublished,
+  signalProducer,
+  eserviceNotPublished,
 } from "pagopa-signalhub-commons-test";
 import { config } from "../src/config/env.js";
+import {
+  operationPushForbiddenGeneric,
+  operationPushForbiddenWrongEservice,
+} from "../src/models/domain/errors.js";
 import { interopService, postgresDB } from "./utils.js";
 
 describe("PDND Interoperability service", () => {
@@ -21,7 +26,11 @@ describe("PDND Interoperability service", () => {
     const purposeId = authorizedPurposeIdForPushSignals;
     const eserviceId = eserviceIdPushSignals;
     await expect(
-      interopService.verifyAuthorization(purposeId, eserviceId, genericLogger)
+      interopService.producerIsAuthorizedToPushSignals(
+        purposeId,
+        eserviceId,
+        genericLogger
+      )
     ).resolves.not.toThrow();
   });
 
@@ -30,8 +39,14 @@ describe("PDND Interoperability service", () => {
     const eserviceId = "";
 
     await expect(
-      interopService.verifyAuthorization(purposeId, eserviceId, genericLogger)
-    ).rejects.toThrowError(operationForbidden);
+      interopService.producerIsAuthorizedToPushSignals(
+        purposeId,
+        eserviceId,
+        genericLogger
+      )
+    ).rejects.toThrowError(
+      operationPushForbiddenGeneric({ purposeId, eserviceId })
+    );
   });
 
   it("should deny permission to a signals producer with a valid purpose and non existent e-service", async () => {
@@ -39,17 +54,35 @@ describe("PDND Interoperability service", () => {
     const eserviceId = "some-non-existent-eservice-id";
 
     await expect(
-      interopService.verifyAuthorization(purposeId, eserviceId, genericLogger)
-    ).rejects.toThrowError(operationForbidden);
+      interopService.producerIsAuthorizedToPushSignals(
+        purposeId,
+        eserviceId,
+        genericLogger
+      )
+    ).rejects.toThrowError(
+      operationPushForbiddenGeneric({ purposeId, eserviceId })
+    );
   });
 
   it("should deny permission to a signals producer with a valid purpose and e-service state != PUBLISHED", async () => {
     const purposeId = authorizedPurposeIdForPushSignals;
-    const eserviceId = eserviceIdNotPublished;
+    const eserviceId = eserviceNotPublished.id;
 
     await expect(
-      interopService.verifyAuthorization(purposeId, eserviceId, genericLogger)
-    ).rejects.toThrowError(operationForbidden);
+      interopService.producerIsAuthorizedToPushSignals(
+        purposeId,
+        eserviceId,
+        genericLogger
+      )
+    ).rejects.toThrowError(
+      operationPushForbiddenWrongEservice({
+        eservice: {
+          id: eserviceId,
+          state: eserviceNotPublished.state,
+          producerId: signalProducer.id,
+        },
+      })
+    );
   });
 
   it("should deny permission to a signals producer that is not owner of the e-service", async () => {
@@ -57,7 +90,13 @@ describe("PDND Interoperability service", () => {
     const eserviceId = eserviceIdPublishedByAnotherOrganization;
 
     await expect(
-      interopService.verifyAuthorization(purposeId, eserviceId, genericLogger)
-    ).rejects.toThrowError(operationForbidden);
+      interopService.producerIsAuthorizedToPushSignals(
+        purposeId,
+        eserviceId,
+        genericLogger
+      )
+    ).rejects.toThrowError(
+      operationPushForbiddenGeneric({ purposeId, eserviceId })
+    );
   });
 });
