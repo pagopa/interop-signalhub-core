@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { SnakeCase } from "../utils/index.js";
+import { InteropSchema, SignalhubSchema } from "../index.js";
 
 export const TracingBatch = z.object({
   batchId: z.string(),
@@ -49,3 +50,18 @@ export type TracingBatchCleanup = z.infer<typeof TracingBatchCleanup>;
 export type ProducerEserviceEntity = SnakeCase<z.infer<typeof ProducerService>>;
 export type AgreementEntity = SnakeCase<z.infer<typeof Agreement>>;
 export type TracingBatchEntity = SnakeCase<z.infer<typeof TracingBatch>>;
+
+type InteropDatabaseTable =
+  | "eservice"
+  | "purpose"
+  | "agreement"
+  | "eservice_producer";
+
+type SignalHubDatabaseTable =
+  | "signal"
+  | "dead_signal"
+  | "tracing_batch_cleanup";
+
+export type TableName =
+  | `${InteropSchema}.${InteropDatabaseTable}`
+  | `${SignalhubSchema}.${SignalHubDatabaseTable}`;

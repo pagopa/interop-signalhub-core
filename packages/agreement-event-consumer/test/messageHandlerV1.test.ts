@@ -3,6 +3,7 @@ import { AgreementStateV1 } from "@pagopa/interop-outbound-models";
 import { truncateAgreementTable } from "pagopa-signalhub-commons-test";
 import { genericLogger } from "pagopa-signalhub-commons";
 import { handleMessageV1 } from "../src/handlers/index.js";
+import { config } from "../src/config/env.js";
 import {
   agreementService,
   createAnAgreementV1,
@@ -20,7 +21,7 @@ import {
 import { getAnAgreementEntityBy } from "./databaseUtils.js";
 
 describe("Message Handler for V1 EVENTS", () => {
-  beforeEach(() => truncateAgreementTable(postgresDB));
+  beforeEach(() => truncateAgreementTable(postgresDB, config.interopSchema));
 
   it("Should add an agreement for an AgreementAdded event", async () => {
     const id = generateID();

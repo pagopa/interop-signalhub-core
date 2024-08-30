@@ -14,6 +14,7 @@ import { match } from "ts-pattern";
 import { agreementRepository } from "../src/repositories/index.js";
 import { agreementServiceBuilder } from "../src/services/index.js";
 import { AgreementEntity } from "../src/models/domain/model.js";
+import { config } from "../src/config/env.js";
 import { writeAnAgreementEntity } from "./databaseUtils.js";
 
 export const { postgresDB } = setupTestContainersVitest(
@@ -155,7 +156,8 @@ export async function createAndWriteAnAgreementEventV1(
     version
   );
   await writeAnAgreementEntity(
-    fromEventToEntity(agreementV1, agreementAddedEventV1)
+    fromEventToEntity(agreementV1, agreementAddedEventV1),
+    config.interopSchema
   );
   return { agreementV1, agreementAddedEventV1 };
 }
@@ -253,7 +255,8 @@ export async function createAndWriteAnAgreementEventV2(
     version
   );
   await writeAnAgreementEntity(
-    fromEventToEntity(agreementV2, agreementEventV2)
+    fromEventToEntity(agreementV2, agreementEventV2),
+    config.interopSchema
   );
   return { agreementV2, agreementEventV2 };
 }

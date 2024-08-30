@@ -1,22 +1,31 @@
-import { ProducerEserviceEntity } from "pagopa-signalhub-commons";
+import {
+  InteropSchema,
+  ProducerEserviceEntity,
+  TableName,
+} from "pagopa-signalhub-commons";
 import { postgresDB } from "./utils.js";
 
 export const insertEserviceIdAndProducerId = async (
   eServiceId: string,
-  producerId: string
+  producerId: string,
+  schema: InteropSchema
 ): Promise<void> => {
+  const eserviceProducerTable: TableName = `${schema}.eservice_producer`;
+
   await postgresDB.none(
-    "INSERT INTO dev_interop.eservice_producer(eservice_id, producer_id) VALUES ($1, $2)",
+    `INSERT INTO ${eserviceProducerTable}(eservice_id, producer_id) VALUES ($1, $2)`,
     [eServiceId, producerId]
   );
 };
 export const findProducerIdByEserviceId = async (
-  eServiceId: string
+  eServiceId: string,
+  schema: InteropSchema
 ): Promise<{
   producerId: string;
 } | null> => {
+  const eserviceProducerTable: TableName = `${schema}.eservice_producer`;
   const result = await postgresDB.oneOrNone(
-    "SELECT producer_id FROM dev_interop.eservice_producer e WHERE e.eservice_id  = $1",
+    `SELECT producer_id FROM ${eserviceProducerTable} e WHERE e.eservice_id  = $1`,
     [eServiceId]
   );
 
@@ -32,10 +41,12 @@ export const findProducerIdByEserviceId = async (
 export const findByEserviceIdAndProducerIdAndDescriptorId = async (
   eServiceId: string,
   descriptorId: string,
-  producerId: string
+  producerId: string,
+  schema: InteropSchema
 ): Promise<ProducerEserviceEntity | null> => {
+  const eserviceTable = `${schema}.eservice`;
   const result = await postgresDB.oneOrNone(
-    "SELECT * FROM dev_interop.eservice e WHERE e.eservice_id = $1 AND e.descriptor_id = $2 AND e.producer_id = $3",
+    `SELECT * FROM ${eserviceTable} e WHERE e.eservice_id = $1 AND e.descriptor_id = $2 AND e.producer_id = $3`,
     [eServiceId, descriptorId, producerId]
   );
 
@@ -47,10 +58,13 @@ export const findByEserviceIdAndProducerIdAndDescriptorId = async (
 };
 
 export const getCountByEserviceId = async (
-  eServiceId: string
+  eServiceId: string,
+  schema: InteropSchema
 ): Promise<number> => {
+  const eserviceTable = `${schema}.eservice`;
+
   const result = await postgresDB.one(
-    "SELECT COUNT(*) FROM dev_interop.eservice WHERE eservice_id = $1",
+    `SELECT COUNT(*) FROM ${eserviceTable} WHERE eservice_id = $1`,
     [eServiceId]
   );
 
@@ -62,11 +76,14 @@ export const insertEserviceDescriptor = async (
   producerId: string,
   state: string,
   eventStreamId: string,
-  eventVersionId: number
+  eventVersionId: number,
+  schema: InteropSchema
   // eslint-disable-next-line max-params
 ): Promise<void> => {
+  const eserviceTable = `${schema}.eservice`;
+
   await postgresDB.none(
-    "INSERT INTO dev_interop.eservice(eservice_id, descriptor_id, producer_id, state, event_stream_id, event_version_id) VALUES ($1, $2, $3, $4, $5, $6)",
+    `INSERT INTO ${eserviceTable}(eservice_id, descriptor_id, producer_id, state, event_stream_id, event_version_id) VALUES ($1, $2, $3, $4, $5, $6)`,
     [eServiceId, descriptorId, producerId, state, eventStreamId, eventVersionId]
   );
 };

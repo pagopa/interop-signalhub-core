@@ -2,6 +2,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { genericLogger } from "pagopa-signalhub-commons";
 import { EServiceDescriptorStateV1 } from "@pagopa/interop-outbound-models";
 import { handleMessageV1 } from "../src/handlers/messageHandlerV1.js";
+import { config } from "../src/config/env.js";
 import {
   createEServiceV1,
   generateID,
@@ -25,7 +26,11 @@ describe("Message Handler for V1 EVENTS", () => {
   const eServiceId = generateID();
 
   beforeAll(async () => {
-    await insertEserviceIdAndProducerId(eServiceId, producerId);
+    await insertEserviceIdAndProducerId(
+      eServiceId,
+      producerId,
+      config.interopSchema
+    );
   });
 
   describe("EserviceAdded Event", () => {
@@ -44,7 +49,10 @@ describe("Message Handler for V1 EVENTS", () => {
       );
 
       await handleMessageV1(eServiceV1Event, eServiceService, genericLogger);
-      const result = await findProducerIdByEserviceId(eServiceId);
+      const result = await findProducerIdByEserviceId(
+        eServiceId,
+        config.interopSchema
+      );
       expect(result?.producerId).toEqual(producerId);
     });
 
@@ -78,7 +86,8 @@ describe("Message Handler for V1 EVENTS", () => {
       const result = await findByEserviceIdAndProducerIdAndDescriptorId(
         eServiceId,
         descriptorId,
-        producerId
+        producerId,
+        config.interopSchema
       );
 
       expect(result?.eservice_id).toEqual(eServiceId);
@@ -125,14 +134,18 @@ describe("Message Handler for V1 EVENTS", () => {
 
       await handleMessageV1(eServiceV1Event, eServiceService, genericLogger);
 
-      const producerIdResult = await findProducerIdByEserviceId(eServiceId);
+      const producerIdResult = await findProducerIdByEserviceId(
+        eServiceId,
+        config.interopSchema
+      );
 
       // Check if ESERVICE_PRODUCER record has been inserted on DB
       expect(producerIdResult?.producerId).toBe(producerId);
       const response = await findByEserviceIdAndProducerIdAndDescriptorId(
         eServiceId,
         descriptorId,
-        producerId
+        producerId,
+        config.interopSchema
       );
 
       expect(response?.state).toEqual(
@@ -155,7 +168,8 @@ describe("Message Handler for V1 EVENTS", () => {
         producerId,
         EServiceDescriptorStateV1[EServiceDescriptorStateV1.DRAFT],
         generateID(),
-        version
+        version,
+        config.interopSchema
       );
 
       const descriptor = createEserviceDescriptorV1({
@@ -172,7 +186,8 @@ describe("Message Handler for V1 EVENTS", () => {
       const response = await findByEserviceIdAndProducerIdAndDescriptorId(
         eServiceId,
         descriptorId,
-        producerId
+        producerId,
+        config.interopSchema
       );
 
       expect(response?.state).toEqual(
@@ -206,7 +221,8 @@ describe("Message Handler for V1 EVENTS", () => {
         producerId,
         EServiceDescriptorStateV1.DRAFT.toString(),
         generateID(),
-        version
+        version,
+        config.interopSchema
       );
 
       const descriptor = createEserviceDescriptorV1({
@@ -229,7 +245,8 @@ describe("Message Handler for V1 EVENTS", () => {
       const response = await findByEserviceIdAndProducerIdAndDescriptorId(
         eServiceId,
         descriptorId,
-        producerId
+        producerId,
+        config.interopSchema
       );
 
       expect(response).toBe(null);

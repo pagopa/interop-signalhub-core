@@ -8,6 +8,7 @@ import {
 } from "@pagopa/interop-outbound-models";
 import { truncatePurposeTable } from "pagopa-signalhub-commons-test";
 import { handleMessageV1 } from "../src/handlers/index.js";
+import { config } from "../src/config/env.js";
 import {
   createAndWriteAPurposeEventV1,
   createAPurposeEventV1,
@@ -23,7 +24,7 @@ import {
 import { getAPurposeEntityBy } from "./databaseUtils.js";
 
 describe("Message Handler for V1 EVENTS", () => {
-  beforeEach(() => truncatePurposeTable(postgresDB));
+  beforeEach(() => truncatePurposeTable(postgresDB, config.interopSchema));
   const mockPurposeV1 = getMockPurpose() as PurposeV1;
   const mockPurposeVersionV1 = getMockPurposeVersion() as PurposeVersionV1;
 

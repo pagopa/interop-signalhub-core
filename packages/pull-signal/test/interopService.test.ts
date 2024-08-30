@@ -13,12 +13,14 @@ import {
   operationPullForbidden,
   operationPullForbiddenWithWrongAgreement,
 } from "../src/model/domain/errors";
+
+import { config } from "../src/config/env.js";
 import { interopService, postgresDB } from "./utils";
 
 describe("PDND Interoperability service", () => {
   beforeAll(async () => {
-    await dataResetForSignalConsumers(postgresDB);
-    await dataPreparationForSignalConsumers(postgresDB);
+    await dataResetForSignalConsumers(postgresDB, config.interopSchema);
+    await dataPreparationForSignalConsumers(postgresDB, config.interopSchema);
   });
 
   it("should give permission to a signals consumer to pull a signal", async () => {
