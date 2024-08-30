@@ -14,7 +14,6 @@ import { config } from "../src/config/env.js";
 import { operationPullForbidden } from "../src/model/domain/errors";
 import { interopService, postgresDB } from "./utils";
 
-
 describe("PDND Interoperability service", () => {
   beforeAll(async () => {
     await dataResetForSignalConsumers(postgresDB, config.interopSchema);
