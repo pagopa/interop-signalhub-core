@@ -1,10 +1,20 @@
 import { z } from "zod";
 
-const interopSchema = z.enum(["DEV_INTEROP", "UAT_INTEROP", "PROD_INTEROP"]);
+const interopSchema = z.enum([
+  "DEV_INTEROP",
+  "UAT_INTEROP",
+  "PROD_INTEROP",
+  "dev_interop",
+  "uat_interop",
+  "prod_interop",
+]);
 const signalhubSchema = z.enum([
   "DEV_SIGNALHUB",
   "UAT_SIGNALHUB",
   "PROD_SIGNALHUB",
+  "dev_signalhub",
+  "uat_signalhub",
+  "prod_signalhub",
 ]);
 
 export const SignalHubStoreConfig = z
