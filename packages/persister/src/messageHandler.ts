@@ -1,4 +1,4 @@
-import { SQS, Logger } from "pagopa-signalhub-commons";
+import { Logger, SQS } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
 import { StoreSignalService } from "./services/storeSignal.service.js";
 import {
@@ -15,8 +15,10 @@ export function processMessage(
   return async (message: SQS.Message): Promise<void> => {
     try {
       const signalMessage = parseQueueMessageToSignal(message, logger);
+      const { correlationId } = signalMessage;
+      logger.info(`processing message CID: ${correlationId}`);
 
-      await storeSignalService.storeSignal(signalMessage);
+      await storeSignalService.storeSignal(signalMessage, logger);
     } catch (error) {
       return match<unknown>(error)
         .with(

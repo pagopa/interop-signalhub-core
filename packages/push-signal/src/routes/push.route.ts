@@ -24,13 +24,14 @@ export const pushRoutes = (
       correlationId: req.ctx.correlationId,
     });
     try {
+      log.debug(
+        `DUMP signal: objectType: ${body.signalType}, objectId: ${body.objectId}, signalType: ${body.signalType}`
+      );
       const { signalId, eserviceId } = body;
       const { purposeId } = req.ctx.sessionData;
-
       log.info(
         `Request ${req.method} ${req.url} for e-service ${eserviceId}, signalId: ${signalId}`
       );
-
       await interopService.producerIsAuthorizedToPushSignals(
         purposeId,
         eserviceId,

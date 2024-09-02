@@ -13,7 +13,9 @@ import {
 import { logger } from "../logging/index.js";
 import { QuequeConsumerConfig } from "../config/queque.consumer.js";
 
-const loggerInstance = logger({});
+const loggerInstance = logger({
+  serviceName: "persister",
+});
 
 const serializeError = (error: unknown): string => {
   try {
@@ -121,7 +123,9 @@ export const sendMessage = async (
     MessageBody: messageBody,
   };
   const command = new SendMessageCommand(messageCommandInput);
-  await sqsClient.send(command);
+  const response = await sqsClient.send(command);
+  const mid = response.MessageId;
+  loggerInstance.info(`message sent with SQS id ${mid}`);
 };
 
 export const deleteMessage = async (

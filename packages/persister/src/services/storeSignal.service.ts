@@ -10,9 +10,12 @@ import {
 } from "../models/domain/errors.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function storeSignalServiceBuilder(db: DB, logger: Logger) {
+export function storeSignalServiceBuilder(db: DB) {
   return {
-    async storeSignal(signalMessage: SignalMessage): Promise<void> {
+    async storeSignal(
+      signalMessage: SignalMessage,
+      logger: Logger
+    ): Promise<void> {
       try {
         const signalRepositoryInstance = signalRepository(db);
         const signal = toSignal(signalMessage);
@@ -27,8 +30,8 @@ export function storeSignalServiceBuilder(db: DB, logger: Logger) {
           logger.warn(`SignalId: ${signal.signalId} already exists`);
           throw notRecoverableMessageError("duplicateSignal", signal);
         } else {
-          const id = await signalRepositoryInstance.insertSignal(signal);
-          logger.info(`Signal with id: ${id} has been inserted on DB`);
+          await signalRepositoryInstance.insertSignal(signal);
+          logger.info(`Signal has been inserted on DB`);
         }
       } catch (error) {
         logger.error(error);
