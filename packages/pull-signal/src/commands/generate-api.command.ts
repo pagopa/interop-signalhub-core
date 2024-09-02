@@ -33,6 +33,12 @@ export function generateApi(version: string): void {
       info: {
         title: "Pull signal Service API",
         version,
+        contact: {
+          name: "API Support",
+          url: "http://www.example.com/support",
+          email: "support@example.com",
+        },
+        termsOfService: "http://swagger.io/terms/",
         license: {
           name: "ISC",
           url: "https://opensource.org/license/isc-license-txt",
