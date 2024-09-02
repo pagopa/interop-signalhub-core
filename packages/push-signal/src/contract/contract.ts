@@ -8,30 +8,35 @@ import { z } from "zod";
 
 const c = initContract();
 
-export const contract = c.router(
-  {
-    pushSignal: {
-      summary: "Push Signal",
-      description: "Insert a signal",
-      metadata: {
-        auth: true,
-        role: "user",
-      } as const,
-      method: "POST",
-      path: "/signals",
-      responses: {
-        200: SignalPushResponse,
-        400: Problem,
-        401: Problem,
-        403: Problem,
-        500: Problem,
-      },
-      body: SignalPayload,
+export const contract = c.router({
+  getStatus: {
+    summary: "Health status endpoint",
+    description: "Should return OK",
+    method: "GET",
+    path: "/status",
+    responses: {
+      200: z.literal("OK"),
     },
   },
-  {
-    baseHeaders: z.object({
+  pushSignal: {
+    summary: "Push Signal",
+    description: "Insert a signal",
+    headers: z.object({
       authorization: z.string(),
     }),
-  }
-);
+    metadata: {
+      auth: true,
+      role: "user",
+    } as const,
+    method: "POST",
+    path: "/signals",
+    responses: {
+      200: SignalPushResponse,
+      400: Problem,
+      401: Problem,
+      403: Problem,
+      500: Problem,
+    },
+    body: SignalPayload,
+  },
+});
