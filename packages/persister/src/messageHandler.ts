@@ -14,9 +14,11 @@ export function processMessage(
 ): (message: SQS.Message) => Promise<void> {
   return async (message: SQS.Message): Promise<void> => {
     try {
-      const signalMessage = parseQueueMessageToSignal(message, logger);
-      const { correlationId } = signalMessage;
-      logger.info(`processing message CID: ${correlationId}`);
+      const signalMessage = parseQueueMessageToSignal(message);
+      const { correlationId, signalId } = signalMessage;
+      logger.info(
+        `processing message CID: ${correlationId}, signalId: ${signalId}`
+      );
 
       await storeSignalService.storeSignal(signalMessage, logger);
     } catch (error) {
