@@ -1,4 +1,4 @@
-import { Logger, logger, SQS } from "pagopa-signalhub-commons";
+import { Logger, SQS } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
 import { StoreSignalService } from "./services/storeSignal.service.js";
 import {
@@ -9,20 +9,17 @@ import {
 import { parseQueueMessageToSignal } from "./models/domain/utils.js";
 
 export function processMessage(
-  storeSignalService: StoreSignalService
+  storeSignalService: StoreSignalService,
+  loggerinstance: Logger
 ): (message: SQS.Message) => Promise<void> {
   // eslint-disable-next-line functional/no-let
-  let loggerinstance: Logger;
   return async (message: SQS.Message): Promise<void> => {
     try {
       const signalMessage = parseQueueMessageToSignal(message);
       const { correlationId, signalId } = signalMessage;
-      loggerinstance = logger({
-        serviceName: "persister",
-        correlationId,
-      });
-
-      loggerinstance.info(`Processing message with signalId: ${signalId}`);
+      loggerinstance.info(
+        `[PUSH]-[CID=${correlationId}] Processing message with signalId: ${signalId}`
+      );
 
       await storeSignalService.storeSignal(signalMessage, loggerinstance);
     } catch (error) {
