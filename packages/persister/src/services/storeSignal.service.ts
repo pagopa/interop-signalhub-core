@@ -17,6 +17,7 @@ export function storeSignalServiceBuilder(db: DB) {
       logger: Logger
     ): Promise<void> {
       try {
+        logger.info(`Saving signalId ${signalMessage.signalId} on DB`);
         const signalRepositoryInstance = signalRepository(db);
         const signal = toSignal(signalMessage);
 
@@ -31,7 +32,6 @@ export function storeSignalServiceBuilder(db: DB) {
           throw notRecoverableMessageError("duplicateSignal", signal);
         } else {
           await signalRepositoryInstance.insertSignal(signal);
-          logger.info(`Signal has been inserted on DB`);
         }
       } catch (error) {
         logger.error(error);

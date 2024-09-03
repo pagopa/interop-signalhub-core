@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { genericLogger } from "pagopa-signalhub-commons";
 import { createSignal } from "pagopa-signalhub-commons-test";
 import {
   notRecoverableGenericMessageError,
@@ -13,7 +12,7 @@ describe("Message parser", () => {
       Body: "Information about current NY Times fiction bestseller for week of 12/11/2016.",
     };
     expect(() =>
-      parseQueueMessageToSignal(malformedNotASignalQueueMessage, genericLogger)
+      parseQueueMessageToSignal(malformedNotASignalQueueMessage)
     ).toThrowError(
       notRecoverableGenericMessageError(
         "notValidJsonError",
@@ -29,12 +28,9 @@ describe("Message parser", () => {
     };
     const malformedSignalQueueMessage = JSON.stringify(malformedSignal);
     expect(() =>
-      parseQueueMessageToSignal(
-        {
-          Body: malformedSignalQueueMessage,
-        },
-        genericLogger
-      )
+      parseQueueMessageToSignal({
+        Body: malformedSignalQueueMessage,
+      })
     ).toThrowError(
       notRecoverableMessageError(
         "parsingError",
@@ -50,12 +46,9 @@ describe("Message parser", () => {
     const malformedSignalQueueMessage = JSON.stringify(malformedSignal);
     // eslint-disable-next-line sonarjs/no-identical-functions
     expect(() =>
-      parseQueueMessageToSignal(
-        {
-          Body: malformedSignalQueueMessage,
-        },
-        genericLogger
-      )
+      parseQueueMessageToSignal({
+        Body: malformedSignalQueueMessage,
+      })
     ).toThrowError(
       notRecoverableMessageError(
         "parsingError",
@@ -70,12 +63,9 @@ describe("Message parser", () => {
 
     // eslint-disable-next-line sonarjs/no-identical-functions
     expect(() =>
-      parseQueueMessageToSignal(
-        {
-          Body: malformedSignalQueueMessage,
-        },
-        genericLogger
-      )
+      parseQueueMessageToSignal({
+        Body: malformedSignalQueueMessage,
+      })
     ).toThrowError(
       notRecoverableMessageError(
         "parsingError",
@@ -91,24 +81,18 @@ describe("Message parser", () => {
     const malformedSignalQueueMessage = JSON.stringify(malformedSignal);
     // eslint-disable-next-line sonarjs/no-identical-functions
     expect(() =>
-      parseQueueMessageToSignal(
-        {
-          Body: malformedSignalQueueMessage,
-        },
-        genericLogger
-      )
+      parseQueueMessageToSignal({
+        Body: malformedSignalQueueMessage,
+      })
     ).not.toThrowError();
   });
 
   it("should parse message to correct type Signal", () => {
     const correctSignalQueueMessage = JSON.stringify(createSignal());
     expect(
-      parseQueueMessageToSignal(
-        {
-          Body: correctSignalQueueMessage,
-        },
-        genericLogger
-      )
+      parseQueueMessageToSignal({
+        Body: correctSignalQueueMessage,
+      })
     ).toEqual(JSON.parse(correctSignalQueueMessage));
   });
 });

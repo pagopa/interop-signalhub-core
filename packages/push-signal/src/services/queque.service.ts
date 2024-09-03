@@ -11,8 +11,8 @@ export function queueServiceBuilder(sqsClient: SQS.SQSClient) {
       queueUrl: string = config.queueUrl
     ): Promise<void> {
       try {
-        logger.info(`QuequeService::send message ${message}`);
-        await SQS.sendMessage(sqsClient, queueUrl, message);
+        logger.info(`QuequeService::sending message`);
+        await SQS.sendMessage(sqsClient, queueUrl, message, logger);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         logger.warn(`QuequeService::send message not sent: ${error}`);

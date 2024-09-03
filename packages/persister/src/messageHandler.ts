@@ -1,4 +1,4 @@
-import { Logger, SQS } from "pagopa-signalhub-commons";
+import { Logger, logger, SQS } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
 import { StoreSignalService } from "./services/storeSignal.service.js";
 import {
@@ -9,31 +9,35 @@ import {
 import { parseQueueMessageToSignal } from "./models/domain/utils.js";
 
 export function processMessage(
-  storeSignalService: StoreSignalService,
-  logger: Logger
+  storeSignalService: StoreSignalService
 ): (message: SQS.Message) => Promise<void> {
+  // eslint-disable-next-line functional/no-let
+  let loggerinstance: Logger;
   return async (message: SQS.Message): Promise<void> => {
     try {
       const signalMessage = parseQueueMessageToSignal(message);
       const { correlationId, signalId } = signalMessage;
-      logger.info(
-        `processing message CID: ${correlationId}, signalId: ${signalId}`
-      );
+      loggerinstance = logger({
+        serviceName: "persister",
+        correlationId,
+      });
 
-      await storeSignalService.storeSignal(signalMessage, logger);
+      loggerinstance.info(`Processing message with signalId: ${signalId}`);
+
+      await storeSignalService.storeSignal(signalMessage, loggerinstance);
     } catch (error) {
       return match<unknown>(error)
         .with(
           P.instanceOf(NotRecoverableGenericMessageError),
           async (error) => {
-            logger.warn(
+            loggerinstance.warn(
               `Not recoverable message: event impossibile to save, with error: ${error.code}`
             );
           }
         )
 
         .with(P.instanceOf(NotRecoverableMessageError), async (error) => {
-          logger.warn(
+          loggerinstance.warn(
             `Not recoverable message saved it on DEAD_SIGNAL with error: ${error.code}`
           );
           await storeSignalService.storeDeadSignal(error.signal);
