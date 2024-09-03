@@ -31,8 +31,7 @@ services:
       timeout: 5s
       retries: 5
 
-  # ElasticMQ is a local SQS-compatible queue system, to replace AWS SQS in local development
-  elasticmq:
+  elasticmq: # ElasticMQ is a local SQS-compatible queue system, to replace AWS SQS in local development
     image: softwaremill/elasticmq-native:1.5.7@sha256:0cb5bcc04638c80af1631e8cf5da9b96b9fb6f46a4164462231065dc516c102f
     container_name: signal-hub-sqs
     ports:
@@ -64,6 +63,7 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     networks:
       - develop-network
+
   kafka-ui:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:v0.7.2@sha256:8f2ff02d64b0a7a2b71b6b3b3148b85f66d00ec20ad40c30bdcd415d46d31818
