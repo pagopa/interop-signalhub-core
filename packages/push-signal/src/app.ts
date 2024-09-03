@@ -9,7 +9,7 @@ import { contract } from "./contract/contract.js";
 import { pushRoutes } from "./routes/push.route.js";
 import { validationErrorHandler } from "./validation/validation.js";
 import { serviceBuilder } from "./services/service.builder.js";
-import { setupHealthRoute } from "./routes/health.route.js";
+// import { setupHealthRoute } from "./routes/health.route.js";
 
 const serviceName = "push-signal";
 
@@ -20,7 +20,7 @@ const { signalService, quequeService, interopService } = serviceBuilder();
 const app: Express = express();
 app.use(express.json());
 app.use(contextMiddleware(serviceName));
-setupHealthRoute(app);
+// setupHealthRoute(app);
 app.use(authenticationMiddleware);
 
 // Disable the "X-Powered-By: Express" HTTP header for security reasons: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#recommendation_16

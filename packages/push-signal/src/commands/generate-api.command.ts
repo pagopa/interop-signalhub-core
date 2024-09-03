@@ -37,6 +37,12 @@ export function generateApi(version: string): void {
           name: "ISC",
           url: "https://opensource.org/license/isc-license-txt",
         },
+        contact: {
+          name: "API Support",
+          url: "http://www.example.com/support",
+          email: "support@example.com",
+        },
+        termsOfService: "http://swagger.io/terms/",
       },
     },
     {

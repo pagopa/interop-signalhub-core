@@ -13,6 +13,12 @@ export const pullRoutes = (
   signalService: SignalService,
   interopService: InteropService
 ) => {
+  const getStatus: AppRouteImplementation<
+    typeof contract.getStatus
+  > = async () => ({
+    status: 200,
+    body: "OK",
+  });
   const pullSignal: AppRouteImplementation<
     typeof contract.pullSignal
   > = async ({ req, res }) => {
@@ -81,5 +87,6 @@ export const pullRoutes = (
 
   return s.router(contract, {
     pullSignal,
+    getStatus,
   });
 };

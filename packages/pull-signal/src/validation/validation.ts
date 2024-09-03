@@ -1,18 +1,14 @@
-import { Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { RequestValidationError } from "@ts-rest/express";
-import { ServerInferRequest } from "@ts-rest/core";
 import { Logger } from "pagopa-signalhub-commons";
 import { requestValidationError } from "../model/domain/errors.js";
-import { contract } from "../contract/contract.js";
-
-type PullRequest = ServerInferRequest<typeof contract.pullSignal>;
 
 export const validationErrorHandler =
   (logger: Logger) =>
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   async (
     err: RequestValidationError,
-    _req: PullRequest,
+    _req: Request,
     res: Response,
     _next: NextFunction
   ) => {

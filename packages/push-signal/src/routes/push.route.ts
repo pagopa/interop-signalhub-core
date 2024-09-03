@@ -16,6 +16,12 @@ export const pushRoutes = (
   interopService: InteropService,
   quequeService: QueueService
 ) => {
+  const getStatus: AppRouteImplementation<
+    typeof contract.getStatus
+  > = async () => ({
+    status: 200,
+    body: "OK",
+  });
   const pushSignal: AppRouteImplementation<
     typeof contract.pushSignal
   > = async ({ body, req, res }) => {
@@ -95,5 +101,6 @@ export const pushRoutes = (
 
   return s.router(contract, {
     pushSignal,
+    getStatus,
   });
 };
