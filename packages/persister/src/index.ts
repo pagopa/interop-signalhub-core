@@ -15,7 +15,9 @@ const loggerInstance = logger({
   correlationId: correlationId(),
 });
 
-const sqsClient: SQS.SQSClient = SQS.instantiateClient();
+const sqsClient: SQS.SQSClient = SQS.instantiateClient({
+  endpoint: config.queueUrl,
+});
 
 const db: DB = createDbInstance({
   username: config.signalhubStoreDbUsername,
