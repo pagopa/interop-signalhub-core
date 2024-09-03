@@ -78,7 +78,7 @@ export function setupTestContainersVitest(
   }
 
   if (sqsConfig) {
-    sqsClient = SQS.instantiateClient();
+    sqsClient = SQS.instantiateClient({ endpoint: sqsConfig.queueUrl });
   }
 
   return {
