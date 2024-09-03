@@ -1,11 +1,11 @@
 import { z } from "zod";
 
-const interopSchema = z.enum(["DEV_INTEROP", "UAT_INTEROP", "PROD_INTEROP"]);
-const signalhubSchema = z.enum([
-  "DEV_SIGNALHUB",
-  "UAT_SIGNALHUB",
-  "PROD_SIGNALHUB",
-]);
+type Env = "dev" | "uat" | "prod";
+type UpperAndLower<T extends string> = T | Uppercase<T>;
+type DatabaseEnv = UpperAndLower<Env>;
+
+export type InteropSchema = `${DatabaseEnv}_${UpperAndLower<"interop">}`;
+export type SignalhubSchema = `${DatabaseEnv}_${UpperAndLower<"signalhub">}`;
 
 export const SignalHubStoreConfig = z
   .object({
@@ -14,8 +14,8 @@ export const SignalHubStoreConfig = z
     SH_DB_USERNAME: z.string(),
     SH_DB_PASSWORD: z.string(),
     SH_DB_PORT: z.coerce.number().min(1001),
-    SH_DB_INTEROP_SCHEMA: interopSchema,
-    SH_DB_SIGNALHUB_SCHEMA: signalhubSchema,
+    SH_DB_INTEROP_SCHEMA: z.custom<InteropSchema>(),
+    SH_DB_SIGNALHUB_SCHEMA: z.custom<SignalhubSchema>(),
     SH_DB_USE_SSL: z
       .enum(["true", "false"])
       .transform((value) => value === "true"),
@@ -32,5 +32,3 @@ export const SignalHubStoreConfig = z
   }));
 
 export type SignalHubStoreConfig = z.infer<typeof SignalHubStoreConfig>;
-export type InteropSchema = z.infer<typeof interopSchema>;
-export type SignalhubSchema = z.infer<typeof signalhubSchema>;
