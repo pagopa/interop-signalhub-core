@@ -17,18 +17,21 @@ export async function handleMessageV2(
   logger: Logger
 ): Promise<void> {
   await match(event)
-    .with({ type: "AgreementAdded" }, async (evt) => {
-      // Added Agreement
-      await agreementService.insert(
-        toAgreementEntity(
-          evt.data.agreement,
-          evt.stream_id,
-          evt.version,
-          event.type
-        ),
-        logger
-      );
-    })
+    .with(
+      { type: P.union("AgreementAdded", "AgreementUpgraded") },
+      async (evt) => {
+        // Added Agreement
+        await agreementService.insert(
+          toAgreementEntity(
+            evt.data.agreement,
+            evt.stream_id,
+            evt.version,
+            event.type
+          ),
+          logger
+        );
+      }
+    )
     .with(
       {
         type: P.union(
@@ -43,7 +46,6 @@ export async function handleMessageV2(
           "AgreementUnsuspendedByConsumer",
           "AgreementUnsuspendedByProducer",
           "AgreementUnsuspendedByPlatform",
-          "AgreementUpgraded",
           "AgreementRejected",
           "DraftAgreementUpdated",
           "AgreementSubmitted"
