@@ -25,5 +25,6 @@ await SQS.runConsumer(
     consumerPollingTimeout: 20,
     runUntilQueueIsEmpty: false,
   },
-  processMessage(storeSignalServiceBuilder(db, loggerInstance), loggerInstance)
+  processMessage(storeSignalServiceBuilder(db)),
+  loggerInstance
 );

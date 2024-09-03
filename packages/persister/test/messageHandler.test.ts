@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createSignal } from "pagopa-signalhub-commons-test";
+import { genericLogger } from "pagopa-signalhub-commons";
 import { recoverableMessageError } from "../src/models/domain/errors.js";
 import { processMessageHandler, wrongStoreSignalService } from "./utils.js";
 
@@ -41,7 +42,7 @@ describe("Message handler", () => {
   });
   it("should throw a RecoverableMessageError for a temporary db error", async () => {
     await expect(
-      wrongStoreSignalService.storeSignal(createSignal())
+      wrongStoreSignalService.storeSignal(createSignal(), genericLogger)
     ).rejects.toThrowError(recoverableMessageError("dbConnection"));
   });
 });
