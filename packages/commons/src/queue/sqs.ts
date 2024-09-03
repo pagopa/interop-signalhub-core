@@ -13,7 +13,8 @@ import {
 import { Logger } from "../logging/index.js";
 import { QuequeConsumerConfig } from "../config/queque.consumer.js";
 
-export const instantiateClient = (): SQSClient => new SQSClient();
+export const instantiateClient = (config: SQSClientConfig): SQSClient =>
+  new SQSClient(config);
 
 export const runConsumer = async (
   sqsClient: SQSClient,

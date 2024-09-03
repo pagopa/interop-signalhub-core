@@ -3,6 +3,7 @@ import { createExpressEndpoints } from "@ts-rest/express";
 import {
   authenticationMiddleware,
   contextMiddleware,
+  logger,
 } from "pagopa-signalhub-commons";
 import { contract } from "./contract/contract.js";
 import { pullRoutes } from "./routes/pull.route.js";
@@ -27,7 +28,11 @@ app.disable("x-powered-by");
 // ts-rest
 const routes = pullRoutes(signalService, interopService);
 createExpressEndpoints(contract, routes, app, {
-  requestValidationErrorHandler: validationErrorHandler(),
+  requestValidationErrorHandler: validationErrorHandler(
+    logger({
+      serviceName,
+    })
+  ),
 });
 
 export default app;

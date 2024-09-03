@@ -19,7 +19,9 @@ export function serviceBuilder(): {
   const signalService = signalServiceBuilder(db);
   const interopService = interopServiceBuilder(db);
 
-  const sqsClient: SQS.SQSClient = SQS.instantiateClient();
+  const sqsClient: SQS.SQSClient = SQS.instantiateClient({
+    endpoint: config.queueUrl,
+  });
   const quequeService = queueServiceBuilder(sqsClient);
 
   return {
