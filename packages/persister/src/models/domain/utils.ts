@@ -1,12 +1,11 @@
-import { Logger, SQS, SignalMessage } from "pagopa-signalhub-commons";
+import { SQS, SignalMessage } from "pagopa-signalhub-commons";
 import {
   notRecoverableGenericMessageError,
   notRecoverableMessageError,
 } from "./errors.js";
 
 export function parseQueueMessageToSignal(
-  queueMessage: SQS.Message,
-  loggerInstance: Logger
+  queueMessage: SQS.Message
 ): SignalMessage {
   // eslint-disable-next-line functional/no-let
   let parsedMessage;
@@ -22,9 +21,6 @@ export function parseQueueMessageToSignal(
     );
   }
   const signalMessage = SignalMessage.safeParse(parsedMessage);
-  loggerInstance.debug(
-    `Message from queue: ${JSON.stringify(parsedMessage, null, 2)}`
-  );
 
   if (!signalMessage.success) {
     throw notRecoverableMessageError("parsingError", parsedMessage);

@@ -32,11 +32,12 @@ export const pushRoutes = (
     try {
       const { signalId, eserviceId } = body;
       const { purposeId } = req.ctx.sessionData;
-
       log.info(
         `Request ${req.method} ${req.url} for e-service ${eserviceId}, signalId: ${signalId}`
       );
-
+      log.debug(
+        `DUMP signal: objectType: ${body.signalType}, objectId: ${body.objectId}, signalType: ${body.signalType}`
+      );
       await interopService.producerIsAuthorizedToPushSignals(
         purposeId,
         eserviceId,

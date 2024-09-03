@@ -18,7 +18,7 @@ export function agreementServiceBuilder(
         return;
       }
       logger.info(
-        `Saving event (update) state: ${agreement.state}, e-service: ${agreement.eservice_id}, consumerId: ${agreement.consumer_id}`
+        `Saving event (update) agreementId: ${agreement.agreement_id}, state: ${agreement.state}, e-service: ${agreement.eservice_id}, consumerId: ${agreement.consumer_id}`
       );
       await agreementRepository.update(agreement);
     },
@@ -32,7 +32,7 @@ export function agreementServiceBuilder(
         return;
       }
       logger.info(
-        `Saving event (insert) state: ${agreement.state}, e-service: ${agreement.eservice_id}, consumerId: ${agreement.consumer_id}`
+        `Saving event (insert) agreementId: ${agreement.agreement_id}, state: ${agreement.state}, e-service: ${agreement.eservice_id}, consumerId: ${agreement.consumer_id}`
       );
       await agreementRepository.insert(agreement);
     },
