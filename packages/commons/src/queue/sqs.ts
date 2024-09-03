@@ -83,7 +83,7 @@ const processQueue = async (
             await deleteMessage(
               sqsClient,
               config.queueUrl,
-              message.ReceiptHandle,
+              message,
               loggerInstance
             );
           } catch (error) {
@@ -117,14 +117,17 @@ export const sendMessage = async (
 export const deleteMessage = async (
   sqsClient: SQSClient,
   queueUrl: string,
-  receiptHandle: string,
+  messagePayload: Message,
   loggerInstance: Logger
 ): Promise<void> => {
+  const { ReceiptHandle, Body } = messagePayload;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const correlationId = JSON.parse(Body!).correlationId as unknown;
   const deleteCommand = new DeleteMessageCommand({
     QueueUrl: queueUrl,
-    ReceiptHandle: receiptHandle,
+    ReceiptHandle,
   });
-  loggerInstance.info("Deleting message from queue");
+  loggerInstance.info(`[CID=${correlationId}] Deleting message from queue`);
   await sqsClient.send(deleteCommand);
 };
 
