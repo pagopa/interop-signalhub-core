@@ -121,8 +121,7 @@ export const deleteMessage = async (
   loggerInstance: Logger
 ): Promise<void> => {
   const { ReceiptHandle, Body } = messagePayload;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const correlationId = JSON.parse(Body!).correlationId as unknown;
+  const correlationId = Body && (JSON.parse(Body).correlationId as unknown);
   const deleteCommand = new DeleteMessageCommand({
     QueueUrl: queueUrl,
     ReceiptHandle,
