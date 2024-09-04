@@ -29,7 +29,11 @@ export function storeSignalServiceBuilder(db: DB) {
         /* it means that signal is already present on db */
         if (signalRecordId !== null) {
           logger.warn(`SignalId: ${signal.signalId} already exists`);
-          throw notRecoverableMessageError("duplicateSignal", signal);
+          throw notRecoverableMessageError(
+            "duplicateSignal",
+            signal,
+            signalMessage.correlationId
+          );
         } else {
           await signalRepositoryInstance.insertSignal(signal);
         }
@@ -40,7 +44,10 @@ export function storeSignalServiceBuilder(db: DB) {
           throw error;
         }
 
-        throw recoverableMessageError("dbConnection");
+        throw recoverableMessageError(
+          "dbConnection",
+          signalMessage.correlationId
+        );
       }
     },
 

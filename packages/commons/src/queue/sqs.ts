@@ -25,19 +25,19 @@ export const runConsumer = async (
   consumerHandler: (messagePayload: Message) => Promise<void>,
   loggerInstance: Logger
 ): Promise<void> => {
-  loggerInstance.info(`Consumer processing on Queue: ${config.queueUrl}`);
+  loggerInstance.info(`Consumer processing on queue: ${config.queueUrl}`);
   try {
     await processQueue(sqsClient, config, consumerHandler, loggerInstance);
   } catch (e) {
     loggerInstance.error(
-      `Generic error occurs processing Queue: ${
+      `Consumer exit: generic error occurs processing queue: ${
         config.queueUrl
       }. Details: ${serializeError(e)}`
     );
-    await processExit(1, loggerInstance);
+    await processExit();
   }
   loggerInstance.info(
-    `Queue processing Completed for Queue: ${config.queueUrl}`
+    `Consumer ended: processing completed for queue: ${config.queueUrl}`
   );
 };
 
@@ -50,6 +50,7 @@ const processQueue = async (
   consumerHandler: (messagePayload: Message) => Promise<void>,
   loggerInstance: Logger
 ): Promise<void> => {
+  loggerInstance.info(`Processing queue starting`);
   const command = new ReceiveMessageCommand({
     QueueUrl: config.queueUrl,
     WaitTimeSeconds: 10,
@@ -82,19 +83,19 @@ const processQueue = async (
             await deleteMessage(
               sqsClient,
               config.queueUrl,
-              message.ReceiptHandle,
+              message,
               loggerInstance
             );
           } catch (error) {
             loggerInstance.warn(
-              `Generated error: message will remain on queue, error ${error}`
+              `Processing queue, message not processed: it will remain on queue, error: ${error}`
             );
           }
         }
       }
     } while (keepProcessingQueue);
   } catch (error) {
-    loggerInstance.error(`Error on queue ${error}`);
+    loggerInstance.error(`Processing queue error: ${error}`);
   }
 };
 
@@ -116,14 +117,16 @@ export const sendMessage = async (
 export const deleteMessage = async (
   sqsClient: SQSClient,
   queueUrl: string,
-  receiptHandle: string,
+  messagePayload: Message,
   loggerInstance: Logger
 ): Promise<void> => {
+  const { ReceiptHandle, Body } = messagePayload;
+  const correlationId = Body && (JSON.parse(Body).correlationId as unknown);
   const deleteCommand = new DeleteMessageCommand({
     QueueUrl: queueUrl,
-    ReceiptHandle: receiptHandle,
+    ReceiptHandle,
   });
-  loggerInstance.info("Deleting message from queue");
+  loggerInstance.info(`[CID=${correlationId}] Deleting message from queue`);
   await sqsClient.send(deleteCommand);
 };
 
@@ -176,11 +179,7 @@ const serializeError = (error: unknown): string => {
   }
 };
 
-const processExit = async (
-  exitStatusCode: number = 1,
-  loggerInstance: Logger
-): Promise<void> => {
-  loggerInstance.error(`Process exit with code ${exitStatusCode}`);
+const processExit = async (exitStatusCode: number = 1): Promise<void> => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   process.exit(exitStatusCode);
 };

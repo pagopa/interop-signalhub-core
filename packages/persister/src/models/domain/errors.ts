@@ -96,22 +96,24 @@ const errorDetails = new Map<ErrorCodes, string>([
 ]);
 
 export function recoverableMessageError(
-  errorCode: RecoverableMessageErrorCodes
+  errorCode: RecoverableMessageErrorCodes,
+  correlationId: string = ""
 ): RecoverableMessageError {
   return new RecoverableMessageError({
     detail: getErrorReason(errorCode),
     code: errorCode,
-    title: "Recoverable message error",
+    title: `[CID=${correlationId}] Recoverable message error`,
   });
 }
 export function notRecoverableMessageError(
   errorCode: NotRecoverableMessageErrorCodes,
-  signal: Signal
+  signal: Signal,
+  correlationId: string = ""
 ): NotRecoverableMessageError {
   return new NotRecoverableMessageError({
     detail: getErrorReason(errorCode),
     code: errorCode,
-    title: "Not recoverable error",
+    title: `[CID=${correlationId}] Not recoverable error`,
     signal: {
       ...signal,
       errorReason: getErrorReason(errorCode),
@@ -121,12 +123,13 @@ export function notRecoverableMessageError(
 
 export function notRecoverableGenericMessageError(
   errorCode: NotRecoverableMessageErrorCodes,
-  signal: unknown
+  signal: unknown,
+  correlationId: string = ""
 ): NotRecoverableGenericMessageError {
   return new NotRecoverableGenericMessageError({
     detail: getErrorReason(errorCode),
     code: errorCode,
-    title: "Not recoverable error",
+    title: `[CID=${correlationId}] Not recoverable error`,
     signal,
   });
 }
