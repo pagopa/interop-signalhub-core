@@ -38,11 +38,12 @@ export function generateApi(version: string): void {
           url: "https://opensource.org/license/isc-license-txt",
         },
         contact: {
-          name: "API Support",
-          url: "http://www.example.com/support",
-          email: "support@example.com",
+          name: "PagoPA support",
+          url: "https://github.com/pagopa/interop-signalhub-core/issues",
+          email: "Interop-sprint@pagopa.it",
         },
-        termsOfService: "http://swagger.io/terms/",
+        termsOfService:
+          "https://docs.pagopa.it/interoperabilita-1/normativa-e-approfondimenti",
       },
     },
     {
