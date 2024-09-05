@@ -21,7 +21,7 @@ export const pullRoutes = (
   });
   const pullSignal: AppRouteImplementation<
     typeof contract.pullSignal
-  > = async ({ req, res }) => {
+  > = async ({ req }) => {
     const log = logger({
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
@@ -31,7 +31,7 @@ export const pullRoutes = (
       const { purposeId } = req.ctx.sessionData;
       const { signalId, size } = req.query;
 
-      log.info(`Request ${req.method} ${req.url} for e-service ${eserviceId}`);
+      log.info(`Pulling signals for e-service ${eserviceId}`);
 
       await interopService.consumerIsAuthorizedToPullSignals(
         purposeId,
@@ -42,9 +42,6 @@ export const pullRoutes = (
       const { signals, nextSignalId, lastSignalId } =
         await signalService.getSignal(eserviceId, signalId, size, log);
       const status = nextSignalId ? 206 : 200;
-      log.info(
-        `Response status: ${res.statusCode}, signals ${signals.length}, lastSignalId ${lastSignalId}`
-      );
       return {
         status,
         body: {
@@ -64,7 +61,6 @@ export const pullRoutes = (
         log,
         req.ctx.correlationId
       );
-      log.warn(`Response ${problem.status} - ${problem.title}`);
       switch (problem.status) {
         case 401:
           return {

@@ -110,8 +110,10 @@ export const sendMessage = async (
     MessageBody: messageBody,
   };
   const command = new SendMessageCommand(messageCommandInput);
-  await sqsClient.send(command);
-  loggerInstance.info(`SQS Client::sendMessage, message sent`);
+  const result = await sqsClient.send(command);
+  loggerInstance.debug(
+    `SQS Client::sendMessage, sent messageId ${result.MessageId}`
+  );
 };
 
 export const deleteMessage = async (
