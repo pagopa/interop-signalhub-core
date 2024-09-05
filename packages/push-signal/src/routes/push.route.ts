@@ -24,7 +24,7 @@ export const pushRoutes = (
   });
   const pushSignal: AppRouteImplementation<
     typeof contract.pushSignal
-  > = async ({ body, req, res }) => {
+  > = async ({ body, req }) => {
     const log = logger({
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
@@ -32,9 +32,7 @@ export const pushRoutes = (
     try {
       const { signalId, eserviceId } = body;
       const { purposeId } = req.ctx.sessionData;
-      log.info(
-        `Request ${req.method} ${req.url} for e-service ${eserviceId}, signalId: ${signalId}`
-      );
+      log.info(`Pushing signalId: ${signalId} for e-service ${eserviceId}`);
       log.debug(
         `DUMP signal: objectType: ${body.signalType}, objectId: ${body.objectId}, signalType: ${body.signalType}`
       );
@@ -51,7 +49,6 @@ export const pushRoutes = (
         req.ctx.correlationId
       );
       await quequeService.send(message, log);
-      log.info(`Response status: ${res.statusCode}, signalId ${signalId}`);
       return {
         status: 200,
         body: {
@@ -72,8 +69,6 @@ export const pushRoutes = (
         log,
         req.ctx.correlationId
       );
-
-      log.warn(`Response ${problem.status} - ${problem.title}`);
       switch (problem.status) {
         case 400:
           return {

@@ -33,6 +33,9 @@ export function signalServiceBuilder(db: DB) {
         eserviceId,
         lastSignalId
       );
+      logger.debug(
+        `SignalService::getSignal, signals: ${signals.length}, lastSignalId: ${lastSignalId}, nextSignalId: ${nextSignalId}`
+      );
       return { signals, lastSignalId, nextSignalId };
     },
   };

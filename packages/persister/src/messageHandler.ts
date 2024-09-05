@@ -21,7 +21,9 @@ export function processMessage(
         serviceName: "persister",
         correlationId,
       });
-      loggerInstance.info(`Processing message with signalId: ${signalId}`);
+      loggerInstance.info(
+        `Processing: signalId: ${signalId}, messageId: ${message.MessageId}`
+      );
 
       await storeSignalService.storeSignal(signalMessage, loggerInstance);
     } catch (error) {
