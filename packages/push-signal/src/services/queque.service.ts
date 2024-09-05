@@ -16,8 +16,8 @@ export function queueServiceBuilder(sqsClient: SQS.SQSClient) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         logger.warn(`QuequeService::send message not sent: ${error}`);
-        const { requestId } = error.$metadata;
-        throw signalNotSendedToQueque(requestId, error);
+        const requestId = error.$metadata ? error.$metadata.requestId : null;
+        throw signalNotSendedToQueque(error, requestId);
       }
     },
   };

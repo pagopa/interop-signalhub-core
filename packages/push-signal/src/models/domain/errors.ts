@@ -31,11 +31,11 @@ export function signalIdDuplicatedForEserviceId(
 }
 
 export function signalNotSendedToQueque(
-  signalId: number,
-  error: string
+  error: string,
+  requestId?: number
 ): ApiError<ErrorCodes> {
   return new ApiError({
-    detail: `ApiError during Signal sending with RequestId ${signalId}, error: ${error}`,
+    detail: `ApiError during Signal sending: error: ${error} (requestId: ${requestId})`,
     code: "signalNotSended",
     title: "Signal not sended to queque",
   });
