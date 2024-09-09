@@ -6,6 +6,7 @@ services:
       - POSTGRES_DB=signal-hub
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      - PGUSER=postgres
     ports:
       - 5432:5432
     volumes:
@@ -17,16 +18,7 @@ services:
     networks:
       - develop-network
     healthcheck:
-      test:
-        [
-          "CMD",
-          "psql",
-          "-h",
-          "localhost",
-          "-p",
-          "5432",
-          "SELECT select 1+1 as result;",
-        ]
+      test: ["CMD-SHELL", "pg_isready"]
       interval: 10s
       timeout: 5s
       retries: 5

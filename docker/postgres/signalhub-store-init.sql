@@ -79,6 +79,9 @@ CREATE TABLE IF NOT EXISTS "dev_signalhub"."dead_signal" (
     tmst_insert    TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     error_reason   VARCHAR(255)  NOT NULL
 );
+CREATE INDEX IF NOT EXISTS IDX_DEAD_SIGNAL_ON_CORRELATION_ID ON "dev_signalhub"."dead_signal"(correlation_id);
+CREATE INDEX IF NOT EXISTS IDX_DEAD_SIGNAL_ON_SIGNAL_ID ON "dev_signalhub"."dead_signal"(signal_id);
+CREATE INDEX IF NOT EXISTS IDX_DEAD_SIGNAL_ON_ESERVICE_ID on "dev_signalhub"."dead_signal"(eservice_id);
 
 CREATE TABLE IF NOT EXISTS "dev_signalhub"."tracing_batch_cleanup" (
     batch_id         SERIAL PRIMARY KEY ,
