@@ -45,6 +45,7 @@ export function createDbInstance({
     password: conData.password,
     port: conData.port,
     user: conData.user,
+    max: 30,
     ssl: useSSL ? { rejectUnauthorized: false } : undefined,
   };
 
