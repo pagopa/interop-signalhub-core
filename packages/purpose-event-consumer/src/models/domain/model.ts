@@ -10,7 +10,6 @@ export const PurposeEntity = z.object({
   eventVersionId: z.number(),
   tmstInsert: z.string().nullable().optional(),
   tmstLastEdit: z.string().nullable().optional(),
-  eventId: z.number().nullable().optional(),
 });
 
 export type PurposeEntity = z.infer<typeof PurposeEntity>;

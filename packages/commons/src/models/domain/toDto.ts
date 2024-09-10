@@ -10,7 +10,6 @@ import {
 export const toProducerEservice = (
   producerEserviceEntity: ProducerEserviceEntity
 ): ProducerService => ({
-  eventId: producerEserviceEntity.event_id,
   eserviceId: producerEserviceEntity.eservice_id,
   producerId: producerEserviceEntity.producer_id,
   agreementId: producerEserviceEntity.agreement_id,
@@ -21,7 +20,6 @@ export const toProducerEservice = (
 });
 
 export const toAgreement = (agreementEntity: AgreementEntity): Agreement => ({
-  eventId: agreementEntity.event_id,
   eserviceId: agreementEntity.eservice_id,
   producerId: agreementEntity.producer_id,
   agreementId: agreementEntity.agreement_id,

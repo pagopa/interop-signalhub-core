@@ -20,7 +20,6 @@ export const TracingBatchCleanup = z.object({
 });
 
 export const ProducerService = z.object({
-  eventId: z.number(),
   eserviceId: z.string(),
   producerId: z.string(),
   agreementId: z.string(),
@@ -31,7 +30,6 @@ export const ProducerService = z.object({
 });
 
 export const Agreement = z.object({
-  eventId: z.number(),
   eserviceId: z.string(),
   producerId: z.string(),
   consumerId: z.string(),
