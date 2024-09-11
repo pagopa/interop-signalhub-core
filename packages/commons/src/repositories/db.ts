@@ -15,6 +15,7 @@ export function createDbInstance({
   port,
   database,
   useSSL,
+  maxConnectionPool,
 }: {
   username: string;
   password: string;
@@ -22,6 +23,7 @@ export function createDbInstance({
   port: number;
   database: string;
   useSSL: boolean;
+  maxConnectionPool: number;
 }): DB {
   // ONLY FOR FOR DEBUGGING
   /*
@@ -45,7 +47,7 @@ export function createDbInstance({
     password: conData.password,
     port: conData.port,
     user: conData.user,
-    max: 30,
+    max: maxConnectionPool,
     ssl: useSSL ? { rejectUnauthorized: false } : undefined,
   };
 
