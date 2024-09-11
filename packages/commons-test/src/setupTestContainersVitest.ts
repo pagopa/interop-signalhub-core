@@ -74,6 +74,7 @@ export function setupTestContainersVitest(
       port: signalHubStoreConfig.signalhubStoreDbPort,
       database: signalHubStoreConfig.signalhubStoreDbName,
       useSSL: signalHubStoreConfig.signalhubStoreDbUseSSL,
+      maxConnectionPool: signalHubStoreConfig.maxConnectionPool,
     });
   }
 
