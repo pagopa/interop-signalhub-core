@@ -13,17 +13,17 @@ on:
 
 jobs:
   find_dockerfiles:
-  name: Find Dockerfiles
-  runs-on: ubuntu-latest
-  outputs:
-    packages: ${{ steps.set_packages_output.outputs.packages }}
-  steps:
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-    - name: Find packages
-      id: set_packages_output
-      run: |
-        PACKAGES=$(find packages -type f -path "*/Dockerfile" | awk -F'/' '{print $2}' | jq -R -s -c 'split("\n")[:-1]')
-        echo "packages=$PACKAGES" >> $GITHUB_OUTPUT
+    name: Find Dockerfiles
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.set_packages_output.outputs.packages }}
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - name: Find packages
+        id: set_packages_output
+        run: |
+          PACKAGES=$(find packages -type f -path "*/Dockerfile" | awk -F'/' '{print $2}' | jq -R -s -c 'split("\n")[:-1]')
+          echo "packages=$PACKAGES" >> $GITHUB_OUTPUT
 
   build_push_image:
     name: ${{ matrix.image_name }}
