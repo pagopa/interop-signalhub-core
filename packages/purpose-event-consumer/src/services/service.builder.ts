@@ -12,6 +12,7 @@ export function serviceBuilder(): {
     port: config.signalhubStoreDbPort,
     database: config.signalhubStoreDbName,
     useSSL: config.signalhubStoreDbUseSSL,
+    maxConnectionPool: config.maxConnectionPool,
   });
 
   const purposeRepositoryInstance = purposeRepository(db);

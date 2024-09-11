@@ -19,6 +19,7 @@ const db: DB = createDbInstance({
   port: config.signalhubStoreDbPort,
   database: config.signalhubStoreDbName,
   useSSL: config.signalhubStoreDbUseSSL,
+  maxConnectionPool: config.maxConnectionPool,
 });
 
 await SQS.runConsumer(
