@@ -26,7 +26,7 @@ jobs:
           echo "packages=$PACKAGES" >> $GITHUB_OUTPUT
 
   build_push_image:
-    name: ${{ matrix.image_name }}
+    name: ${{ matrix.package }}
     runs-on: ubuntu-latest
     environment: ecr
     needs: [find_dockerfiles]
@@ -73,7 +73,7 @@ jobs:
         if: ${{ github.ref_type == 'tag' }}
         uses: docker/metadata-action@f7b4ed12385588c3f9bc252f0a2b520d83b52d48
         with:
-          images: ${{ steps.login-ecr.outputs.registry }}/signalhub-be-${{ matrix.image_name }}
+          images: ${{ steps.login-ecr.outputs.registry }}/signalhub-be-${{ matrix.package }}
           flavor: |
             latest=false
             prefix=
