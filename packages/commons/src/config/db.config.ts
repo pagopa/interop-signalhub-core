@@ -19,7 +19,7 @@ export const SignalHubStoreConfig = z
     SH_DB_USE_SSL: z
       .enum(["true", "false"])
       .transform((value) => value === "true"),
-    SH_MAX_CONNECTION_POOL: z.coerce.number().default(30),
+    SH_MAX_CONNECTION_POOL: z.coerce.number().default(10),
   })
   .transform((c) => ({
     signalhubStoreDbHost: c.SH_DB_HOST,
