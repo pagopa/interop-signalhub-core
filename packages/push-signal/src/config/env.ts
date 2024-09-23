@@ -4,12 +4,13 @@ import {
   SignalHubStoreConfig,
   QuequeConfig,
   JWTConfig,
+  APIServiceConfig,
 } from "pagopa-signalhub-commons";
 
 const PushServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
   .and(QuequeConfig)
-  .and(JWTConfig);
-
+  .and(JWTConfig)
+  .and(APIServiceConfig);
 export type PushServiceConfig = z.infer<typeof PushServiceConfig>;
 
 const parsedFromEnv = PushServiceConfig.safeParse(process.env);
