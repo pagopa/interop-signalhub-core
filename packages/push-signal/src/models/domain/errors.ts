@@ -41,7 +41,7 @@ export function signalNotSendedToQueque(
   });
 }
 
-export function operationPushForbiddenGeneric({
+export function operationPushForbidden({
   purposeId,
   eserviceId,
 }: {
@@ -49,21 +49,9 @@ export function operationPushForbiddenGeneric({
   eserviceId: string;
 }): ApiError<ErrorCodes> {
   return new ApiError({
-    detail: `Insufficient privileges: cannot access to to e-service ${eserviceId}, with voucher's purpose ${purposeId} for e-service PUSH`,
-    code: "operationPushForbidden",
-    title: "Insufficient privileges for operation push signal - Generic Error",
-  });
-}
-
-export function operationPushForbiddenWrongEservice({
-  eservice,
-}: {
-  eservice?: { id?: string; state?: string; producerId?: string };
-}): ApiError<ErrorCodes> {
-  return new ApiError({
-    detail: `Insufficient privileges: invalid or unpublished e-service: producer ${eservice?.producerId}, e-service ${eservice?.id}, state ${eservice?.state} cannot deposit signal`,
+    detail: `Insufficient privileges: cannot access to push signals with voucher's purpose ${purposeId} for e-service PUSH; please verify if your e-service ${eserviceId} is published or in a valid state`,
     code: "operationPushForbidden",
     title:
-      "Insufficient privileges for operation push signal - Invalid e-service",
+      "Insufficient privileges for operation push signal - Invalid e-service status od Invalid Purpose",
   });
 }

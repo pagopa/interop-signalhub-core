@@ -19,7 +19,7 @@ export function requestValidationError(message: string): ApiError<ErrorCodes> {
   });
 }
 
-export function operationPullForbiddenGeneric({
+export function operationPullForbidden({
   purposeId,
   eserviceId,
 }: {
@@ -27,23 +27,9 @@ export function operationPullForbiddenGeneric({
   eserviceId: string;
 }): ApiError<ErrorCodes> {
   return new ApiError({
-    detail: `Insufficient privileges: cannot access to to e-service ${eserviceId}, with voucher's purpose ${purposeId} for e-service PULL, `,
-    code: "operationPullForbidden",
-    title: "Insufficient privileges for operation pull signal - Generic Error",
-  });
-}
-
-export function operationPullForbiddenWrongAgreement({
-  eservice,
-  agreement,
-}: {
-  eservice?: { id?: string };
-  agreement?: { id?: string; state?: string; consumerId?: string };
-}): ApiError<ErrorCodes> {
-  return new ApiError({
-    detail: `Insufficient privileges: invalid agreement: consumer ${agreement?.consumerId} with agreement ${agreement?.id}, state ${agreement?.state} cannot access to e-service ${eservice?.id}`,
+    detail: `Insufficient privileges: cannot access to pull signals with voucher's purpose ${purposeId} for e-service PULL; please verify if the consumer has a valid agreement to pull signals to e-service ${eserviceId}`,
     code: "operationPullForbidden",
     title:
-      "Insufficient privileges for operation pull signal - Invalid Agreement",
+      "Insufficient privileges for operation pull signal - Invalid Agreement or Invalid Purpose",
   });
 }
