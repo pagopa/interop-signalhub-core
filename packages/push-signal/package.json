@@ -30,6 +30,7 @@
     "fast-json-stringify": "^5.16.0",
     "js-yaml": "^4.1.0",
     "pagopa-signalhub-commons": "workspace:*",
+    "pagopa-tsrest-openapi-parser": "workspace:*",
     "@pagopa/interop-outbound-models": "^1.0.3",
     "pg-promise": "^11.6.0",
     "swagger-ui-express": "^5.0.0",
