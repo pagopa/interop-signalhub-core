@@ -347,6 +347,9 @@ importers:
       pagopa-signalhub-commons:
         specifier: workspace:*
         version: link:../commons
+      pagopa-tsrest-openapi-parser:
+        specifier: workspace:*
+        version: link:../tsrest-openapi-parser
       pg-promise:
         specifier: ^11.6.0
         version: 11.8.0

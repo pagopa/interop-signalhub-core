@@ -7,23 +7,6 @@ export function generateApi(version: string): void {
   const document = generateOpenApiSpecification(
     contract,
     {
-      components: {
-        securitySchemes: {
-          bearerAuth: {
-            type: "http",
-            scheme: "bearer",
-            bearerFormat: "JWT",
-            description:
-              "A bearer token in the format of a JWS and conformed to the specifications included in [RFC8725](https://tools.ietf.org/html/RFC8725).",
-          },
-        },
-      },
-
-      security: [
-        {
-          bearerAuth: [],
-        },
-      ],
       servers: [
         {
           url: "/signals",
@@ -49,10 +32,21 @@ export function generateApi(version: string): void {
     },
     {
       setOperationId: true,
-    }
+    },
+    [
+      {
+        type: "securitySchemes",
+        name: "bearerAuth",
+        component: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+          description:
+            "A bearer token in the format of a JWS and conformed to the specifications included in [RFC8725](https://tools.ietf.org/html/RFC8725).",
+        },
+      },
+    ]
   );
-
-  console.log("openApiDocumentV2", document);
 
   const openApiDocument = {
     openapi: document.openapi,
@@ -64,7 +58,6 @@ export function generateApi(version: string): void {
     components: document.components,
   };
 
-  console.log("risultaot dopo", openApiDocument);
   const fileOutputDocument = `./src/api/push-signals_${openApiDocument.info.version}_.yaml`;
   writeFileSync(fileOutputDocument, yaml.dump(openApiDocument));
 }

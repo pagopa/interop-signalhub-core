@@ -1,29 +1,12 @@
 import { writeFileSync } from "fs";
-import { generateOpenApi } from "@ts-rest/open-api";
+import { generateOpenApiSpecification } from "pagopa-tsrest-openapi-parser";
 import * as yaml from "js-yaml";
 import { contract } from "../contract/contract.js";
 
 export function generateApi(version: string): void {
-  const openApiDocument = generateOpenApi(
+  const openApiDocument = generateOpenApiSpecification(
     contract,
     {
-      components: {
-        securitySchemes: {
-          bearerAuth: {
-            type: "http",
-            scheme: "bearer",
-            bearerFormat: "JWT",
-            description:
-              "A bearer token in the format of a JWS and conformed to the specifications included in [RFC8725](https://tools.ietf.org/html/RFC8725).",
-          },
-        },
-      },
-
-      security: [
-        {
-          bearerAuth: [],
-        },
-      ],
       servers: [
         {
           url: "/signals",
@@ -48,9 +31,31 @@ export function generateApi(version: string): void {
     },
     {
       setOperationId: true,
-    }
+    },
+    [
+      {
+        type: "securitySchemes",
+        name: "bearerAuth",
+        component: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+          description:
+            "A bearer token in the format of a JWS and conformed to the specifications included in [RFC8725](https://tools.ietf.org/html/RFC8725).",
+        },
+      },
+    ]
   );
 
-  const fileOutputDocument = `./src/api/pull-signals_${openApiDocument.info.version}_.yaml`;
-  writeFileSync(fileOutputDocument, yaml.dump(openApiDocument));
+  const document = {
+    openapi: openApiDocument.openapi,
+    info: openApiDocument.info,
+    servers: openApiDocument.servers,
+    tags: openApiDocument.tags,
+    security: openApiDocument.security,
+    paths: openApiDocument.paths,
+    components: openApiDocument.components,
+  };
+  const fileOutputDocument = `./src/api/pull-signals_${document.info.version}_.yaml`;
+  writeFileSync(fileOutputDocument, yaml.dump(document));
 }

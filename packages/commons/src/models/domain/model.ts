@@ -59,10 +59,12 @@ export type SignalResponse = z.infer<typeof SignalSchema>;
 export const SignalPushResponse = SignalSchema.pick({ signalId: true }).openapi(
   "SignalPushResponse"
 );
-export const SignalPullResponse = z.object({
-  signals: z.array(SignalResponse),
-  lastSignalId: z.number().nullish(),
-});
+export const SignalPullResponse = z
+  .object({
+    signals: z.array(SignalResponse),
+    lastSignalId: z.number().nullish(),
+  })
+  .openapi("SignalPullResponse");
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SignalRecord = any;

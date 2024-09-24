@@ -15,14 +15,21 @@ import { z } from "zod";
 import { InfoObject, OpenAPIObject, OperationObject } from "openapi3-ts";
 import { RouteParameter } from "@asteasolutions/zod-to-openapi/dist/openapi-registry.js";
 
+extendZodWithOpenApi(z);
+
+type OpenAPIComponentTypeKey = Parameters<typeof registry.registerComponent>[0];
+export type OpenAPICustomComponent = {
+  type: OpenAPIComponentTypeKey;
+  name: string;
+  component: unknown;
+};
+
 type RouterPath = {
   id: string;
   path: string;
   route: AppRoute;
   paths: string[];
 };
-
-extendZodWithOpenApi(z);
 
 const mapMethod = {
   GET: "get",
@@ -47,8 +54,6 @@ export const generateComponentFromContractOpenApi = (
   const paths = getPathsFromRouter(router);
 
   const operationIds = new Map<string, string[]>();
-
-  // For each patch i have to register a path...
 
   paths.forEach((path) => {
     // --- Check operationId ---
@@ -115,9 +120,14 @@ export function generateOpenApiSpecification(
       operation: OperationObject,
       appRoute: AppRoute
     ) => OperationObject;
-  } = {}
+  } = {},
+  customComponents: OpenAPICustomComponent[] = []
 ): OpenAPIObject {
   generateComponentFromContractOpenApi(router, options);
+
+  //---  registering custom components ----
+  registerRowOpenAPIcomponents(customComponents);
+
   const generator = new OpenApiGeneratorV3(registry.definitions);
 
   const apiDocuments = generator.generateDocument({
@@ -128,6 +138,17 @@ export function generateOpenApiSpecification(
   return apiDocuments as OpenAPIObject;
 }
 
+const registerRowOpenAPIcomponents = (
+  components: OpenAPICustomComponent[] = []
+) => {
+  components.forEach((component) => {
+    registry.registerComponent(
+      component.type,
+      component.name,
+      component.component
+    );
+  });
+};
 const getHeaders = (
   headers: ContractAnyType | undefined
 ): RouteParameter | undefined => {
