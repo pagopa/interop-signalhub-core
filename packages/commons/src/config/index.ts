@@ -6,3 +6,4 @@ export * from "./aws.config.js";
 export * from "./jwt.config.js";
 export * from "./queque.consumer.js";
 export * from "./kafka.config.js";
+export * from "./api.config.js";

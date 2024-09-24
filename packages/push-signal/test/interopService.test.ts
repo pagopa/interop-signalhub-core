@@ -6,14 +6,10 @@ import {
   eserviceIdPushSignals,
   authorizedPurposeIdForPushSignals,
   eserviceIdPublishedByAnotherOrganization,
-  signalProducer,
   eserviceNotPublished,
 } from "pagopa-signalhub-commons-test";
 import { config } from "../src/config/env.js";
-import {
-  operationPushForbiddenGeneric,
-  operationPushForbiddenWrongEservice,
-} from "../src/models/domain/errors.js";
+import { operationPushForbidden } from "../src/models/domain/errors.js";
 import { interopService, postgresDB } from "./utils.js";
 
 describe("PDND Interoperability service", () => {
@@ -44,9 +40,7 @@ describe("PDND Interoperability service", () => {
         eserviceId,
         genericLogger
       )
-    ).rejects.toThrowError(
-      operationPushForbiddenGeneric({ purposeId, eserviceId })
-    );
+    ).rejects.toThrowError(operationPushForbidden({ purposeId, eserviceId }));
   });
 
   it("should deny permission to a signals producer with a valid purpose and non existent e-service", async () => {
@@ -59,9 +53,7 @@ describe("PDND Interoperability service", () => {
         eserviceId,
         genericLogger
       )
-    ).rejects.toThrowError(
-      operationPushForbiddenGeneric({ purposeId, eserviceId })
-    );
+    ).rejects.toThrowError(operationPushForbidden({ purposeId, eserviceId }));
   });
 
   it("should deny permission to a signals producer with a valid purpose and e-service state != PUBLISHED", async () => {
@@ -74,15 +66,7 @@ describe("PDND Interoperability service", () => {
         eserviceId,
         genericLogger
       )
-    ).rejects.toThrowError(
-      operationPushForbiddenWrongEservice({
-        eservice: {
-          id: eserviceId,
-          state: eserviceNotPublished.state,
-          producerId: signalProducer.id,
-        },
-      })
-    );
+    ).rejects.toThrowError(operationPushForbidden({ purposeId, eserviceId }));
   });
 
   it("should deny permission to a signals producer that is not owner of the e-service", async () => {
@@ -95,8 +79,6 @@ describe("PDND Interoperability service", () => {
         eserviceId,
         genericLogger
       )
-    ).rejects.toThrowError(
-      operationPushForbiddenGeneric({ purposeId, eserviceId })
-    );
+    ).rejects.toThrowError(operationPushForbidden({ purposeId, eserviceId }));
   });
 });

@@ -3,10 +3,12 @@ import {
   HTTPServerConfig,
   SignalHubStoreConfig,
   JWTConfig,
+  APIServiceConfig,
 } from "pagopa-signalhub-commons";
 
-const PullServiceConfig =
-  HTTPServerConfig.and(SignalHubStoreConfig).and(JWTConfig);
+const PullServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
+  .and(JWTConfig)
+  .and(APIServiceConfig);
 
 export type PullServiceConfig = z.infer<typeof PullServiceConfig>;
 
