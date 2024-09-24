@@ -24,7 +24,6 @@ export function generateApi(version: string): void {
         contact: {
           name: "PagoPA support",
           url: "https://www.interop.pagopa.it/",
-          // email: "Interop-sprint@pagopa.it",
         },
         termsOfService:
           "https://docs.pagopa.it/interoperabilita-1/normativa-e-approfondimenti",
