@@ -24,6 +24,8 @@ export type OpenAPICustomComponent = {
   component: unknown;
 };
 
+type ResponseItems = RouteConfig["responses"];
+
 type RouterPath = {
   id: string;
   path: string;
@@ -40,7 +42,7 @@ const mapMethod = {
 };
 const registry = new OpenAPIRegistry();
 
-export const generateComponentFromContractOpenApi = (
+const generateOpenAPIFromTsRestContract = (
   router: AppRouter,
   options: {
     setOperationId?: boolean | "concatenated-path";
@@ -50,7 +52,7 @@ export const generateComponentFromContractOpenApi = (
       appRoute: AppRoute
     ) => OperationObject;
   } = {}
-) => {
+): void => {
   const paths = getPathsFromRouter(router);
 
   const operationIds = new Map<string, string[]>();
@@ -77,22 +79,22 @@ export const generateComponentFromContractOpenApi = (
       description: path.route.description,
       deprecated: path.route.deprecated,
       summary: path.route.summary,
+
       method: mapMethod[path.route.method] as RouteConfig["method"],
       request: {
         body: body
           ? {
               content: {
                 "application/json": {
-                  schema: body as any,
+                  schema: body as z.ZodType<unknown, z.ZodTypeDef, unknown>,
                 },
               },
               description: "",
               required: true,
             }
           : undefined,
-
+        headers,
         query: path.route.query as RouteParameter,
-        headers: headers as RouteParameter,
         params: path.route.pathParams as RouteParameter,
       },
       ...(options.setOperationId
@@ -110,7 +112,7 @@ export const generateComponentFromContractOpenApi = (
     registry.registerPath(routeConfigPath);
   });
 };
-export function generateOpenApiSpecification(
+export function generateOpenAPISpec(
   router: AppRouter,
   apiDoc: Omit<OpenAPIObject, "paths" | "openapi"> & { info: InfoObject },
   options: {
@@ -123,9 +125,9 @@ export function generateOpenApiSpecification(
   } = {},
   customComponents: OpenAPICustomComponent[] = []
 ): OpenAPIObject {
-  generateComponentFromContractOpenApi(router, options);
+  generateOpenAPIFromTsRestContract(router, options);
 
-  //---  registering custom components ----
+  // ---  registering custom components ----
   registerRowOpenAPIcomponents(customComponents);
 
   const generator = new OpenApiGeneratorV3(registry.definitions);
@@ -140,7 +142,7 @@ export function generateOpenApiSpecification(
 
 const registerRowOpenAPIcomponents = (
   components: OpenAPICustomComponent[] = []
-) => {
+): void => {
   components.forEach((component) => {
     registry.registerComponent(
       component.type,
@@ -151,45 +153,42 @@ const registerRowOpenAPIcomponents = (
 };
 const getHeaders = (
   headers: ContractAnyType | undefined
-): RouteParameter | undefined => {
-  return headers && Object.keys(headers).length === 0
+): RouteParameter | undefined =>
+  headers && Object.keys(headers).length === 0
     ? undefined
     : (headers as RouteParameter);
-};
 
-const getResponses = (responses: Record<number, AppRouteResponse>) => {
-  return Object.entries(responses).reduce(
-    (acc, [statusCode, responseSchema]) => {
-      const description =
-        isZodType(responseSchema) && responseSchema.description
-          ? responseSchema.description
-          : statusCode;
+const getResponses = (
+  responses: Record<number, AppRouteResponse>
+): ResponseItems =>
+  Object.entries(responses).reduce((acc, [statusCode, responseSchema]) => {
+    const description =
+      isZodType(responseSchema) && responseSchema.description
+        ? responseSchema.description
+        : statusCode;
 
-      const httpSuccessCodePattern: RegExp = /^2[0-9]{2}$/;
-      const isSuccess = httpSuccessCodePattern.test(statusCode);
-      const keyMediaObject = isSuccess
-        ? "application/json"
-        : "application/problem+json";
+    const httpSuccessCodePattern: RegExp = /^2[0-9]{2}$/;
+    const isSuccess = httpSuccessCodePattern.test(statusCode);
+    const keyMediaObject = isSuccess
+      ? "application/json"
+      : "application/problem+json";
 
-      return {
-        ...acc,
-        [statusCode]: {
-          description,
-          ...(responseSchema
-            ? {
-                content: {
-                  [keyMediaObject]: {
-                    schema: responseSchema,
-                  },
+    return {
+      ...acc,
+      [statusCode]: {
+        description,
+        ...(responseSchema
+          ? {
+              content: {
+                [keyMediaObject]: {
+                  schema: responseSchema,
                 },
-              }
-            : {}),
-        },
-      };
-    },
-    {}
-  );
-};
+              },
+            }
+          : {}),
+      },
+    };
+  }, {});
 
 export const getPathsFromRouter = (
   router: AppRouter,
@@ -203,6 +202,7 @@ export const getPathsFromRouter = (
     if (isAppRoute(value)) {
       const pathWithPathParams = value.path.replace(/:(\w+)/g, "{$1}");
 
+      // eslint-disable-next-line functional/immutable-data
       paths.push({
         id: key,
         path: pathWithPathParams,
@@ -210,6 +210,7 @@ export const getPathsFromRouter = (
         paths: pathHistory ?? [],
       });
     } else {
+      // eslint-disable-next-line functional/immutable-data
       paths.push(...getPathsFromRouter(value, [...(pathHistory ?? []), key]));
     }
   });
@@ -223,6 +224,5 @@ export const getPathsFromRouter = (
  * @param obj
  * @returns
  */
-export const isAppRoute = (obj: AppRoute | AppRouter): obj is AppRoute => {
-  return "method" in obj && "path" in obj;
-};
+export const isAppRoute = (obj: AppRoute | AppRouter): obj is AppRoute =>
+  "method" in obj && "path" in obj;

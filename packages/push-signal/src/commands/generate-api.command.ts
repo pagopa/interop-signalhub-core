@@ -1,10 +1,10 @@
 import { writeFileSync } from "fs";
-import { generateOpenApiSpecification } from "pagopa-tsrest-openapi-parser";
+import { generateOpenAPISpec } from "pagopa-tsrest-openapi-parser";
 import * as yaml from "js-yaml";
 import { contract } from "../contract/contract.js";
 
 export function generateApi(version: string): void {
-  const document = generateOpenApiSpecification(
+  const document = generateOpenAPISpec(
     contract,
     {
       servers: [
