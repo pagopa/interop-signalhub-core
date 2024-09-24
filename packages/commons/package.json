@@ -30,7 +30,8 @@
     "ts-pattern": "^5.1.1",
     "uuid": "^9.0.1",
     "winston": "^3.13.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "@asteasolutions/zod-to-openapi": "^7.1.1"
   },
   "devDependencies": {
     "@pagopa/eslint-config": "^3.0.0",

@@ -11,8 +11,6 @@ import {
   ContractAnyType,
   isZodType,
 } from "@ts-rest/core";
-// import * as yaml from "js-yaml";
-// import { writeFileSync } from "fs";
 import { z } from "zod";
 import { InfoObject, OpenAPIObject, OperationObject } from "openapi3-ts";
 import { RouteParameter } from "@asteasolutions/zod-to-openapi/dist/openapi-registry.js";
@@ -123,14 +121,11 @@ export function generateOpenApiSpecification(
   const generator = new OpenApiGeneratorV3(registry.definitions);
 
   const apiDocuments = generator.generateDocument({
-    openapi: "3.0.0",
+    openapi: "3.0.3",
     ...apiDoc,
   });
 
   return apiDocuments as OpenAPIObject;
-
-  //   const fileOutputDocument = `./pull-signals_${apiDocuments.info.version}_.yaml`;
-  //   writeFileSync(fileOutputDocument, yaml.dump(apiDocuments));
 }
 
 const getHeaders = (

@@ -97,6 +97,9 @@ importers:
 
   packages/commons:
     dependencies:
+      '@asteasolutions/zod-to-openapi':
+        specifier: ^7.1.1
+        version: 7.1.1(zod@3.23.8)
       '@aws-sdk/client-sqs':
         specifier: ^3.583.0
         version: 3.583.0
@@ -567,9 +570,6 @@ importers:
       '@ts-rest/core':
         specifier: ^3.45.2
         version: 3.45.2(zod@3.23.8)
-      js-yaml:
-        specifier: ^4.1.0
-        version: 4.1.0
       openapi3-ts:
         specifier: ^2.0.2
         version: 2.0.2
@@ -580,9 +580,6 @@ importers:
       '@pagopa/eslint-config':
         specifier: ^3.0.0
         version: 3.0.0(typescript@5.5.4)
-      '@types/js-yaml':
-        specifier: ^4.0.9
-        version: 4.0.9
       '@types/node':
         specifier: ^20.11.24
         version: 20.12.12
