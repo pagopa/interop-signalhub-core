@@ -1,0 +1,33 @@
+{
+  "name": "pagopa-tsrest-openapi-parser",
+  "private": true,
+  "version": "1.0.0",
+  "description": "PagoPA Interop Signalhub ts-rest parser for openAPI generation with components",
+  "main": "dist",
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "format:check": "prettier --check src",
+    "format:write": "prettier --write src",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:autofix": "eslint . --ext .ts,.tsx --fix",
+    "check": "tsc --project tsconfig.check.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "zod": "^3.23.8",
+    "@asteasolutions/zod-to-openapi": "^7.1.1",
+    "openapi3-ts": "^2.0.2",
+    "@ts-rest/core": "^3.45.2"
+  },
+  "devDependencies": {
+    "@pagopa/eslint-config": "^3.0.0",
+    "@types/node": "^20.11.24",
+    "typescript": "^5.3.3"
+  }
+}

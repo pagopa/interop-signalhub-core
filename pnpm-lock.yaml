@@ -344,6 +344,9 @@ importers:
       pagopa-signalhub-commons:
         specifier: workspace:*
         version: link:../commons
+      pagopa-tsrest-openapi-parser:
+        specifier: workspace:*
+        version: link:../tsrest-openapi-parser
       pg-promise:
         specifier: ^11.6.0
         version: 11.8.0
@@ -433,6 +436,9 @@ importers:
 
   packages/push-signal:
     dependencies:
+      '@asteasolutions/zod-to-openapi':
+        specifier: ^7.1.1
+        version: 7.1.1(zod@3.23.8)
       '@pagopa/interop-outbound-models':
         specifier: ^1.0.3
         version: 1.0.3
@@ -466,6 +472,9 @@ importers:
       pagopa-signalhub-commons:
         specifier: workspace:*
         version: link:../commons
+      pagopa-tsrest-openapi-parser:
+        specifier: workspace:*
+        version: link:../tsrest-openapi-parser
       pg-promise:
         specifier: ^11.6.0
         version: 11.8.0
@@ -556,6 +565,31 @@ importers:
         specifier: ^1.6.0
         version: 1.6.0(@types/node@20.12.12)
 
+  packages/tsrest-openapi-parser:
+    dependencies:
+      '@asteasolutions/zod-to-openapi':
+        specifier: ^7.1.1
+        version: 7.1.1(zod@3.23.8)
+      '@ts-rest/core':
+        specifier: ^3.45.2
+        version: 3.45.2(zod@3.23.8)
+      openapi3-ts:
+        specifier: ^2.0.2
+        version: 2.0.2
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
+    devDependencies:
+      '@pagopa/eslint-config':
+        specifier: ^3.0.0
+        version: 3.0.0(typescript@5.5.4)
+      '@types/node':
+        specifier: ^20.11.24
+        version: 20.12.12
+      typescript:
+        specifier: ^5.3.3
+        version: 5.5.4
+
 packages:
 
   /@anatine/zod-mock@3.13.4(@faker-js/faker@8.4.1)(zod@3.23.8):
@@ -577,6 +611,15 @@ packages:
     dependencies:
       openapi3-ts: 2.0.2
       ts-deepmerge: 6.2.1
+      zod: 3.23.8
+    dev: false
+
+  /@asteasolutions/zod-to-openapi@7.1.1(zod@3.23.8):
+    resolution: {integrity: sha512-lF0d1gAc0lYLO9/BAGivwTwE2Sh9h6CHuDcbk5KnGBfIuAsAkDC+Fdat4dkQY3CS/zUWKHRmFEma0B7X132Ymw==}
+    peerDependencies:
+      zod: ^3.20.2
+    dependencies:
+      openapi3-ts: 4.4.0
       zod: 3.23.8
     dev: false
 
@@ -4727,7 +4770,7 @@ packages:
     resolution: {integrity: sha512-plizRs/Vf15H+GCVxq2EUvyPK7ei9b/cVesHvjnX4xaXjM9spHe2Ytq0BitndFgvTJ3E3NljPNUEl7BAN43iZw==}
     engines: {node: '>= 6.0.0'}
     dependencies:
-      yaml: 2.4.3
+      yaml: 2.5.1
     dev: true
 
   /docker-modem@3.0.8:
@@ -6511,6 +6554,12 @@ packages:
       yaml: 1.10.2
     dev: false
 
+  /openapi3-ts@4.4.0:
+    resolution: {integrity: sha512-9asTNB9IkKEzWMcHmVZE7Ts3kC9G7AFHfs8i7caD8HbI76gEjdkId4z/AkP83xdZsH7PLAnnbl47qZkXuxpArw==}
+    dependencies:
+      yaml: 2.5.1
+    dev: false
+
   /optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
     engines: {node: '>= 0.8.0'}
@@ -8095,11 +8144,10 @@ packages:
     engines: {node: '>= 6'}
     dev: false
 
-  /yaml@2.4.3:
-    resolution: {integrity: sha512-sntgmxj8o7DE7g/Qi60cqpLBA3HG3STcDA0kO+WfB05jEKhZMbY7umNm2rBpQvsmZ16/lPXCJGW2672dgOUkrg==}
+  /yaml@2.5.1:
+    resolution: {integrity: sha512-bLQOjaX/ADgQ20isPJRvF0iRUHIxVhYvr53Of7wGcWlO2jvtUlH5m87DsmulFVxRpNLOnI4tB6p/oh8D7kpn9Q==}
     engines: {node: '>= 14'}
     hasBin: true
-    dev: true
 
   /yn@3.1.1:
     resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}

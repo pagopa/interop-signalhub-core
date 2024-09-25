@@ -71,7 +71,7 @@ export const Problem = z.object({
       detail: z.string(),
     })
   ),
-  toString: z.function(),
+  // toString: z.function(),
 });
 export type Problem = z.infer<typeof Problem>;
 
