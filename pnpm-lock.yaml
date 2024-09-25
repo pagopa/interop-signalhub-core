@@ -320,9 +320,6 @@ importers:
       '@ts-rest/express':
         specifier: ^3.45.2
         version: 3.45.2(express@4.19.2)(zod@3.23.8)
-      '@ts-rest/open-api':
-        specifier: ^3.45.2
-        version: 3.45.2(zod@3.23.8)
       axios:
         specifier: ^1.6.8
         version: 1.7.0
@@ -344,9 +341,6 @@ importers:
       pagopa-signalhub-commons:
         specifier: workspace:*
         version: link:../commons
-      pagopa-tsrest-openapi-parser:
-        specifier: workspace:*
-        version: link:../tsrest-openapi-parser
       pg-promise:
         specifier: ^11.6.0
         version: 11.8.0
@@ -381,6 +375,9 @@ importers:
       pagopa-signalhub-commons-test:
         specifier: workspace:*
         version: link:../commons-test
+      pagopa-tsrest-openapi-parser:
+        specifier: workspace:*
+        version: link:../tsrest-openapi-parser
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@20.12.12)(typescript@5.4.5)
@@ -448,9 +445,6 @@ importers:
       '@ts-rest/express':
         specifier: ^3.45.2
         version: 3.45.2(express@4.19.2)(zod@3.23.8)
-      '@ts-rest/open-api':
-        specifier: ^3.45.2
-        version: 3.45.2(zod@3.23.8)
       axios:
         specifier: ^1.6.8
         version: 1.7.0
@@ -472,9 +466,6 @@ importers:
       pagopa-signalhub-commons:
         specifier: workspace:*
         version: link:../commons
-      pagopa-tsrest-openapi-parser:
-        specifier: workspace:*
-        version: link:../tsrest-openapi-parser
       pg-promise:
         specifier: ^11.6.0
         version: 11.8.0
@@ -509,6 +500,9 @@ importers:
       pagopa-signalhub-commons-test:
         specifier: workspace:*
         version: link:../commons-test
+      pagopa-tsrest-openapi-parser:
+        specifier: workspace:*
+        version: link:../tsrest-openapi-parser
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@20.12.12)(typescript@5.4.5)
@@ -602,17 +596,6 @@ packages:
       randexp: 0.5.3
       zod: 3.23.8
     dev: true
-
-  /@anatine/zod-openapi@1.14.2(openapi3-ts@2.0.2)(zod@3.23.8):
-    resolution: {integrity: sha512-q0qHfnuNYVKu0Swrnnvfj9971AEyW7c8v9jCOZGCl5ZbyGMNG4RPyJkRcMi/JC8CRfdOe0IDfNm1nNsi2avprg==}
-    peerDependencies:
-      openapi3-ts: ^2.0.0 || ^3.0.0
-      zod: ^3.20.0
-    dependencies:
-      openapi3-ts: 2.0.2
-      ts-deepmerge: 6.2.1
-      zod: 3.23.8
-    dev: false
 
   /@asteasolutions/zod-to-openapi@7.1.1(zod@3.23.8):
     resolution: {integrity: sha512-lF0d1gAc0lYLO9/BAGivwTwE2Sh9h6CHuDcbk5KnGBfIuAsAkDC+Fdat4dkQY3CS/zUWKHRmFEma0B7X132Ymw==}
@@ -3442,16 +3425,6 @@ packages:
         optional: true
     dependencies:
       express: 4.19.2
-      zod: 3.23.8
-    dev: false
-
-  /@ts-rest/open-api@3.45.2(zod@3.23.8):
-    resolution: {integrity: sha512-TG5GvD0eyicMR3HjEAMTO2ulO7x/ADSn5bfLF/ZDdVXla48PiQdwhG4NsjVbsUDCghwx+6y5u2aTYjypzdiXQg==}
-    peerDependencies:
-      zod: ^3.22.3
-    dependencies:
-      '@anatine/zod-openapi': 1.14.2(openapi3-ts@2.0.2)(zod@3.23.8)
-      openapi3-ts: 2.0.2
       zod: 3.23.8
     dev: false
 
@@ -7578,11 +7551,6 @@ packages:
   /triple-beam@1.4.1:
     resolution: {integrity: sha512-aZbgViZrg1QNcG+LULa7nhZpJTZSLm/mXnHXnbAbjmN5aSa0y7V+wvv6+4WaBtpISJzThKy+PIPxc1Nq1EJ9mg==}
     engines: {node: '>= 14.0.0'}
-    dev: false
-
-  /ts-deepmerge@6.2.1:
-    resolution: {integrity: sha512-8CYSLazCyj0DJDpPIxOFzJG46r93uh6EynYjuey+bxcLltBeqZL7DMfaE5ZPzZNFlav7wx+2TDa/mBl8gkTYzw==}
-    engines: {node: '>=14.13.1'}
     dev: false
 
   /ts-node@10.9.2(@types/node@20.12.12)(typescript@5.4.5):
