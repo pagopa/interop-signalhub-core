@@ -97,9 +97,6 @@ importers:
 
   packages/commons:
     dependencies:
-      '@asteasolutions/zod-to-openapi':
-        specifier: ^7.1.1
-        version: 7.1.1(zod@3.23.8)
       '@aws-sdk/client-sqs':
         specifier: ^3.583.0
         version: 3.583.0

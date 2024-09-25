@@ -1,8 +1,3 @@
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { z } from "zod";
-
-extendZodWithOpenApi(z);
-
 export * from "./authentication/index.js";
 export * from "./config/index.js";
 export * from "./errors/index.js";
