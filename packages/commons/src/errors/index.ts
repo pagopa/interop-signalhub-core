@@ -59,22 +59,20 @@ export type ProblemError = {
 
 // zod object
 
-export const Problem = z
-  .object({
-    type: z.string(),
-    status: z.number(),
-    title: z.string(),
-    correlationId: z.string().nullish(),
-    detail: z.string(),
-    errors: z.array(
-      z.object({
-        code: z.string(),
-        detail: z.string(),
-      })
-    ),
-    // toString: z.function(),
-  })
-  .openapi("Problem");
+export const Problem = z.object({
+  type: z.string(),
+  status: z.number(),
+  title: z.string(),
+  correlationId: z.string().nullish(),
+  detail: z.string(),
+  errors: z.array(
+    z.object({
+      code: z.string(),
+      detail: z.string(),
+    })
+  ),
+  // toString: z.function(),
+});
 export type Problem = z.infer<typeof Problem>;
 
 export type MakeApiProblemFn<T extends string> = (

@@ -1,15 +1,27 @@
 import { initContract } from "@ts-rest/core";
 import {
-  SignalPayload,
-  SignalPushResponse,
-  Problem,
+  SignalPayload as SignalPayloadComponent,
+  SignalPushResponse as SignalPushResponseComponent,
+  Problem as ProblemComponent,
+  SignalType,
 } from "pagopa-signalhub-commons";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+
 import { z } from "zod";
 import { config } from "../config/env.js";
+
+extendZodWithOpenApi(z);
 
 const c = initContract();
 
 const pathPrefix = `/${config.apiPushVersion}/push`;
+
+const SignalPushResponse =
+  SignalPushResponseComponent.openapi("SignalPushResponse");
+const Problem = ProblemComponent.openapi("problem");
+const SignalPayload = SignalPayloadComponent.extend({
+  signalType: SignalType.openapi("signalType"),
+}).openapi("SignalPayload");
 
 export const contract = c.router(
   {

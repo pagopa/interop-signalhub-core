@@ -6,13 +6,12 @@ info:
   license:
     name: ISC
     url: https://opensource.org/license/isc-license-txt
-  contact:
-    name: PagoPA support
-    url: https://www.interop.pagopa.it/
   termsOfService: https://docs.pagopa.it/interoperabilita-1/normativa-e-approfondimenti
 servers:
-  - url: /signals
-    description: Push signal data
+  - url: https://api.signalhub.interop.pagopa.it
+    description: Push signal Production URL
+  - url: https://api.uat.signalhub.interop.pagopa.it
+    description: Push signal UAT URL
 paths:
   /v1/push/status:
     get:
@@ -58,25 +57,25 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: '#/components/schemas/problem'
         '401':
           description: '401'
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: '#/components/schemas/problem'
         '403':
           description: '403'
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: '#/components/schemas/problem'
         '500':
           description: '500'
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: '#/components/schemas/problem'
 components:
   securitySchemes:
     bearerAuth:
@@ -95,7 +94,7 @@ components:
           type: number
       required:
         - signalId
-    Problem:
+    problem:
       type: object
       properties:
         type:
@@ -127,7 +126,7 @@ components:
         - title
         - detail
         - errors
-    SignalType:
+    signalType:
       type: string
       enum:
         - CREATE
@@ -138,7 +137,7 @@ components:
       type: object
       properties:
         signalType:
-          $ref: '#/components/schemas/SignalType'
+          $ref: '#/components/schemas/signalType'
         objectId:
           type: string
         eserviceId:

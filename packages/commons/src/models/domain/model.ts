@@ -38,9 +38,7 @@ export const Headers = z.object({
 export type Headers = z.infer<typeof Headers>;
 export type AppContext = z.infer<typeof AppContext>;
 
-export const SignalType = z
-  .enum(["CREATE", "UPDATE", "DELETE", "SEEDUPDATE"])
-  .openapi("SignalType");
+export const SignalType = z.enum(["CREATE", "UPDATE", "DELETE", "SEEDUPDATE"]);
 
 const SignalSchema = z.object({
   signalType: SignalType,
@@ -50,21 +48,17 @@ const SignalSchema = z.object({
   objectType: z.string(),
 });
 
-export const SignalPayload = SignalSchema.openapi("SignalPayload");
+export const SignalPayload = SignalSchema;
 export type SignalPayload = z.infer<typeof SignalSchema>;
 
 export const SignalResponse = SignalSchema;
 export type SignalResponse = z.infer<typeof SignalSchema>;
 
-export const SignalPushResponse = SignalSchema.pick({ signalId: true }).openapi(
-  "SignalPushResponse"
-);
-export const SignalPullResponse = z
-  .object({
-    signals: z.array(SignalResponse),
-    lastSignalId: z.number().nullish(),
-  })
-  .openapi("SignalPullResponse");
+export const SignalPushResponse = SignalSchema.pick({ signalId: true });
+export const SignalPullResponse = z.object({
+  signals: z.array(SignalResponse),
+  lastSignalId: z.number().nullish(),
+});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SignalRecord = any;
