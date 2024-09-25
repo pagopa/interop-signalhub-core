@@ -1,11 +1,28 @@
 import { initContract } from "@ts-rest/core";
-import { Problem, SignalPullResponse } from "pagopa-signalhub-commons";
+import {
+  Problem as ProblemComponent,
+  SignalPullResponse as SignalPullResponseComponent,
+  SignalResponse,
+  SignalType,
+} from "pagopa-signalhub-commons";
 import { z } from "zod";
 import { config } from "../config/env.js";
 
 const c = initContract();
 
 const pathPrefix = `/${config.apiPullVersion}/pull`;
+
+// Here we use "extend" ZOD api only to add keyword "openapi" in order to generate openAPI document with component section
+// Read more here: https://github.com/asteasolutions/zod-to-openapi
+
+const Problem = ProblemComponent.openapi("problem");
+const SignalPullResponse = SignalPullResponseComponent.extend({
+  signals: z.array(
+    SignalResponse.extend({
+      signalType: SignalType.openapi("signalType"),
+    })
+  ),
+}).openapi("SignalPullResponse");
 
 export const contract = c.router(
   {

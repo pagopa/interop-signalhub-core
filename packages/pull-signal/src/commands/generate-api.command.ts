@@ -9,8 +9,12 @@ export function generateApi(version: string): void {
     {
       servers: [
         {
-          url: "/signals",
-          description: "Pull signal data",
+          url: "https://api.signalhub.interop.pagopa.it",
+          description: "Pull signal Production URL",
+        },
+        {
+          url: "https://api.uat.signalhub.interop.pagopa.it",
+          description: "Pull signal UAT URL",
         },
       ],
       info: {

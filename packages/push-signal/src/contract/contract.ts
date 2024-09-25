@@ -16,9 +16,12 @@ const c = initContract();
 
 const pathPrefix = `/${config.apiPushVersion}/push`;
 
+// Here we use "extend" ZOD api only to add keyword "openapi" in order to generate openAPI document with component section
+// Read more here: https://github.com/asteasolutions/zod-to-openapi
+
+const Problem = ProblemComponent.openapi("problem");
 const SignalPushResponse =
   SignalPushResponseComponent.openapi("SignalPushResponse");
-const Problem = ProblemComponent.openapi("problem");
 const SignalPayload = SignalPayloadComponent.extend({
   signalType: SignalType.openapi("signalType"),
 }).openapi("SignalPayload");

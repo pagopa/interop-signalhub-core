@@ -1,18 +1,17 @@
 openapi: 3.0.3
 info:
   title: Pull signal Service API
+  description: Exposes the API for Signal-hub pull service
   version: 1.2.0
-  contact:
-    name: PagoPA support
-    url: https://github.com/pagopa/interop-signalhub-core/issues
-    email: Interop-sprint@pagopa.it
   termsOfService: https://docs.pagopa.it/interoperabilita-1/normativa-e-approfondimenti
   license:
     name: ISC
     url: https://opensource.org/license/isc-license-txt
 servers:
-  - url: /signals
-    description: Pull signal data
+  - url: https://api.signalhub.interop.pagopa.it
+    description: Pull signal Production URL
+  - url: https://api.uat.signalhub.interop.pagopa.it
+    description: Pull signal UAT URL
 paths:
   /v1/pull/status:
     get:
@@ -78,25 +77,25 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: '#/components/schemas/problem'
         '401':
           description: '401'
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: '#/components/schemas/problem'
         '403':
           description: '403'
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: '#/components/schemas/problem'
         '500':
           description: '500'
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: '#/components/schemas/problem'
 components:
   securitySchemes:
     bearerAuth:
@@ -108,7 +107,7 @@ components:
         specifications included in
         [RFC8725](https://tools.ietf.org/html/RFC8725).
   schemas:
-    SignalType:
+    signalType:
       type: string
       enum:
         - CREATE
@@ -124,7 +123,7 @@ components:
             type: object
             properties:
               signalType:
-                $ref: '#/components/schemas/SignalType'
+                $ref: '#/components/schemas/signalType'
               objectId:
                 type: string
               eserviceId:
@@ -144,7 +143,7 @@ components:
           nullable: true
       required:
         - signals
-    Problem:
+    problem:
       type: object
       properties:
         type:
