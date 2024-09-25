@@ -15,12 +15,9 @@ export function generateApi(version: string): void {
       ],
       info: {
         title: "Pull signal Service API",
+        description: "Exposes the API for Signal-hub pull service",
+
         version,
-        contact: {
-          name: "PagoPA support",
-          url: "https://github.com/pagopa/interop-signalhub-core/issues",
-          email: "Interop-sprint@pagopa.it",
-        },
         termsOfService:
           "https://docs.pagopa.it/interoperabilita-1/normativa-e-approfondimenti",
         license: {

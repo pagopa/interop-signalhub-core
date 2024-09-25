@@ -21,10 +21,6 @@ export function generateApi(version: string): void {
           name: "ISC",
           url: "https://opensource.org/license/isc-license-txt",
         },
-        contact: {
-          name: "PagoPA support",
-          url: "https://www.interop.pagopa.it/",
-        },
         termsOfService:
           "https://docs.pagopa.it/interoperabilita-1/normativa-e-approfondimenti",
       },
