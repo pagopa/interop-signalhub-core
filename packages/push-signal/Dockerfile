@@ -9,7 +9,6 @@ COPY pnpm-workspace.yaml /app/
 
 COPY ./packages/push-signal/package.json /app/packages/push-signal/package.json
 COPY ./packages/commons/package.json /app/packages/commons/package.json
-COPY ./packages/tsrest-openapi-parser/package.json /app/packages/tsrest-openapi-parser/package.json
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
@@ -17,7 +16,6 @@ COPY tsconfig.json /app/
 COPY turbo.json /app/
 COPY ./packages/push-signal /app/packages/push-signal
 COPY ./packages/commons /app/packages/commons
-COPY ./packages/tsrest-openapi-parser /app/packages/tsrest-openapi-parser
 
 RUN pnpm build && \
     rm -rf /app/node_modules/.modules.yaml && \
@@ -27,7 +25,6 @@ RUN pnpm build && \
       node_modules packages/push-signal/node_modules \
       package*.json packages/push-signal/package*.json \
       packages/commons \
-      packages/tsrest-openapi-parser \
       packages/push-signal/dist && \
     find /out -exec touch -h --date=@0 {} \;
 
