@@ -26,8 +26,7 @@ export function storeSignalServiceBuilder(db: DB) {
           signalMessage.eserviceId
         );
 
-        /* it means that signal is already present on db */
-        if (signalRecordId !== null) {
+        if (this.isSignalAlreadyOnDatabase(signalRecordId)) {
           logger.warn(
             `SignalId: ${signal.signalId} already exists (NotRecoverableMessage)`
           );
@@ -55,6 +54,10 @@ export function storeSignalServiceBuilder(db: DB) {
 
     async storeDeadSignal(deadSignal: DeadSignal): Promise<void> {
       await deadSignalRepository(db).insertDeadSignal(deadSignal);
+    },
+
+    isSignalAlreadyOnDatabase(signalRecordId: number | null): boolean {
+      return signalRecordId !== null;
     },
   };
 }
