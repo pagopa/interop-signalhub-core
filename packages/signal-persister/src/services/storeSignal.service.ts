@@ -28,7 +28,9 @@ export function storeSignalServiceBuilder(db: DB) {
 
         /* it means that signal is already present on db */
         if (signalRecordId !== null) {
-          logger.warn(`SignalId: ${signal.signalId} already exists`);
+          logger.warn(
+            `SignalId: ${signal.signalId} already exists (NotRecoverableMessage)`
+          );
           throw notRecoverableMessageError(
             "duplicateSignal",
             signal,
@@ -38,11 +40,11 @@ export function storeSignalServiceBuilder(db: DB) {
           await signalRepositoryInstance.insertSignal(signal);
         }
       } catch (error) {
-        logger.error(error);
-
         if (error instanceof NotRecoverableMessageError) {
           throw error;
         }
+
+        logger.error(error);
 
         throw recoverableMessageError(
           "dbConnection",
