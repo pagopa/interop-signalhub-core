@@ -10,7 +10,6 @@ If you want to run this service in local you need to execute:
 
 - ElasticMQ (for SQS simulation)
 - Postgres
-- Signal-persister service
 
 You can launch ElasticMQ and Posgtres with this command (**NB**: you need Docker installed into your machine):
 
@@ -23,8 +22,6 @@ docker-compose up postgres elasticmq
 For elastic MQ configuration you can check [here](../../README.md).
 
 ### Run services
-
-`pnpm start:persister`
 
 Now you're able to launch push-signal service with this:
 
