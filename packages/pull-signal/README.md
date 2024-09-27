@@ -1,4 +1,4 @@
-## Push-signal service
+## Pull-signal service
 
 ### Overview
 
@@ -20,7 +20,7 @@ docker-compose up postgres
 
 ### Run service
 
-Now you're able to launch push-signal service with this:
+Now you're able to launch pull-signal service with this:
 
 `pnpm start:pull`
 
