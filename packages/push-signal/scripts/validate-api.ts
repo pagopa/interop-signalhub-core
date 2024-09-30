@@ -1,5 +1,5 @@
 import { Command, Option } from "commander";
-import { validateApi } from "../commands/validate-api.command.js";
+import { validateApi } from "../src/commands/validate-api.command.js";
 
 const semanticVersionRegex = /^([1-9]\d*|0)(\.(([1-9]\d*)|0)){2}$/;
 
