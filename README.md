@@ -24,6 +24,10 @@ Within package folder, there are other libs that provide utils method for the pl
 - [Commons-test](https://github.com/pagopa/interop-signalhub-core/tree/main/packages/commons-test)
 - [TS-rest openapi parser](https://github.com/pagopa/interop-signalhub-core/tree/main/packages/tsrest-openapi-parser)
 
+### ADR (Architectural Decision Records)
+
+Throughout developing phases of this project, we make several decisions that we decide to keep track in ADR folder. You cand find it [here](docs/ADR/).
+
 ## Getting started
 
 ### Prerequisites
