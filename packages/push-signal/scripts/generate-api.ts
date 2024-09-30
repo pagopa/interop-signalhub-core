@@ -1,5 +1,5 @@
 import { Command, Option } from "commander";
-import { generateApi } from "../commands/generate-api.command.js";
+import { generateApi } from "../src/commands/generate-api.command.js";
 
 const semanticVersionRegex = /^([1-9]\d*|0)(\.(([1-9]\d*)|0)){2}$/;
 

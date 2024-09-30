@@ -57,6 +57,6 @@ export function generateApi(version: string): void {
     paths: openApiDocument.paths,
     components: openApiDocument.components,
   };
-  const fileOutputDocument = `./src/api/pull-signals_${document.info.version}.yaml`;
+  const fileOutputDocument = `../../docs/openAPI/pull-signals_${document.info.version}.yaml`;
   writeFileSync(fileOutputDocument, yaml.dump(document));
 }

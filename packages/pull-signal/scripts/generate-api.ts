@@ -1,5 +1,5 @@
 import { Command, Option } from "commander";
-import { validateApi } from "../commands/validate-api.command.js";
+import { generateApi } from "../src/commands/generate-api.command.js";
 
 const semanticVersionRegex = /^([1-9]\d*|0)(\.(([1-9]\d*)|0)){2}$/;
 
@@ -11,7 +11,7 @@ new Command()
   .addOption(
     new Option(
       "-v, --version <string>",
-      "Pull signal validate openAPI"
+      "Pull signal API version"
     ).makeOptionMandatory()
   )
   .hook("preAction", async (command) => {
@@ -22,6 +22,6 @@ new Command()
     }
   })
   .action(async (options) => {
-    validateApi(options.version);
+    generateApi(options.version);
   })
   .parse(process.argv);
