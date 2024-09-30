@@ -13,7 +13,7 @@
     "format:check": "prettier --check src test",
     "format:write": "prettier --write src test",
     "check": "tsc --project tsconfig.check.json",
-    "api:validate": "node --loader ts-node/esm -r 'dotenv-flow/config' ./src/api/validate-api.ts",
+    "api:validate": "node --loader ts-node/esm -r 'dotenv-flow/config' ./scripts/validate-api.ts",
     "api:generate": "node --loader ts-node/esm -r 'dotenv-flow/config' ./scripts/generate-api.ts"
   },
   "keywords": [],
