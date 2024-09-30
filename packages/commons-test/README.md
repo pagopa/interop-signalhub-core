@@ -1,5 +1,5 @@
-### Commons
+### Commons package
 
 ### Overview
 
-This package contain what's necessary to run test .
+This package contain what's necessary to run test.

@@ -2,22 +2,22 @@
 
 ## Overview
 
-Signal-hub is a platform with the aim to give to INTEROP-PLATFORM users, the chance to notify and receive a "signal" if data has been updated. More info here:
+Signal-hub is a platform with the aim to give to [interop-platform](https://github.com/pagopa/interop-be-monorepo) users, the chance to notify and receive a "signal" if data has been updated. More info here:
 https://www.interop.pagopa.it/.
 
 ## Architecture
 
-The platform has been splitted in several service, eacio h one with its scope:
+The platform has been splitted in several service, each one with its own scope:
 
-- [Push-signal service](https://github.com/pagopa/interop-signalhub-core/tree/main/packages/push-signal) : Is in charge of signal's storage.
-- [Pull-signal service](https://github.com/pagopa/interop-signalhub-core/tree/main/packages/pull-signal): Is in charge of retrieve signals from storage.
+- [Push-signal service](https://github.com/pagopa/interop-signalhub-core/tree/main/packages/push-signal) : In charge of signal's storage.
+- [Pull-signal service](https://github.com/pagopa/interop-signalhub-core/tree/main/packages/pull-signal): In charge of retrieve signals from storage.
 - [Persister service](https://github.com/pagopa/interop-signalhub-core/tree/main/packages/signal-persister) : Actors in the middle between push and pull services.
-- [Eservice-event-consumer](https://github.com/pagopa/interop-signalhub-core/tree/main/packages/eservice-event-consumer): Responsible to mantain platform sync with interop-platform (EService state)
-- [Purpose-event-consumer](https://github.com/pagopa/interop-signalhub-core/tree/main/packages/purpose-event-consumer): Responsible to mantain platform sync with interop-platform (Purpose state)
+- [Eservice-event-consumer](https://github.com/pagopa/interop-signalhub-core/tree/main/packages/eservice-event-consumer): Responsible to mantain platform sync with interop-platform (EService state).
+- [Purpose-event-consumer](https://github.com/pagopa/interop-signalhub-core/tree/main/packages/purpose-event-consumer): Responsible to mantain platform sync with interop-platform (Purpose state).
 - [Agreement-event-consumer](https://github.com/pagopa/interop-signalhub-core/tree/main/packages/agreement-event-consumer): Responsible to mantain platform sync with interop-platform (Purpose state).
 - [Clean up](https://github.com/pagopa/interop-signalhub-core/tree/main/packages/batch-cleanup): Responsible to clean storage after a certain amount of time.
 
-Within package folder, there are other lib that provide utils method for the platform like:
+Within package folder, there are other libs that provide utils method for the platform like:
 
 - [Commons](https://github.com/pagopa/interop-signalhub-core/tree/main/packages/commons)
 - [Kafka-connector](https://github.com/pagopa/interop-signalhub-core/tree/main/packages/kafka-connector)
@@ -59,7 +59,7 @@ If you want to watch status of applications and logs you can prompt this:
 ./script/infra-status.sh
 ```
 
-also available scripts for stop and destroy container which has been created with this:
+Moreover it's available scripts for stop and destroy containers which has been created with this:
 
 ```
 ./script/infra-stop.sh // Stop containers
@@ -78,7 +78,7 @@ docker-compose -f docker/docker-compose.yml logs -f -t postgres
 
 ### Run a single service in watch mode
 
-If you need to run only one service, maybe run every service is not necessary. For instance, if you want to run only push-service you need elasticMQ and Posgtres containers only.
+If you need to run only one service, maybe run every service is not necessary. For instance, if you want to run only "push-service" you need elasticMQ and Posgtres containers only.
 
 If you choose to use docker you can run (**NB**: you need to be inside /docker folder):
 

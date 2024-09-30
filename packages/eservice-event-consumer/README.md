@@ -2,7 +2,7 @@
 
 ### Overview
 
-This service is intended to keep data synchornized with interop. It's in charge for "EService" state only.
+This service is intended to keep data synchornized with interop.It's in charge to keep **"EService"** state sync.
 
 ### Getting started
 

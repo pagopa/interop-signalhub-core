@@ -2,7 +2,7 @@
 
 ### Overview
 
-This service is intended to keep data synchornized with interop. It's in charge for "agreement" state only.
+This service is intended to keep data syncronized with interop. It's in charge to keep **"agreement"** state sync.
 
 ### Getting started
 

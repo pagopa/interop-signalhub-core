@@ -11,7 +11,7 @@ If you want to run this service in local you need to execute:
 - ElasticMQ (for SQS simulation)
 - Postgres
 
-You can launch ElasticMQ and Posgtres with this command (**NB**: you need Docker installed into your machine):
+You can launch ElasticMQ and Postgres with this command (**NB**: you need Docker installed into your machine):
 
 ```
 docker-compose up postgres elasticmq

@@ -2,7 +2,7 @@
 
 ### Overview
 
-This service is intended to keep data synchornized with interop. It's in charge for "purpose" state only.
+This service is intended to keep data synchornized with interop. t's in charge to keep **"purpose"** state sync.
 
 ### Getting started
 
