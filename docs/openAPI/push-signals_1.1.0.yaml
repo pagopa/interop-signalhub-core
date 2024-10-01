@@ -8,12 +8,12 @@ info:
     url: https://opensource.org/license/isc-license-txt
   termsOfService: https://docs.pagopa.it/interoperabilita-1/normativa-e-approfondimenti
 servers:
-  - url: https://api.signalhub.interop.pagopa.it
+  - url: https://api.signalhub.interop.pagopa.it/v1/push
     description: Push signal Production URL
-  - url: https://api.uat.signalhub.interop.pagopa.it
+  - url: https://api.uat.signalhub.interop.pagopa.it/v1/push
     description: Push signal UAT URL
 paths:
-  /v1/push/status:
+  /status:
     get:
       description: Should return OK
       summary: Health status endpoint
@@ -27,7 +27,7 @@ paths:
                 type: string
                 enum:
                   - OK
-  /v1/push/signals:
+  /signals:
     post:
       description: Insert a signal
       summary: Push Signal
