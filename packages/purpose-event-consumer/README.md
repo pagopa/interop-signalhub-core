@@ -21,6 +21,12 @@ You can launch all of them with following command:
   docker-compose up postgres
 ```
 
+Or launch, from monorepo's root:
+
+```
+./script/infra-start.sh
+```
+
 (**NB:** Please remember to configure .env files)
 
 ### Run services
