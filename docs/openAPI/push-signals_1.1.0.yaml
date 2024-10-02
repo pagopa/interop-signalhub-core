@@ -10,8 +10,6 @@ info:
 servers:
   - url: https://api.signalhub.interop.pagopa.it/v1/push
     description: Push signal Production URL
-  - url: https://api.uat.signalhub.interop.pagopa.it/v1/push
-    description: Push signal UAT URL
 paths:
   /status:
     get:

@@ -14,10 +14,6 @@ export function generateApi(version: string): void {
           url: `https://api.signalhub.interop.pagopa.it/${pushApiVersion}`,
           description: "Push signal Production URL",
         },
-        {
-          url: `https://api.uat.signalhub.interop.pagopa.it/${pushApiVersion}`,
-          description: "Push signal UAT URL",
-        },
       ],
       info: {
         title: "Push signal Service API",

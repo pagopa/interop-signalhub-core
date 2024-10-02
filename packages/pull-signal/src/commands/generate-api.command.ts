@@ -15,10 +15,6 @@ export function generateApi(version: string): void {
           url: `https://api.signalhub.interop.pagopa.it/${pullApiVersion}`,
           description: "Pull signal Production URL",
         },
-        {
-          url: `https://api.uat.signalhub.interop.pagopa.it/${pullApiVersion}`,
-          description: "Pull signal UAT URL",
-        },
       ],
       info: {
         title: "Pull signal Service API",
