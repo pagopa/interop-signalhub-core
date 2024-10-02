@@ -2,19 +2,17 @@ import { writeFileSync } from "fs";
 import { generateOpenAPISpec } from "pagopa-tsrest-openapi-parser";
 import * as yaml from "js-yaml";
 import { contract } from "../contract/contract.js";
+import { config } from "../config/env.js";
 
 export function generateApi(version: string): void {
+  const pushApiVersion: string = `${config.apiPushVersion}/push`;
   const document = generateOpenAPISpec(
     contract,
     {
       servers: [
         {
-          url: "https://api.signalhub.interop.pagopa.it",
+          url: `https://api.signalhub.interop.pagopa.it/${pushApiVersion}`,
           description: "Push signal Production URL",
-        },
-        {
-          url: "https://api.uat.signalhub.interop.pagopa.it",
-          description: "Push signal UAT URL",
         },
       ],
       info: {
