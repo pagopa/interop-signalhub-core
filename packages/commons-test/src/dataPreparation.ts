@@ -29,7 +29,6 @@ async function setupPurposeTableForProducers(
   schema: InteropSchema
 ): Promise<void> {
   const producers = [signalProducer, eserviceProducer];
-  // eslint-disable-next-line functional/no-let
 
   const purposeTable: TableName = `${schema}.purpose`;
   for (const producer of producers) {
@@ -55,7 +54,6 @@ async function setupPurposeTableForConsumers(
 ): Promise<void> {
   const { id: consumerId, purposes } = signalConsumer;
   const purposeTable: TableName = `${schema}.purpose`;
-  // eslint-disable-next-line functional/no-let
   for (const purpose of purposes.filter(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (e: any) => !("skip_insert" in e)
@@ -76,7 +74,6 @@ async function setupAgreementTable(
 ): Promise<void> {
   const { id, agreements } = signalConsumer;
   const agreementTable: TableName = `${schema}.agreement`;
-  // eslint-disable-next-line functional/no-let
   for (const agreement of agreements.filter(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (e: any) => !("skip_insert" in e)

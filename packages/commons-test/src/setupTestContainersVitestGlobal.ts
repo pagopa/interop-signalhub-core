@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable functional/immutable-data */
-/* eslint-disable functional/no-let */
 
 import type {} from "vitest";
 import { config as dotenv } from "dotenv-flow";

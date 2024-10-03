@@ -11,7 +11,6 @@ import { parseQueueMessageToSignal } from "./models/domain/utils.js";
 export function processMessage(
   storeSignalService: StoreSignalService
 ): (message: SQS.Message) => Promise<void> {
-  // eslint-disable-next-line functional/no-let
   let loggerInstance: Logger;
   return async (message: SQS.Message): Promise<void> => {
     try {
