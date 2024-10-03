@@ -29,7 +29,6 @@ export function createDbInstance({
   /*
   const initOptions = {
     query(e: { query: unknown }): void {
-      // eslint-disable-next-line no-console
       console.log(e.query);
     },
   };
