@@ -13,7 +13,6 @@ export const cleanupBuilder = async (
   logger: Logger
 ): Promise<ICleanupBuilder> => {
   const cleanSignals = async (): Promise<void> => {
-    // eslint-disable-next-line functional/no-let
     let tracingBatchCleanup: TracingBatchCleanup = {
       batchId: null,
       tmstStartAt: null,

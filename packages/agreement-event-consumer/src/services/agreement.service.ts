@@ -2,7 +2,7 @@ import { Logger } from "pagopa-signalhub-commons";
 import { IAgreementRepository } from "../repositories/agreement.repository.js";
 import { AgreementEntity } from "../models/domain/model.js";
 
-interface IAgreementService {
+export interface IAgreementService {
   readonly insert: (
     agreement: AgreementEntity,
     logger: Logger

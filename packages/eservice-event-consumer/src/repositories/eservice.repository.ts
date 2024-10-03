@@ -23,7 +23,7 @@ export interface IEserviceRepository {
 
   readonly upsertDescriptor: (
     eServiceId: string,
-    producerId: string | null,
+    producerId: string,
     eServiceDescriptor: EserviceDescriptorEntity,
     eventStreamId: string,
     eventVersionId: number

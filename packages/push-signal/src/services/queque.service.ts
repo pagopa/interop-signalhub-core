@@ -6,7 +6,7 @@ interface IQueueService {
   readonly send: (
     message: string,
     logger: Logger,
-    queueUrl: string
+    queueUrl?: string
   ) => Promise<void>;
 }
 export function queueServiceBuilder(sqsClient: SQS.SQSClient): IQueueService {

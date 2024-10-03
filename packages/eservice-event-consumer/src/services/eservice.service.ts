@@ -113,7 +113,7 @@ export function eServiceServiceBuilder(
 
         await eServiceRepository.upsertDescriptor(
           eService.eservice_id,
-          producerId,
+          producerId as string,
           descriptor,
           eService.event_stream_id,
           eService.event_version_id
