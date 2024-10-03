@@ -1,13 +1,15 @@
-/* eslint-disable functional/no-method-signature */
 import { DB, TableName, genericInternalError } from "pagopa-signalhub-commons";
 import { AgreementEntity } from "../models/domain/model.js";
 import { config } from "../config/env.js";
 
 export interface IAgreementRepository {
-  eventWasProcessed(streamId: string, version: number): Promise<boolean>;
-  insert(agreement: AgreementEntity): Promise<void>;
-  update(agreement: AgreementEntity): Promise<void>;
-  delete(agreementId: string, streamId: string): Promise<void>;
+  readonly eventWasProcessed: (
+    streamId: string,
+    version: number
+  ) => Promise<boolean>;
+  readonly insert: (agreement: AgreementEntity) => Promise<void>;
+  readonly update: (agreement: AgreementEntity) => Promise<void>;
+  readonly delete: (agreementId: string, streamId: string) => Promise<void>;
 }
 
 export const agreementRepository = (db: DB): IAgreementRepository => {

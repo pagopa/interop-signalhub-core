@@ -1,16 +1,20 @@
-/* eslint-disable functional/no-method-signature */
 import { DB, TableName, genericInternalError } from "pagopa-signalhub-commons";
 import { config } from "../config/env.js";
 
 export interface IEserviceProduceRepository {
-  eventWasProcessed: (streamId: string, version: number) => Promise<boolean>;
-  insert(
+  readonly eventWasProcessed: (
+    streamId: string,
+    version: number
+  ) => Promise<boolean>;
+  readonly insert: (
     eServiceId: string,
     producerId: string,
     eventStreamId: string,
     eventVersionId: number
-  ): Promise<void>;
-  findProducerIdByEserviceId(eServiceId: string): Promise<string | null>;
+  ) => Promise<void>;
+  readonly findProducerIdByEserviceId: (
+    eServiceId: string
+  ) => Promise<string | null>;
 }
 export const eServiceProducerRepository = (
   db: DB

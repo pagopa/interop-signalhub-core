@@ -1,14 +1,16 @@
-/* eslint-disable functional/no-method-signature */
 import { DB, TableName, genericInternalError } from "pagopa-signalhub-commons";
 import { PurposeEntity } from "../models/domain/model.js";
 import { config } from "../config/env.js";
 
 export interface IPurposeRepository {
-  eventWasProcessed(streamId: string, version: number): Promise<boolean>;
-  insert(purpose: PurposeEntity): Promise<void>;
-  update(purpose: PurposeEntity): Promise<void>;
-  upsert(purpose: PurposeEntity): Promise<void>;
-  delete(purposeId: string, streamId: string): Promise<void>;
+  readonly eventWasProcessed: (
+    streamId: string,
+    version: number
+  ) => Promise<boolean>;
+  readonly insert: (purpose: PurposeEntity) => Promise<void>;
+  readonly update: (purpose: PurposeEntity) => Promise<void>;
+  readonly upsert: (purpose: PurposeEntity) => Promise<void>;
+  readonly delete: (purposeId: string, streamId: string) => Promise<void>;
 }
 
 export const purposeRepository = (db: DB): IPurposeRepository => {

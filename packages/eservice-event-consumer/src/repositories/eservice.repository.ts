@@ -1,4 +1,3 @@
-/* eslint-disable functional/no-method-signature */
 import {
   DB,
   genericInternalError,
@@ -11,28 +10,31 @@ import { EserviceDescriptorEntity } from "../models/domain/model.js";
 import { config } from "../config/env.js";
 
 export interface IEserviceRepository {
-  eventWasProcessed(
+  readonly eventWasProcessed: (
     descriptorId: string,
     streamId: string,
     version: number
-  ): Promise<boolean>;
-  findByEserviceIdAndProducerIdAndDescriptorId(
+  ) => Promise<boolean>;
+  readonly findByEserviceIdAndProducerIdAndDescriptorId: (
     eserviceId: string,
     producerId: string,
     descriptorId: string
-  ): Promise<ProducerService | null>;
+  ) => Promise<ProducerService | null>;
 
-  upsertDescriptor(
+  readonly upsertDescriptor: (
     eServiceId: string,
     producerId: string | null,
     eServiceDescriptor: EserviceDescriptorEntity,
     eventStreamId: string,
     eventVersionId: number
-  ): Promise<void>;
+  ) => Promise<void>;
 
-  delete(eserviceId: string): Promise<void>;
+  readonly delete: (eserviceId: string) => Promise<void>;
 
-  deleteDescriptor(eserviceId: string, descriptorId: string): Promise<void>;
+  readonly deleteDescriptor: (
+    eserviceId: string,
+    descriptorId: string
+  ) => Promise<void>;
 }
 export const eServiceRepository = (db: DB): IEserviceRepository => {
   const eServiceTable: TableName = `${config.interopSchema}.eservice`;
