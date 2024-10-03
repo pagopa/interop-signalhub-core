@@ -2,8 +2,14 @@ import { Logger, SQS } from "pagopa-signalhub-commons";
 import { signalNotSendedToQueque } from "../models/domain/errors.js";
 import { config } from "../config/env.js";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function queueServiceBuilder(sqsClient: SQS.SQSClient) {
+interface IQueueService {
+  readonly send: (
+    message: string,
+    logger: Logger,
+    queueUrl: string
+  ) => Promise<void>;
+}
+export function queueServiceBuilder(sqsClient: SQS.SQSClient): IQueueService {
   return {
     async send(
       message: string,

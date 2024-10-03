@@ -2,8 +2,14 @@ import { DB, Logger } from "pagopa-signalhub-commons";
 import { operationPullForbidden } from "../model/domain/errors.js";
 import { interopRepository } from "../repositories/interop.repository.js";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function interopServiceBuilder(db: DB) {
+interface IInteropService {
+  readonly consumerIsAuthorizedToPullSignals: (
+    purposeId: string,
+    eserviceId: string,
+    logger: Logger
+  ) => Promise<void>;
+}
+export function interopServiceBuilder(db: DB): IInteropService {
   return {
     async consumerIsAuthorizedToPullSignals(
       purposeId: string,

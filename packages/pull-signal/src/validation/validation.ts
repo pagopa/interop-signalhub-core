@@ -5,13 +5,12 @@ import { requestValidationError } from "../model/domain/errors.js";
 
 export const validationErrorHandler =
   (logger: Logger) =>
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   async (
     err: RequestValidationError,
     _req: Request,
     res: Response,
     _next: NextFunction
-  ) => {
+  ): Promise<Response> => {
     const errors = {
       context: err.body
         ? "body"

@@ -2,8 +2,19 @@ import { DB, Logger, SignalResponse } from "pagopa-signalhub-commons";
 import { signalRepository } from "../repositories/signal.repository.js";
 import { toSignalResponse } from "../model/domain/toSignalResponse.js";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function signalServiceBuilder(db: DB) {
+interface ISignalService {
+  readonly getSignal: (
+    eserviceId: string,
+    signalId: number,
+    limit: number,
+    logger: Logger
+  ) => Promise<{
+    signals: SignalResponse[];
+    lastSignalId: number | null;
+    nextSignalId: number | null;
+  }>;
+}
+export function signalServiceBuilder(db: DB): ISignalService {
   return {
     async getSignal(
       eserviceId: string,

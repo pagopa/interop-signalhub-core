@@ -2,8 +2,17 @@ import { Logger } from "pagopa-signalhub-commons";
 import { PurposeEntity } from "../models/domain/model.js";
 import { IPurposeRepository } from "../repositories/index.js";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function purposeServiceBuilder(purposeRepository: IPurposeRepository) {
+interface IPurposeService {
+  readonly upsert: (purpose: PurposeEntity, logger: Logger) => Promise<void>;
+  readonly delete: (
+    purposeId: string,
+    streamId: string,
+    logger: Logger
+  ) => Promise<void>;
+}
+export function purposeServiceBuilder(
+  purposeRepository: IPurposeRepository
+): IPurposeService {
   return {
     async upsert(purpose: PurposeEntity, logger: Logger): Promise<void> {
       const eventWasProcessed = await purposeRepository.eventWasProcessed(

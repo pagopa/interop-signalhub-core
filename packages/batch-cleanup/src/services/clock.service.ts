@@ -1,5 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function clockServiceBuilder() {
+interface IClockService {
+  readonly getCurrentDate: () => Date;
+  readonly getPastDate: (currentDate: Date, hoursAgo: number) => Date;
+}
+export function clockServiceBuilder(): IClockService {
   return {
     getCurrentDate(): Date {
       return new Date();
