@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable functional/no-let */
 /* eslint-disable functional/immutable-data */
 
 import {

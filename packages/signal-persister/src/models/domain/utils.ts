@@ -7,7 +7,6 @@ import {
 export function parseQueueMessageToSignal(
   queueMessage: SQS.Message
 ): SignalMessage {
-  // eslint-disable-next-line functional/no-let
   let parsedMessage;
   try {
     if (!queueMessage.Body) {

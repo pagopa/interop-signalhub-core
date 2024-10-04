@@ -2,12 +2,16 @@ import { DB, genericInternalError, Logger } from "pagopa-signalhub-commons";
 import { signalRepository } from "../repositories/index.js";
 import { ClockService } from "./clock.service.js";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+interface ISignalService {
+  readonly cleanup: (
+    signalRetentionPeriodInHours: number
+  ) => Promise<{ countDeleted: number; dateInThePast: Date }>;
+}
 export function signalServiceBuilder(
   db: DB,
   clockService: ClockService,
   logger: Logger
-) {
+): ISignalService {
   return {
     async cleanup(
       signalRetentionPeriodInHours: number

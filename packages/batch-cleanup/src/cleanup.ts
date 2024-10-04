@@ -3,14 +3,16 @@ import { config } from "./config/env.js";
 import { SignalService } from "./services/signal.service.js";
 import { TracingBatchCleanupService } from "./services/tracingBatchCleanup.service.js";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+interface ICleanupBuilder {
+  readonly executeTask: () => Promise<void>;
+}
+
 export const cleanupBuilder = async (
   signalService: SignalService,
   tracingBatchCleanupService: TracingBatchCleanupService,
   logger: Logger
-) => {
+): Promise<ICleanupBuilder> => {
   const cleanSignals = async (): Promise<void> => {
-    // eslint-disable-next-line functional/no-let
     let tracingBatchCleanup: TracingBatchCleanup = {
       batchId: null,
       tmstStartAt: null,

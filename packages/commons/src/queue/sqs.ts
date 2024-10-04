@@ -57,7 +57,6 @@ const processQueue = async (
     MaxNumberOfMessages: 10,
   });
 
-  // eslint-disable-next-line functional/no-let
   let keepProcessingQueue: boolean = true;
 
   try {

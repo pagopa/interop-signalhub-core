@@ -1,41 +1,52 @@
 import { Logger } from "pagopa-signalhub-commons";
 import { EServiceDescriptorV2 } from "@pagopa/interop-outbound-models";
 import { IEserviceRepository } from "../repositories/eservice.repository.js";
-/* eslint-disable functional/no-method-signature */
 
 import { EserviceEntity, EserviceV2Entity } from "../models/domain/model.js";
 import { IEserviceProduceRepository } from "../repositories/eServiceProducer.repository.js";
 
 export interface IEServiceService {
-  addEserviceProducer(
+  readonly addEserviceProducer: (
     eServiceId: string,
     producerId: string,
     eventStreamId: string,
     eventVersionId: number,
     logger: Logger
-  ): Promise<void>;
-  upsertV1(eService: EserviceEntity, logger: Logger): Promise<void>;
-  insertEserviceAndProducerId(
+  ) => Promise<void>;
+
+  readonly upsertV1: (
+    eService: EserviceEntity,
+    logger: Logger
+  ) => Promise<void>;
+
+  readonly insertEserviceAndProducerId: (
     eService: EserviceEntity,
     producerId: string,
     eventStreamId: string,
     eventVersionId: number,
     logger: Logger
-  ): Promise<void>;
-  upsertV2(eService: EserviceV2Entity, logger: Logger): Promise<void>;
-  delete(eServiceId: string, logger: Logger): Promise<void>;
-  deleteDescriptor(
+  ) => Promise<void>;
+
+  readonly upsertV2: (
+    eService: EserviceV2Entity,
+    logger: Logger
+  ) => Promise<void>;
+
+  readonly delete: (eServiceId: string, logger: Logger) => Promise<void>;
+
+  readonly deleteDescriptor: (
     eServiceId: string,
     descriptorId: string,
     eventStreamId: string,
     eventVersionId: number,
     logger: Logger
-  ): Promise<void>;
-  deleteDescritorV2(
+  ) => Promise<void>;
+
+  readonly deleteDescritorV2: (
     eServiceId: string,
     descriptors: EServiceDescriptorV2[],
     logger: Logger
-  ): Promise<void>;
+  ) => Promise<void>;
 }
 export function eServiceServiceBuilder(
   eServiceRepository: IEserviceRepository,
@@ -102,7 +113,7 @@ export function eServiceServiceBuilder(
 
         await eServiceRepository.upsertDescriptor(
           eService.eservice_id,
-          producerId,
+          producerId as string,
           descriptor,
           eService.event_stream_id,
           eService.event_version_id

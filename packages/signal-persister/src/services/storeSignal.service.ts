@@ -9,8 +9,18 @@ import {
   recoverableMessageError,
 } from "../models/domain/errors.js";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function storeSignalServiceBuilder(db: DB) {
+interface IStoreSignalServiceBuilder {
+  readonly storeSignal: (
+    signalMessage: SignalMessage,
+    logger: Logger
+  ) => Promise<void>;
+  readonly storeDeadSignal: (deadSignal: DeadSignal) => Promise<void>;
+  readonly isSignalAlreadyOnDatabase: (
+    signalRecordId: number | null
+  ) => boolean;
+}
+
+export function storeSignalServiceBuilder(db: DB): IStoreSignalServiceBuilder {
   return {
     async storeSignal(
       signalMessage: SignalMessage,

@@ -140,12 +140,7 @@ export const createMultipleOrderedSignals = (
   partialSignal?: Partial<SignalPayload>
 ): Signal[] => {
   const signals: Signal[] = [];
-  for (
-    // eslint-disable-next-line functional/no-let
-    let index = 1;
-    index <= howMany;
-    index++
-  ) {
+  for (let index = 1; index <= howMany; index++) {
     // eslint-disable-next-line functional/immutable-data
     signals.push(createSignal({ signalId: index, ...partialSignal }));
   }

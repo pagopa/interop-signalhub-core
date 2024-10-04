@@ -19,7 +19,6 @@ if (!parsedFromEnv.success) {
     (issue) => issue.path
   );
 
-  // eslint-disable-next-line no-console
   console.error(
     "Invalid or missing env vars: Batch Cleanup " + invalidEnvVars.join(", ")
   );
