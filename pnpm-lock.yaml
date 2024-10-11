@@ -268,6 +268,9 @@ importers:
 
   packages/pull-signal:
     dependencies:
+      '@asteasolutions/zod-to-openapi':
+        specifier: ^7.1.1
+        version: 7.1.1(zod@3.23.8)
       '@ts-rest/core':
         specifier: ^3.45.2
         version: 3.45.2(zod@3.23.8)

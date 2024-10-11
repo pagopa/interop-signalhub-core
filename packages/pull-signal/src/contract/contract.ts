@@ -6,6 +6,9 @@ import {
   SignalType,
 } from "pagopa-signalhub-commons";
 import { z } from "zod";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+
+extendZodWithOpenApi(z);
 
 const c = initContract();
 
