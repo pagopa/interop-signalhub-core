@@ -8,11 +8,13 @@ export interface IInteropRepository {
     eserviceState: string,
     purposeState: string,
     agreementState: string
-  ) => Promise<Array<{
-    eserviceId: string;
-    agreementId: string;
-    purposeId: string;
-  }> | null>;
+  ) => Promise<
+    Array<{
+      eserviceId: string;
+      agreementId: string;
+      purposeId: string;
+    }>
+  >;
 }
 
 export const interopRepository = (db: DB): IInteropRepository => {
@@ -26,11 +28,13 @@ export const interopRepository = (db: DB): IInteropRepository => {
       eserviceState: string,
       purposeState: string,
       agreementState: string
-    ): Promise<Array<{
-      eserviceId: string;
-      agreementId: string;
-      purposeId: string;
-    }> | null> {
+    ): Promise<
+      Array<{
+        eserviceId: string;
+        agreementId: string;
+        purposeId: string;
+      }>
+    > {
       try {
         return await db.manyOrNone(
           `SELECT
