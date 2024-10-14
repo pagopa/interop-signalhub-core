@@ -8,7 +8,7 @@ export const contextMiddleware =
     req.ctx = {
       serviceName,
       correlationId: correlationId(),
-      sessionData: { purposeId: "" },
+      sessionData: { organizationId: "" },
     };
     next();
   };

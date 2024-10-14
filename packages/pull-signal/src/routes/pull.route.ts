@@ -28,13 +28,13 @@ export const pullRoutes = (
     });
     try {
       const { eserviceId } = req.params;
-      const { purposeId } = req.ctx.sessionData;
+      const { organizationId } = req.ctx.sessionData;
       const { signalId, size } = req.query;
 
       log.info(`Pulling signals for e-service ${eserviceId}`);
 
       await interopService.consumerIsAuthorizedToPullSignals(
-        purposeId,
+        organizationId,
         eserviceId,
         log
       );

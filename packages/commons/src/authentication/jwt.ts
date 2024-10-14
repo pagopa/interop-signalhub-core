@@ -20,7 +20,7 @@ export const readSessionDataFromJwtToken = (jwtToken: string): SessionData => {
     throw invalidClaim(token.error);
   } else {
     return {
-      purposeId: token.data.purposeId,
+      organizationId: token.data.organizationId,
     };
   }
 };

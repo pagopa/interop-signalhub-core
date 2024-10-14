@@ -20,20 +20,9 @@ const StandardJWTClaims = z.object({
 
 export const AuthToken = StandardJWTClaims.merge(
   z.object({
-    purposeId: z.string().uuid(),
+    organizationId: z.string().uuid(),
     client_id: z.string().uuid(),
     sub: z.string(),
   })
 );
 export type AuthToken = z.infer<typeof AuthToken>;
-
-export const AuthData = z.object({
-  purposeId: z.string().uuid(),
-  aud: z.union([z.array(z.string()), CommaSeparatedStringToArray(z.string())]),
-});
-export type AuthData = z.infer<typeof AuthData>;
-
-export const getAuthDataFromToken = (token: AuthToken): AuthData => ({
-  purposeId: token.purposeId,
-  aud: token.aud,
-});

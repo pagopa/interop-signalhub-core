@@ -12,7 +12,7 @@ const StandardJWTClaims = z.object({
 
 export const AuthToken = StandardJWTClaims.merge(
   z.object({
-    purposeId: z.string().uuid(),
+    organizationId: z.string().uuid(),
     client_id: z.string().uuid(),
     sub: z.string(),
   })
@@ -20,7 +20,7 @@ export const AuthToken = StandardJWTClaims.merge(
 export type AuthToken = z.infer<typeof AuthToken>;
 
 export const SessionData = z.object({
-  purposeId: z.string().uuid(),
+  organizationId: z.string().uuid(),
 });
 export type SessionData = z.infer<typeof SessionData>;
 
