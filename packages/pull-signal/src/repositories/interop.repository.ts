@@ -5,29 +5,55 @@ export interface IInteropRepository {
   findBy: (
     eserviceId: string,
     purposeId: string,
+    eserviceState: string,
     purposeState: string,
     agreementState: string
-  ) => Promise<{
-    agreement?: { id: string; state: string; consumerId: string };
-  } | null>;
+  ) => Promise<Array<{
+    eserviceId: string;
+    agreementId: string;
+    purposeId: string;
+  }> | null>;
 }
 
 export const interopRepository = (db: DB): IInteropRepository => {
+  const eserviceTable: TableName = `${config.interopSchema}.eservice`;
   const agreementTable: TableName = `${config.interopSchema}.agreement`;
   const purposeTable: TableName = `${config.interopSchema}.purpose`;
   return {
     async findBy(
       eserviceId: string,
-      purposeId: string,
+      organizationId: string,
+      eserviceState: string,
       purposeState: string,
       agreementState: string
-    ): Promise<{
-      agreement?: { id: string; state: string; consumerId: string };
-    } | null> {
+    ): Promise<Array<{
+      eserviceId: string;
+      agreementId: string;
+      purposeId: string;
+    }> | null> {
       try {
-        return await db.oneOrNone(
-          `select agreement.agreement_id, agreement.state, agreement.consumer_id from ${purposeTable} purpose, ${agreementTable} agreement where purpose.consumer_id = agreement.consumer_id and agreement.eservice_id = $1 and purpose.purpose_id = $2 and UPPER(purpose.purpose_state) = UPPER($3) and UPPER(agreement.state) = UPPER($4)`,
-          [eserviceId, purposeId, purposeState, agreementState]
+        return await db.manyOrNone(
+          `SELECT
+                eservice.eservice_id eserviceId, agreement.agreement_id agreementId, purpose.purpose_id purposeId
+           FROM
+                ${eserviceTable} eservice, ${agreementTable} agreement, ${purposeTable} purpose
+           WHERE
+                eservice.eservice_id = $1
+           AND  eservice.enabled_signal_hub = true
+           AND  eservice.state = $2
+           AND  agreement.consumer_id = $3
+           AND  agreement.eservice_id = eservice.eservice_id
+           AND  UPPER(agreement.state) = UPPER($4)
+           AND  purpose.consumer_id = agreement.consumer_id
+           AND  purpose.eservice_id = eservice.eservice_id 
+           AND  UPPER(purpose.purpose_state) = UPPER($5)`,
+          [
+            eserviceId,
+            eserviceState,
+            organizationId,
+            agreementState,
+            purposeState,
+          ]
         );
       } catch (error: unknown) {
         throw genericError(`Error interopRepository::findBy ${error}`);
