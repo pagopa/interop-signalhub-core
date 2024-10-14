@@ -31,54 +31,54 @@ describe("PDND Interoperability service", () => {
   });
 
   it("should deny permission to a signals producer without a purpose for e-service push", async () => {
-    const purposeId = "some-non-existent-purpose-id";
+    const producerId = "some-non-existent-purpose-id";
     const eserviceId = "";
 
     await expect(
       interopService.producerIsAuthorizedToPushSignals(
-        purposeId,
+        producerId,
         eserviceId,
         genericLogger
       )
-    ).rejects.toThrowError(operationPushForbidden({ purposeId, eserviceId }));
+    ).rejects.toThrowError(operationPushForbidden({ producerId, eserviceId }));
   });
 
   it("should deny permission to a signals producer with a valid purpose and non existent e-service", async () => {
-    const purposeId = authorizedPurposeIdForPushSignals;
+    const producerId = authorizedPurposeIdForPushSignals;
     const eserviceId = "some-non-existent-eservice-id";
 
     await expect(
       interopService.producerIsAuthorizedToPushSignals(
-        purposeId,
+        producerId,
         eserviceId,
         genericLogger
       )
-    ).rejects.toThrowError(operationPushForbidden({ purposeId, eserviceId }));
+    ).rejects.toThrowError(operationPushForbidden({ producerId, eserviceId }));
   });
 
   it("should deny permission to a signals producer with a valid purpose and e-service state != PUBLISHED", async () => {
-    const purposeId = authorizedPurposeIdForPushSignals;
+    const producerId = authorizedPurposeIdForPushSignals;
     const eserviceId = eserviceNotPublished.id;
 
     await expect(
       interopService.producerIsAuthorizedToPushSignals(
-        purposeId,
+        producerId,
         eserviceId,
         genericLogger
       )
-    ).rejects.toThrowError(operationPushForbidden({ purposeId, eserviceId }));
+    ).rejects.toThrowError(operationPushForbidden({ producerId, eserviceId }));
   });
 
   it("should deny permission to a signals producer that is not owner of the e-service", async () => {
-    const purposeId = authorizedPurposeIdForPushSignals;
+    const producerId = authorizedPurposeIdForPushSignals;
     const eserviceId = eserviceIdPublishedByAnotherOrganization;
 
     await expect(
       interopService.producerIsAuthorizedToPushSignals(
-        purposeId,
+        producerId,
         eserviceId,
         genericLogger
       )
-    ).rejects.toThrowError(operationPushForbidden({ purposeId, eserviceId }));
+    ).rejects.toThrowError(operationPushForbidden({ producerId, eserviceId }));
   });
 });
