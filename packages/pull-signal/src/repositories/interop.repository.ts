@@ -24,7 +24,7 @@ export const interopRepository = (db: DB): IInteropRepository => {
   return {
     async findBy(
       eserviceId: string,
-      organizationId: string,
+      consumerId: string,
       eserviceState: string,
       purposeState: string,
       agreementState: string
@@ -51,13 +51,7 @@ export const interopRepository = (db: DB): IInteropRepository => {
            AND  purpose.consumer_id = agreement.consumer_id
            AND  purpose.eservice_id = eservice.eservice_id 
            AND  UPPER(purpose.purpose_state) = UPPER($5)`,
-          [
-            eserviceId,
-            eserviceState,
-            organizationId,
-            agreementState,
-            purposeState,
-          ]
+          [eserviceId, eserviceState, consumerId, agreementState, purposeState]
         );
       } catch (error: unknown) {
         throw genericError(`Error interopRepository::findBy ${error}`);

@@ -4,7 +4,7 @@ import { interopRepository } from "../repositories/interop.repository.js";
 
 interface IInteropService {
   readonly consumerIsAuthorizedToPullSignals: (
-    organizationId: string,
+    consumerId: string,
     eserviceId: string,
     logger: Logger
   ) => Promise<void>;
@@ -12,19 +12,19 @@ interface IInteropService {
 export function interopServiceBuilder(db: DB): IInteropService {
   return {
     async consumerIsAuthorizedToPullSignals(
-      organizationId: string,
+      consumerId: string,
       eserviceId: string,
       logger: Logger
     ): Promise<void> {
       logger.info(
-        `InteropService::consumerIsAuthorizedToPullSignals with organizationId: ${organizationId}`
+        `InteropService::consumerIsAuthorizedToPullSignals with consumerId: ${consumerId}`
       );
       const eserviceState = "PUBLISHED";
       const agreementState = "ACTIVE";
       const purposeState = "ACTIVE";
       const result = await interopRepository(db).findBy(
         eserviceId,
-        organizationId,
+        consumerId,
         eserviceState,
         purposeState,
         agreementState
@@ -32,7 +32,7 @@ export function interopServiceBuilder(db: DB): IInteropService {
       if (!result?.length) {
         throw operationPullForbidden({
           eserviceId,
-          organizationId,
+          consumerId,
         });
       }
     },
