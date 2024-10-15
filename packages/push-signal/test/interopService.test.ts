@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { genericLogger } from "pagopa-signalhub-commons";
 import {
@@ -8,7 +9,6 @@ import {
 import { config } from "../src/config/env.js";
 import { operationPushForbidden } from "../src/models/domain/errors.js";
 import { interopService, postgresDB } from "./utils.js";
-import { randomUUID } from "crypto";
 
 describe("PDND Interoperability service", () => {
   beforeAll(async () => {
