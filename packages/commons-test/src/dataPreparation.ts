@@ -119,7 +119,7 @@ export const createEservice = async (
     text: `INSERT INTO ${eserviceTable} (eservice_id, producer_id, descriptor_id, state, enabled_signal_hub) values ($1, $2, $3, $4,$5)`,
     values: [eServiceId, producerId, descriptorId, state, enabledSH],
   };
-  await db.one(query);
+  await db.none(query);
 };
 
 // TODO: to delete
