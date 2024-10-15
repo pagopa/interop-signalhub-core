@@ -27,6 +27,8 @@ export function interopServiceBuilder(db: DB): InteropServiceBuilder {
         eserviceState
       );
 
+      console.log("RESULT", result);
+
       if (result === null) {
         throw operationPushForbidden({
           eserviceId,
