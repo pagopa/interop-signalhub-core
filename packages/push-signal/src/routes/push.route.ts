@@ -36,6 +36,7 @@ export const pushRoutes = (
       log.debug(
         `DUMP signal: objectType: ${body.signalType}, objectId: ${body.objectId}, signalType: ${body.signalType}`
       );
+
       await interopService.producerIsAuthorizedToPushSignals(
         organizationId,
         eserviceId,

@@ -4,33 +4,33 @@ import { operationPushForbidden } from "../models/domain/errors.js";
 
 interface InteropServiceBuilder {
   readonly producerIsAuthorizedToPushSignals: (
-    purposeId: string,
+    producerId: string,
     eserviceId: string,
     logger: Logger
   ) => Promise<void>;
 }
+
 export function interopServiceBuilder(db: DB): InteropServiceBuilder {
   return {
     async producerIsAuthorizedToPushSignals(
-      purposeId: string,
+      producerId: string,
       eserviceId: string,
       logger: Logger
     ): Promise<void> {
       logger.info(
-        `InteropService::consumerIsAuthorizedToPushSignals with purposeId: ${purposeId}`
+        `InteropService::producerIsAuthorizedToPushSignals with producerId: ${producerId}`
       );
-      const purposeState = "ACTIVE";
       const eserviceState = "PUBLISHED";
       const result = await interopRepository(db).findBy(
         eserviceId,
-        purposeId,
-        purposeState,
+        producerId,
         eserviceState
       );
+
       if (result === null) {
         throw operationPushForbidden({
           eserviceId,
-          purposeId,
+          producerId,
         });
       }
     },
