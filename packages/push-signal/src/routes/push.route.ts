@@ -37,7 +37,6 @@ export const pushRoutes = (
         `DUMP signal: objectType: ${body.signalType}, objectId: ${body.objectId}, signalType: ${body.signalType}`
       );
 
-      // Authorization logic
       await interopService.producerIsAuthorizedToPushSignals(
         organizationId,
         eserviceId,

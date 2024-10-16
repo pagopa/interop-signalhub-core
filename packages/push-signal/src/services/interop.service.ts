@@ -21,7 +21,7 @@ export function interopServiceBuilder(db: DB): InteropServiceBuilder {
         `InteropService::producerIsAuthorizedToPushSignals with producerId: ${producerId}`
       );
       const eserviceState = "PUBLISHED";
-      const result = await interopRepository(db).findByEserviceIdAndProducerId(
+      const result = await interopRepository(db).findBy(
         eserviceId,
         producerId,
         eserviceState

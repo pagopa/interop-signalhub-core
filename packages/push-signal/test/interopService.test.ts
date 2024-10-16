@@ -20,7 +20,7 @@ describe("PDND Interoperability service", () => {
     await dataResetForSignalProducers(postgresDB, config.interopSchema);
   });
 
-  it("Should give permission to a signal producer authorized to use sighal-hub push service", async () => {
+  it("Should give permission to a signal producer authorized to use signal-hub push service", async () => {
     const producerId = randomUUID();
     const eServiceId = randomUUID();
     const descriptorId = randomUUID();
