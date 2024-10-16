@@ -49,7 +49,7 @@ export function operationPushForbidden({
   eserviceId: string;
 }): ApiError<ErrorCodes> {
   return new ApiError({
-    detail: `Insufficient privileges: ${producerId} cannot deposit sigan for e-service with id ${eserviceId}; please verify if your e-service ${eserviceId} is published ,in a valid state and if you enabled the use of Signal-hub`,
+    detail: `Insufficient privileges: producerId: ${producerId} cannot deposit signal for e-service with id ${eserviceId}; please verify if your e-service ${eserviceId} is published ,in a valid state and if you enabled the use of Signal-hub`,
     code: "operationPushForbidden",
     title:
       "Insufficient privileges for operation push signal - Invalid e-service status/enabled-sh disabled",
