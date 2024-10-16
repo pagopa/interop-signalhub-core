@@ -100,6 +100,28 @@ export const dataPreparation = async (
   await setupEserviceTable(db, schema);
   await setupAgreementTable(db, schema);
 };
+
+export const createEservice = async (
+  db: DB,
+  schema: InteropSchema,
+  eService: {
+    producerId: string;
+    eServiceId: string;
+    descriptorId: string;
+    state: string;
+    enabledSH: boolean;
+  }
+): Promise<void> => {
+  const eserviceTable: TableName = `${schema}.eservice`;
+
+  const { producerId, eServiceId, descriptorId, state, enabledSH } = eService;
+  const query = {
+    text: `INSERT INTO ${eserviceTable} (eservice_id, producer_id, descriptor_id, state, enabled_signal_hub) values ($1, $2, $3, $4,$5)`,
+    values: [eServiceId, producerId, descriptorId, state, enabledSH],
+  };
+  await db.none(query);
+};
+
 // TODO: to delete
 export const dataPreparationCleanup = async (
   db: DB,

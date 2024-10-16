@@ -42,16 +42,16 @@ export function signalNotSendedToQueque(
 }
 
 export function operationPushForbidden({
-  purposeId,
+  producerId,
   eserviceId,
 }: {
-  purposeId: string;
+  producerId: string;
   eserviceId: string;
 }): ApiError<ErrorCodes> {
   return new ApiError({
-    detail: `Insufficient privileges: cannot access to push signals with voucher's purpose ${purposeId} for e-service PUSH; please verify if your e-service ${eserviceId} is published or in a valid state`,
+    detail: `Insufficient privileges: producerId: ${producerId} cannot deposit signal for e-service with id ${eserviceId}; please verify if your e-service is published,in a valid state and if you enabled the use of Signal-hub`,
     code: "operationPushForbidden",
     title:
-      "Insufficient privileges for operation push signal - Invalid e-service status od Invalid Purpose",
+      "Insufficient privileges for operation push signal - Invalid e-service status or option 'use signal hub' is disabled",
   });
 }

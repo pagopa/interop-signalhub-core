@@ -1,12 +1,10 @@
-import { beforeAll, describe, expect, it } from "vitest";
+import { randomUUID } from "crypto";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { genericLogger } from "pagopa-signalhub-commons";
 import {
+  createEservice,
   dataPreparationForSignalProducers,
   dataResetForSignalProducers,
-  eserviceIdPushSignals,
-  authorizedPurposeIdForPushSignals,
-  eserviceIdPublishedByAnotherOrganization,
-  eserviceNotPublished,
 } from "pagopa-signalhub-commons-test";
 import { config } from "../src/config/env.js";
 import { operationPushForbidden } from "../src/models/domain/errors.js";
@@ -18,67 +16,106 @@ describe("PDND Interoperability service", () => {
     await dataPreparationForSignalProducers(postgresDB, config.interopSchema);
   });
 
-  it("should give permission to a signals producer for pushing a signal", async () => {
-    const purposeId = authorizedPurposeIdForPushSignals;
-    const eserviceId = eserviceIdPushSignals;
+  afterAll(async () => {
+    await dataResetForSignalProducers(postgresDB, config.interopSchema);
+  });
+
+  it("Should give permission to a signal producer authorized to use signal-hub push service", async () => {
+    const producerId = randomUUID();
+    const eServiceId = randomUUID();
+    const descriptorId = randomUUID();
+
+    await createEservice(postgresDB, config.interopSchema, {
+      eServiceId,
+      descriptorId,
+      producerId,
+      enabledSH: true,
+      state: "PUBLISHED",
+    });
+
     await expect(
       interopService.producerIsAuthorizedToPushSignals(
-        purposeId,
-        eserviceId,
+        producerId,
+        eServiceId,
         genericLogger
       )
     ).resolves.not.toThrow();
   });
 
-  it("should deny permission to a signals producer without a purpose for e-service push", async () => {
-    const purposeId = "some-non-existent-purpose-id";
-    const eserviceId = "";
+  it("should deny permission to a signals producer who isn't eservice's owner", async () => {
+    const producerId = randomUUID();
+    const eServiceId = randomUUID();
+    const descriptorId = randomUUID();
+
+    const differentProducerId = "different-producer-id";
+
+    await createEservice(postgresDB, config.interopSchema, {
+      eServiceId,
+      descriptorId,
+      producerId,
+      enabledSH: true,
+      state: "PUBLISHED",
+    });
 
     await expect(
       interopService.producerIsAuthorizedToPushSignals(
-        purposeId,
-        eserviceId,
+        differentProducerId,
+        eServiceId,
         genericLogger
       )
-    ).rejects.toThrowError(operationPushForbidden({ purposeId, eserviceId }));
+    ).rejects.toThrowError(
+      operationPushForbidden({
+        producerId: differentProducerId,
+        eserviceId: eServiceId,
+      })
+    );
   });
 
-  it("should deny permission to a signals producer with a valid purpose and non existent e-service", async () => {
-    const purposeId = authorizedPurposeIdForPushSignals;
-    const eserviceId = "some-non-existent-eservice-id";
+  it("should deny permission to a signals producer who is owner of an e-service with state != PUBLISHED", async () => {
+    const producerId = randomUUID();
+    const eServiceId = randomUUID();
+    const descriptorId = randomUUID();
+
+    await createEservice(postgresDB, config.interopSchema, {
+      eServiceId,
+      descriptorId,
+      producerId,
+      enabledSH: true,
+      state: "DRAFT",
+    });
 
     await expect(
       interopService.producerIsAuthorizedToPushSignals(
-        purposeId,
-        eserviceId,
+        producerId,
+        eServiceId,
         genericLogger
       )
-    ).rejects.toThrowError(operationPushForbidden({ purposeId, eserviceId }));
+    ).rejects.toThrowError(
+      operationPushForbidden({ producerId, eserviceId: eServiceId })
+    );
   });
 
-  it("should deny permission to a signals producer with a valid purpose and e-service state != PUBLISHED", async () => {
-    const purposeId = authorizedPurposeIdForPushSignals;
-    const eserviceId = eserviceNotPublished.id;
+  it("should deny permission to a signals producer who is owner of an e-service with state == PUBLISHED but there is not authorization for signal-hub push service", async () => {
+    const producerId = randomUUID();
+    const eServiceId = randomUUID();
+    const descriptorId = randomUUID();
+
+    await createEservice(postgresDB, config.interopSchema, {
+      eServiceId,
+      descriptorId,
+      producerId,
+      enabledSH: false,
+      state: "PUBLISHED",
+    });
 
     await expect(
       interopService.producerIsAuthorizedToPushSignals(
-        purposeId,
-        eserviceId,
+        producerId,
+        eServiceId,
         genericLogger
       )
-    ).rejects.toThrowError(operationPushForbidden({ purposeId, eserviceId }));
-  });
-
-  it("should deny permission to a signals producer that is not owner of the e-service", async () => {
-    const purposeId = authorizedPurposeIdForPushSignals;
-    const eserviceId = eserviceIdPublishedByAnotherOrganization;
-
-    await expect(
-      interopService.producerIsAuthorizedToPushSignals(
-        purposeId,
-        eserviceId,
-        genericLogger
-      )
-    ).rejects.toThrowError(operationPushForbidden({ purposeId, eserviceId }));
+    ).rejects.toThrowError(
+      operationPushForbidden({ producerId, eserviceId: eServiceId })
+    );
   });
 });

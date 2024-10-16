@@ -4,33 +4,30 @@ import { config } from "../config/env.js";
 export interface IInteropRepository {
   findBy: (
     eserviceId: string,
-    purposeId: string,
-    purposeState: string,
-    eserviceState: string
-  ) => Promise<{
-    eservice?: { id: string; state: string; producerId: string };
-  } | null>;
+    producerId: string,
+    state: string
+  ) => Promise<string | null>;
 }
 
 export const interopRepository = (db: DB): IInteropRepository => {
   const eserviceTable: TableName = `${config.interopSchema}.eservice`;
-  const purposeTable: TableName = `${config.interopSchema}.purpose`;
   return {
     async findBy(
       eserviceId: string,
-      purposeId: string,
-      purposeState: string,
-      eserviceState: string
-    ): Promise<{
-      eservice?: { id: string; state: string; producerId: string };
-    } | null> {
+      producerId: string,
+      state: string
+    ): Promise<string | null> {
       try {
         return await db.oneOrNone(
-          `select eservice.eservice_id, eservice.state, eservice.producer_id from ${purposeTable} purpose, ${eserviceTable} eservice where purpose.consumer_id = eservice.producer_id and eservice.eservice_id = $1 and purpose.purpose_id = $2 and UPPER(purpose.purpose_state) = UPPER($3) and UPPER(eservice.state) = UPPER($4)`,
-          [eserviceId, purposeId, purposeState, eserviceState]
+          `select eservice_id 
+           from ${eserviceTable} 
+           where eservice_id = $1 and producer_id = $2 and UPPER(state) = UPPER($3) and enabled_signal_hub IS TRUE`,
+          [eserviceId, producerId, state]
         );
       } catch (error: unknown) {
-        throw genericError(`Error interopRepository::findBy ${error}`);
+        throw genericError(
+          `Error interopRepository::findByEserviceIdAndProducerId ${error}`
+        );
       }
     },
   };
