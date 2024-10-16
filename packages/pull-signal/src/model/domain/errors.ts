@@ -20,14 +20,14 @@ export function requestValidationError(message: string): ApiError<ErrorCodes> {
 }
 
 export function operationPullForbidden({
-  purposeId,
   eserviceId,
+  consumerId,
 }: {
-  purposeId: string;
+  consumerId: string;
   eserviceId: string;
 }): ApiError<ErrorCodes> {
   return new ApiError({
-    detail: `Insufficient privileges: cannot access to pull signals with voucher's purpose ${purposeId} for e-service PULL; please verify if the consumer has a valid agreement to pull signals to e-service ${eserviceId}`,
+    detail: `Insufficient privileges: your organization (id: ${consumerId}) cannot access to pull signals for e-service with id ${eserviceId}. Please verify if you have a valid agreement and at least one valid purpose to pull signals. Verify also if that e-service is enabled for using Signal Hub.`,
     code: "operationPullForbidden",
     title:
       "Insufficient privileges for operation pull signal - Invalid Agreement or Invalid Purpose",
