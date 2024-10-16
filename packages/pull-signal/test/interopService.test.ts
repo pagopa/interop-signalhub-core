@@ -19,7 +19,7 @@ describe("PDND Interoperability service", () => {
     await dataResetForSignalConsumers(postgresDB, config.interopSchema);
   });
 
-  it("Should deny permission to a signal consumer without e-service, agreement, purpose", async () => {
+  it("Should deny permission to a signal consumer without agreement and purpose for a non existent e-service", async () => {
     const consumerId = getUUID();
     const eserviceId = getUUID();
 
@@ -32,7 +32,7 @@ describe("PDND Interoperability service", () => {
     ).rejects.toThrowError(operationPullForbidden({ eserviceId, consumerId }));
   });
 
-  it("Should deny permission to a signal consumer without e-service", async () => {
+  it("Should deny permission to a signal consumer for an unavailable e-service", async () => {
     const consumerId = getUUID();
     const eserviceId = getUUID();
     const eservice = undefined;
