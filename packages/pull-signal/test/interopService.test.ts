@@ -2,8 +2,12 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { genericLogger } from "pagopa-signalhub-commons";
 
 import {
+  createEservice,
   createInteropContext,
+  createPurpose,
   dataResetForSignalConsumers,
+  getAnEservice,
+  getAPurpose,
   getUUID,
 } from "pagopa-signalhub-commons-test";
 import { operationPullForbidden } from "../src/model/domain/errors";
@@ -15,10 +19,23 @@ describe("PDND Interoperability service", () => {
     await dataResetForSignalConsumers(postgresDB, config.interopSchema);
   });
 
-  it("should give permission to a signals consumer to pull a signal", async () => {
+  it("Should deny permission to a signal consumer without e-service, agreement, purpose", async () => {
     const consumerId = getUUID();
     const eserviceId = getUUID();
-    const eservice = { eServiceId: eserviceId };
+
+    await expect(
+      interopService.consumerIsAuthorizedToPullSignals(
+        consumerId,
+        eserviceId,
+        genericLogger
+      )
+    ).rejects.toThrowError(operationPullForbidden({ eserviceId, consumerId }));
+  });
+
+  it("Should deny permission to a signal consumer without e-service", async () => {
+    const consumerId = getUUID();
+    const eserviceId = getUUID();
+    const eservice = undefined;
     const agreement = { eserviceId, consumerId };
     const purpose = { eserviceId, consumerId };
     await createInteropContext(
@@ -35,20 +52,21 @@ describe("PDND Interoperability service", () => {
         eserviceId,
         genericLogger
       )
-    ).resolves.not.toThrow();
+    ).rejects.toThrowError(operationPullForbidden({ eserviceId, consumerId }));
   });
 
-  it("Should deny permission to a signal consumer without purpose available", async () => {
+  it("should deny permission to a signal consumer for an e-service not 'signal-hub enabled'", async () => {
     const consumerId = getUUID();
     const eserviceId = getUUID();
-    const eservice = { eServiceId: eserviceId };
+    const eservice = { eServiceId: eserviceId, enabledSH: false };
     const agreement = { eserviceId, consumerId };
+    const purpose = { eserviceId, consumerId };
     await createInteropContext(
       postgresDB,
       config.interopSchema,
       eservice,
       agreement,
-      undefined
+      purpose
     );
 
     await expect(
@@ -57,15 +75,48 @@ describe("PDND Interoperability service", () => {
         eserviceId,
         genericLogger
       )
-    ).rejects.toThrowError(operationPullForbidden({ eserviceId, consumerId }));
+    ).rejects.toThrowError(
+      operationPullForbidden({
+        consumerId,
+        eserviceId,
+      })
+    );
   });
 
-  it("should deny permission to a signal consumer with purpose != ACTIVE", async () => {
+  it("should deny permission to a signal consumer for an e-service in state != 'PUBLISHED'", async () => {
+    const consumerId = getUUID();
+    const eserviceId = getUUID();
+    const eservice = { eServiceId: eserviceId, state: "DRAFT" };
+    const agreement = { eserviceId, consumerId };
+    const purpose = { eserviceId, consumerId };
+    await createInteropContext(
+      postgresDB,
+      config.interopSchema,
+      eservice,
+      agreement,
+      purpose
+    );
+
+    await expect(
+      interopService.consumerIsAuthorizedToPullSignals(
+        consumerId,
+        eserviceId,
+        genericLogger
+      )
+    ).rejects.toThrowError(
+      operationPullForbidden({
+        consumerId,
+        eserviceId,
+      })
+    );
+  });
+
+  it("Should deny permission to a signal consumer without agreement", async () => {
     const consumerId = getUUID();
     const eserviceId = getUUID();
     const eservice = { eServiceId: eserviceId };
-    const agreement = { eserviceId, consumerId };
-    const purpose = { eserviceId, consumerId, state: "INACTIVE" };
+    const agreement = undefined;
+    const purpose = { eserviceId, consumerId };
     await createInteropContext(
       postgresDB,
       config.interopSchema,
@@ -110,10 +161,56 @@ describe("PDND Interoperability service", () => {
     );
   });
 
-  it("should deny permission to a signal consumer for an e-service not 'signal-hub enabled'", async () => {
+  it("Should deny permission to a signal consumer without purpose", async () => {
     const consumerId = getUUID();
     const eserviceId = getUUID();
-    const eservice = { eServiceId: eserviceId, enabledSH: false };
+    const eservice = { eServiceId: eserviceId };
+    const agreement = { eserviceId, consumerId };
+    const purpose = undefined;
+    await createInteropContext(
+      postgresDB,
+      config.interopSchema,
+      eservice,
+      agreement,
+      purpose
+    );
+
+    await expect(
+      interopService.consumerIsAuthorizedToPullSignals(
+        consumerId,
+        eserviceId,
+        genericLogger
+      )
+    ).rejects.toThrowError(operationPullForbidden({ eserviceId, consumerId }));
+  });
+
+  it("should deny permission to a signal consumer with purpose != ACTIVE", async () => {
+    const consumerId = getUUID();
+    const eserviceId = getUUID();
+    const eservice = { eServiceId: eserviceId };
+    const agreement = { eserviceId, consumerId };
+    const purpose = { eserviceId, consumerId, state: "INACTIVE" };
+    await createInteropContext(
+      postgresDB,
+      config.interopSchema,
+      eservice,
+      agreement,
+      purpose
+    );
+
+    await expect(
+      interopService.consumerIsAuthorizedToPullSignals(
+        consumerId,
+        eserviceId,
+        genericLogger
+      )
+    ).rejects.toThrowError(operationPullForbidden({ eserviceId, consumerId }));
+  });
+
+  it("should give permission to a signals consumer to pull a signal", async () => {
+    const consumerId = getUUID();
+    const eserviceId = getUUID();
+    const eservice = { eServiceId: eserviceId };
     const agreement = { eserviceId, consumerId };
     const purpose = { eserviceId, consumerId };
     await createInteropContext(
@@ -130,11 +227,70 @@ describe("PDND Interoperability service", () => {
         eserviceId,
         genericLogger
       )
-    ).rejects.toThrowError(
-      operationPullForbidden({
+    ).resolves.not.toThrow();
+  });
+
+  it("should give permission to a signals consumer to pull a signal when at least one purpose is ACTIVE", async () => {
+    const consumerId = getUUID();
+    const eserviceId = getUUID();
+    const eservice = { eServiceId: eserviceId };
+    const agreement = { eserviceId, consumerId };
+    const purpose = { eserviceId, consumerId, state: "INACTIVE" };
+    await createInteropContext(
+      postgresDB,
+      config.interopSchema,
+      eservice,
+      agreement,
+      purpose
+    );
+    await createPurpose(
+      postgresDB,
+      config.interopSchema,
+      getAPurpose({ eserviceId, consumerId, state: "ACTIVE" })
+    );
+
+    await expect(
+      interopService.consumerIsAuthorizedToPullSignals(
         consumerId,
         eserviceId,
+        genericLogger
+      )
+    ).resolves.not.toThrow();
+  });
+
+  it("should give permission to a signals consumer to pull a signal when e-service has more the one version and last is PUBLISHED", async () => {
+    const consumerId = getUUID();
+    const eserviceId = getUUID();
+    const eservice = {
+      eServiceId: eserviceId,
+      descriptorId: "1",
+      state: "DRAFT",
+    };
+    const agreement = { eserviceId, consumerId };
+    const purpose = { eserviceId, consumerId };
+    await createInteropContext(
+      postgresDB,
+      config.interopSchema,
+      eservice,
+      agreement,
+      purpose
+    );
+    await createEservice(
+      postgresDB,
+      config.interopSchema,
+      getAnEservice({
+        eServiceId: eserviceId,
+        descriptorId: "2",
+        state: "PUBLISHED",
       })
     );
+
+    await expect(
+      interopService.consumerIsAuthorizedToPullSignals(
+        consumerId,
+        eserviceId,
+        genericLogger
+      )
+    ).resolves.not.toThrow();
   });
 });
