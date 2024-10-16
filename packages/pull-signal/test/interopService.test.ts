@@ -3,7 +3,7 @@ import { genericLogger } from "pagopa-signalhub-commons";
 
 import {
   createEservice,
-  createInteropContext,
+  createAdministrativeActsForConsumer,
   createPurpose,
   dataResetForSignalConsumers,
   getAnEservice,
@@ -38,7 +38,7 @@ describe("PDND Interoperability service", () => {
     const eservice = undefined;
     const agreement = { eserviceId, consumerId };
     const purpose = { eserviceId, consumerId };
-    await createInteropContext(
+    await createAdministrativeActsForConsumer(
       postgresDB,
       config.interopSchema,
       eservice,
@@ -61,7 +61,7 @@ describe("PDND Interoperability service", () => {
     const eservice = { eServiceId: eserviceId, enabledSH: false };
     const agreement = { eserviceId, consumerId };
     const purpose = { eserviceId, consumerId };
-    await createInteropContext(
+    await createAdministrativeActsForConsumer(
       postgresDB,
       config.interopSchema,
       eservice,
@@ -89,7 +89,7 @@ describe("PDND Interoperability service", () => {
     const eservice = { eServiceId: eserviceId, state: "DRAFT" };
     const agreement = { eserviceId, consumerId };
     const purpose = { eserviceId, consumerId };
-    await createInteropContext(
+    await createAdministrativeActsForConsumer(
       postgresDB,
       config.interopSchema,
       eservice,
@@ -117,7 +117,7 @@ describe("PDND Interoperability service", () => {
     const eservice = { eServiceId: eserviceId };
     const agreement = undefined;
     const purpose = { eserviceId, consumerId };
-    await createInteropContext(
+    await createAdministrativeActsForConsumer(
       postgresDB,
       config.interopSchema,
       eservice,
@@ -140,7 +140,7 @@ describe("PDND Interoperability service", () => {
     const eservice = { eServiceId: eserviceId };
     const agreement = { eserviceId, consumerId, state: "INACTIVE" };
     const purpose = { eserviceId, consumerId };
-    await createInteropContext(
+    await createAdministrativeActsForConsumer(
       postgresDB,
       config.interopSchema,
       eservice,
@@ -167,7 +167,7 @@ describe("PDND Interoperability service", () => {
     const eservice = { eServiceId: eserviceId };
     const agreement = { eserviceId, consumerId };
     const purpose = undefined;
-    await createInteropContext(
+    await createAdministrativeActsForConsumer(
       postgresDB,
       config.interopSchema,
       eservice,
@@ -190,7 +190,7 @@ describe("PDND Interoperability service", () => {
     const eservice = { eServiceId: eserviceId };
     const agreement = { eserviceId, consumerId };
     const purpose = { eserviceId, consumerId, state: "INACTIVE" };
-    await createInteropContext(
+    await createAdministrativeActsForConsumer(
       postgresDB,
       config.interopSchema,
       eservice,
@@ -213,7 +213,7 @@ describe("PDND Interoperability service", () => {
     const eservice = { eServiceId: eserviceId };
     const agreement = { eserviceId, consumerId };
     const purpose = { eserviceId, consumerId };
-    await createInteropContext(
+    await createAdministrativeActsForConsumer(
       postgresDB,
       config.interopSchema,
       eservice,
@@ -236,7 +236,7 @@ describe("PDND Interoperability service", () => {
     const eservice = { eServiceId: eserviceId };
     const agreement = { eserviceId, consumerId };
     const purpose = { eserviceId, consumerId, state: "INACTIVE" };
-    await createInteropContext(
+    await createAdministrativeActsForConsumer(
       postgresDB,
       config.interopSchema,
       eservice,
@@ -268,7 +268,7 @@ describe("PDND Interoperability service", () => {
     };
     const agreement = { eserviceId, consumerId };
     const purpose = { eserviceId, consumerId };
-    await createInteropContext(
+    await createAdministrativeActsForConsumer(
       postgresDB,
       config.interopSchema,
       eservice,

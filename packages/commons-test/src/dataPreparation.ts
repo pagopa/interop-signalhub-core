@@ -204,7 +204,7 @@ export const createPurpose = async (
   await db.none(query);
 };
 
-export const createInteropContext = async (
+export const createAdministrativeActsForConsumer = async (
   db: DB,
   schema: InteropSchema,
   eservice?: Partial<EserviceData>,
