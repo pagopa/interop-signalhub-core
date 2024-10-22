@@ -19,7 +19,7 @@ export function interopServiceBuilder(db: DB): IInteropService {
       logger.info(
         `InteropService::consumerIsAuthorizedToPullSignals with consumerId: ${consumerId}`
       );
-      const eserviceState = "PUBLISHED";
+      const eserviceState = ["PUBLISHED", "DEPRECATED"];
       const agreementState = "ACTIVE";
       const purposeState = "ACTIVE";
       const administrativeActs = await interopRepository(db).findBy(

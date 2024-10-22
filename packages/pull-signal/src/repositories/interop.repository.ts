@@ -5,7 +5,7 @@ export interface IInteropRepository {
   findBy: (
     eserviceId: string,
     purposeId: string,
-    eserviceState: string,
+    eserviceAllowedStates: string[],
     purposeState: string,
     agreementState: string
   ) => Promise<
@@ -25,7 +25,7 @@ export const interopRepository = (db: DB): IInteropRepository => {
     async findBy(
       eserviceId: string,
       consumerId: string,
-      eserviceState: string,
+      eserviceAllowedStates: string[],
       purposeState: string,
       agreementState: string
     ): Promise<
@@ -35,6 +35,10 @@ export const interopRepository = (db: DB): IInteropRepository => {
         purposeId: string;
       }>
     > {
+      const sqlConditionStates = eserviceAllowedStates
+        .map((eServiceState) => `eservice.state = '${eServiceState}'`)
+        .join(" OR ");
+
       try {
         return await db.manyOrNone(
           `SELECT
@@ -44,14 +48,14 @@ export const interopRepository = (db: DB): IInteropRepository => {
            WHERE
                 eservice.eservice_id = $1
            AND  eservice.enabled_signal_hub = true
-           AND  eservice.state = $2
-           AND  agreement.consumer_id = $3
+           AND  (${sqlConditionStates})
+           AND  agreement.consumer_id = $2
            AND  agreement.eservice_id = eservice.eservice_id
-           AND  UPPER(agreement.state) = UPPER($4)
+           AND  UPPER(agreement.state) = UPPER($3)
            AND  purpose.consumer_id = agreement.consumer_id
            AND  purpose.eservice_id = eservice.eservice_id 
-           AND  UPPER(purpose.purpose_state) = UPPER($5)`,
-          [eserviceId, eserviceState, consumerId, agreementState, purposeState]
+           AND  UPPER(purpose.purpose_state) = UPPER($4)`,
+          [eserviceId, consumerId, agreementState, purposeState]
         );
       } catch (error: unknown) {
         throw genericError(`Error interopRepository::findBy ${error}`);
