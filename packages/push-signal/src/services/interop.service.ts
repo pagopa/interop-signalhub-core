@@ -40,7 +40,7 @@ export function interopServiceBuilder(db: DB): InteropServiceBuilder {
 function isNotEserviceVersionPublishedOrDeprecated(
   list: string[] | null
 ): boolean {
-  return !list || list.length <= 0 ? true : false;
+  return !list || list.length <= 0;
 }
 
 export type InteropService = ReturnType<typeof interopServiceBuilder>;
