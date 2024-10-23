@@ -5,8 +5,8 @@ export interface IInteropRepository {
   findBy: (
     eserviceId: string,
     producerId: string,
-    state: string
-  ) => Promise<string | null>;
+    eserviceAllowedStates: string[]
+  ) => Promise<string[] | null>;
 }
 
 export const interopRepository = (db: DB): IInteropRepository => {
@@ -15,14 +15,20 @@ export const interopRepository = (db: DB): IInteropRepository => {
     async findBy(
       eserviceId: string,
       producerId: string,
-      state: string
-    ): Promise<string | null> {
+      eserviceAllowedStates: string[]
+    ): Promise<string[] | null> {
       try {
-        return await db.oneOrNone(
-          `select eservice_id 
-           from ${eserviceTable} 
-           where eservice_id = $1 and producer_id = $2 and UPPER(state) = UPPER($3) and enabled_signal_hub IS TRUE`,
-          [eserviceId, producerId, state]
+        const sqlConditionStates = eserviceAllowedStates
+          .map((eServiceState) => `UPPER(state) = UPPER('${eServiceState}')`)
+          .join(" OR ");
+
+        return await db.manyOrNone(
+          `SELECT eservice_id 
+           FROM ${eserviceTable} 
+           WHERE eservice_id = $1 and producer_id = $2
+           AND (${sqlConditionStates}) 
+           AND enabled_signal_hub IS TRUE`,
+          [eserviceId, producerId]
         );
       } catch (error: unknown) {
         throw genericError(

@@ -20,14 +20,14 @@ export function interopServiceBuilder(db: DB): InteropServiceBuilder {
       logger.info(
         `InteropService::producerIsAuthorizedToPushSignals with producerId: ${producerId}`
       );
-      const eserviceState = "PUBLISHED";
+      const eserviceStatesAllowed = ["PUBLISHED", "DEPRECATED"];
       const result = await interopRepository(db).findBy(
         eserviceId,
         producerId,
-        eserviceState
+        eserviceStatesAllowed
       );
 
-      if (result === null) {
+      if (isNotEserviceVersionPublishedOrDeprecated(result)) {
         throw operationPushForbidden({
           eserviceId,
           producerId,
@@ -35,6 +35,12 @@ export function interopServiceBuilder(db: DB): InteropServiceBuilder {
       }
     },
   };
+}
+
+function isNotEserviceVersionPublishedOrDeprecated(
+  list: string[] | null
+): boolean {
+  return !list || list.length <= 0 ? true : false;
 }
 
 export type InteropService = ReturnType<typeof interopServiceBuilder>;
