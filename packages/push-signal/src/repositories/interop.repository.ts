@@ -6,7 +6,7 @@ export interface IInteropRepository {
     eserviceId: string,
     producerId: string,
     eserviceAllowedStates: string[]
-  ) => Promise<string[] | null>;
+  ) => Promise<string[]>;
 }
 
 export const interopRepository = (db: DB): IInteropRepository => {
@@ -16,7 +16,7 @@ export const interopRepository = (db: DB): IInteropRepository => {
       eserviceId: string,
       producerId: string,
       eserviceAllowedStates: string[]
-    ): Promise<string[] | null> {
+    ): Promise<string[]> {
       try {
         const sqlConditionStates = eserviceAllowedStates
           .map((eServiceState) => `UPPER(state) = UPPER('${eServiceState}')`)
