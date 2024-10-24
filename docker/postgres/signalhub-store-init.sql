@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."eservice" (
     UNIQUE (eservice_id, descriptor_id, producer_id),
     PRIMARY KEY (eservice_id, descriptor_id)
 );
-CREATE INDEX IF NOT EXISTS ESERVICE_INDEX_ID_AND_PRODUCER_AND_STATE ON "dev_interop"."eservice"(eservice_id, producer_id, upper(state));
+CREATE INDEX IF NOT EXISTS ESERVICE_INDEX_ID_AND_PRODUCER_AND_ENABLED_SH_AND_STATE ON "dev_interop"."eservice"(eservice_id, producer_id, enabled_signal_hub, upper(state));
 
 CREATE TABLE IF NOT EXISTS "dev_interop"."agreement" (
     agreement_id    VARCHAR (255) NOT NULL,
