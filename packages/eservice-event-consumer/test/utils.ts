@@ -63,6 +63,7 @@ export const getDescriptorV2 = (
   state: EServiceDescriptorStateV2.DRAFT,
   version: 1n,
   voucherLifespan: 100,
+  rejectionReasons: [],
   ...partialDescriptorV2,
 });
 
@@ -219,8 +220,10 @@ export const createV2Event = (
   eServiceId: string,
   descriptorId: string,
   producerId: string,
+  isSignalHubEnabled: boolean | undefined,
   eServiceDescriptorState: EServiceDescriptorStateV2,
   descriptors?: EServiceDescriptorV2[]
+  // eslint-disable-next-line max-params
 ): EServiceV2 => ({
   id: eServiceId,
   producerId,
@@ -229,6 +232,7 @@ export const createV2Event = (
   mode: EServiceModeV2.RECEIVE,
   name: "eService test name",
   technology: EServiceTechnologyV2.REST,
+  isSignalHubEnabled,
 
   descriptors: descriptors
     ? descriptors
@@ -271,3 +275,7 @@ export const createEServiceDescriptorUpdatedEventV2 = (
     eservice: eServiceV2,
   },
 });
+
+export function randomArrayItem<T>(array: T[]): T {
+  return array[Math.floor(Math.random() * array.length)];
+}
