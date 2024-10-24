@@ -69,7 +69,10 @@ export async function handleMessageV2(
           "EServiceDescriptorQuotasUpdated",
           "EServiceDescriptorInterfaceDeleted",
           "EServiceDescriptorInterfaceUpdated",
-          "EServiceDescriptorQuotasUpdated"
+          "EServiceDescriptorQuotasUpdated",
+          "EServiceDescriptorDelegateSubmitted",
+          "EServiceDescriptorDelegatorApproved",
+          "EServiceDescriptorDelegatorRejected"
         ),
       },
       async () => {
@@ -91,6 +94,8 @@ export const fromEserviceEventV2ToEserviceEntity = (
     descriptor_id: descriptor.id,
     state: EServiceDescriptorStateV2[descriptor.state],
   })),
+
+  isSignalHubEnabled: eService?.isSignalHubEnabled,
 
   event_stream_id: streamId,
   event_version_id: version,

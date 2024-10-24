@@ -26,7 +26,8 @@ export interface IEserviceRepository {
     producerId: string,
     eServiceDescriptor: EserviceDescriptorEntity,
     eventStreamId: string,
-    eventVersionId: number
+    eventVersionId: number,
+    isSignalHubEnabled?: boolean
   ) => Promise<void>;
 
   readonly delete: (eserviceId: string) => Promise<void>;
@@ -80,26 +81,29 @@ export const eServiceRepository = (db: DB): IEserviceRepository => {
       }
     },
 
+    // eslint-disable-next-line max-params
     async upsertDescriptor(
       eServiceId: string,
       producerId: string,
       eServiceDescriptor: EserviceDescriptorEntity,
       eventStreamId: string,
-      eventVersionId: number
+      eventVersionId: number,
+      isSignalHubEnabled: boolean | undefined
     ): Promise<void> {
       try {
         const tmstLastEdit = getCurrentDate();
         const { descriptor_id, state } = eServiceDescriptor;
 
         await db.oneOrNone(
-          `INSERT INTO ${eServiceTable}(eservice_id, producer_id, descriptor_id, state, event_stream_id, event_version_id)
-             VALUES($1, $2, $3, $4, $5, $6)
+          `INSERT INTO ${eServiceTable}(eservice_id, producer_id, descriptor_id, state, event_stream_id, event_version_id, enabled_signal_hub, tmst_last_edit)
+             VALUES($1, $2, $3, $4, $5, $6, $7, $8)
              ON CONFLICT (eservice_id, descriptor_id)
              DO UPDATE SET
                 producer_id = EXCLUDED.producer_id,
                 state = EXCLUDED.state,
                 event_stream_id = EXCLUDED.event_stream_id,
                 event_version_id = EXCLUDED.event_version_id,
+                enabled_signal_hub = EXCLUDED.enabled_signal_hub,
                 tmst_last_edit= EXCLUDED.tmst_last_edit
                 `,
 
@@ -110,6 +114,7 @@ export const eServiceRepository = (db: DB): IEserviceRepository => {
             state,
             eventStreamId,
             eventVersionId,
+            isSignalHubEnabled,
             tmstLastEdit,
           ]
         );

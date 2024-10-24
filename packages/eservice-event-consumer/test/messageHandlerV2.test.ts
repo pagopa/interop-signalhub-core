@@ -13,6 +13,7 @@ import {
   createEServiceDescriptorUpdatedEventV2,
   incrementVersion,
   getDescriptorV2,
+  randomArrayItem,
 } from "./utils.js";
 import {
   findByEserviceIdAndProducerIdAndDescriptorId,
@@ -27,11 +28,13 @@ describe("Message Handler for V2 EVENTS", () => {
         const eServiceId = generateID();
         const descriptorId = generateID();
         const producerId = "producer-test-idV2";
+        const isSignalHubEnabled = randomArrayItem([false, true, undefined]);
 
         const eServiceV2 = createV2Event(
           eServiceId,
           descriptorId,
           producerId,
+          isSignalHubEnabled,
           EServiceDescriptorStateV2.DRAFT
         );
 
@@ -49,6 +52,7 @@ describe("Message Handler for V2 EVENTS", () => {
         expect(result?.eservice_id).toEqual(eServiceId);
         expect(result?.descriptor_id).toEqual(descriptorId);
         expect(result?.producer_id).toEqual(producerId);
+        expect(result?.enabled_signal_hub).toEqual(isSignalHubEnabled ?? null);
       });
     });
 
@@ -57,11 +61,13 @@ describe("Message Handler for V2 EVENTS", () => {
         const eServiceId = generateID();
         const descriptorId = generateID();
         const producerId = "producer-test-id-eserviceDescriptorAdded";
+        const isSignalHubEnabled = randomArrayItem([false, true, undefined]);
 
         const eServiceV2 = createV2Event(
           eServiceId,
           descriptorId,
           producerId,
+          isSignalHubEnabled,
           EServiceDescriptorStateV2.DRAFT
         );
 
@@ -82,6 +88,7 @@ describe("Message Handler for V2 EVENTS", () => {
         expect(result?.eservice_id).toEqual(eServiceId);
         expect(result?.descriptor_id).toEqual(descriptorId);
         expect(result?.producer_id).toEqual(producerId);
+        expect(result?.enabled_signal_hub).toEqual(isSignalHubEnabled ?? null);
       });
     });
     describe("EServiceDescriptorPublished event", () => {
@@ -89,6 +96,7 @@ describe("Message Handler for V2 EVENTS", () => {
         const eServiceId = generateID();
         const descriptorId = generateID();
         const producerId = "producer-test-id-eserviceDescriptorPublished";
+        const isSignalHubEnabled = randomArrayItem([false, true, undefined]);
         const initalVersion = 1;
         // Insert Eservice
 
@@ -106,6 +114,7 @@ describe("Message Handler for V2 EVENTS", () => {
           eServiceId,
           descriptorId,
           producerId,
+          isSignalHubEnabled,
           EServiceDescriptorStateV2.PUBLISHED
         );
 
@@ -130,6 +139,7 @@ describe("Message Handler for V2 EVENTS", () => {
         expect(result?.eservice_id).toEqual(eServiceId);
         expect(result?.descriptor_id).toEqual(descriptorId);
         expect(result?.producer_id).toEqual(producerId);
+        expect(result?.enabled_signal_hub).toEqual(isSignalHubEnabled ?? null);
         expect(result?.state).toEqual(
           EServiceDescriptorStateV2[EServiceDescriptorStateV2.PUBLISHED]
         );
@@ -141,6 +151,7 @@ describe("Message Handler for V2 EVENTS", () => {
         const eServiceId = generateID();
         const descriptorId = generateID();
         const producerId = "producer-test-id-eserviceDescriptorArchived";
+        const isSignalHubEnabled = randomArrayItem([false, true, undefined]);
         const initalVersion = 1;
         const eventStreamId = generateID();
 
@@ -158,6 +169,7 @@ describe("Message Handler for V2 EVENTS", () => {
           eServiceId,
           descriptorId,
           producerId,
+          isSignalHubEnabled,
           EServiceDescriptorStateV2.ARCHIVED
         );
 
@@ -182,6 +194,7 @@ describe("Message Handler for V2 EVENTS", () => {
         expect(result?.eservice_id).toEqual(eServiceId);
         expect(result?.descriptor_id).toEqual(descriptorId);
         expect(result?.producer_id).toEqual(producerId);
+        expect(result?.enabled_signal_hub).toEqual(isSignalHubEnabled ?? null);
         expect(result?.state).toEqual(
           EServiceDescriptorStateV2[EServiceDescriptorStateV2.ARCHIVED]
         );
@@ -193,11 +206,13 @@ describe("Message Handler for V2 EVENTS", () => {
         const eServiceId = generateID();
         const descriptorId = generateID();
         const producerId = "producer-test-id-eserviceDescriptorUpdated";
+        const isSignalHubEnabled = randomArrayItem([false, true, undefined]);
 
         const eServiceV2 = createV2Event(
           eServiceId,
           descriptorId,
           producerId,
+          isSignalHubEnabled,
           EServiceDescriptorStateV2.DRAFT
         );
 
@@ -212,6 +227,7 @@ describe("Message Handler for V2 EVENTS", () => {
           eServiceId,
           descriptorId,
           producerId,
+          isSignalHubEnabled,
           EServiceDescriptorStateV2.DRAFT
         );
 
@@ -237,6 +253,7 @@ describe("Message Handler for V2 EVENTS", () => {
         expect(result?.eservice_id).toEqual(eServiceId);
         expect(result?.descriptor_id).toEqual(descriptorId);
         expect(result?.producer_id).toEqual(producerId);
+        expect(result?.enabled_signal_hub).toEqual(isSignalHubEnabled ?? null);
       });
     });
 
@@ -245,11 +262,13 @@ describe("Message Handler for V2 EVENTS", () => {
         const eServiceId = generateID();
         const descriptorId = generateID();
         const producerId = "producer-test-id-eserviceDescriptorDeleted";
+        const isSignalHubEnabled = randomArrayItem([false, true, undefined]);
 
         const eServiceV2 = createV2Event(
           eServiceId,
           descriptorId,
           producerId,
+          isSignalHubEnabled,
           EServiceDescriptorStateV2.DRAFT
         );
 
@@ -278,6 +297,7 @@ describe("Message Handler for V2 EVENTS", () => {
       const eServiceId = generateID();
       const descriptorIdV1 = generateID();
       const producerId = "producer-test-id";
+      const isSignalHubEnabled = randomArrayItem([false, true, undefined]);
       const eventStreamId = generateID();
       const initialVersion = 1;
 
@@ -325,6 +345,7 @@ describe("Message Handler for V2 EVENTS", () => {
         eServiceId,
         descriptorIdV2,
         producerId,
+        isSignalHubEnabled,
         EServiceDescriptorStateV2.DRAFT,
         [descriptorVersion1, descriptorVersion2, descriptorEvent]
       );
