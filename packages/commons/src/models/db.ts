@@ -25,6 +25,7 @@ export const ProducerService = z.object({
   agreementId: z.string(),
   descriptorId: z.string(),
   state: z.string(),
+  enabledSignalHub: z.boolean().optional(),
   tmstInsert: z.string(),
   tmstLastEdit: z.string(),
 });
