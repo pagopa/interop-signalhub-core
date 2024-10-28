@@ -36,7 +36,9 @@ export const interopRepository = (db: DB): IInteropRepository => {
       }>
     > {
       const sqlConditionStates = eserviceAllowedStates
-        .map((eServiceState) => `eservice.state = '${eServiceState}'`)
+        .map(
+          (eServiceState) => `UPPER(eservice.state) = UPPER('${eServiceState}')`
+        )
         .join(" OR ");
 
       try {
