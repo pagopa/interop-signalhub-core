@@ -37,8 +37,8 @@ describe("PDND Interoperability service", () => {
       interopService.producerIsAuthorizedToPushSignals(
         producerId,
         eServiceId,
-        genericLogger
-      )
+        genericLogger,
+      ),
     ).resolves.not.toThrow();
   });
 
@@ -61,13 +61,13 @@ describe("PDND Interoperability service", () => {
       interopService.producerIsAuthorizedToPushSignals(
         differentProducerId,
         eServiceId,
-        genericLogger
-      )
+        genericLogger,
+      ),
     ).rejects.toThrowError(
       operationPushForbidden({
         producerId: differentProducerId,
         eserviceId: eServiceId,
-      })
+      }),
     );
   });
 
@@ -88,10 +88,10 @@ describe("PDND Interoperability service", () => {
       interopService.producerIsAuthorizedToPushSignals(
         producerId,
         eServiceId,
-        genericLogger
-      )
+        genericLogger,
+      ),
     ).rejects.toThrowError(
-      operationPushForbidden({ producerId, eserviceId: eServiceId })
+      operationPushForbidden({ producerId, eserviceId: eServiceId }),
     );
   });
 
@@ -112,10 +112,10 @@ describe("PDND Interoperability service", () => {
       interopService.producerIsAuthorizedToPushSignals(
         producerId,
         eServiceId,
-        genericLogger
-      )
+        genericLogger,
+      ),
     ).rejects.toThrowError(
-      operationPushForbidden({ producerId, eserviceId: eServiceId })
+      operationPushForbidden({ producerId, eserviceId: eServiceId }),
     );
   });
 });

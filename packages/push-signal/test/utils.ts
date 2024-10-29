@@ -10,7 +10,7 @@ import { interopServiceBuilder } from "../src/services/interop.service.js";
 
 export const { cleanup, postgresDB, sqsClient } = setupTestContainersVitest(
   inject("signalHubStoreConfig"),
-  inject("sqsConfig")
+  inject("sqsConfig"),
 );
 
 export const signalService = signalServiceBuilder(postgresDB);

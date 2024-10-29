@@ -15,8 +15,8 @@ describe("Store service", () => {
         signalService.verifySignalDuplicated(
           signalId,
           eserviceId,
-          genericLogger
-        )
+          genericLogger,
+        ),
       ).resolves.not.toThrow();
     });
 
@@ -30,10 +30,10 @@ describe("Store service", () => {
         signalService.verifySignalDuplicated(
           signalId,
           eserviceId,
-          genericLogger
-        )
+          genericLogger,
+        ),
       ).rejects.toThrowError(
-        signalIdDuplicatedForEserviceId(signalId, eserviceId)
+        signalIdDuplicatedForEserviceId(signalId, eserviceId),
       );
     });
   });

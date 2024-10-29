@@ -12,12 +12,12 @@ describe("Message parser", () => {
       Body: "Information about current NY Times fiction bestseller for week of 12/11/2016.",
     };
     expect(() =>
-      parseQueueMessageToSignal(malformedNotASignalQueueMessage)
+      parseQueueMessageToSignal(malformedNotASignalQueueMessage),
     ).toThrowError(
       notRecoverableGenericMessageError(
         "notValidJsonError",
-        malformedNotASignalQueueMessage.Body
-      )
+        malformedNotASignalQueueMessage.Body,
+      ),
     );
   });
 
@@ -30,12 +30,12 @@ describe("Message parser", () => {
     expect(() =>
       parseQueueMessageToSignal({
         Body: malformedSignalQueueMessage,
-      })
+      }),
     ).toThrowError(
       notRecoverableMessageError(
         "parsingError",
-        JSON.parse(malformedSignalQueueMessage)
-      )
+        JSON.parse(malformedSignalQueueMessage),
+      ),
     );
   });
   it("should throw an error if message is malformed Signal (signalId as string) ", () => {
@@ -48,12 +48,12 @@ describe("Message parser", () => {
     expect(() =>
       parseQueueMessageToSignal({
         Body: malformedSignalQueueMessage,
-      })
+      }),
     ).toThrowError(
       notRecoverableMessageError(
         "parsingError",
-        JSON.parse(malformedSignalQueueMessage)
-      )
+        JSON.parse(malformedSignalQueueMessage),
+      ),
     );
   });
   it("should throw an error if message is malformed Signal (no  attribute eserviceId)", () => {
@@ -65,12 +65,12 @@ describe("Message parser", () => {
     expect(() =>
       parseQueueMessageToSignal({
         Body: malformedSignalQueueMessage,
-      })
+      }),
     ).toThrowError(
       notRecoverableMessageError(
         "parsingError",
-        JSON.parse(malformedSignalQueueMessage)
-      )
+        JSON.parse(malformedSignalQueueMessage),
+      ),
     );
   });
   it("should parse message even if message contains an arbitrary attribute", () => {
@@ -83,7 +83,7 @@ describe("Message parser", () => {
     expect(() =>
       parseQueueMessageToSignal({
         Body: malformedSignalQueueMessage,
-      })
+      }),
     ).not.toThrowError();
   });
 
@@ -92,7 +92,7 @@ describe("Message parser", () => {
     expect(
       parseQueueMessageToSignal({
         Body: correctSignalQueueMessage,
-      })
+      }),
     ).toEqual(JSON.parse(correctSignalQueueMessage));
   });
 });

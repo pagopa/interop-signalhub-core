@@ -17,7 +17,7 @@ describe("Message handler", () => {
       Body: "Information about current NY Times fiction bestseller for week of 12/11/2016.",
     };
     await expect(
-      processMessageHandler(malformedNotASignalQueueMessage)
+      processMessageHandler(malformedNotASignalQueueMessage),
     ).resolves.not.toThrow();
   });
   it("should NOT throw an error ((NotRecoverableMessageError)) if message is a malformed Signal, with wrong signalType", async () => {
@@ -42,7 +42,7 @@ describe("Message handler", () => {
   });
   it("should throw a RecoverableMessageError for a temporary db error", async () => {
     await expect(
-      wrongStoreSignalService.storeSignal(createSignal(), genericLogger)
+      wrongStoreSignalService.storeSignal(createSignal(), genericLogger),
     ).rejects.toThrowError(recoverableMessageError("dbConnection"));
   });
 });

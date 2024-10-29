@@ -19,7 +19,7 @@ describe("Queue service", () => {
     };
 
     await expect(
-      quequeService.send(JSON.stringify(message), genericLogger, queueUrl)
+      quequeService.send(JSON.stringify(message), genericLogger, queueUrl),
     ).resolves.not.toThrow();
   });
 
@@ -33,20 +33,20 @@ describe("Queue service", () => {
       tabulation,
     };
     await expect(
-      quequeService.send(JSON.stringify(message), genericLogger, queueUrl)
+      quequeService.send(JSON.stringify(message), genericLogger, queueUrl),
     ).resolves.not.toThrow();
   });
 
   it("should send empty message", async () => {
     await expect(
-      quequeService.send(JSON.stringify(""), genericLogger, queueUrl)
+      quequeService.send(JSON.stringify(""), genericLogger, queueUrl),
     ).resolves.not.toThrow();
   });
 
   it("should throw a signalNotSendedToQueque error for a non existent queue", async () => {
     const wrongQueueUrl = sqsConfig.queueUrl + "wrong";
     const response = expect(
-      quequeService.send(JSON.stringify(""), genericLogger, wrongQueueUrl)
+      quequeService.send(JSON.stringify(""), genericLogger, wrongQueueUrl),
     ).rejects;
 
     void response.toBeInstanceOf(ApiError<ErrorCodes>);

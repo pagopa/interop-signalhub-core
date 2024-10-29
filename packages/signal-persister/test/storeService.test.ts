@@ -17,15 +17,15 @@ describe("Signal Store Service", () => {
     const signal = createSignal({ signalId: 1 });
     await writeSignal(signal, postgresDB, config.signalHubSchema);
     await expect(
-      storeSignalService.storeSignal(signal, genericLogger)
+      storeSignalService.storeSignal(signal, genericLogger),
     ).rejects.toThrowError(
-      notRecoverableMessageError("duplicateSignal", signal)
+      notRecoverableMessageError("duplicateSignal", signal),
     );
   });
   it("should save a signal", async () => {
     const signal = createSignal({ signalId: 1 });
     await expect(
-      storeSignalService.storeSignal(signal, genericLogger)
+      storeSignalService.storeSignal(signal, genericLogger),
     ).resolves.not.toThrow();
   });
   it("should save a signal even if there's another signal", async () => {
@@ -33,12 +33,12 @@ describe("Signal Store Service", () => {
     await writeSignal(oneSignal, postgresDB, config.signalHubSchema);
     const anotherSignal = createSignal();
     await expect(
-      storeSignalService.storeSignal(anotherSignal, genericLogger)
+      storeSignalService.storeSignal(anotherSignal, genericLogger),
     ).resolves.not.toThrow();
   });
   it("should throw an recoverable error if db is down", async () => {
     await expect(
-      wrongStoreSignalService.storeSignal(createSignal(), genericLogger)
+      wrongStoreSignalService.storeSignal(createSignal(), genericLogger),
     ).rejects.toThrowError(recoverableMessageError("dbConnection"));
   });
 });
