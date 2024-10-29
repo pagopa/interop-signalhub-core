@@ -1,21 +1,21 @@
 import { z } from "zod";
 
 const StandardJWTClaims = z.object({
-  // All standard claims except "sub", which is not present in UI tokens
-  iss: z.string(),
   aud: z.string(),
   exp: z.number(),
-  nbf: z.number(),
   iat: z.number(),
+  // All standard claims except "sub", which is not present in UI tokens
+  iss: z.string(),
   jti: z.string(),
+  nbf: z.number(),
 });
 
 export const AuthToken = StandardJWTClaims.merge(
   z.object({
-    organizationId: z.string().uuid(),
     client_id: z.string().uuid(),
+    organizationId: z.string().uuid(),
     sub: z.string(),
-  })
+  }),
 );
 export type AuthToken = z.infer<typeof AuthToken>;
 
@@ -25,8 +25,8 @@ export const SessionData = z.object({
 export type SessionData = z.infer<typeof SessionData>;
 
 export const AppContext = z.object({
-  serviceName: z.string(),
   correlationId: z.string(),
+  serviceName: z.string(),
   sessionData: SessionData,
 });
 
@@ -41,11 +41,11 @@ export type AppContext = z.infer<typeof AppContext>;
 export const SignalType = z.enum(["CREATE", "UPDATE", "DELETE", "SEEDUPDATE"]);
 
 const SignalSchema = z.object({
-  signalType: SignalType,
-  objectId: z.string(),
   eserviceId: z.string(),
-  signalId: z.number(),
+  objectId: z.string(),
   objectType: z.string(),
+  signalId: z.number(),
+  signalType: SignalType,
 });
 
 export const SignalPayload = SignalSchema;
@@ -56,8 +56,8 @@ export type SignalResponse = z.infer<typeof SignalSchema>;
 
 export const SignalPushResponse = SignalSchema.pick({ signalId: true });
 export const SignalPullResponse = z.object({
-  signals: z.array(SignalResponse),
   lastSignalId: z.number().nullish(),
+  signals: z.array(SignalResponse),
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -69,23 +69,21 @@ export const SignalMessage = SignalSchema.extend({
 
 export const SignalMessageSchema = {
   $schema: "http://json-schema.org/draft-07/schema#",
-  title: "Signal Message Schema",
-  type: "object",
   properties: {
     correlationId: {
-      type: "string",
-    },
-    signalId: {
-      type: "number",
-    },
-    objectId: {
       type: "string",
     },
     eserviceId: {
       type: "string",
     },
+    objectId: {
+      type: "string",
+    },
     objectType: {
       type: "string",
+    },
+    signalId: {
+      type: "number",
     },
     signalType: {
       enum: ["CREATE", "UPDATE", "DELETE", "SEEDUPDATE"],
@@ -99,12 +97,14 @@ export const SignalMessageSchema = {
     "objectType",
     "signalType",
   ],
+  title: "Signal Message Schema",
+  type: "object",
 };
 
 export const SMessageSchema = z.object({
   value: z.preprocess(
     (v) => (v != null ? JSON.parse(v.toString()) : null),
-    SignalMessage
+    SignalMessage,
   ),
 });
 

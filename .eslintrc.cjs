@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ["@pagopa/eslint-config/strong"],
+  // extends: ["@pagopa/eslint-config/strong"],
   parserOptions: {
     tsconfigRootDir: __dirname,
     // TODO: check if this is needed
@@ -9,7 +9,7 @@ module.exports = {
     // Any project level custom rule
     "@typescript-eslint/switch-exhaustiveness-check": "error",
     "default-case": "off",
-    "functional/no-let": "warn",
+    // "functional/no-let": "warn",
     "no-console": [
       "error",
       {

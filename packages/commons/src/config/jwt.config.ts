@@ -8,14 +8,14 @@ const APIEndpoint = z
 
 export const JWTConfig = z
   .object({
+    ACCEPTED_AUDIENCE: z.string(),
     WELL_KNOWN_URLS: z
       .string()
       .transform((s) => s.split(","))
       .pipe(z.array(APIEndpoint)),
-    ACCEPTED_AUDIENCE: z.string(),
   })
   .transform((c) => ({
-    wellKnownUrls: c.WELL_KNOWN_URLS,
     acceptedAudience: c.ACCEPTED_AUDIENCE,
+    wellKnownUrls: c.WELL_KNOWN_URLS,
   }));
 export type JWTConfig = z.infer<typeof JWTConfig>;

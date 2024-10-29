@@ -1,18 +1,18 @@
 /* eslint-disable no-constant-condition */
 import {
-  SQSClient,
-  ReceiveMessageCommand,
-  SendMessageCommand,
+  DeleteMessageBatchCommand,
   DeleteMessageCommand,
   Message,
-  SQSClientConfig,
-  SendMessageCommandInput,
-  DeleteMessageBatchCommand,
+  ReceiveMessageCommand,
   ReceiveMessageCommandOutput,
+  SQSClient,
+  SQSClientConfig,
+  SendMessageCommand,
+  SendMessageCommandInput,
 } from "@aws-sdk/client-sqs";
-import { Logger } from "../logging/index.js";
-import { QuequeConsumerConfig } from "../config/queque.consumer.js";
 
+import { QuequeConsumerConfig } from "../config/queque.consumer.js";
+import { Logger } from "../logging/index.js";
 export const instantiateClient = (config: SQSClientConfig): SQSClient =>
   new SQSClient(config);
 
@@ -23,7 +23,7 @@ export const runConsumer = async (
     runUntilQueueIsEmpty?: boolean;
   } & QuequeConsumerConfig,
   consumerHandler: (messagePayload: Message) => Promise<void>,
-  loggerInstance: Logger
+  loggerInstance: Logger,
 ): Promise<void> => {
   loggerInstance.info(`Consumer processing on queue: ${config.queueUrl}`);
   try {
@@ -32,12 +32,12 @@ export const runConsumer = async (
     loggerInstance.error(
       `Consumer exit: generic error occurs processing queue: ${
         config.queueUrl
-      }. Details: ${serializeError(e)}`
+      }. Details: ${serializeError(e)}`,
     );
     await processExit();
   }
   loggerInstance.info(
-    `Consumer ended: processing completed for queue: ${config.queueUrl}`
+    `Consumer ended: processing completed for queue: ${config.queueUrl}`,
   );
 };
 
@@ -48,16 +48,16 @@ const processQueue = async (
     runUntilQueueIsEmpty?: boolean;
   } & QuequeConsumerConfig,
   consumerHandler: (messagePayload: Message) => Promise<void>,
-  loggerInstance: Logger
+  loggerInstance: Logger,
 ): Promise<void> => {
   loggerInstance.info(`Processing queue starting`);
   const command = new ReceiveMessageCommand({
+    MaxNumberOfMessages: 10,
     QueueUrl: config.queueUrl,
     WaitTimeSeconds: 10,
-    MaxNumberOfMessages: 10,
   });
 
-  let keepProcessingQueue: boolean = true;
+  let keepProcessingQueue = true;
 
   try {
     do {
@@ -74,7 +74,7 @@ const processQueue = async (
         for (const message of Messages) {
           if (!message.ReceiptHandle) {
             throw new Error(
-              `ReceiptHandle not found in Message: ${JSON.stringify(message)}`
+              `ReceiptHandle not found in Message: ${JSON.stringify(message)}`,
             );
           }
           try {
@@ -83,11 +83,11 @@ const processQueue = async (
               sqsClient,
               config.queueUrl,
               message,
-              loggerInstance
+              loggerInstance,
             );
           } catch (error) {
             loggerInstance.warn(
-              `Processing queue, message not processed: it will remain on queue, error: ${error}`
+              `Processing queue, message not processed: it will remain on queue, error: ${error}`,
             );
           }
         }
@@ -102,16 +102,16 @@ export const sendMessage = async (
   sqsClient: SQSClient,
   queueUrl: string,
   messageBody: string,
-  loggerInstance: Logger
+  loggerInstance: Logger,
 ): Promise<void> => {
   const messageCommandInput: SendMessageCommandInput = {
-    QueueUrl: queueUrl,
     MessageBody: messageBody,
+    QueueUrl: queueUrl,
   };
   const command = new SendMessageCommand(messageCommandInput);
   const result = await sqsClient.send(command);
   loggerInstance.debug(
-    `SQS Client::sendMessage, sent messageId ${result.MessageId}`
+    `SQS Client::sendMessage, sent messageId ${result.MessageId}`,
   );
 };
 
@@ -119,9 +119,9 @@ export const deleteMessage = async (
   sqsClient: SQSClient,
   queueUrl: string,
   messagePayload: Message,
-  loggerInstance: Logger
+  loggerInstance: Logger,
 ): Promise<void> => {
-  const { ReceiptHandle, Body } = messagePayload;
+  const { Body, ReceiptHandle } = messagePayload;
   const correlationId = Body && (JSON.parse(Body).correlationId as unknown);
   const deleteCommand = new DeleteMessageCommand({
     QueueUrl: queueUrl,
@@ -133,17 +133,17 @@ export const deleteMessage = async (
 
 export const deleteBatchMessages = async (
   sqsClient: SQSClient,
-  queueUrl: string
+  queueUrl: string,
 ): Promise<void> => {
   const receiveMessage = (
-    queueUrl: string
+    queueUrl: string,
   ): Promise<ReceiveMessageCommandOutput> =>
     sqsClient.send(
       new ReceiveMessageCommand({
         MaxNumberOfMessages: 10,
-        WaitTimeSeconds: 10,
         QueueUrl: queueUrl,
-      })
+        WaitTimeSeconds: 10,
+      }),
     );
 
   const { Messages } = await receiveMessage(queueUrl);
@@ -157,17 +157,17 @@ export const deleteBatchMessages = async (
       new DeleteMessageCommand({
         QueueUrl: queueUrl,
         ReceiptHandle: Messages[0].ReceiptHandle,
-      })
+      }),
     );
   } else {
     await sqsClient.send(
       new DeleteMessageBatchCommand({
-        QueueUrl: queueUrl,
         Entries: Messages.map((message) => ({
           Id: message.MessageId,
           ReceiptHandle: message.ReceiptHandle,
         })),
-      })
+        QueueUrl: queueUrl,
+      }),
     );
   }
 };
@@ -180,9 +180,9 @@ const serializeError = (error: unknown): string => {
   }
 };
 
-const processExit = async (exitStatusCode: number = 1): Promise<void> => {
+const processExit = async (exitStatusCode = 1): Promise<void> => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   process.exit(exitStatusCode);
 };
 
-export { SQSClient, SQSClientConfig, Message };
+export { Message, SQSClient, SQSClientConfig };

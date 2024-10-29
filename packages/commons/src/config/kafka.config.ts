@@ -1,5 +1,6 @@
-import { z } from "zod";
 import { logLevel } from "kafkajs";
+import { z } from "zod";
+
 import { AwsConfig } from "./aws.config.js";
 const KafkaConfig = z
   .object({
@@ -8,8 +9,8 @@ const KafkaConfig = z
       .transform((s) => s.split(","))
       .pipe(z.array(z.string())),
     KAFKA_CLIENT_ID: z.string(),
-    KAFKA_GROUP_ID: z.string(),
     KAFKA_DISABLE_AWS_IAM_AUTH: z.literal("true").optional(),
+    KAFKA_GROUP_ID: z.string(),
     KAFKA_LOG_LEVEL: z
       .enum(["NOTHING", "ERROR", "WARN", "INFO", "DEBUG"])
       .default("WARN"),
@@ -21,8 +22,8 @@ const KafkaConfig = z
   .transform((c) => ({
     kafkaBrokers: c.KAFKA_BROKERS,
     kafkaClientId: c.KAFKA_CLIENT_ID,
-    kafkaGroupId: c.KAFKA_GROUP_ID,
     kafkaDisableAwsIamAuth: c.KAFKA_DISABLE_AWS_IAM_AUTH === "true",
+    kafkaGroupId: c.KAFKA_GROUP_ID,
     kafkaLogLevel: logLevel[c.KAFKA_LOG_LEVEL],
     kafkaReauthenticationThreshold: c.KAFKA_REAUTHENTICATION_THRESHOLD,
   }));
@@ -36,7 +37,7 @@ export const KafkaConsumerConfig = KafkaConfig.and(AwsConfig).and(
     })
     .transform((c) => ({
       topicStartingOffset: c.TOPIC_STARTING_OFFSET,
-    }))
+    })),
 );
 export type KafkaConsumerConfig = z.infer<typeof KafkaConsumerConfig>;
 

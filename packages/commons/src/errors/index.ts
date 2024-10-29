@@ -11,23 +11,23 @@ export class ApiError<T> extends Error {
     map ApiError to a specific HTTP status code.
     */
   public code: T;
-  public title: string;
-  public detail: string;
-  public errors: Array<{ code: T; detail: string }>;
   public correlationId?: string;
+  public detail: string;
+  public errors: { code: T; detail: string }[];
+  public title: string;
 
   constructor({
     code,
-    title,
-    detail,
     correlationId,
+    detail,
     errors,
+    title,
   }: {
     code: T;
-    title: string;
-    detail: string;
     correlationId?: string;
+    detail: string;
     errors?: Error[];
+    title: string;
   }) {
     super(detail);
     this.code = code;
@@ -52,17 +52,14 @@ export class InternalError<T> extends Error {
   }
 }
 
-export type ProblemError = {
+export interface ProblemError {
   code: string;
   detail: string;
-};
+}
 
 // zod object
 
 export const Problem = z.object({
-  type: z.string(),
-  status: z.number(),
-  title: z.string(),
   correlationId: z.string().nullish(),
   detail: z.string(),
   errors: z.array(
@@ -71,13 +68,16 @@ export const Problem = z.object({
       detail: z.string(),
     })
   ),
+  status: z.number(),
+  title: z.string(),
+  type: z.string(),
   // toString: z.function(),
 });
 export type Problem = z.infer<typeof Problem>;
 
 export type MakeApiProblemFn<T extends string> = (
   error: unknown,
-  httpMapper: (apiError: ApiError<T | CommonErrorCodes>) => number,
+  httpMapper: (apiError: ApiError<CommonErrorCodes | T>) => number,
   logger: {
     error: (message: string) => void;
     warn: (message: string) => void;
@@ -94,27 +94,28 @@ const makeProblemLogString = (
 };
 
 export function makeApiProblemBuilder<T extends string>(errors: {
+  // eslint-disable-next-line
   [K in T]: string;
 }): MakeApiProblemFn<T> {
   const allErrors = { ...errorCodes, ...errors };
   return (error, getErrorFromStatus, logger, correlationId) => {
     const makeProblem = (
       httpStatus: number,
-      { title, detail, errors }: ApiError<T | CommonErrorCodes>
+      { detail, errors, title }: ApiError<CommonErrorCodes | T>
     ): Problem => ({
-      type: "about:blank",
-      title,
-      status: httpStatus,
-      detail,
       correlationId,
+      detail,
       errors: errors.map(({ code, detail }) => ({
         code: allErrors[code],
         detail,
       })),
+      status: httpStatus,
+      title,
+      type: "about:blank",
     });
 
     return match<unknown, Problem>(error)
-      .with(P.instanceOf(ApiError<T | CommonErrorCodes>), (error) => {
+      .with(P.instanceOf(ApiError<CommonErrorCodes | T>), (error) => {
         const problem = makeProblem(getErrorFromStatus(error), error);
 
         logger.warn(makeProblemLogString(problem, error));
@@ -129,17 +130,17 @@ export function makeApiProblemBuilder<T extends string>(errors: {
 }
 
 const errorCodes = {
-  jwtDecodingError: "9001",
-  operationForbidden: "9989",
-  invalidClaim: "9990",
-  genericError: "9991",
-  unauthorizedError: "9993",
-  missingHeader: "9994",
   badRequestError: "9999",
+  genericError: "9991",
+  invalidClaim: "9990",
+  jwtDecodingError: "9001",
   jwtNotPresent: "10000",
-  kafkaMessageValueError: "9996",
-  kafkaMessageProcessError: "9997",
   kafkaMessageMissingData: "9998",
+  kafkaMessageProcessError: "9997",
+  kafkaMessageValueError: "9996",
+  missingHeader: "9994",
+  operationForbidden: "9989",
+  unauthorizedError: "9993",
 } as const;
 
 export type CommonErrorCodes = keyof typeof errorCodes;
@@ -176,8 +177,8 @@ export function genericInternalError(
 
 export function genericError(details: string): ApiError<CommonErrorCodes> {
   return new ApiError({
-    detail: details,
     code: "genericError",
+    detail: details,
     title: "Unexpected error",
   });
 }
@@ -186,8 +187,8 @@ export function unauthorizedError(
   details: string
 ): ApiError<"unauthorizedError"> {
   return new ApiError({
-    detail: details,
     code: "unauthorizedError",
+    detail: details,
     title: "Unauthorized",
   });
 }
@@ -197,25 +198,25 @@ export function badRequestError(
   errors: Error[]
 ): ApiError<CommonErrorCodes> {
   return new ApiError({
-    detail,
     code: "badRequestError",
-    title: "Bad request",
+    detail,
     errors,
+    title: "Bad request",
   });
 }
 
 export function invalidClaim(error: unknown): ApiError<CommonErrorCodes> {
   return new ApiError({
-    detail: `Claim not valid or missing: ${parseErrorMessage(error)}`,
     code: "invalidClaim",
+    detail: `Claim not valid or missing: ${parseErrorMessage(error)}`,
     title: "Claim not valid or missing",
   });
 }
 
 export function jwtDecodingError(error: unknown): ApiError<CommonErrorCodes> {
   return new ApiError({
-    detail: `Unexpected error on JWT decoding: ${parseErrorMessage(error)}`,
     code: "jwtDecodingError",
+    detail: `Unexpected error on JWT decoding: ${parseErrorMessage(error)}`,
     title: "JWT decoding error",
   });
 }
@@ -223,10 +224,10 @@ export function jwtDecodingError(error: unknown): ApiError<CommonErrorCodes> {
 export function missingHeader(headerName?: string): ApiError<CommonErrorCodes> {
   const title = "Header has not been passed";
   return new ApiError({
+    code: "missingHeader",
     detail: headerName
       ? `Header ${headerName} not existing in this request`
       : title,
-    code: "missingHeader",
     title,
   });
 }
@@ -263,20 +264,20 @@ export function kafkaMessageMissingData(
   });
 }
 
-export const missingBearer: ApiError<"missingHeader"> = new ApiError({
-  detail: `Authorization Illegal header key.`,
+export const missingBearer = new ApiError<"missingHeader">({
   code: "missingHeader",
+  detail: `Authorization Illegal header key.`,
   title: "Bearer token has not been passed",
 });
 
-export const jwtNotPresent: ApiError<"jwtNotPresent"> = new ApiError({
-  detail: `JWT token has not been passed`,
+export const jwtNotPresent = new ApiError<"jwtNotPresent">({
   code: "jwtNotPresent",
+  detail: `JWT token has not been passed`,
   title: "JWT token has not been passed",
 });
 
-export const operationForbidden: ApiError<"operationForbidden"> = new ApiError({
-  detail: `Insufficient privileges`,
+export const operationForbidden = new ApiError<"operationForbidden">({
   code: "operationForbidden",
+  detail: `Insufficient privileges`,
   title: "Insufficient privileges",
 });

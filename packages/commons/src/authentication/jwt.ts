@@ -1,9 +1,10 @@
 import jwt, { JwtHeader, JwtPayload, Secret } from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
-import { Logger } from "../logging/index.js";
-import { invalidClaim, jwtDecodingError } from "../errors/index.js";
-import { SessionData, AuthToken } from "../models/index.js";
+
 import { JWTConfig } from "../config/jwt.config.js";
+import { invalidClaim, jwtDecodingError } from "../errors/index.js";
+import { Logger } from "../logging/index.js";
+import { AuthToken, SessionData } from "../models/index.js";
 
 const decodeJwtToken = (jwtToken: string): JwtPayload | null => {
   try {
@@ -34,7 +35,7 @@ export const isTokenExpired = (token: string): boolean => {
 const getPublicKey = async (
   token: string,
   jwkClient: jwksClient.JwksClient[],
-  logger: Logger
+  logger: Logger,
 ): Promise<Secret> => {
   const clientList = jwkClient.map((c, i) => ({
     client: c,
@@ -49,7 +50,7 @@ const getPublicKey = async (
       return key?.getPublicKey();
     } catch (error) {
       logger.debug(
-        `Authentication::getPublicKey failed: ${JSON.stringify(error)}`
+        `Authentication::getPublicKey failed: ${JSON.stringify(error)}`,
       );
       if (error && last) {
         throw error;
@@ -61,44 +62,44 @@ const getPublicKey = async (
 
 export const validateToken = async (
   token: string,
-  logger: Logger
-): Promise<{ success: boolean; err: jwt.JsonWebTokenError | null }> => {
+  logger: Logger,
+): Promise<{ err: jwt.JsonWebTokenError | null; success: boolean }> => {
   const config = JWTConfig.parse(process.env);
 
   const clients = config.wellKnownUrls.map((url) =>
     jwksClient({
       jwksUri: url,
-    })
+    }),
   );
   try {
     const pubKey = await getPublicKey(token, clients, logger);
-    return new Promise((resolve, _reject) => {
+    return new Promise((resolve) => {
       jwt.verify(
         token,
         pubKey,
         {
           audience: config.acceptedAudience,
         },
-        function (err, _decoded) {
+        function (err) {
           if (err) {
             logger.warn(`Authentication::validateToken, failed: ${err}`);
             resolve({
-              success: false,
               err,
+              success: false,
             });
           }
           return resolve({
-            success: true,
             err: null,
+            success: true,
           });
-        }
+        },
       );
     });
   } catch (error) {
-    return new Promise((resolve, _reject) => {
+    return new Promise((resolve) => {
       resolve({
-        success: false,
         err: error as jwt.JsonWebTokenError,
+        success: false,
       });
     });
   }
