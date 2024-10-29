@@ -1,4 +1,5 @@
 import { DB, createDbInstance } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
 import { agreementRepository } from "../repositories/index.js";
 import {
@@ -9,13 +10,13 @@ export function serviceBuilder(): {
   agreementService: AgreementService;
 } {
   const db: DB = createDbInstance({
-    username: config.signalhubStoreDbUsername,
-    password: config.signalhubStoreDbPassword,
-    host: config.signalhubStoreDbHost,
-    port: config.signalhubStoreDbPort,
     database: config.signalhubStoreDbName,
-    useSSL: config.signalhubStoreDbUseSSL,
+    host: config.signalhubStoreDbHost,
     maxConnectionPool: config.maxConnectionPool,
+    password: config.signalhubStoreDbPassword,
+    port: config.signalhubStoreDbPort,
+    useSSL: config.signalhubStoreDbUseSSL,
+    username: config.signalhubStoreDbUsername,
   });
 
   const agreementRepositoryInstance = agreementRepository(db);

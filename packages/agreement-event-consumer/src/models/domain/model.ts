@@ -3,12 +3,12 @@ import { z } from "zod";
 
 export const AgreementEntity = z.object({
   agreementId: z.string(),
-  eserviceId: z.string(),
-  descriptorId: z.string(),
   consumerId: z.string(),
-  state: z.string(),
+  descriptorId: z.string(),
+  eserviceId: z.string(),
   eventStreamId: z.string(),
   eventVersionId: z.number(),
+  state: z.string(),
   tmstInsert: z.string().nullable().optional(),
   tmstLastEdit: z.string().nullable().optional(),
 });

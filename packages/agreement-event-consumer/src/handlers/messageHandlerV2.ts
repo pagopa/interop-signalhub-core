@@ -1,20 +1,19 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import {
-  AgreementV2,
   AgreementEventV2,
   AgreementStateV2,
+  AgreementV2,
 } from "@pagopa/interop-outbound-models";
-
+import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
-import { AgreementService } from "../services/agreement.service.js";
-import { AgreementEntity } from "../models/domain/model.js";
+
 import { config } from "../config/env.js";
+import { AgreementEntity } from "../models/domain/model.js";
+import { AgreementService } from "../services/agreement.service.js";
 
 export async function handleMessageV2(
   event: AgreementEventV2,
   agreementService: AgreementService,
-  logger: Logger
+  logger: Logger,
 ): Promise<void> {
   await match(event)
     .with(
@@ -26,11 +25,11 @@ export async function handleMessageV2(
             evt.data.agreement,
             evt.stream_id,
             evt.version,
-            event.type
+            event.type,
           ),
-          logger
+          logger,
         );
-      }
+      },
     )
     .with(
       {
@@ -48,7 +47,7 @@ export async function handleMessageV2(
           "AgreementUnsuspendedByPlatform",
           "AgreementRejected",
           "DraftAgreementUpdated",
-          "AgreementSubmitted"
+          "AgreementSubmitted",
         ),
       },
 
@@ -58,11 +57,11 @@ export async function handleMessageV2(
             evt.data.agreement,
             evt.stream_id,
             evt.version,
-            event.type
+            event.type,
           ),
-          logger
+          logger,
         );
-      }
+      },
     )
     .with(
       { type: "AgreementDeleted" },
@@ -71,20 +70,20 @@ export async function handleMessageV2(
         await agreementService.delete(
           toAgreementId(evt.data.agreement),
           evt.stream_id,
-          logger
+          logger,
         );
-      }
+      },
     )
     .with(
       {
         type: P.union(
           "AgreementConsumerDocumentAdded",
-          "AgreementConsumerDocumentRemoved"
+          "AgreementConsumerDocumentRemoved",
         ),
       },
       async () => {
         logger.info(`Skip event (not relevant)`);
-      }
+      },
     )
     .exhaustive();
 }
@@ -101,18 +100,18 @@ const toAgreementEntity = (
   agreement: AgreementV2 | undefined,
   streamId: string,
   version: number,
-  eventType: string
+  eventType: string,
 ): AgreementEntity => {
   if (!agreement) {
     throw kafkaMessageMissingData(config.kafkaTopic, eventType);
   }
   return {
     agreement_id: agreement.id,
-    eservice_id: agreement.eserviceId,
-    descriptor_id: agreement.descriptorId,
     consumer_id: agreement.consumerId,
-    state: AgreementStateV2[agreement.state],
+    descriptor_id: agreement.descriptorId,
+    eservice_id: agreement.eserviceId,
     event_stream_id: streamId,
     event_version_id: version,
+    state: AgreementStateV2[agreement.state],
   };
 };

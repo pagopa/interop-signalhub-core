@@ -1,25 +1,33 @@
 import { DB, TableName, genericInternalError } from "pagopa-signalhub-commons";
-import { AgreementEntity } from "../models/domain/model.js";
+
 import { config } from "../config/env.js";
+import { AgreementEntity } from "../models/domain/model.js";
 
 export interface IAgreementRepository {
+  readonly delete: (agreementId: string, streamId: string) => Promise<void>;
   readonly eventWasProcessed: (
     streamId: string,
-    version: number
+    version: number,
   ) => Promise<boolean>;
   readonly insert: (agreement: AgreementEntity) => Promise<void>;
   readonly update: (agreement: AgreementEntity) => Promise<void>;
-  readonly delete: (agreementId: string, streamId: string) => Promise<void>;
 }
 
 export const agreementRepository = (db: DB): IAgreementRepository => {
   const agreementTable: TableName = `${config.interopSchema}.agreement`;
   return {
+    async delete(agreementId: string, streamId: string): Promise<void> {
+      await db.none(
+        `delete from ${agreementTable} where agreement_id = $1 and event_stream_id = $2`,
+        [agreementId, streamId],
+      );
+    },
+
     async eventWasProcessed(streamId, versionId): Promise<boolean> {
       try {
         const response = await db.oneOrNone(
           `select event_stream_id, event_version_id from ${agreementTable} a where a.event_stream_id = $1 AND a.event_version_id >= $2`,
-          [streamId, versionId]
+          [streamId, versionId],
         );
         return response ? true : false;
       } catch (error) {
@@ -30,12 +38,12 @@ export const agreementRepository = (db: DB): IAgreementRepository => {
     async insert(agreement: AgreementEntity): Promise<void> {
       const {
         agreement_id,
-        eservice_id,
         consumer_id,
         descriptor_id,
-        state,
+        eservice_id,
         event_stream_id,
         event_version_id,
+        state,
       } = agreement;
       try {
         await db.oneOrNone(
@@ -48,25 +56,24 @@ export const agreementRepository = (db: DB): IAgreementRepository => {
             state,
             event_stream_id,
             event_version_id,
-          ]
+          ],
         );
       } catch (error) {
         throw genericInternalError(
-          `Error insertAgreement: id: ${agreement_id}, eservice_id: ${eservice_id}, consumer_id: ${consumer_id}, descriptor_id: ${descriptor_id}, state: ${state}, event_stream_id: ${event_stream_id}, event_version_id: ${event_version_id} -  ${error} `
+          `Error insertAgreement: id: ${agreement_id}, eservice_id: ${eservice_id}, consumer_id: ${consumer_id}, descriptor_id: ${descriptor_id}, state: ${state}, event_stream_id: ${event_stream_id}, event_version_id: ${event_version_id} -  ${error} `,
         );
       }
     },
-
     async update(agreement: AgreementEntity): Promise<void> {
       const tmstLastEdit = getCurrentDate();
       const {
         agreement_id,
-        eservice_id,
         consumer_id,
         descriptor_id,
-        state,
+        eservice_id,
         event_stream_id,
         event_version_id,
+        state,
       } = agreement;
       try {
         await db.none(
@@ -80,19 +87,13 @@ export const agreementRepository = (db: DB): IAgreementRepository => {
             event_stream_id,
             event_version_id,
             tmstLastEdit,
-          ]
+          ],
         );
       } catch (error) {
         throw genericInternalError(
-          `Error updateAgreement: id: ${agreement_id}, eservice_id: ${eservice_id}, consumer_id: ${consumer_id}, descriptor_id: ${descriptor_id}, state: ${state}, event_stream_id: ${event_stream_id}, event_version_id: ${event_version_id} -  ${error} `
+          `Error updateAgreement: id: ${agreement_id}, eservice_id: ${eservice_id}, consumer_id: ${consumer_id}, descriptor_id: ${descriptor_id}, state: ${state}, event_stream_id: ${event_stream_id}, event_version_id: ${event_version_id} -  ${error} `,
         );
       }
-    },
-    async delete(agreementId: string, streamId: string): Promise<void> {
-      await db.none(
-        `delete from ${agreementTable} where agreement_id = $1 and event_stream_id = $2`,
-        [agreementId, streamId]
-      );
     },
   };
 };

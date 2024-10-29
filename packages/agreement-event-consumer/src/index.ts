@@ -1,9 +1,9 @@
-/* eslint-disable no-console */
+import { decodeOutboundAgreementEvent } from "@pagopa/interop-outbound-models";
 import { runConsumer } from "kafka-connector";
 import { EachMessagePayload } from "kafkajs";
-import { match } from "ts-pattern";
-import { decodeOutboundAgreementEvent } from "@pagopa/interop-outbound-models";
 import { kafkaMissingMessageValue } from "pagopa-signalhub-commons";
+import { match } from "ts-pattern";
+
 import { config } from "./config/env.js";
 import { handleMessageV1, handleMessageV2 } from "./handlers/index.js";
 import { serviceBuilder } from "./services/service.builder.js";
@@ -25,15 +25,15 @@ export async function processMessage({
 
   await match(agreementEvent)
     .with({ event_version: 1 }, (event) =>
-      handleMessageV1(event, agreementService, logger)
+      handleMessageV1(event, agreementService, logger),
     )
     .with({ event_version: 2 }, (event) =>
-      handleMessageV2(event, agreementService, logger)
+      handleMessageV2(event, agreementService, logger),
     )
     .exhaustive();
 
   logger.info(
-    `Message was processed. Partition number: [${partition}] Offset: [$${message.offset}]`
+    `Message was processed. Partition number: [${partition}] Offset: [$${message.offset}]`,
   );
 }
 
