@@ -7,13 +7,13 @@ import {
 
 export function toSignalMessage(
   signalRequest: SignalPayload,
-  correlationId: string
+  correlationId: string,
 ): string {
   return toJson(SignalMessageSchema, tolMessage(signalRequest, correlationId));
 }
 const tolMessage = (
   signalPayload: SignalPayload,
-  correlationId: string
+  correlationId: string,
 ): SignalMessage => ({
   ...signalPayload,
   correlationId,

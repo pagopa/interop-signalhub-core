@@ -23,7 +23,6 @@
     "@aws-sdk/client-sqs": "^3.583.0",
     "@types/uuid": "^9.0.8",
     "connection-string": "^4.4.0",
-    "eslint-plugin-functional": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "jwks-rsa": "^3.1.0",
     "kafkajs": "^2.2.4",

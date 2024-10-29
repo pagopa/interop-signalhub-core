@@ -1,23 +1,24 @@
-import { genericInternalError, DB, TableName } from "pagopa-signalhub-commons";
+import { DB, TableName, genericInternalError } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
 
 export interface ISignalRepository {
-  findBy: (signalId: number, eserviceId: string) => Promise<number | null>;
+  findBy: (signalId: number, eserviceId: string) => Promise<null | number>;
 }
 
 export const signalRepository = (db: DB): ISignalRepository => {
   const signalTable: TableName = `${config.signalHubSchema}.signal`;
 
   return {
-    async findBy(signalId: number, eserviceId: string): Promise<number | null> {
+    async findBy(signalId: number, eserviceId: string): Promise<null | number> {
       try {
         return await db.oneOrNone(
           `SELECT signal_id FROM ${signalTable} WHERE eservice_id = $1 AND signal_id = $2`,
-          [eserviceId, signalId]
+          [eserviceId, signalId],
         );
       } catch (error) {
         throw genericInternalError(
-          `Error findBySignalIdAndEServiceId: ${error}`
+          `Error findBySignalIdAndEServiceId: ${error}`,
         );
       }
     },

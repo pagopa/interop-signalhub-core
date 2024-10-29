@@ -1,12 +1,13 @@
 import { Logger, SQS } from "pagopa-signalhub-commons";
-import { signalNotSendedToQueque } from "../models/domain/errors.js";
+
 import { config } from "../config/env.js";
+import { signalNotSendedToQueque } from "../models/domain/errors.js";
 
 interface IQueueService {
   readonly send: (
     message: string,
     logger: Logger,
-    queueUrl?: string
+    queueUrl?: string,
   ) => Promise<void>;
 }
 export function queueServiceBuilder(sqsClient: SQS.SQSClient): IQueueService {
@@ -14,7 +15,7 @@ export function queueServiceBuilder(sqsClient: SQS.SQSClient): IQueueService {
     async send(
       message: string,
       logger: Logger,
-      queueUrl: string = config.queueUrl
+      queueUrl: string = config.queueUrl,
     ): Promise<void> {
       try {
         logger.info(`QuequeService::sending message`);

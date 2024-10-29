@@ -1,13 +1,13 @@
 import { DB, Logger } from "pagopa-signalhub-commons";
-import { signalRepository } from "../repositories/signal.repository.js";
 
 import { signalIdDuplicatedForEserviceId } from "../models/domain/errors.js";
+import { signalRepository } from "../repositories/signal.repository.js";
 
 interface ISignalService {
   readonly verifySignalDuplicated: (
     signalId: number,
     eserviceId: string,
-    logger: Logger
+    logger: Logger,
   ) => Promise<void>;
 }
 export function signalServiceBuilder(db: DB): ISignalService {
@@ -15,14 +15,14 @@ export function signalServiceBuilder(db: DB): ISignalService {
     async verifySignalDuplicated(
       signalId: number,
       eserviceId: string,
-      logger: Logger
+      logger: Logger,
     ): Promise<void> {
       logger.info(
-        `SignalService::verifySignalDuplicated signald: ${signalId}, eserviceId: ${eserviceId}`
+        `SignalService::verifySignalDuplicated signald: ${signalId}, eserviceId: ${eserviceId}`,
       );
       const signalIdPresent = await signalRepository(db).findBy(
         signalId,
-        eserviceId
+        eserviceId,
       );
 
       if (signalIsDuplicated(signalIdPresent)) {
@@ -32,7 +32,7 @@ export function signalServiceBuilder(db: DB): ISignalService {
   };
 }
 
-const signalIsDuplicated = (signalIdPresent: number | null): boolean =>
+const signalIsDuplicated = (signalIdPresent: null | number): boolean =>
   signalIdPresent !== null;
 
 export type SignalService = ReturnType<typeof signalServiceBuilder>;

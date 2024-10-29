@@ -1,11 +1,12 @@
-import { genericError, DB, TableName } from "pagopa-signalhub-commons";
+import { DB, TableName, genericError } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
 
 export interface IInteropRepository {
   findBy: (
     eserviceId: string,
     producerId: string,
-    eserviceAllowedStates: string[]
+    eserviceAllowedStates: string[],
   ) => Promise<string[]>;
 }
 
@@ -15,7 +16,7 @@ export const interopRepository = (db: DB): IInteropRepository => {
     async findBy(
       eserviceId: string,
       producerId: string,
-      eserviceAllowedStates: string[]
+      eserviceAllowedStates: string[],
     ): Promise<string[]> {
       try {
         const sqlConditionStates = eserviceAllowedStates
@@ -28,11 +29,11 @@ export const interopRepository = (db: DB): IInteropRepository => {
            WHERE eservice_id = $1 and producer_id = $2
            AND (${sqlConditionStates}) 
            AND enabled_signal_hub IS TRUE`,
-          [eserviceId, producerId]
+          [eserviceId, producerId],
         );
       } catch (error: unknown) {
         throw genericError(
-          `Error interopRepository::findByEserviceIdAndProducerId ${error}`
+          `Error interopRepository::findByEserviceIdAndProducerId ${error}`,
         );
       }
     },

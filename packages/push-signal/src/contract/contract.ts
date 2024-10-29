@@ -1,13 +1,13 @@
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { initContract } from "@ts-rest/core";
 import {
+  Problem as ProblemComponent,
   SignalPayload as SignalPayloadComponent,
   SignalPushResponse as SignalPushResponseComponent,
-  Problem as ProblemComponent,
   SignalType,
 } from "pagopa-signalhub-commons";
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-
 import { z } from "zod";
+
 import { config } from "../config/env.js";
 
 extendZodWithOpenApi(z);
@@ -29,16 +29,16 @@ const SignalPayload = SignalPayloadComponent.extend({
 export const contract = c.router(
   {
     getStatus: {
-      summary: "Health status endpoint",
       description: "Should return OK",
       method: "GET",
       path: "/status",
       responses: {
         200: z.literal("OK"),
       },
+      summary: "Health status endpoint",
     },
     pushSignal: {
-      summary: "Push Signal",
+      body: SignalPayload,
       description: "Insert a signal",
       headers: z.object({
         authorization: z.string(),
@@ -56,10 +56,10 @@ export const contract = c.router(
         403: Problem,
         500: Problem,
       },
-      body: SignalPayload,
+      summary: "Push Signal",
     },
   },
   {
     pathPrefix,
-  }
+  },
 );

@@ -1,12 +1,13 @@
 import { AppRouteImplementation, initServer } from "@ts-rest/express";
-import { logger, Problem, SignalPayload } from "pagopa-signalhub-commons";
+import { Problem, SignalPayload, logger } from "pagopa-signalhub-commons";
 import { match } from "ts-pattern";
+
 import { contract } from "../contract/contract.js";
-import { SignalService } from "../services/signal.service.js";
 import { makeApiProblem } from "../models/domain/errors.js";
-import { QueueService } from "../services/queque.service.js";
-import { InteropService } from "../services/interop.service.js";
 import { toSignalMessage } from "../models/domain/toSignalMessage.js";
+import { InteropService } from "../services/interop.service.js";
+import { QueueService } from "../services/queque.service.js";
+import { SignalService } from "../services/signal.service.js";
 
 const s = initServer();
 
@@ -14,47 +15,47 @@ const s = initServer();
 export const pushRoutes = (
   signalService: SignalService,
   interopService: InteropService,
-  quequeService: QueueService
+  quequeService: QueueService,
 ) => {
   const getStatus: AppRouteImplementation<
     typeof contract.getStatus
   > = async () => ({
-    status: 200,
     body: "OK",
+    status: 200,
   });
   const pushSignal: AppRouteImplementation<
     typeof contract.pushSignal
   > = async ({ body, req }) => {
     const log = logger({
-      serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
+      serviceName: req.ctx.serviceName,
     });
     try {
-      const { signalId, eserviceId } = body;
+      const { eserviceId, signalId } = body;
       const { organizationId } = req.ctx.sessionData;
       log.info(`Pushing signalId: ${signalId} for e-service ${eserviceId}`);
       log.debug(
-        `DUMP signal: objectType: ${body.signalType}, objectId: ${body.objectId}, signalType: ${body.signalType}`
+        `DUMP signal: objectType: ${body.signalType}, objectId: ${body.objectId}, signalType: ${body.signalType}`,
       );
 
       await interopService.producerIsAuthorizedToPushSignals(
         organizationId,
         eserviceId,
-        log
+        log,
       );
 
       await signalService.verifySignalDuplicated(signalId, eserviceId, log);
 
       const message = toSignalMessage(
         body as SignalPayload,
-        req.ctx.correlationId
+        req.ctx.correlationId,
       );
       await quequeService.send(message, log);
       return {
-        status: 200,
         body: {
           signalId,
         },
+        status: 200,
       };
     } catch (error) {
       const problem: Problem = makeApiProblem(
@@ -68,35 +69,35 @@ export const pushRoutes = (
             .with("genericError", () => 500)
             .otherwise(() => 500),
         log,
-        req.ctx.correlationId
+        req.ctx.correlationId,
       );
       switch (problem.status) {
         case 400:
           return {
-            status: 400,
             body: problem,
+            status: 400,
           };
         case 401:
           return {
-            status: 401,
             body: problem,
+            status: 401,
           };
         case 403:
           return {
-            status: 403,
             body: problem,
+            status: 403,
           };
         default:
           return {
-            status: 500,
             body: problem,
+            status: 500,
           };
       }
     }
   };
 
   return s.router(contract, {
-    pushSignal,
     getStatus,
+    pushSignal,
   });
 };
