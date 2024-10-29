@@ -1,15 +1,16 @@
-import { logger, Logger, SQS } from "pagopa-signalhub-commons";
+import { Logger, SQS, logger } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
-import { StoreSignalService } from "./services/storeSignal.service.js";
+
 import {
   NotRecoverableGenericMessageError,
   NotRecoverableMessageError,
   RecoverableMessageError,
 } from "./models/domain/errors.js";
 import { parseQueueMessageToSignal } from "./models/domain/utils.js";
+import { StoreSignalService } from "./services/storeSignal.service.js";
 
 export function processMessage(
-  storeSignalService: StoreSignalService
+  storeSignalService: StoreSignalService,
 ): (message: SQS.Message) => Promise<void> {
   let loggerInstance: Logger;
   return async (message: SQS.Message): Promise<void> => {
@@ -17,11 +18,11 @@ export function processMessage(
       const signalMessage = parseQueueMessageToSignal(message);
       const { correlationId, signalId } = signalMessage;
       loggerInstance = logger({
-        serviceName: "persister",
         correlationId,
+        serviceName: "persister",
       });
       loggerInstance.info(
-        `Processing: signalId: ${signalId}, messageId: ${message.MessageId}`
+        `Processing: signalId: ${signalId}, messageId: ${message.MessageId}`,
       );
 
       await storeSignalService.storeSignal(signalMessage, loggerInstance);
@@ -31,14 +32,14 @@ export function processMessage(
           P.instanceOf(NotRecoverableGenericMessageError),
           async (error) => {
             loggerInstance.warn(
-              `Not recoverable message: event impossibile to save, with error: ${error.code}`
+              `Not recoverable message: event impossibile to save, with error: ${error.code}`,
             );
-          }
+          },
         )
 
         .with(P.instanceOf(NotRecoverableMessageError), async (error) => {
           loggerInstance.warn(
-            `Not recoverable message saved it on DEAD_SIGNAL with error: ${error.code}`
+            `Not recoverable message saved it on DEAD_SIGNAL with error: ${error.code}`,
           );
           await storeSignalService.storeDeadSignal(error.signal);
         })
@@ -47,7 +48,7 @@ export function processMessage(
           throw error;
         })
 
-        .otherwise((_error: unknown) => {
+        .otherwise(() => {
           throw error;
         });
     }

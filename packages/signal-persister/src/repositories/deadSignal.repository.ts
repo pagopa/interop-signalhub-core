@@ -1,17 +1,18 @@
 import { DB, TableName } from "pagopa-signalhub-commons";
-import { DeadSignal } from "../models/domain/model.js";
-import { recoverableMessageError } from "../models/domain/errors.js";
+
 import { config } from "../config/env.js";
+import { recoverableMessageError } from "../models/domain/errors.js";
+import { DeadSignal } from "../models/domain/model.js";
 
 export interface IDeadSignalRepository {
-  insertDeadSignal: (deadSignal: DeadSignal) => Promise<number | null>;
+  insertDeadSignal: (deadSignal: DeadSignal) => Promise<null | number>;
 }
 
 export const deadSignalRepository = (db: DB): IDeadSignalRepository => {
   const deadSignalTable: TableName = `${config.signalHubSchema}.dead_signal`;
 
   return {
-    async insertDeadSignal(deadSignal): Promise<number | null> {
+    async insertDeadSignal(deadSignal): Promise<null | number> {
       try {
         return await db.oneOrNone(
           `INSERT INTO ${deadSignalTable} (correlation_id, signal_id,object_id,eservice_id, object_type, signal_type,error_reason) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
@@ -24,7 +25,7 @@ export const deadSignalRepository = (db: DB): IDeadSignalRepository => {
             deadSignal.signalType,
             deadSignal.errorReason,
           ],
-          (rec) => rec.id
+          (rec) => rec.id,
         );
       } catch (error) {
         throw recoverableMessageError("dbConnection");

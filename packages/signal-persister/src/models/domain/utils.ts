@@ -1,11 +1,12 @@
 import { SQS, SignalMessage } from "pagopa-signalhub-commons";
+
 import {
   notRecoverableGenericMessageError,
   notRecoverableMessageError,
 } from "./errors.js";
 
 export function parseQueueMessageToSignal(
-  queueMessage: SQS.Message
+  queueMessage: SQS.Message,
 ): SignalMessage {
   let parsedMessage;
   try {
@@ -16,7 +17,7 @@ export function parseQueueMessageToSignal(
   } catch (error) {
     throw notRecoverableGenericMessageError(
       "notValidJsonError",
-      queueMessage.Body
+      queueMessage.Body,
     );
   }
   const signalMessage = SignalMessage.safeParse(parsedMessage);

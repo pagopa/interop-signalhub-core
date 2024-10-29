@@ -13,22 +13,22 @@ const sqsClient: SQS.SQSClient = SQS.instantiateClient({
 });
 
 const db: DB = createDbInstance({
-  username: config.signalhubStoreDbUsername,
-  password: config.signalhubStoreDbPassword,
-  host: config.signalhubStoreDbHost,
-  port: config.signalhubStoreDbPort,
   database: config.signalhubStoreDbName,
-  useSSL: config.signalhubStoreDbUseSSL,
+  host: config.signalhubStoreDbHost,
   maxConnectionPool: config.maxConnectionPool,
+  password: config.signalhubStoreDbPassword,
+  port: config.signalhubStoreDbPort,
+  useSSL: config.signalhubStoreDbUseSSL,
+  username: config.signalhubStoreDbUsername,
 });
 
 await SQS.runConsumer(
   sqsClient,
   {
-    queueUrl: config.queueUrl,
     consumerPollingTimeout: 20,
+    queueUrl: config.queueUrl,
     runUntilQueueIsEmpty: false,
   },
   processMessage(storeSignalServiceBuilder(db)),
-  loggerInstance
+  loggerInstance,
 );
