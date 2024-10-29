@@ -11,7 +11,7 @@ export function clockServiceBuilder(): IClockService {
     getPastDate(currentDate: Date, hoursAgo: number): Date {
       return subtractTime(
         dateToMilliSecs(currentDate),
-        hoursToMilliSecs(hoursAgo)
+        hoursToMilliSecs(hoursAgo),
       );
     },
   };

@@ -1,4 +1,5 @@
 import { Logger, TracingBatchCleanup } from "pagopa-signalhub-commons";
+
 import { config } from "./config/env.js";
 import { SignalService } from "./services/signal.service.js";
 import { TracingBatchCleanupService } from "./services/tracingBatchCleanup.service.js";
@@ -10,16 +11,16 @@ interface ICleanupBuilder {
 export const cleanupBuilder = async (
   signalService: SignalService,
   tracingBatchCleanupService: TracingBatchCleanupService,
-  logger: Logger
+  logger: Logger,
 ): Promise<ICleanupBuilder> => {
   const cleanSignals = async (): Promise<void> => {
     let tracingBatchCleanup: TracingBatchCleanup = {
       batchId: null,
-      tmstStartAt: null,
-      tmstEndAt: null,
-      tmstDeleteFrom: null,
-      error: null,
       countDeleted: null,
+      error: null,
+      tmstDeleteFrom: null,
+      tmstEndAt: null,
+      tmstStartAt: null,
     };
     const tmstStartAt = new Date().toISOString();
 
@@ -31,14 +32,14 @@ export const cleanupBuilder = async (
       };
 
       const { countDeleted, dateInThePast } = await signalService.cleanup(
-        config.signalsRetentionHours
+        config.signalsRetentionHours,
       );
 
       tracingBatchCleanup = {
         ...tracingBatchCleanup,
-        tmstEndAt: new Date().toISOString(),
-        tmstDeleteFrom: dateInThePast.toISOString(),
         countDeleted,
+        tmstDeleteFrom: dateInThePast.toISOString(),
+        tmstEndAt: new Date().toISOString(),
       };
       await tracingBatchCleanupService.end(tracingBatchCleanup);
     } catch (error) {

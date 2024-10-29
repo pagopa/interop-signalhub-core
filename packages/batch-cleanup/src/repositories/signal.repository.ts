@@ -1,8 +1,9 @@
-import { genericInternalError, DB, TableName } from "pagopa-signalhub-commons";
+import { DB, TableName, genericInternalError } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
 
 export interface ISignalRepository {
-  deleteBy: (date: Date) => Promise<number | null>;
+  deleteBy: (date: Date) => Promise<null | number>;
 }
 
 export const signalRepository = (db: DB): ISignalRepository => {
@@ -14,7 +15,7 @@ export const signalRepository = (db: DB): ISignalRepository => {
         return await db.result(
           `DELETE from ${signalTable} WHERE tmst_insert <= $1`,
           [datetimeInThePast],
-          (result) => result.rowCount
+          (result) => result.rowCount,
         );
       } catch (error) {
         throw genericInternalError(`Error deleting signals: ${error}`);

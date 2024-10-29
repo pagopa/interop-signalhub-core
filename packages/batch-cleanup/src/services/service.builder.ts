@@ -1,25 +1,26 @@
-import { DB, createDbInstance, Logger } from "pagopa-signalhub-commons";
+import { DB, Logger, createDbInstance } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
+import { clockServiceBuilder } from "./clock.service.js";
 import { SignalService, signalServiceBuilder } from "./signal.service.js";
 import {
   TracingBatchCleanupService,
   tracingBatchServiceCleanupBuilder,
 } from "./tracingBatchCleanup.service.js";
-import { clockServiceBuilder } from "./clock.service.js";
 
 export async function serviceBuilder(logger: Logger): Promise<{
+  db: DB;
   signalService: SignalService;
   tracingBatchCleanupService: TracingBatchCleanupService;
-  db: DB;
 }> {
   const db: DB = createDbInstance({
-    username: config.signalhubStoreDbUsername,
-    password: config.signalhubStoreDbPassword,
-    host: config.signalhubStoreDbHost,
-    port: config.signalhubStoreDbPort,
     database: config.signalhubStoreDbName,
-    useSSL: config.signalhubStoreDbUseSSL,
+    host: config.signalhubStoreDbHost,
     maxConnectionPool: config.maxConnectionPool,
+    password: config.signalhubStoreDbPassword,
+    port: config.signalhubStoreDbPort,
+    useSSL: config.signalhubStoreDbUseSSL,
+    username: config.signalhubStoreDbUsername,
   });
 
   const clockService = clockServiceBuilder();
@@ -27,7 +28,7 @@ export async function serviceBuilder(logger: Logger): Promise<{
 
   const tracingBatchCleanupService = tracingBatchServiceCleanupBuilder(
     db,
-    logger
+    logger,
   );
 
   return {

@@ -16,11 +16,11 @@ export type BatchCleanupConfig = z.infer<typeof BatchCleanupConfig>;
 const parsedFromEnv = BatchCleanupConfig.safeParse(process.env);
 if (!parsedFromEnv.success) {
   const invalidEnvVars = parsedFromEnv.error.issues.flatMap(
-    (issue) => issue.path
+    (issue) => issue.path,
   );
 
   console.error(
-    "Invalid or missing env vars: Batch Cleanup " + invalidEnvVars.join(", ")
+    "Invalid or missing env vars: Batch Cleanup " + invalidEnvVars.join(", "),
   );
   process.exit(1);
 }
