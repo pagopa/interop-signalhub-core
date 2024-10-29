@@ -4,6 +4,7 @@ import {
   RouteConfig,
   extendZodWithOpenApi,
 } from "@asteasolutions/zod-to-openapi";
+import { RouteParameter } from "@asteasolutions/zod-to-openapi/dist/openapi-registry.js";
 import {
   AppRoute,
   AppRouteResponse,
@@ -11,17 +12,16 @@ import {
   ContractAnyType,
   isZodType,
 } from "@ts-rest/core";
-import { z } from "zod";
 import { InfoObject, OpenAPIObject, OperationObject } from "openapi3-ts";
-import { RouteParameter } from "@asteasolutions/zod-to-openapi/dist/openapi-registry.js";
+import { z } from "zod";
 
 extendZodWithOpenApi(z);
 
 type OpenAPIComponentTypeKey = Parameters<typeof registry.registerComponent>[0];
 export type OpenAPICustomComponent = {
-  type: OpenAPIComponentTypeKey;
-  name: string;
   component: unknown;
+  name: string;
+  type: OpenAPIComponentTypeKey;
 };
 
 type ResponseItems = RouteConfig["responses"];
@@ -29,29 +29,29 @@ type ResponseItems = RouteConfig["responses"];
 type RouterPath = {
   id: string;
   path: string;
-  route: AppRoute;
   paths: string[];
+  route: AppRoute;
 };
 
 const mapMethod = {
+  DELETE: "delete",
   GET: "get",
+  PATCH: "patch",
   POST: "post",
   PUT: "put",
-  DELETE: "delete",
-  PATCH: "patch",
 };
 const registry = new OpenAPIRegistry();
 
 const generateOpenAPIFromTsRestContract = (
   router: AppRouter,
   options: {
-    setOperationId?: boolean | "concatenated-path";
     jsonQuery?: boolean;
     operationMapper?: (
       operation: OperationObject,
-      appRoute: AppRoute
+      appRoute: AppRoute,
     ) => OperationObject;
-  } = {}
+    setOperationId?: "concatenated-path" | boolean;
+  } = {},
 ): void => {
   const paths = getPathsFromRouter(router);
 
@@ -63,7 +63,7 @@ const generateOpenAPIFromTsRestContract = (
       const existingOp = operationIds.get(path.id);
       if (existingOp) {
         throw new Error(
-          `Route '${path.id}' already defined under ${existingOp.join(".")}`
+          `Route '${path.id}' already defined under ${existingOp.join(".")}`,
         );
       }
       operationIds.set(path.id, path.paths);
@@ -76,11 +76,10 @@ const generateOpenAPIFromTsRestContract = (
     const body = path.route.method !== "GET" ? path.route.body : null;
 
     const routeConfigPath: RouteConfig = {
-      description: path.route.description,
       deprecated: path.route.deprecated,
-      summary: path.route.summary,
-
+      description: path.route.description,
       method: mapMethod[path.route.method] as RouteConfig["method"],
+
       request: {
         body: body
           ? {
@@ -94,9 +93,10 @@ const generateOpenAPIFromTsRestContract = (
             }
           : undefined,
         headers,
-        query: path.route.query as RouteParameter,
         params: path.route.pathParams as RouteParameter,
+        query: path.route.query as RouteParameter,
       },
+      summary: path.route.summary,
       ...(options.setOperationId
         ? {
             operationId:
@@ -114,16 +114,16 @@ const generateOpenAPIFromTsRestContract = (
 };
 export function generateOpenAPISpec(
   router: AppRouter,
-  apiDoc: Omit<OpenAPIObject, "paths" | "openapi"> & { info: InfoObject },
+  apiDoc: { info: InfoObject } & Omit<OpenAPIObject, "openapi" | "paths">,
   options: {
-    setOperationId?: boolean | "concatenated-path";
     jsonQuery?: boolean;
     operationMapper?: (
       operation: OperationObject,
-      appRoute: AppRoute
+      appRoute: AppRoute,
     ) => OperationObject;
+    setOperationId?: "concatenated-path" | boolean;
   } = {},
-  customComponents: OpenAPICustomComponent[] = []
+  customComponents: OpenAPICustomComponent[] = [],
 ): OpenAPIObject {
   generateOpenAPIFromTsRestContract(router, options);
 
@@ -141,25 +141,25 @@ export function generateOpenAPISpec(
 }
 
 const registerRowOpenAPIcomponents = (
-  components: OpenAPICustomComponent[] = []
+  components: OpenAPICustomComponent[] = [],
 ): void => {
   components.forEach((component) => {
     registry.registerComponent(
       component.type,
       component.name,
-      component.component
+      component.component,
     );
   });
 };
 const getHeaders = (
-  headers: ContractAnyType | undefined
+  headers: ContractAnyType | undefined,
 ): RouteParameter | undefined =>
   headers && Object.keys(headers).length === 0
     ? undefined
     : (headers as RouteParameter);
 
 const getResponses = (
-  responses: Record<number, AppRouteResponse>
+  responses: Record<number, AppRouteResponse>,
 ): ResponseItems =>
   Object.entries(responses).reduce((acc, [statusCode, responseSchema]) => {
     const description =
@@ -167,7 +167,7 @@ const getResponses = (
         ? responseSchema.description
         : statusCode;
 
-    const httpSuccessCodePattern: RegExp = /^2[0-9]{2}$/;
+    const httpSuccessCodePattern = /^2[0-9]{2}$/;
     const isSuccess = httpSuccessCodePattern.test(statusCode);
     const keyMediaObject = isSuccess
       ? "application/json"
@@ -192,7 +192,7 @@ const getResponses = (
 
 export const getPathsFromRouter = (
   router: AppRouter,
-  pathHistory?: string[]
+  pathHistory?: string[],
 ): RouterPath[] => {
   const paths: RouterPath[] = [];
 
@@ -206,8 +206,8 @@ export const getPathsFromRouter = (
       paths.push({
         id: key,
         path: pathWithPathParams,
-        route: value,
         paths: pathHistory ?? [],
+        route: value,
       });
     } else {
       // eslint-disable-next-line functional/immutable-data
