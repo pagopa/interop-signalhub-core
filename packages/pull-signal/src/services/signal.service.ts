@@ -1,17 +1,18 @@
 import { DB, Logger, SignalResponse } from "pagopa-signalhub-commons";
-import { signalRepository } from "../repositories/signal.repository.js";
+
 import { toSignalResponse } from "../model/domain/toSignalResponse.js";
+import { signalRepository } from "../repositories/signal.repository.js";
 
 interface ISignalService {
   readonly getSignal: (
     eserviceId: string,
     signalId: number,
     limit: number,
-    logger: Logger
+    logger: Logger,
   ) => Promise<{
+    lastSignalId: null | number;
+    nextSignalId: null | number;
     signals: SignalResponse[];
-    lastSignalId: number | null;
-    nextSignalId: number | null;
   }>;
 }
 export function signalServiceBuilder(db: DB): ISignalService {
@@ -20,34 +21,34 @@ export function signalServiceBuilder(db: DB): ISignalService {
       eserviceId: string,
       signalId: number,
       limit: number,
-      logger: Logger
+      logger: Logger,
     ): Promise<{
+      lastSignalId: null | number;
+      nextSignalId: null | number;
       signals: SignalResponse[];
-      lastSignalId: number | null;
-      nextSignalId: number | null;
     }> {
       logger.info(
-        `SignalService::getSignal, signalId: ${signalId}, limit: ${limit}`
+        `SignalService::getSignal, signalId: ${signalId}, limit: ${limit}`,
       );
       const records = await signalRepository(db).getByEservice(
         eserviceId,
         signalId,
-        limit
+        limit,
       );
       const signals: SignalResponse[] = (records || []).map((record) =>
-        toSignalResponse(record)
+        toSignalResponse(record),
       );
       const lastSignalId = signals.length
         ? signals[signals.length - 1].signalId
         : null;
       const nextSignalId = await signalRepository(db).getNextSignalId(
         eserviceId,
-        lastSignalId
+        lastSignalId,
       );
       logger.debug(
-        `SignalService::getSignal, signals: ${signals.length}, lastSignalId: ${lastSignalId}, nextSignalId: ${nextSignalId}`
+        `SignalService::getSignal, signals: ${signals.length}, lastSignalId: ${lastSignalId}, nextSignalId: ${nextSignalId}`,
       );
-      return { signals, lastSignalId, nextSignalId };
+      return { lastSignalId, nextSignalId, signals };
     },
   };
 }

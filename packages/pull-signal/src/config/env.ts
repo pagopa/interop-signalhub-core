@@ -1,10 +1,10 @@
-import { z } from "zod";
 import {
-  HTTPServerConfig,
-  SignalHubStoreConfig,
-  JWTConfig,
   APIServiceConfig,
+  HTTPServerConfig,
+  JWTConfig,
+  SignalHubStoreConfig,
 } from "pagopa-signalhub-commons";
+import { z } from "zod";
 
 const PullServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
   .and(JWTConfig)
@@ -15,10 +15,10 @@ export type PullServiceConfig = z.infer<typeof PullServiceConfig>;
 const parsedFromEnv = PullServiceConfig.safeParse(process.env);
 if (!parsedFromEnv.success) {
   const invalidEnvVars = parsedFromEnv.error.issues.flatMap(
-    (issue) => issue.path
+    (issue) => issue.path,
   );
   console.error(
-    "Invalid or missing env vars: Pull Service  " + invalidEnvVars.join(", ")
+    "Invalid or missing env vars: Pull Service  " + invalidEnvVars.join(", "),
   );
   process.exit(1);
 }

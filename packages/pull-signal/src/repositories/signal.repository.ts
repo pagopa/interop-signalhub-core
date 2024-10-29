@@ -1,21 +1,22 @@
 import {
-  genericInternalError,
   DB,
   SignalRecord,
   TableName,
+  genericInternalError,
 } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
 
 export interface ISignalRepository {
   getByEservice: (
     eserviceId: string,
     signalId: number,
-    limit: number
+    limit: number,
   ) => Promise<SignalRecord[] | null>;
   getNextSignalId: (
     eserviceId: string,
-    signalId: number | null
-  ) => Promise<number | null>;
+    signalId: null | number,
+  ) => Promise<null | number>;
 }
 
 export const signalRepository = (db: DB): ISignalRepository => {
@@ -25,12 +26,12 @@ export const signalRepository = (db: DB): ISignalRepository => {
     async getByEservice(
       eserviceId: string,
       signalId: number,
-      limit: number
+      limit: number,
     ): Promise<SignalRecord[] | null> {
       try {
         return await db.any<SignalRecord[]>(
           `SELECT signal_id, object_id, eservice_id, object_type, signal_type FROM ${signalTable} s WHERE s.eservice_id = $1 AND s.signal_id > $2 order by s.signal_id asc limit $3`,
-          [eserviceId, signalId, limit]
+          [eserviceId, signalId, limit],
         );
       } catch (error) {
         throw genericInternalError(`Error get: ${error}`);
@@ -38,8 +39,8 @@ export const signalRepository = (db: DB): ISignalRepository => {
     },
     async getNextSignalId(
       eserviceId: string,
-      lastReadSignalId: number | null
-    ): Promise<number | null> {
+      lastReadSignalId: null | number,
+    ): Promise<null | number> {
       if (!lastReadSignalId) {
         return null;
       }
@@ -49,7 +50,7 @@ export const signalRepository = (db: DB): ISignalRepository => {
           [eserviceId, lastReadSignalId],
           // leave this rule disabled
           // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-          (item) => item && item.signal_id
+          (item) => item && item.signal_id,
         );
       } catch (error) {
         throw genericInternalError(`Error get: ${error}`);

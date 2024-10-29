@@ -1,4 +1,5 @@
-import { genericError, DB, TableName } from "pagopa-signalhub-commons";
+import { DB, TableName, genericError } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
 
 export interface IInteropRepository {
@@ -7,13 +8,13 @@ export interface IInteropRepository {
     purposeId: string,
     eserviceAllowedStates: string[],
     purposeState: string,
-    agreementState: string
+    agreementState: string,
   ) => Promise<
-    Array<{
-      eserviceId: string;
+    {
       agreementId: string;
+      eserviceId: string;
       purposeId: string;
-    }>
+    }[]
   >;
 }
 
@@ -27,17 +28,18 @@ export const interopRepository = (db: DB): IInteropRepository => {
       consumerId: string,
       eserviceAllowedStates: string[],
       purposeState: string,
-      agreementState: string
+      agreementState: string,
     ): Promise<
-      Array<{
-        eserviceId: string;
+      {
         agreementId: string;
+        eserviceId: string;
         purposeId: string;
-      }>
+      }[]
     > {
       const sqlConditionStates = eserviceAllowedStates
         .map(
-          (eServiceState) => `UPPER(eservice.state) = UPPER('${eServiceState}')`
+          (eServiceState) =>
+            `UPPER(eservice.state) = UPPER('${eServiceState}')`,
         )
         .join(" OR ");
 
@@ -57,7 +59,7 @@ export const interopRepository = (db: DB): IInteropRepository => {
            AND  purpose.consumer_id = agreement.consumer_id
            AND  purpose.eservice_id = eservice.eservice_id 
            AND  UPPER(purpose.purpose_state) = UPPER($4)`,
-          [eserviceId, consumerId, agreementState, purposeState]
+          [eserviceId, consumerId, agreementState, purposeState],
         );
       } catch (error: unknown) {
         throw genericError(`Error interopRepository::findBy ${error}`);

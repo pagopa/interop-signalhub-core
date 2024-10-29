@@ -1,30 +1,31 @@
 import { AppRouteImplementation, initServer } from "@ts-rest/express";
-import { logger, Problem } from "pagopa-signalhub-commons";
+import { Problem, logger } from "pagopa-signalhub-commons";
 import { match } from "ts-pattern";
+
 import { contract } from "../contract/contract.js";
 import { makeApiProblem } from "../model/domain/errors.js";
-import { SignalService } from "../services/signal.service.js";
 import { InteropService } from "../services/interop.service.js";
+import { SignalService } from "../services/signal.service.js";
 
 const s = initServer();
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const pullRoutes = (
   signalService: SignalService,
-  interopService: InteropService
+  interopService: InteropService,
 ) => {
   const getStatus: AppRouteImplementation<
     typeof contract.getStatus
   > = async () => ({
-    status: 200,
     body: "OK",
+    status: 200,
   });
   const pullSignal: AppRouteImplementation<
     typeof contract.pullSignal
   > = async ({ req }) => {
     const log = logger({
-      serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId,
+      serviceName: req.ctx.serviceName,
     });
     try {
       const { eserviceId } = req.params;
@@ -36,18 +37,18 @@ export const pullRoutes = (
       await interopService.consumerIsAuthorizedToPullSignals(
         organizationId,
         eserviceId,
-        log
+        log,
       );
 
-      const { signals, nextSignalId, lastSignalId } =
+      const { lastSignalId, nextSignalId, signals } =
         await signalService.getSignal(eserviceId, signalId, size, log);
       const status = nextSignalId ? 206 : 200;
       return {
-        status,
         body: {
-          signals,
           lastSignalId,
+          signals,
         },
+        status,
       };
     } catch (error) {
       const problem: Problem = makeApiProblem(
@@ -59,30 +60,30 @@ export const pullRoutes = (
             .with("genericError", () => 500)
             .otherwise(() => 500),
         log,
-        req.ctx.correlationId
+        req.ctx.correlationId,
       );
       switch (problem.status) {
         case 401:
           return {
-            status: 401,
             body: problem,
+            status: 401,
           };
         case 403:
           return {
-            status: 403,
             body: problem,
+            status: 403,
           };
         default:
           return {
-            status: 500,
             body: problem,
+            status: 500,
           };
       }
     }
   };
 
   return s.router(contract, {
-    pullSignal,
     getStatus,
+    pullSignal,
   });
 };

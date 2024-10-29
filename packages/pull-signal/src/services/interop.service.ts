@@ -1,4 +1,5 @@
 import { DB, Logger } from "pagopa-signalhub-commons";
+
 import { operationPullForbidden } from "../model/domain/errors.js";
 import { interopRepository } from "../repositories/interop.repository.js";
 
@@ -6,7 +7,7 @@ interface IInteropService {
   readonly consumerIsAuthorizedToPullSignals: (
     consumerId: string,
     eserviceId: string,
-    logger: Logger
+    logger: Logger,
   ) => Promise<void>;
 }
 export function interopServiceBuilder(db: DB): IInteropService {
@@ -14,10 +15,10 @@ export function interopServiceBuilder(db: DB): IInteropService {
     async consumerIsAuthorizedToPullSignals(
       consumerId: string,
       eserviceId: string,
-      logger: Logger
+      logger: Logger,
     ): Promise<void> {
       logger.info(
-        `InteropService::consumerIsAuthorizedToPullSignals with consumerId: ${consumerId}`
+        `InteropService::consumerIsAuthorizedToPullSignals with consumerId: ${consumerId}`,
       );
       const eserviceState = ["PUBLISHED", "DEPRECATED"];
       const agreementState = "ACTIVE";
@@ -27,12 +28,12 @@ export function interopServiceBuilder(db: DB): IInteropService {
         consumerId,
         eserviceState,
         purposeState,
-        agreementState
+        agreementState,
       );
       if (thereAreNo(administrativeActs)) {
         throw operationPullForbidden({
-          eserviceId,
           consumerId,
+          eserviceId,
         });
       }
     },
