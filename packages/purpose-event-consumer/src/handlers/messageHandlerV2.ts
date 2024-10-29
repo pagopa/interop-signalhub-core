@@ -1,22 +1,21 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import {
   PurposeEventV2,
   PurposeStateV2,
   PurposeV2,
   PurposeVersionV2,
 } from "@pagopa/interop-outbound-models";
-
+import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
-import { PurposeService } from "../services/purpose.service.js";
-import { PurposeEntity } from "../models/domain/model.js";
+
 import { config } from "../config/env.js";
 import { kafkaInvalidVersion } from "../models/domain/errors.js";
+import { PurposeEntity } from "../models/domain/model.js";
+import { PurposeService } from "../services/purpose.service.js";
 
 export async function handleMessageV2(
   event: PurposeEventV2,
   purposeService: PurposeService,
-  logger: Logger
+  logger: Logger,
 ): Promise<void> {
   await match(event)
     .with(
@@ -30,7 +29,7 @@ export async function handleMessageV2(
           "PurposeVersionSuspendedByProducer",
           "PurposeVersionSuspendedByConsumer",
           "PurposeVersionOverQuotaUnsuspended",
-          "PurposeArchived"
+          "PurposeArchived",
         ),
       },
       async (evt) => {
@@ -42,9 +41,9 @@ export async function handleMessageV2(
         }
         await purposeService.upsert(
           toPurposeV2Entity(evt, evt.data.purpose),
-          logger
+          logger,
         );
-      }
+      },
     )
     .with(
       {
@@ -57,19 +56,19 @@ export async function handleMessageV2(
           "NewPurposeVersionWaitingForApproval",
           "WaitingForApprovalPurposeVersionDeleted",
           "PurposeVersionRejected",
-          "PurposeCloned"
+          "PurposeCloned",
         ),
       },
       async () => {
         logger.info(`Skip event (not relevant)`);
-      }
+      },
     )
     .exhaustive();
 }
 
 export const toPurposeV2Entity = (
   event: PurposeEventV2,
-  purpose: PurposeV2
+  purpose: PurposeV2,
 ): PurposeEntity => {
   const { stream_id: streamId, version } = event;
   const validVersion = validVersionInVersionsV2(purpose.versions);
@@ -77,51 +76,54 @@ export const toPurposeV2Entity = (
     throw kafkaInvalidVersion();
   }
   return {
-    purposeId: purpose.id,
-    eserviceId: purpose.eserviceId,
     consumerId: purpose.consumerId,
-    purposeState: validVersion.state,
-    purposeVersionId: validVersion.versionId,
+    eserviceId: purpose.eserviceId,
     eventStreamId: streamId,
     eventVersionId: version,
+    purposeId: purpose.id,
+    purposeState: validVersion.state,
+    purposeVersionId: validVersion.versionId,
   };
 };
 const validVersionInVersionsV2 = (
-  purposeVersions: PurposeVersionV2[]
-): { versionId: string; state: string } | undefined =>
+  purposeVersions: PurposeVersionV2[],
+): { state: string; versionId: string } | undefined =>
   match(purposeVersions)
     .when(
       (versions) =>
         versions.some((version) => version.state === PurposeStateV2.ACTIVE),
-      () => getVersionBy(PurposeStateV2.ACTIVE, purposeVersions)
+      () => getVersionBy(PurposeStateV2.ACTIVE, purposeVersions),
     )
     .when(
       (versions) =>
         versions.some((version) => version.state === PurposeStateV2.SUSPENDED),
-      () => getVersionBy(PurposeStateV2.SUSPENDED, purposeVersions)
+      () => getVersionBy(PurposeStateV2.SUSPENDED, purposeVersions),
     )
     .when(
       (versions) =>
         versions.some((version) => version.state === PurposeStateV2.ARCHIVED),
-      () => getVersionBy(PurposeStateV2.ARCHIVED, purposeVersions)
+      () => getVersionBy(PurposeStateV2.ARCHIVED, purposeVersions),
     )
     .otherwise(() => undefined);
 
 function getVersionBy(
   purposeState: PurposeStateV2,
-  purposeVersions: PurposeVersionV2[]
+  purposeVersions: PurposeVersionV2[],
 ): {
-  versionId: string;
   state: string;
+  versionId: string;
 } {
   return purposeVersions
     .filter((version) => version.state === purposeState)
-    .reduce((obj, version) => {
-      const { id, state } = version;
-      return { ...obj, versionId: id, state: PurposeStateV2[state] };
-    }, {} as { versionId: string; state: string });
+    .reduce(
+      (obj, version) => {
+        const { id, state } = version;
+        return { ...obj, state: PurposeStateV2[state], versionId: id };
+      },
+      {} as { state: string; versionId: string },
+    );
 }
 
 const hasPurposeVersionInAValidState = (
-  versions: PurposeVersionV2[]
+  versions: PurposeVersionV2[],
 ): boolean => !validVersionInVersionsV2(versions);
