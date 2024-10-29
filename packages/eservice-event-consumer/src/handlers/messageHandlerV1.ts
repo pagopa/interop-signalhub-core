@@ -5,14 +5,15 @@ import {
 } from "@pagopa/interop-outbound-models";
 import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
-import { EServiceService } from "../services/eservice.service.js";
-import { EserviceEntity } from "../models/domain/model.js";
+
 import { config } from "../config/env.js";
+import { EserviceEntity } from "../models/domain/model.js";
+import { EServiceService } from "../services/eservice.service.js";
 
 export async function handleMessageV1(
   event: EServiceEventV1,
   eServiceService: EServiceService,
-  logger: Logger
+  logger: Logger,
 ): Promise<void> {
   await match(event)
     .with(
@@ -31,16 +32,16 @@ export async function handleMessageV1(
           eservice.producerId,
           evt.stream_id,
           evt.version,
-          logger
+          logger,
         );
-      }
+      },
     )
     .with(
       {
         type: P.union("EServiceDescriptorAdded", "EServiceDescriptorUpdated"),
       },
       async (evt) => {
-        const { eserviceId, eserviceDescriptor } = evt.data;
+        const { eserviceDescriptor, eserviceId } = evt.data;
 
         if (!eserviceDescriptor) {
           throw kafkaMessageMissingData(config.kafkaTopic, event.type);
@@ -50,11 +51,11 @@ export async function handleMessageV1(
           eserviceId,
           [eserviceDescriptor],
           evt.stream_id,
-          evt.version
+          evt.version,
         );
 
         await eServiceService.upsertV1(eService, logger);
-      }
+      },
     )
 
     .with(
@@ -63,7 +64,7 @@ export async function handleMessageV1(
       },
       async (evt) => {
         await eServiceService.delete(evt.data.eserviceId, logger);
-      }
+      },
     )
     .with(
       {
@@ -79,9 +80,9 @@ export async function handleMessageV1(
           evt.data.descriptorId,
           evt.stream_id,
           evt.version,
-          logger
+          logger,
         );
-      }
+      },
     )
     .with(
       {
@@ -96,7 +97,7 @@ export async function handleMessageV1(
           evt.data.eservice?.id,
           evt.data.eservice?.descriptors,
           evt.stream_id,
-          evt.version
+          evt.version,
         );
 
         await eServiceService.insertEserviceAndProducerId(
@@ -104,9 +105,9 @@ export async function handleMessageV1(
           evt.data.eservice.producerId,
           evt.stream_id,
           evt.version,
-          logger
+          logger,
         );
-      }
+      },
     )
     .with(
       {
@@ -115,13 +116,13 @@ export async function handleMessageV1(
           "EServiceDocumentAdded",
           "EServiceDocumentDeleted",
           "EServiceDocumentUpdated",
-          "MovedAttributesFromEserviceToDescriptors"
+          "MovedAttributesFromEserviceToDescriptors",
         ),
       },
 
       async () => {
         logger.info(`Skip event (not relevant)`);
-      }
+      },
     )
     .exhaustive();
 }
@@ -130,13 +131,13 @@ export const fromEserviceEventV1ToEserviceEntity = (
   eServiceId: string,
   descriptorsData: EServiceDescriptorV1[],
   streamId: string,
-  version: number
+  version: number,
 ): EserviceEntity => ({
-  eservice_id: eServiceId,
   descriptors: descriptorsData.map((descriptor) => ({
     descriptor_id: descriptor.id,
     state: EServiceDescriptorStateV1[descriptor.state],
   })),
+  eservice_id: eServiceId,
 
   event_stream_id: streamId,
   event_version_id: version,

@@ -6,19 +6,19 @@ export const EserviceDescriptorEntity = z.object({
 });
 
 export const EserviceEntity = z.object({
-  eservice_id: z.string(),
   descriptors: z.array(EserviceDescriptorEntity),
-  event_version_id: z.number(),
+  eservice_id: z.string(),
   event_stream_id: z.string(),
+  event_version_id: z.number(),
 });
 
 export const EserviceV2Entity = z.object({
-  eservice_id: z.string(),
-  producer_id: z.string(),
   descriptors: z.array(EserviceDescriptorEntity),
-  isSignalHubEnabled: z.boolean().optional(),
-  event_version_id: z.number(),
+  eservice_id: z.string(),
   event_stream_id: z.string(),
+  event_version_id: z.number(),
+  isSignalHubEnabled: z.boolean().optional(),
+  producer_id: z.string(),
 });
 
 export type EserviceEntity = z.infer<typeof EserviceEntity>;

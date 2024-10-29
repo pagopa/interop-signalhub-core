@@ -5,14 +5,15 @@ import {
 } from "@pagopa/interop-outbound-models";
 import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
+
+import { config } from "../config/env.js";
 import { EserviceV2Entity } from "../models/domain/model.js";
 import { EServiceService } from "../services/eservice.service.js";
-import { config } from "../config/env.js";
 
 export async function handleMessageV2(
   event: EServiceEventV2,
   eServiceService: EServiceService,
-  logger: Logger
+  logger: Logger,
 ): Promise<void> {
   await match(event)
     .with(
@@ -27,7 +28,7 @@ export async function handleMessageV2(
           "EServiceDescriptorArchived",
           "EServiceDescriptorPublished",
           "EServiceDescriptorSuspended",
-          "EServiceDraftDescriptorUpdated"
+          "EServiceDraftDescriptorUpdated",
         ),
       },
       async (evt) => {
@@ -39,11 +40,11 @@ export async function handleMessageV2(
         const eService = fromEserviceEventV2ToEserviceEntity(
           eservice,
           evt.stream_id,
-          evt.version
+          evt.version,
         );
 
         await eServiceService.upsertV2(eService, logger);
-      }
+      },
     )
 
     .with(
@@ -54,7 +55,7 @@ export async function handleMessageV2(
         const { eserviceId } = evt.data;
 
         await eServiceService.delete(eserviceId, logger);
-      }
+      },
     )
 
     .with(
@@ -72,12 +73,12 @@ export async function handleMessageV2(
           "EServiceDescriptorQuotasUpdated",
           "EServiceDescriptorDelegateSubmitted",
           "EServiceDescriptorDelegatorApproved",
-          "EServiceDescriptorDelegatorRejected"
+          "EServiceDescriptorDelegatorRejected",
         ),
       },
       async () => {
         logger.info(`Skip event (not relevant)`);
-      }
+      },
     )
     .exhaustive();
 }
@@ -85,18 +86,18 @@ export async function handleMessageV2(
 export const fromEserviceEventV2ToEserviceEntity = (
   eService: EServiceV2,
   streamId: string,
-  version: number
+  version: number,
 ): EserviceV2Entity => ({
-  eservice_id: eService.id,
-  producer_id: eService.producerId,
-
   descriptors: eService.descriptors.map((descriptor) => ({
     descriptor_id: descriptor.id,
     state: EServiceDescriptorStateV2[descriptor.state],
   })),
-
-  isSignalHubEnabled: eService?.isSignalHubEnabled,
+  eservice_id: eService.id,
 
   event_stream_id: streamId,
+
   event_version_id: version,
+
+  isSignalHubEnabled: eService?.isSignalHubEnabled,
+  producer_id: eService.producerId,
 });
