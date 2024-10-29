@@ -5,8 +5,8 @@ import path from "path";
 function getActors() {
   const catalogInteropData = JSON.parse(
     Buffer.from(
-      fs.readFileSync(path.resolve(__dirname, "../__mocks__/data.json"))
-    ).toString()
+      fs.readFileSync(path.resolve(__dirname, "../__mocks__/data.json")),
+    ).toString(),
   );
 
   const signalProducer = catalogInteropData.PRODUCERS[0].organization;
@@ -31,34 +31,34 @@ function getActors() {
 
   const eServiceWithNotActiveAgreement = signalProducer.eservices[2].id;
   return {
-    signalProducer,
-    signalConsumer,
-    eserviceProducer,
+    authorizedPurposeIdForPullSignals,
+    authorizedPurposeIdForPushSignals,
+    consumerAgreementDraftState,
+    eServiceWithNotActiveAgreement,
+    eserviceIdNotAgreementWithConsumer,
+    eserviceIdPublishedByAnotherOrganization,
     eserviceIdPushSignals,
     eserviceIdSecondPushSignals,
-    eserviceIdNotAgreementWithConsumer,
     eserviceNotPublished,
-    eserviceIdPublishedByAnotherOrganization,
-    eServiceWithNotActiveAgreement,
+    eserviceProducer,
     purposeIdDifferentFromEservicePushSignals,
-    authorizedPurposeIdForPushSignals,
-    authorizedPurposeIdForPullSignals,
-    consumerAgreementDraftState,
+    signalConsumer,
+    signalProducer,
   };
 }
 
 export const {
-  signalProducer,
-  signalConsumer,
-  eserviceProducer,
+  authorizedPurposeIdForPullSignals,
+  authorizedPurposeIdForPushSignals,
+  consumerAgreementDraftState,
+  eServiceWithNotActiveAgreement,
+  eserviceIdNotAgreementWithConsumer,
+  eserviceIdPublishedByAnotherOrganization,
   eserviceIdPushSignals,
   eserviceIdSecondPushSignals,
-  eserviceIdNotAgreementWithConsumer,
   eserviceNotPublished,
-  eserviceIdPublishedByAnotherOrganization,
+  eserviceProducer,
   purposeIdDifferentFromEservicePushSignals,
-  authorizedPurposeIdForPushSignals,
-  authorizedPurposeIdForPullSignals,
-  eServiceWithNotActiveAgreement,
-  consumerAgreementDraftState,
+  signalConsumer,
+  signalProducer,
 } = getActors();

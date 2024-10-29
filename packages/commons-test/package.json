@@ -9,8 +9,8 @@
     "build": "tsc",
     "format:check": "prettier --check src",
     "format:write": "prettier --write src",
-    "lint": "eslint . --ext .ts,.tsx",
-    "lint:autofix": "eslint . --ext .ts,.tsx --fix",
+    "lint": "eslint ./src/**",
+    "lint:autofix": "eslint ./src/** --fix",
     "check": "tsc --project tsconfig.check.json"
   },
   "keywords": [],
@@ -18,7 +18,7 @@
   "license": "ISC",
   "devDependencies": {
     "@anatine/zod-mock": "3.13.4",
-    "@pagopa/eslint-config": "^3.0.0",
+    "@pagopa/eslint-config": "^4.0.1",
     "@testcontainers/postgresql": "10.2.2",
     "@types/dotenv-flow": "3.3.3",
     "@types/jsonwebtoken": "9.0.6",

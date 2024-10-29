@@ -3,15 +3,17 @@
 /* eslint-disable functional/immutable-data */
 
 import type {} from "vitest";
-import { config as dotenv } from "dotenv-flow";
 import type { GlobalSetupContext } from "vitest/node";
+
+import { config as dotenv } from "dotenv-flow";
 import {
+  AwsConfig,
   QuequeConfig,
   SignalHubStoreConfig,
-  AwsConfig,
 } from "pagopa-signalhub-commons";
 import { StartedTestContainer } from "testcontainers";
 import { z } from "zod";
+
 import {
   TEST_ELASTIC_MQ_PORT,
   TEST_POSTGRES_DB_PORT,
@@ -50,7 +52,7 @@ export function setupTestContainersVitestGlobal() {
 
     if (signalHubStoreConfig.success) {
       startedPostgreSqlContainer = await postgreSQLContainer(
-        signalHubStoreConfig.data
+        signalHubStoreConfig.data,
       ).start();
 
       /**
@@ -79,7 +81,7 @@ export function setupTestContainersVitestGlobal() {
       startedElasticMQContainer = await elasticMQContainer().start();
 
       sqsConfig.data.queueUrl = `http://localhost:${startedElasticMQContainer.getMappedPort(
-        TEST_ELASTIC_MQ_PORT
+        TEST_ELASTIC_MQ_PORT,
       )}/000000000000/sqsLocalQueue`;
 
       provide("sqsConfig", sqsConfig.data);

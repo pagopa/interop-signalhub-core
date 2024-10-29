@@ -1,29 +1,29 @@
 import {
   DB,
   InteropSchema,
-  SignalhubSchema,
   Signal,
   SignalPayload,
+  SignalhubSchema,
   TableName,
 } from "pagopa-signalhub-commons";
 
 export async function truncatePurposeTable(
   db: DB,
-  schema: InteropSchema
+  schema: InteropSchema,
 ): Promise<void> {
   const purposeTable: TableName = `${schema}.purpose`;
   await db.none(`truncate ${purposeTable};`);
 }
 export async function truncateAgreementTable(
   db: DB,
-  schema: InteropSchema
+  schema: InteropSchema,
 ): Promise<void> {
   const agreementTable: TableName = `${schema}.agreement`;
   await db.none(`truncate ${agreementTable};`);
 }
 export async function truncateEserviceTable(
   db: DB,
-  schema: InteropSchema
+  schema: InteropSchema,
 ): Promise<void> {
   const eserviceTable: TableName = `${schema}.eservice`;
   await db.none(`truncate ${eserviceTable};`);
@@ -31,7 +31,7 @@ export async function truncateEserviceTable(
 
 export async function truncateSignalTable(
   db: DB,
-  schema: SignalhubSchema
+  schema: SignalhubSchema,
 ): Promise<void> {
   const signalTable: TableName = `${schema}.signal`;
   await db.none(`truncate ${signalTable};`);
@@ -39,7 +39,7 @@ export async function truncateSignalTable(
 
 export async function truncateTracingBatchCleanupTable(
   db: DB,
-  schema: SignalhubSchema
+  schema: SignalhubSchema,
 ): Promise<void> {
   const tracingBatchCleanupTable: TableName = `${schema}.tracing_batch_cleanup`;
   await db.none(`truncate ${tracingBatchCleanupTable};`);
@@ -48,7 +48,7 @@ export async function truncateTracingBatchCleanupTable(
 export async function writeSignal(
   signal: Partial<Signal>,
   db: DB,
-  schema: SignalhubSchema
+  schema: SignalhubSchema,
 ): Promise<unknown> {
   const signalTable: TableName = `${schema}.signal`;
   return await db.oneOrNone(
@@ -61,14 +61,14 @@ export async function writeSignal(
       signal.objectType,
       signal.signalType,
     ],
-    (rec) => rec.id
+    (rec) => rec.id,
   );
 }
 
 export async function writeSignals(
-  signals: Array<Partial<Signal>>,
+  signals: Partial<Signal>[],
   db: DB,
-  schema: SignalhubSchema
+  schema: SignalhubSchema,
 ): Promise<number[]> {
   const signalTable: TableName = `${schema}.signal`;
 
@@ -86,8 +86,8 @@ export async function writeSignals(
           signal.objectType,
           signal.signalType,
         ],
-        (rec) => rec.id
-      )
+        (rec) => rec.id,
+      ),
     );
   }
   return ids;
@@ -118,12 +118,12 @@ export const createSignal = (partialSignal?: Partial<Signal>): Signal => ({
 });
 
 export const createSignalPayload = (
-  partialSignal?: Partial<SignalPayload>
+  partialSignal?: Partial<SignalPayload>,
 ): SignalPayload => ({
-  signalId: getRandomInt(),
   eserviceId: "eservice-id-test",
   objectId: "object-id-test",
   objectType: "object-type-test",
+  signalId: getRandomInt(),
   signalType: "CREATE",
 
   ...partialSignal,
@@ -131,13 +131,13 @@ export const createSignalPayload = (
 
 export const createMultipleSignals = (
   howMany: number,
-  partialSignal?: Partial<SignalPayload>
+  partialSignal?: Partial<SignalPayload>,
 ): Signal[] =>
   Array.from({ length: howMany }, () => createSignal(partialSignal));
 
 export const createMultipleOrderedSignals = (
   howMany: number,
-  partialSignal?: Partial<SignalPayload>
+  partialSignal?: Partial<SignalPayload>,
 ): Signal[] => {
   const signals: Signal[] = [];
   for (let index = 1; index <= howMany; index++) {

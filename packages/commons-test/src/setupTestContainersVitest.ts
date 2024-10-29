@@ -8,6 +8,7 @@ import {
   SignalHubStoreConfig,
   createDbInstance,
 } from "pagopa-signalhub-commons";
+
 import { SqsConfig, truncateSignalTable } from "./index.js";
 /**
  * This function is a setup for vitest that initializes the postgres
@@ -30,50 +31,50 @@ import { SqsConfig, truncateSignalTable } from "./index.js";
  */
 
 export function setupTestContainersVitest(
-  signalHubStoreConfig?: SignalHubStoreConfig
+  signalHubStoreConfig?: SignalHubStoreConfig,
 ): {
-  postgresDB: DB;
   cleanup: () => Promise<void>;
+  postgresDB: DB;
 };
 
 export function setupTestContainersVitest(
   signalHubStoreConfig?: SignalHubStoreConfig,
-  sqsConfig?: SqsConfig
+  sqsConfig?: SqsConfig,
 ): {
-  postgresDB: DB;
-  sqsClient: SQS.SQSClient;
   cleanup: () => Promise<void>;
-};
-
-export function setupTestContainersVitest(
-  signalHubStoreConfig?: SignalHubStoreConfig,
-  sqsConfig?: SqsConfig
-): {
   postgresDB: DB;
   sqsClient: SQS.SQSClient;
-  cleanup: () => Promise<void>;
 };
 
 export function setupTestContainersVitest(
   signalHubStoreConfig?: SignalHubStoreConfig,
-  sqsConfig?: SqsConfig
+  sqsConfig?: SqsConfig,
 ): {
+  cleanup: () => Promise<void>;
+  postgresDB: DB;
+  sqsClient: SQS.SQSClient;
+};
+
+export function setupTestContainersVitest(
+  signalHubStoreConfig?: SignalHubStoreConfig,
+  sqsConfig?: SqsConfig,
+): {
+  cleanup: () => Promise<void>;
   postgresDB?: DB;
   sqsClient?: SQS.SQSClient;
-  cleanup: () => Promise<void>;
 } {
   let postgresDB: DB | undefined;
   let sqsClient: SQS.SQSClient | undefined;
 
   if (signalHubStoreConfig) {
     postgresDB = createDbInstance({
-      username: signalHubStoreConfig.signalhubStoreDbUsername,
-      password: signalHubStoreConfig.signalhubStoreDbPassword,
-      host: signalHubStoreConfig.signalhubStoreDbHost,
-      port: signalHubStoreConfig.signalhubStoreDbPort,
       database: signalHubStoreConfig.signalhubStoreDbName,
-      useSSL: signalHubStoreConfig.signalhubStoreDbUseSSL,
+      host: signalHubStoreConfig.signalhubStoreDbHost,
       maxConnectionPool: signalHubStoreConfig.maxConnectionPool,
+      password: signalHubStoreConfig.signalhubStoreDbPassword,
+      port: signalHubStoreConfig.signalhubStoreDbPort,
+      useSSL: signalHubStoreConfig.signalhubStoreDbUseSSL,
+      username: signalHubStoreConfig.signalhubStoreDbUsername,
     });
   }
 
@@ -82,15 +83,15 @@ export function setupTestContainersVitest(
   }
 
   return {
-    postgresDB,
-    sqsClient,
     cleanup: async (): Promise<void> => {
       await truncateSignalTable(
         postgresDB!,
         // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-        signalHubStoreConfig?.signalHubSchema!
+        signalHubStoreConfig?.signalHubSchema!,
       );
       // TODO: clean queque messages
     },
+    postgresDB,
+    sqsClient,
   };
 }

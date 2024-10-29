@@ -10,13 +10,13 @@ export const TEST_ELASTIC_MQ_IMAGE =
 export const TEST_ELASTIC_MQ_PORT = 9324;
 
 export const postgreSQLContainer = (
-  config: SignalHubStoreConfig
+  config: SignalHubStoreConfig,
 ): GenericContainer =>
   new GenericContainer(TEST_POSTGRES_DB_IMAGE)
     .withEnvironment({
       POSTGRES_DB: config.signalhubStoreDbName,
-      POSTGRES_USER: config.signalhubStoreDbUsername,
       POSTGRES_PASSWORD: config.signalhubStoreDbPassword,
+      POSTGRES_USER: config.signalhubStoreDbUsername,
     })
     .withCopyFilesToContainer([
       {
