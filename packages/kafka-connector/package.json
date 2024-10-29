@@ -9,7 +9,8 @@
     ".": "./dist/index.js"
   },
   "scripts": {
-    "lint": "eslint . --ext .ts,.tsx",
+    "lint": "eslint ./src/**",
+    "lint:autofix": "eslint ./src/** --fix",
     "build": "tsc"
   },
   "keywords": [],
@@ -22,6 +23,7 @@
     "ts-pattern": "^5.2.0"
   },
   "devDependencies": {
+    "@pagopa/eslint-config": "^4.0.1",
     "typescript": "^5.5.3"
   }
 }

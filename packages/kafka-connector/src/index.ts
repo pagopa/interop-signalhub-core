@@ -1,5 +1,4 @@
 import { generateAuthToken } from "aws-msk-iam-sasl-signer-js";
-
 import {
   Consumer,
   EachMessagePayload,
@@ -9,9 +8,9 @@ import {
   logLevel,
 } from "kafkajs";
 import {
-  genericLogger,
   KafkaConsumerConfig,
   Logger,
+  genericLogger,
   kafkaMessageProcessError,
 } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
@@ -19,14 +18,14 @@ import { P, match } from "ts-pattern";
 const errorTypes = ["unhandledRejection", "uncaughtException"];
 const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
 
-const processExit = (code: number = 1): void => {
+const processExit = (code = 1): void => {
   genericLogger.info(`Process exit with code ${code}`);
   process.exit(code);
 };
 
 async function oauthBearerTokenProvider(
   region: string,
-  logger: Logger
+  logger: Logger,
 ): Promise<OauthbearerProviderResponse> {
   logger.debug("Retrieving token from AWS");
 
@@ -35,7 +34,7 @@ async function oauthBearerTokenProvider(
   });
 
   logger.debug(
-    `Token fetched from AWS expires at ${authTokenResponse.expiryTime}`
+    `Token fetched from AWS expires at ${authTokenResponse.expiryTime}`,
   );
 
   return {
@@ -51,8 +50,8 @@ async function oauthBearerTokenProvider(
  */
 const getKafkaConfig = (config: KafkaConsumerConfig): KafkaConfig => {
   const kafkaBaseConfig = {
-    clientId: config.kafkaClientId,
     brokers: config.kafkaBrokers,
+    clientId: config.kafkaClientId,
     logLevel: config.kafkaLogLevel,
   };
 
@@ -64,23 +63,23 @@ const getKafkaConfig = (config: KafkaConsumerConfig): KafkaConfig => {
     : {
         ...kafkaBaseConfig,
         reauthenticationThreshold: config.kafkaReauthenticationThreshold,
-        ssl: true,
         sasl: {
           mechanism: "oauthbearer",
           oauthBearerProvider: () =>
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             oauthBearerTokenProvider(config.awsRegion!, genericLogger),
         },
+        ssl: true,
       };
 };
 
 export const initConsumer = async (
   config: KafkaConsumerConfig,
   topics: string[],
-  consumerHandler: (payload: EachMessagePayload) => Promise<void>
+  consumerHandler: (payload: EachMessagePayload) => Promise<void>,
 ): Promise<Consumer> => {
   genericLogger.info(
-    `Initializing kafka consumer, listening on topics: ${topics}`
+    `Initializing kafka consumer, listening on topics: ${topics}`,
   );
 
   const kafkaConfig = getKafkaConfig(config);
@@ -88,9 +87,9 @@ export const initConsumer = async (
   const kafka = new Kafka({
     ...kafkaConfig,
     logCreator:
-      (_logLevel) =>
+      () =>
       ({ level, log }) => {
-        const { message, error } = log;
+        const { error, message } = log;
 
         const filteredLevel = match(error)
           .with(
@@ -98,16 +97,15 @@ export const initConsumer = async (
             (error) =>
               (level === logLevel.ERROR || level === logLevel.WARN) &&
               error.includes("The group is rebalancing, so a rejoin is needed"),
-            () => logLevel.INFO
+            () => logLevel.INFO,
           )
           .otherwise(() => level);
 
-        // eslint-disable-next-line sonarjs/no-nested-template-literals
         const msg = `${message}${error ? ` - ${error}` : ""}`;
 
         match(filteredLevel)
           .with(logLevel.NOTHING, logLevel.ERROR, () =>
-            genericLogger.error(msg)
+            genericLogger.error(msg),
           )
           .with(logLevel.WARN, () => genericLogger.warn(msg))
           .with(logLevel.INFO, () => genericLogger.info(msg))
@@ -123,11 +121,11 @@ export const initConsumer = async (
     retry: {
       initialRetryTime: 100,
       maxRetryTime: 3000,
-      retries: 3,
       restartOnFailure: (error) => {
         genericLogger.error(`Error on restarting service: ${error.message}`);
         return Promise.resolve(false);
       },
+      retries: 3,
     },
   });
 
@@ -143,8 +141,8 @@ export const initConsumer = async (
   }
 
   await consumer.subscribe({
-    topics,
     fromBeginning: config.topicStartingOffset === "earliest",
+    topics,
   });
 
   genericLogger.info(`Consumer subscribed topic ${topics}`);
@@ -160,7 +158,7 @@ export const initConsumer = async (
           payload.topic,
           payload.partition,
           payload.message.offset,
-          e
+          e,
         );
       }
     },
@@ -187,7 +185,7 @@ const kafkaEventsListener = (consumer: Consumer): void => {
 
   consumer.on(consumer.events.REQUEST_TIMEOUT, (e) => {
     genericLogger.error(
-      `Error Request to a broker has timed out : ${JSON.stringify(e)}.`
+      `Error Request to a broker has timed out : ${JSON.stringify(e)}.`,
     );
   });
 };
@@ -203,7 +201,7 @@ const errorEventsListener = (consumer: Consumer): void => {
         processExit();
       } catch (e) {
         genericLogger.error(
-          `Unexpected error on consumer disconnection with event type ${type}; Error detail: ${e}`
+          `Unexpected error on consumer disconnection with event type ${type}; Error detail: ${e}`,
         );
         processExit();
       }
@@ -226,10 +224,10 @@ const errorEventsListener = (consumer: Consumer): void => {
 
 export const validateTopicMetadata = async (
   kafka: Kafka,
-  topicNames: string[]
+  topicNames: string[],
 ): Promise<boolean> => {
   genericLogger.debug(
-    `Check topics |${JSON.stringify(topicNames)}| existence...`
+    `Check topics |${JSON.stringify(topicNames)}| existence...`,
   );
 
   const admin = kafka.admin();
@@ -246,8 +244,8 @@ export const validateTopicMetadata = async (
     await admin.disconnect();
     genericLogger.error(
       `Unable to subscribe! Error during topic metadata fetch: ${JSON.stringify(
-        e
-      )}`
+        e,
+      )}`,
     );
     return false;
   }
@@ -255,28 +253,28 @@ export const validateTopicMetadata = async (
 
 const kafkaCommitMessageOffsets = async (
   consumer: Consumer,
-  payload: EachMessagePayload
+  payload: EachMessagePayload,
 ): Promise<void> => {
-  const { topic, partition, message } = payload;
+  const { message, partition, topic } = payload;
   await consumer.commitOffsets([
-    { topic, partition, offset: (Number(message.offset) + 1).toString() },
+    { offset: (Number(message.offset) + 1).toString(), partition, topic },
   ]);
 
   genericLogger.debug(
-    `Topic message offset ${Number(message.offset) + 1} committed`
+    `Topic message offset ${Number(message.offset) + 1} committed`,
   );
 };
 
 export const runConsumer = async (
   config: KafkaConsumerConfig,
   topics: string[],
-  consumerHandler: (messagePayload: EachMessagePayload) => Promise<void>
+  consumerHandler: (messagePayload: EachMessagePayload) => Promise<void>,
 ): Promise<void> => {
   try {
     await initConsumer(config, topics, consumerHandler);
   } catch (e) {
     genericLogger.error(
-      `Generic error occurs during consumer initialization: ${e}`
+      `Generic error occurs during consumer initialization: ${e}`,
     );
     processExit();
   }
