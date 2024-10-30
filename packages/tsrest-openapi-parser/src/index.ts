@@ -73,7 +73,10 @@ const generateOpenAPIFromTsRestContract = (
     const headers = getHeaders(path.route.headers);
     const responses = getResponses(path.route.responses);
 
-    const body = path.route.method !== "GET" ? path.route.body : null;
+    const body =
+      path.route.method === "DELETE" || path.route.method === "GET"
+        ? null
+        : path.route.body;
 
     const routeConfigPath: RouteConfig = {
       deprecated: path.route.deprecated,

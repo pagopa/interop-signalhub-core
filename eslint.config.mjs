@@ -6,11 +6,7 @@ import pagopa from "@pagopa/eslint-config";
 export default tseslint.config({
   files: ["**/*.ts"],
   ignores: ["**/.eslintrc.cjs", "**/vitest.config.ts", "**/dist"],
-  extends: [
-    functional.configs.stylistic,
-    ...pagopa,
-    // your other plugin configs here
-  ],
+  extends: [functional.configs.stylistic, ...pagopa],
   languageOptions: {
     parser: tseslint.parser,
     parserOptions: {

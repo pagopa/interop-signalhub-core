@@ -22,7 +22,6 @@
   },
   "devDependencies": {
     "pagopa-signalhub-commons-test": "workspace:*",
-    "@pagopa/eslint-config": "^4.0.1",
     "@types/node": "^20.11.24",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",

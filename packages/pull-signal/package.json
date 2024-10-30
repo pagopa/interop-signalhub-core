@@ -34,7 +34,6 @@
   },
   "devDependencies": {
     "commander": "^12.1.0",
-    "@pagopa/eslint-config": "^4.0.1",
     "@types/express": "^4.17.21",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.11.24",

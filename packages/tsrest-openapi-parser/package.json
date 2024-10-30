@@ -26,7 +26,6 @@
     "@ts-rest/core": "^3.45.2"
   },
   "devDependencies": {
-    "@pagopa/eslint-config": "^4.0.1",
     "@types/node": "^20.11.24",
     "typescript": "^5.3.3"
   }

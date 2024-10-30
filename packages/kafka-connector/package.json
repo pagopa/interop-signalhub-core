@@ -23,7 +23,6 @@
     "ts-pattern": "^5.2.0"
   },
   "devDependencies": {
-    "@pagopa/eslint-config": "^4.0.1",
     "typescript": "^5.5.3"
   }
 }
