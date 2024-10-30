@@ -8,51 +8,51 @@ export function generateApi(version: string): void {
   const openApiDocument = generateOpenAPISpec(
     contract,
     {
+      servers: [
+        {
+          url: `https://api.signalhub.interop.pagopa.it`,
+          description: "Pull signal Production URL",
+        },
+      ],
       info: {
+        title: "Pull signal Service API",
         description: "Exposes the API for Signal-hub pull service",
+
+        version,
+        termsOfService:
+          "https://docs.pagopa.it/interoperabilita-1/normativa-e-approfondimenti",
         license: {
           name: "ISC",
           url: "https://opensource.org/license/isc-license-txt",
         },
-
-        termsOfService:
-          "https://docs.pagopa.it/interoperabilita-1/normativa-e-approfondimenti",
-        title: "Pull signal Service API",
-        version,
       },
-      servers: [
-        {
-          description: "Pull signal Production URL",
-          url: `https://api.signalhub.interop.pagopa.it`,
-        },
-      ],
     },
     {
       setOperationId: true,
     },
     [
       {
+        type: "securitySchemes",
+        name: "bearerAuth",
         component: {
+          type: "http",
+          scheme: "bearer",
           bearerFormat: "JWT",
           description:
             "A bearer token in the format of a JWS and conformed to the specifications included in [RFC8725](https://tools.ietf.org/html/RFC8725).",
-          scheme: "bearer",
-          type: "http",
         },
-        name: "bearerAuth",
-        type: "securitySchemes",
       },
     ],
   );
 
   const document = {
-    components: openApiDocument.components,
-    info: openApiDocument.info,
     openapi: openApiDocument.openapi,
-    paths: openApiDocument.paths,
-    security: openApiDocument.security,
+    info: openApiDocument.info,
     servers: openApiDocument.servers,
     tags: openApiDocument.tags,
+    security: openApiDocument.security,
+    paths: openApiDocument.paths,
+    components: openApiDocument.components,
   };
   const fileOutputDocument = `../../docs/openAPI/pull-signals_${document.info.version}.yaml`;
   writeFileSync(fileOutputDocument, yaml.dump(document));

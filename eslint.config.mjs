@@ -37,5 +37,6 @@ export default tseslint.config({
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/no-invalid-void-type": "off",
     "@typescript-eslint/switch-exhaustiveness-check": "error",
+    "perfectionist/sort-objects": "off",
   },
 });
