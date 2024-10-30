@@ -36,6 +36,6 @@ export default tseslint.config({
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/no-invalid-void-type": "off",
-    // "@typescript-eslint/switch-exhaustiveness-check": "error",
+    "@typescript-eslint/switch-exhaustiveness-check": "error",
   },
 });
