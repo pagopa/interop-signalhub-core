@@ -36,6 +36,8 @@ export default tseslint.config({
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/no-invalid-void-type": "off",
     "@typescript-eslint/switch-exhaustiveness-check": "error",
+    // Some rules inherited from pagoPA eslint config has been disabled
+
     "perfectionist/sort-objects": "off",
     "perfectionist/sort-arrays": "off",
     "perfectionist/sort-object-types": "off",
