@@ -1,8 +1,9 @@
 import {
   InteropSchema,
   ProducerEserviceEntity,
-  TableName,
+  TableName
 } from "pagopa-signalhub-commons";
+
 import { postgresDB } from "./utils.js";
 
 export const insertEserviceIdAndProducerId = async (
@@ -34,7 +35,7 @@ export const findProducerIdByEserviceId = async (
   }
 
   return {
-    producerId: result.producer_id,
+    producerId: result.producer_id
   };
 };
 
@@ -78,7 +79,6 @@ export const insertEserviceDescriptor = async (
   eventStreamId: string,
   eventVersionId: number,
   schema: InteropSchema
-  // eslint-disable-next-line max-params
 ): Promise<void> => {
   const eserviceTable = `${schema}.eservice`;
 

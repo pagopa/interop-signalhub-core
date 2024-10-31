@@ -12,7 +12,7 @@
     "build": "tsc",
     "format:check": "prettier --check src",
     "format:write": "prettier --write src",
-    "lint": "eslint ./src/**",
+    "lint": "eslint ./src/** ",
     "lint:autofix": "eslint ./src/** --fix",
     "check": "tsc --project tsconfig.check.json"
   },

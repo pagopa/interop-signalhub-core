@@ -3,14 +3,14 @@ import tseslint from "typescript-eslint";
 import pagopa from "@pagopa/eslint-config";
 
 export default tseslint.config({
-  files: ["**/*.ts"],
+  files: ["**/*.ts", "**/*.test.ts"],
   ignores: ["**/.eslintrc.cjs", "**/vitest.config.ts", "**/dist"],
   extends: [functional.configs.stylistic, ...pagopa],
   languageOptions: {
     parser: tseslint.parser,
     parserOptions: {
-      projectService: true,
-    },
+      projectService: true
+    }
   },
   rules: {
     "default-case": "off",
@@ -18,8 +18,8 @@ export default tseslint.config({
     "no-console": [
       "error",
       {
-        allow: ["error"],
-      },
+        allow: ["error"]
+      }
     ],
 
     "prefer-arrow/prefer-arrow-functions": "off",
@@ -42,6 +42,6 @@ export default tseslint.config({
     "perfectionist/sort-arrays": "off",
     "perfectionist/sort-object-types": "off",
     "perfectionist/sort-union-types": "off",
-    "prettier/prettier": ["error", { trailingComma: "none" }],
-  },
+    "prettier/prettier": ["error", { trailingComma: "none" }]
+  }
 });

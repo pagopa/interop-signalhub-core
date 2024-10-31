@@ -1,8 +1,9 @@
-import { afterEach, inject } from "vitest";
 import { DB, createDbInstance } from "pagopa-signalhub-commons";
 import { setupTestContainersVitest } from "pagopa-signalhub-commons-test";
-import { storeSignalServiceBuilder } from "../src/services/storeSignal.service.js";
+import { afterEach, inject } from "vitest";
+
 import { processMessage } from "../src/messageHandler.js";
+import { storeSignalServiceBuilder } from "../src/services/storeSignal.service.js";
 
 export const { cleanup, postgresDB } = setupTestContainersVitest(
   inject("signalHubStoreConfig")
@@ -20,6 +21,6 @@ export const wrongDB: DB = createDbInstance({
   port: 65535,
   database: "wrong",
   useSSL: false,
-  maxConnectionPool: 5,
+  maxConnectionPool: 5
 });
 export const wrongStoreSignalService = storeSignalServiceBuilder(wrongDB);

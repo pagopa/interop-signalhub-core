@@ -1,22 +1,23 @@
+import {
+  PurposeEventV1,
+  PurposeEventV2,
+  PurposeStateV1,
+  PurposeStateV2,
+  PurposeV1,
+  PurposeV2,
+  PurposeVersionV1,
+  PurposeVersionV2
+} from "@pagopa/interop-outbound-models";
 import { randomUUID } from "crypto";
 import { setupTestContainersVitest } from "pagopa-signalhub-commons-test";
+import { P, match } from "ts-pattern";
 import { inject } from "vitest";
-import {
-  PurposeV1,
-  PurposeVersionV1,
-  PurposeStateV1,
-  PurposeEventV1,
-  PurposeV2,
-  PurposeEventV2,
-  PurposeStateV2,
-  PurposeVersionV2,
-} from "@pagopa/interop-outbound-models";
 import { z } from "zod";
-import { match, P } from "ts-pattern";
+
+import { toPurposeV1Entity, toPurposeV2Entity } from "../src/handlers/index.js";
+import { PurposeEntity } from "../src/models/domain/model.js";
 import { purposeRepository } from "../src/repositories/purpose.repository.js";
 import { purposeServiceBuilder } from "../src/services/purpose.service.js";
-import { PurposeEntity } from "../src/models/domain/model.js";
-import { toPurposeV1Entity, toPurposeV2Entity } from "../src/handlers/index.js";
 import { writeAPurposeEntity } from "./databaseUtils.js";
 export const { postgresDB } = setupTestContainersVitest(
   inject("signalHubStoreConfig")
@@ -26,7 +27,7 @@ export const purposeService = purposeServiceBuilder(
   purposeRepository(postgresDB)
 );
 
-export const incrementVersion = (version: number = 0): number => version + 1;
+export const incrementVersion = (version = 0): number => version + 1;
 
 export const generateId = (): string => randomUUID();
 export function dateToBigInt(input: Date): bigint {
@@ -44,7 +45,7 @@ export const getMockPurpose = (
   description: "This is a description for a test purpose",
   createdAt: dateToBigInt(new Date()),
   isFreeOfCharge: false,
-  ...partialPurpose,
+  ...partialPurpose
 });
 
 export const getMockPurposeVersion = (
@@ -59,13 +60,13 @@ export const getMockPurposeVersion = (
   ...(state !== PurposeStateV1.DRAFT
     ? {
         updatedAt: dateToBigInt(new Date()),
-        firstActivationAt: dateToBigInt(new Date()),
+        firstActivationAt: dateToBigInt(new Date())
       }
     : {}),
   ...(state === PurposeStateV1.SUSPENDED
     ? { suspendedAt: dateToBigInt(new Date()) }
     : {}),
-  ...(state === PurposeStateV1.REJECTED ? { rejectionReason: "test" } : {}),
+  ...(state === PurposeStateV1.REJECTED ? { rejectionReason: "test" } : {})
 });
 
 export const PurposeEventV1Type = z.union([
@@ -74,7 +75,7 @@ export const PurposeEventV1Type = z.union([
   z.literal("PurposeVersionWaitedForApproval"),
   z.literal("PurposeVersionActivated"),
   z.literal("PurposeVersionSuspended"),
-  z.literal("PurposeVersionArchived"),
+  z.literal("PurposeVersionArchived")
 ]);
 type PurposeEventV1Type = z.infer<typeof PurposeEventV1Type>;
 
@@ -83,7 +84,7 @@ export const PurposeVersionEventV1Type = z.union([
   z.literal("PurposeVersionUpdated"),
   z.literal("PurposeVersionDeleted"),
   z.literal("PurposeVersionRejected"),
-  z.literal("PurposeDeleted"),
+  z.literal("PurposeDeleted")
 ]);
 type PurposeVersionEventV1Type = z.infer<typeof PurposeVersionEventV1Type>;
 
@@ -96,12 +97,12 @@ export const createAPurposeEventV1 = (
   const purposeEventV1: PurposeEventV1 = {
     type,
     data: {
-      purpose,
+      purpose
     },
     event_version: 1,
     stream_id: stream_id || generateId(),
     version: version || 1,
-    timestamp: new Date(),
+    timestamp: new Date()
   };
   return purposeEventV1;
 };
@@ -118,47 +119,44 @@ export const createAPurposeVersionEventV1 = (
     event_version: 1,
     stream_id: stream_id || generateId(),
     version: version || 1,
-    timestamp: new Date(),
+    timestamp: new Date()
   };
-  return (
-    match({ type })
-      .with({ type: "PurposeVersionRejected" }, () => ({
-        ...purposeGeneric,
-        data: {
-          purpose,
-          versionId: purpose.versions[0].id,
-        },
-      }))
-      .with({ type: "PurposeDeleted" }, () => ({
-        ...purposeGeneric,
-        data: {
-          purposeId: purpose.id,
-        },
-      }))
-      .with({ type: "PurposeVersionDeleted" }, () => ({
-        ...purposeGeneric,
-        data: {
-          purposeId: purpose.id,
-          versionId: purpose.versions[0].id,
-        },
-      }))
-      .with({ type: "PurposeVersionUpdated" }, () => ({
-        ...purposeGeneric,
-        data: {
-          purposeId: purpose.id,
-          version: purpose.versions[0],
-        },
-      }))
-      // eslint-disable-next-line sonarjs/no-identical-functions
-      .with({ type: "PurposeVersionCreated" }, () => ({
-        ...purposeGeneric,
-        data: {
-          purposeId: purpose.id,
-          version: purpose.versions[0],
-        },
-      }))
-      .exhaustive()
-  );
+  return match({ type })
+    .with({ type: "PurposeVersionRejected" }, () => ({
+      ...purposeGeneric,
+      data: {
+        purpose,
+        versionId: purpose.versions[0].id
+      }
+    }))
+    .with({ type: "PurposeDeleted" }, () => ({
+      ...purposeGeneric,
+      data: {
+        purposeId: purpose.id
+      }
+    }))
+    .with({ type: "PurposeVersionDeleted" }, () => ({
+      ...purposeGeneric,
+      data: {
+        purposeId: purpose.id,
+        versionId: purpose.versions[0].id
+      }
+    }))
+    .with({ type: "PurposeVersionUpdated" }, () => ({
+      ...purposeGeneric,
+      data: {
+        purposeId: purpose.id,
+        version: purpose.versions[0]
+      }
+    }))
+    .with({ type: "PurposeVersionCreated" }, () => ({
+      ...purposeGeneric,
+      data: {
+        purposeId: purpose.id,
+        version: purpose.versions[0]
+      }
+    }))
+    .exhaustive();
 };
 
 export async function createAndWriteAPurposeEventV1(
@@ -186,7 +184,7 @@ export const PurposeEventV2Type = z.union([
   z.literal("PurposeWaitingForApproval"),
   z.literal("PurposeActivated"),
   z.literal("DraftPurposeDeleted"),
-  z.literal("WaitingForApprovalPurposeDeleted"),
+  z.literal("WaitingForApprovalPurposeDeleted")
 ]);
 type PurposeEventV2Type = z.infer<typeof PurposeEventV2Type>;
 
@@ -202,7 +200,7 @@ export const PurposeVersionEventV2Type = z.union([
   z.literal("PurposeArchived"),
   z.literal("WaitingForApprovalPurposeVersionDeleted"),
   z.literal("PurposeVersionRejected"),
-  z.literal("PurposeCloned"),
+  z.literal("PurposeCloned")
 ]);
 type PurposeVersionEventV2Type = z.infer<typeof PurposeVersionEventV2Type>;
 
@@ -215,12 +213,12 @@ export const createAPurposeEventV2 = (
   const purposeEventV2: PurposeEventV2 = {
     type,
     data: {
-      purpose,
+      purpose
     },
     event_version: 2,
     stream_id: stream_id || generateId(),
     version: version || 1,
-    timestamp: new Date(),
+    timestamp: new Date()
   };
   return purposeEventV2;
 };
@@ -237,7 +235,7 @@ export const createAPurposeVersionEventV2 = (
     event_version: 2,
     stream_id: stream_id || generateId(),
     version: version || 1,
-    timestamp: new Date(),
+    timestamp: new Date()
   };
   return match({ type })
     .with(
@@ -254,15 +252,14 @@ export const createAPurposeVersionEventV2 = (
           "PurposeArchived",
           "WaitingForApprovalPurposeVersionDeleted",
           "PurposeVersionRejected"
-        ),
+        )
       },
-      // eslint-disable-next-line sonarjs/no-identical-functions
       () => ({
         ...purposeGeneric,
         data: {
           purpose,
-          versionId: purpose.versions[0].id,
-        },
+          versionId: purpose.versions[0].id
+        }
       })
     )
     .with({ type: "PurposeCloned" }, () => ({
@@ -270,8 +267,8 @@ export const createAPurposeVersionEventV2 = (
       data: {
         purposeId: purpose.id,
         version: purpose.versions[0],
-        sourcePurposeId: purpose.id,
-      },
+        sourcePurposeId: purpose.id
+      }
     }))
     .exhaustive();
 };
@@ -306,7 +303,7 @@ export const fromEventToEntity = (
   eserviceId: purpose.eserviceId,
   consumerId: purpose.consumerId,
   eventStreamId: event.stream_id,
-  eventVersionId: event.version,
+  eventVersionId: event.version
 });
 
 const getPurposeState = (
@@ -326,5 +323,5 @@ export const toPurposeEntity = (purpose: any): PurposeEntity => ({
   eserviceId: purpose.eservice_id,
   consumerId: purpose.consumer_id,
   eventStreamId: purpose.event_stream_id,
-  eventVersionId: Number(purpose.event_version_id),
+  eventVersionId: Number(purpose.event_version_id)
 });

@@ -1,20 +1,21 @@
-import { randomUUID } from "crypto";
-import { setupTestContainersVitest } from "pagopa-signalhub-commons-test";
-import { inject } from "vitest";
 import {
   AgreementEventV1,
   AgreementEventV2,
   AgreementStateV1,
   AgreementStateV2,
   AgreementV1,
-  AgreementV2,
+  AgreementV2
 } from "@pagopa/interop-outbound-models";
-import { z } from "zod";
+import { randomUUID } from "crypto";
+import { setupTestContainersVitest } from "pagopa-signalhub-commons-test";
 import { match } from "ts-pattern";
+import { inject } from "vitest";
+import { z } from "zod";
+
+import { config } from "../src/config/env.js";
+import { AgreementEntity } from "../src/models/domain/model.js";
 import { agreementRepository } from "../src/repositories/index.js";
 import { agreementServiceBuilder } from "../src/services/index.js";
-import { AgreementEntity } from "../src/models/domain/model.js";
-import { config } from "../src/config/env.js";
 import { writeAnAgreementEntity } from "./databaseUtils.js";
 
 export const { postgresDB } = setupTestContainersVitest(
@@ -47,7 +48,7 @@ export const createAnAgreementV1 = (
   verifiedAttributes: [],
   createdAt: BigInt(new Date().getTime()),
 
-  ...partialAgreement,
+  ...partialAgreement
 });
 
 export const createAnAgreementAddedEventV1 = (
@@ -58,12 +59,12 @@ export const createAnAgreementAddedEventV1 = (
   const agreementEventAddedV1: AgreementEventV1 = {
     type: "AgreementAdded",
     data: {
-      agreement,
+      agreement
     },
     event_version: 1,
     stream_id: stream_id || generateID(),
     version: version || 1,
-    timestamp: new Date(),
+    timestamp: new Date()
   };
   return agreementEventAddedV1;
 };
@@ -76,12 +77,12 @@ export const createAnAgreementUpdatedEventV1 = (
   const agreementEventAddedV1: AgreementEventV1 = {
     type: "AgreementUpdated",
     data: {
-      agreement,
+      agreement
     },
     event_version: 1,
     stream_id,
     version: version || 1,
-    timestamp: new Date(),
+    timestamp: new Date()
   };
   return agreementEventAddedV1;
 };
@@ -95,12 +96,12 @@ export const createAnAgreementContractAddedEventV1 = (
     type: "AgreementContractAdded",
     data: {
       agreementId: agreement.id,
-      contract: undefined,
+      contract: undefined
     },
     event_version: 1,
     stream_id: stream_id || generateID(),
     version: version || 1,
-    timestamp: new Date(),
+    timestamp: new Date()
   };
   return agreementEventAddedV1;
 };
@@ -113,12 +114,12 @@ export const createAnAgreementActivatedEventV1 = (
   const agreementEventAddedV1: AgreementEventV1 = {
     type: "AgreementActivated",
     data: {
-      agreement,
+      agreement
     },
     event_version: 1,
     stream_id,
     version: version || 1,
-    timestamp: new Date(),
+    timestamp: new Date()
   };
   return agreementEventAddedV1;
 };
@@ -131,12 +132,12 @@ export const createAnAgreementDeletedEventV1 = (
   const agreementEventAddedV1: AgreementEventV1 = {
     type: "AgreementDeleted",
     data: {
-      agreementId: agreement.id,
+      agreementId: agreement.id
     },
     event_version: 1,
     stream_id,
     version: version || 1,
-    timestamp: new Date(),
+    timestamp: new Date()
   };
   return agreementEventAddedV1;
 };
@@ -179,7 +180,7 @@ export const AgreementEventV2Type = z.union([
   z.literal("AgreementRejected"),
   z.literal("DraftAgreementUpdated"),
   z.literal("AgreementSubmitted"),
-  z.literal("AgreementDeleted"),
+  z.literal("AgreementDeleted")
 ]);
 type AgreementEventV2Type = z.infer<typeof AgreementEventV2Type>;
 
@@ -192,12 +193,12 @@ export const createAnAgreementEventV2 = (
   const agreementEventV2: AgreementEventV2 = {
     type,
     data: {
-      agreement,
+      agreement
     },
     event_version: 2,
     stream_id,
     version: version || 1,
-    timestamp: new Date(),
+    timestamp: new Date()
   };
   return agreementEventV2;
 };
@@ -217,7 +218,7 @@ export const createAnAgreementV2 = (
   verifiedAttributes: [],
   createdAt: BigInt(new Date().getTime()),
 
-  ...partialAgreement,
+  ...partialAgreement
 });
 
 export const createAnAgreementConsumerDocumentAddedEventV2 = (
@@ -229,12 +230,12 @@ export const createAnAgreementConsumerDocumentAddedEventV2 = (
     type: "AgreementConsumerDocumentAdded",
     data: {
       agreement,
-      documentId: generateID(),
+      documentId: generateID()
     },
     event_version: 2,
     stream_id,
     version: version || 1,
-    timestamp: new Date(),
+    timestamp: new Date()
   };
   return agreementEventV2;
 };
@@ -271,7 +272,7 @@ export const fromEventToEntity = (
   consumer_id: agreement.consumerId,
   state: getAgreementState(event, agreement),
   event_stream_id: event.stream_id,
-  event_version_id: event.version,
+  event_version_id: event.version
 });
 
 const getAgreementState = (

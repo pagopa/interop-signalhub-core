@@ -1,18 +1,18 @@
-import { beforeAll, describe, expect, it } from "vitest";
 import { genericLogger } from "pagopa-signalhub-commons";
-
 import {
-  createEservice,
   createAdministrativeActsForConsumer,
+  createEservice,
   createPurpose,
   dataResetForSignalConsumers,
-  getAnEservice,
   getAPurpose,
-  getUUID,
+  getAnEservice,
+  getUUID
 } from "pagopa-signalhub-commons-test";
-import { operationPullForbidden } from "../src/model/domain/errors";
+import { beforeAll, describe, expect, it } from "vitest";
+
 import { config } from "../src/config/env.js";
-import { interopService, postgresDB } from "./utils";
+import { operationPullForbidden } from "../src/model/domain/errors.js";
+import { interopService, postgresDB } from "./utils.js";
 
 describe("PDND Interoperability service", () => {
   beforeAll(async () => {
@@ -78,7 +78,7 @@ describe("PDND Interoperability service", () => {
     ).rejects.toThrowError(
       operationPullForbidden({
         consumerId,
-        eserviceId,
+        eserviceId
       })
     );
   });
@@ -106,7 +106,7 @@ describe("PDND Interoperability service", () => {
     ).rejects.toThrowError(
       operationPullForbidden({
         consumerId,
-        eserviceId,
+        eserviceId
       })
     );
   });
@@ -156,7 +156,7 @@ describe("PDND Interoperability service", () => {
     ).rejects.toThrowError(
       operationPullForbidden({
         consumerId,
-        eserviceId,
+        eserviceId
       })
     );
   });
@@ -264,7 +264,7 @@ describe("PDND Interoperability service", () => {
     const eservice = {
       eServiceId: eserviceId,
       descriptorId: "1",
-      state: "DRAFT",
+      state: "DRAFT"
     };
     const agreement = { eserviceId, consumerId };
     const purpose = { eserviceId, consumerId };
@@ -281,7 +281,7 @@ describe("PDND Interoperability service", () => {
       getAnEservice({
         eServiceId: eserviceId,
         descriptorId: "2",
-        state: "PUBLISHED",
+        state: "PUBLISHED"
       })
     );
 

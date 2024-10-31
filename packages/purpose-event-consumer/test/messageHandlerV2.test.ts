@@ -1,33 +1,34 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import { genericLogger } from "pagopa-signalhub-commons";
 import {
   PurposeEventV2,
   PurposeStateV2,
   PurposeV2,
-  PurposeVersionV2,
+  PurposeVersionV2
 } from "@pagopa/interop-outbound-models";
+import { genericLogger } from "pagopa-signalhub-commons";
 import { truncatePurposeTable } from "pagopa-signalhub-commons-test";
-import { handleMessageV2 } from "../src/handlers/index.js";
+import { beforeEach, describe, expect, it } from "vitest";
+
 import { config } from "../src/config/env.js";
+import { handleMessageV2 } from "../src/handlers/index.js";
+import { getAPurposeEntityBy } from "./databaseUtils.js";
 import {
-  createAndWriteAPurposeEventV2,
   createAPurposeEventV2,
   createAPurposeVersionEventV2,
+  createAndWriteAPurposeEventV2,
   fromEventToEntity,
   generateId,
   getMockPurpose,
   getMockPurposeVersion,
   incrementVersion,
   postgresDB,
-  purposeService,
+  purposeService
 } from "./utils.js";
-import { getAPurposeEntityBy } from "./databaseUtils.js";
 
 describe("Message Handler for V2 EVENTS", () => {
   beforeEach(() => truncatePurposeTable(postgresDB, config.interopSchema));
   const mockPurposeV2 = {
     ...getMockPurpose(),
-    isFreeOfCharge: false,
+    isFreeOfCharge: false
   } as PurposeV2;
   const mockPurposeVersionV2 = getMockPurposeVersion() as PurposeVersionV2;
 
@@ -37,19 +38,19 @@ describe("Message Handler for V2 EVENTS", () => {
       "DraftPurposeUpdated",
       "PurposeWaitingForApproval",
       "DraftPurposeDeleted",
-      "WaitingForApprovalPurposeDeleted",
+      "WaitingForApprovalPurposeDeleted"
     ] as const;
 
     const eventVersionTypes = [
       "NewPurposeVersionWaitingForApproval",
       "WaitingForApprovalPurposeVersionDeleted",
       "PurposeVersionRejected",
-      "PurposeCloned",
+      "PurposeCloned"
     ] as const;
 
     const purpose: PurposeV2 = {
       ...mockPurposeV2,
-      versions: [mockPurposeVersionV2],
+      versions: [mockPurposeVersionV2]
     };
 
     for (const eventType of eventTypes) {
@@ -77,15 +78,15 @@ describe("Message Handler for V2 EVENTS", () => {
   it("Should activate a purpose for a PurposeVersionActivated, NewPurposeVersionActivated event", async () => {
     const anActiveVersion = {
       ...mockPurposeVersionV2,
-      state: PurposeStateV2.ACTIVE,
+      state: PurposeStateV2.ACTIVE
     };
     const purposeV2: PurposeV2 = {
       ...mockPurposeV2,
-      versions: [anActiveVersion],
+      versions: [anActiveVersion]
     };
     const eventVersionTypes = [
       "PurposeVersionActivated",
-      "NewPurposeVersionActivated",
+      "NewPurposeVersionActivated"
     ] as const;
     for (const eventVersionType of eventVersionTypes) {
       const purposeEventV2 = createAPurposeVersionEventV2(
@@ -108,15 +109,15 @@ describe("Message Handler for V2 EVENTS", () => {
   it("Should activate a purpose for a PurposeActivated event, with two version: one ACTIVE, one in DRAFT", async () => {
     const anActiveVersion = {
       ...mockPurposeVersionV2,
-      state: PurposeStateV2.ACTIVE,
+      state: PurposeStateV2.ACTIVE
     };
     const aDraftVersion = {
       ...mockPurposeVersionV2,
-      state: PurposeStateV2.DRAFT,
+      state: PurposeStateV2.DRAFT
     };
     const purposeV2: PurposeV2 = {
       ...mockPurposeV2,
-      versions: [anActiveVersion, aDraftVersion],
+      versions: [anActiveVersion, aDraftVersion]
     };
     const purposeEventV2 = createAPurposeEventV2("PurposeActivated", purposeV2);
 
@@ -134,15 +135,15 @@ describe("Message Handler for V2 EVENTS", () => {
   it("Should activate a purpose for a PurposeVersionOverQuotaUnsuspended event, with two version: one ACTIVE, one in WAITING_FOR_APPROVAL", async () => {
     const anActiveVersion = {
       ...mockPurposeVersionV2,
-      state: PurposeStateV2.ACTIVE,
+      state: PurposeStateV2.ACTIVE
     };
     const aWaitingForApprovalVersion = {
       ...mockPurposeVersionV2,
-      state: PurposeStateV2.WAITING_FOR_APPROVAL,
+      state: PurposeStateV2.WAITING_FOR_APPROVAL
     };
     const purposeV2: PurposeV2 = {
       ...mockPurposeV2,
-      versions: [anActiveVersion, aWaitingForApprovalVersion],
+      versions: [anActiveVersion, aWaitingForApprovalVersion]
     };
     const purposeEventV2 = createAPurposeVersionEventV2(
       "PurposeVersionOverQuotaUnsuspended",
@@ -162,15 +163,15 @@ describe("Message Handler for V2 EVENTS", () => {
   it("Should not activate a purpose for a PurposeActivated event without a version in ACTIVE state", async () => {
     const aSuspendedVersion = {
       ...mockPurposeVersionV2,
-      state: PurposeStateV2.SUSPENDED,
+      state: PurposeStateV2.SUSPENDED
     };
     const aWaitingForApprovalVersion = {
       ...mockPurposeVersionV2,
-      state: PurposeStateV2.WAITING_FOR_APPROVAL,
+      state: PurposeStateV2.WAITING_FOR_APPROVAL
     };
     const purposeV2: PurposeV2 = {
       ...mockPurposeV2,
-      versions: [aSuspendedVersion, aWaitingForApprovalVersion],
+      versions: [aSuspendedVersion, aWaitingForApprovalVersion]
     };
     const purposeEventV2 = createAPurposeEventV2("PurposeActivated", purposeV2);
 
@@ -190,11 +191,11 @@ describe("Message Handler for V2 EVENTS", () => {
     const version = 1;
     const anActiveVersion = {
       ...mockPurposeVersionV2,
-      state: PurposeStateV2.ACTIVE,
+      state: PurposeStateV2.ACTIVE
     };
     const purposeV2: PurposeV2 = {
       ...mockPurposeV2,
-      versions: [anActiveVersion],
+      versions: [anActiveVersion]
     };
     await createAndWriteAPurposeEventV2(purposeV2, streamId, version);
 
@@ -203,9 +204,9 @@ describe("Message Handler for V2 EVENTS", () => {
       versions: [
         {
           ...mockPurposeVersionV2,
-          state: PurposeStateV2.ACTIVE,
-        },
-      ],
+          state: PurposeStateV2.ACTIVE
+        }
+      ]
     };
     const purposeEventV2 = createAPurposeVersionEventV2(
       "PurposeVersionSuspendedByProducer",
@@ -229,30 +230,30 @@ describe("Message Handler for V2 EVENTS", () => {
     const version = 1;
     const anActiveVersion = {
       ...mockPurposeVersionV2,
-      state: PurposeStateV2.ACTIVE,
+      state: PurposeStateV2.ACTIVE
     };
     const aSuspendedVersion = {
       ...mockPurposeVersionV2,
-      state: PurposeStateV2.SUSPENDED,
+      state: PurposeStateV2.SUSPENDED
     };
     const aDraftVersion = {
       ...mockPurposeVersionV2,
-      state: PurposeStateV2.DRAFT,
+      state: PurposeStateV2.DRAFT
     };
     const purposeV2: PurposeV2 = {
       ...mockPurposeV2,
-      versions: [anActiveVersion],
+      versions: [anActiveVersion]
     };
     await createAndWriteAPurposeEventV2(purposeV2, streamId, version);
 
     const purposeSuspendedV2: PurposeV2 = {
       ...mockPurposeV2,
-      versions: [aSuspendedVersion, aDraftVersion],
+      versions: [aSuspendedVersion, aDraftVersion]
     };
 
     const eventVersionTypes = [
       "PurposeVersionSuspendedByProducer",
-      "PurposeVersionSuspendedByConsumer",
+      "PurposeVersionSuspendedByConsumer"
     ] as const;
     for (const eventVersionType of eventVersionTypes) {
       const purposeEventV2 = createAPurposeVersionEventV2(
@@ -277,20 +278,20 @@ describe("Message Handler for V2 EVENTS", () => {
   it("Should not suspend a purpose for a PurposeVersionUnsuspendedByProducer, PurposeVersionUnsuspendedByConsumer events with a version in ACTIVE state", async () => {
     const anActiveVersion = {
       ...mockPurposeVersionV2,
-      state: PurposeStateV2.ACTIVE,
+      state: PurposeStateV2.ACTIVE
     };
     const aSuspendedVersion = {
       ...mockPurposeVersionV2,
-      state: PurposeStateV2.SUSPENDED,
+      state: PurposeStateV2.SUSPENDED
     };
     const purposeV2: PurposeV2 = {
       ...mockPurposeV2,
-      versions: [aSuspendedVersion, anActiveVersion],
+      versions: [aSuspendedVersion, anActiveVersion]
     };
 
     const eventVersionTypes = [
       "PurposeVersionUnsuspendedByProducer",
-      "PurposeVersionUnsuspendedByConsumer",
+      "PurposeVersionUnsuspendedByConsumer"
     ] as const;
     for (const eventVersionType of eventVersionTypes) {
       const purposeEventV2 = createAPurposeVersionEventV2(
@@ -315,15 +316,15 @@ describe("Message Handler for V2 EVENTS", () => {
     const version = 1;
     const anArchivedVersion = {
       ...mockPurposeVersionV2,
-      state: PurposeStateV2.ACTIVE,
+      state: PurposeStateV2.ACTIVE
     };
     const aSuspendedVersion = {
       ...mockPurposeVersionV2,
-      state: PurposeStateV2.SUSPENDED,
+      state: PurposeStateV2.SUSPENDED
     };
     const purposeV2: PurposeV2 = {
       ...mockPurposeV2,
-      versions: [aSuspendedVersion, anArchivedVersion],
+      versions: [aSuspendedVersion, anArchivedVersion]
     };
     const purposeEventV2 = createAPurposeVersionEventV2(
       "PurposeArchived",
@@ -346,12 +347,12 @@ describe("Message Handler for V2 EVENTS", () => {
     const purposeEventV2: PurposeEventV2 = {
       type: "PurposeActivated",
       data: {
-        purpose: undefined,
+        purpose: undefined
       },
       event_version: 2,
       stream_id: generateId(),
       version: 1,
-      timestamp: new Date(),
+      timestamp: new Date()
     };
     await expect(
       handleMessageV2(purposeEventV2, purposeService, genericLogger)
@@ -361,11 +362,11 @@ describe("Message Handler for V2 EVENTS", () => {
   it("Should throw an error if versions[] has no valid state", async () => {
     const aDraftVersion = {
       ...mockPurposeVersionV2,
-      state: PurposeStateV2.DRAFT,
+      state: PurposeStateV2.DRAFT
     };
     const purposeV2: PurposeV2 = {
       ...mockPurposeV2,
-      versions: [aDraftVersion],
+      versions: [aDraftVersion]
     };
     const purposeEventV2 = createAPurposeEventV2("PurposeActivated", purposeV2);
 

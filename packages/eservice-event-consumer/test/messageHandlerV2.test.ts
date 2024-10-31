@@ -1,25 +1,26 @@
-import { describe, expect, it } from "vitest";
 import { EServiceDescriptorStateV2 } from "@pagopa/interop-outbound-models";
 import { genericLogger } from "pagopa-signalhub-commons";
-import { handleMessageV2 } from "../src/handlers/messageHandlerV2.js";
+import { describe, expect, it } from "vitest";
+
 import { config } from "../src/config/env.js";
-import {
-  createEserviceAddedEventV2,
-  createEServiceDescriptorAddedEventV2,
-  eServiceService,
-  generateID,
-  createEServiceWithDescriptorsDeletedEventV2,
-  createV2Event,
-  createEServiceDescriptorUpdatedEventV2,
-  incrementVersion,
-  getDescriptorV2,
-  randomArrayItem,
-} from "./utils.js";
+import { handleMessageV2 } from "../src/handlers/messageHandlerV2.js";
 import {
   findByEserviceIdAndProducerIdAndDescriptorId,
   getCountByEserviceId,
-  insertEserviceDescriptor,
+  insertEserviceDescriptor
 } from "./databaseUtils.js";
+import {
+  createEServiceDescriptorAddedEventV2,
+  createEServiceDescriptorUpdatedEventV2,
+  createEServiceWithDescriptorsDeletedEventV2,
+  createEserviceAddedEventV2,
+  createV2Event,
+  eServiceService,
+  generateID,
+  getDescriptorV2,
+  incrementVersion,
+  randomArrayItem
+} from "./utils.js";
 
 describe("Message Handler for V2 EVENTS", () => {
   describe("Should matching Event", () => {
@@ -303,7 +304,7 @@ describe("Message Handler for V2 EVENTS", () => {
 
       const descriptorVersion1 = getDescriptorV2({
         id: descriptorIdV1,
-        state: EServiceDescriptorStateV2.DRAFT,
+        state: EServiceDescriptorStateV2.DRAFT
       });
 
       await insertEserviceDescriptor(
@@ -322,7 +323,7 @@ describe("Message Handler for V2 EVENTS", () => {
 
       const descriptorVersion2 = getDescriptorV2({
         id: descriptorIdV2,
-        state: EServiceDescriptorStateV2.PUBLISHED,
+        state: EServiceDescriptorStateV2.PUBLISHED
       });
 
       await insertEserviceDescriptor(
@@ -338,7 +339,7 @@ describe("Message Handler for V2 EVENTS", () => {
       // Create event for the third descriptor
       const descriptorEvent = getDescriptorV2({
         id: generateID(),
-        state: EServiceDescriptorStateV2.DRAFT,
+        state: EServiceDescriptorStateV2.DRAFT
       });
 
       const eServiceV2 = createV2Event(

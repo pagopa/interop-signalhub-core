@@ -1,11 +1,12 @@
-import { afterEach, describe, expect, it } from "vitest";
 import { genericLogger } from "pagopa-signalhub-commons";
 import {
-  createSignal,
-  createMultipleSignals,
-  writeSignals,
   createMultipleOrderedSignals,
+  createMultipleSignals,
+  createSignal,
+  writeSignals
 } from "pagopa-signalhub-commons-test";
+import { afterEach, describe, expect, it } from "vitest";
+
 import { config } from "../src/config/env.js";
 import {
   cleanup,
@@ -13,7 +14,7 @@ import {
   signalService,
   sortSignalsBySignalId,
   toSignal,
-  toSignals,
+  toSignals
 } from "./utils.js";
 
 describe("Pull Signal service", () => {
@@ -160,7 +161,7 @@ describe("Pull Signal service", () => {
     const eserviceId = "an-eservice-id";
     const totalSignals = 12;
     const batchSignals = createMultipleOrderedSignals(totalSignals, {
-      eserviceId,
+      eserviceId
     });
     await writeSignals(batchSignals, postgresDB, config.signalHubSchema);
 
@@ -180,7 +181,7 @@ describe("Pull Signal service", () => {
     const eserviceId = "an-eservice-id";
     const totalSignals = 20;
     const batchSignals = createMultipleOrderedSignals(totalSignals, {
-      eserviceId,
+      eserviceId
     });
     await writeSignals(batchSignals, postgresDB, config.signalHubSchema);
 

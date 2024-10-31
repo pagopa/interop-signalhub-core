@@ -1,6 +1,3 @@
-import { randomUUID } from "crypto";
-import { inject } from "vitest";
-import { setupTestContainersVitest } from "pagopa-signalhub-commons-test";
 import {
   AgreementApprovalPolicyV2,
   EServiceDescriptorStateV1,
@@ -14,12 +11,16 @@ import {
   EServiceTechnologyV1,
   EServiceTechnologyV2,
   EServiceV1,
-  EServiceV2,
+  EServiceV2
 } from "@pagopa/interop-outbound-models";
+import { randomUUID } from "crypto";
+import { setupTestContainersVitest } from "pagopa-signalhub-commons-test";
+import { inject } from "vitest";
 import { z } from "zod";
-import { eServiceServiceBuilder } from "../src/services/eservice.service.js";
-import { eServiceRepository } from "../src/repositories/eservice.repository.js";
+
 import { eServiceProducerRepository } from "../src/repositories/eServiceProducer.repository.js";
+import { eServiceRepository } from "../src/repositories/eservice.repository.js";
+import { eServiceServiceBuilder } from "../src/services/eservice.service.js";
 
 export const { postgresDB } = setupTestContainersVitest(
   inject("signalHubStoreConfig")
@@ -46,7 +47,7 @@ const descriptor: EServiceDescriptorV1 = {
   version: "1",
   voucherLifespan: 100,
   serverUrls: ["http://test.com"],
-  docs: [],
+  docs: []
 };
 
 export const getDescriptorV2 = (
@@ -64,14 +65,14 @@ export const getDescriptorV2 = (
   version: 1n,
   voucherLifespan: 100,
   rejectionReasons: [],
-  ...partialDescriptorV2,
+  ...partialDescriptorV2
 });
 
 export const createEserviceDescriptorV1 = (
   partialEserviceDescriptorV1?: Partial<EServiceDescriptorV1>
 ): EServiceDescriptorV1 => ({
   ...descriptor,
-  ...partialEserviceDescriptorV1,
+  ...partialEserviceDescriptorV1
 });
 
 export const createEServiceV1 = (
@@ -85,7 +86,7 @@ export const createEServiceV1 = (
   mode: EServiceModeV1.RECEIVE,
   technology: EServiceTechnologyV1.REST,
   ...partialEservice,
-  descriptors: [descriptorItem || descriptor],
+  descriptors: [descriptorItem || descriptor]
 });
 
 export const createEserviceAddedEventV1 = (
@@ -99,8 +100,8 @@ export const createEserviceAddedEventV1 = (
   version: version || 1,
   stream_id: stream_id || generateID(),
   data: {
-    eservice: eserviceV1,
-  },
+    eservice: eserviceV1
+  }
 });
 
 export const createEserviceDescriptorAddedEventV1 = (
@@ -116,8 +117,8 @@ export const createEserviceDescriptorAddedEventV1 = (
   version: version || 1,
   data: {
     eserviceId: eServiceId,
-    eserviceDescriptor: descriptor,
-  },
+    eserviceDescriptor: descriptor
+  }
 });
 
 export const createEserviceDescriptorUpdatedEventV1 = (
@@ -133,8 +134,8 @@ export const createEserviceDescriptorUpdatedEventV1 = (
   version: version || 1,
   data: {
     eserviceId: eServiceId,
-    eserviceDescriptor: descriptor,
-  },
+    eserviceDescriptor: descriptor
+  }
 });
 
 export const createEServiceClonedEventV1 = (
@@ -148,8 +149,8 @@ export const createEServiceClonedEventV1 = (
   timestamp: new Date(),
   version: version || 1,
   data: {
-    eservice: eServiceV1,
-  },
+    eservice: eServiceV1
+  }
 });
 
 export const createEServiceWithDescriptorsDeletedEventV1 = (
@@ -164,8 +165,8 @@ export const createEServiceWithDescriptorsDeletedEventV1 = (
   version: version || 1,
   data: {
     descriptorId: eserviceV1.descriptors[0].id,
-    eservice: eserviceV1,
-  },
+    eservice: eserviceV1
+  }
 });
 
 export const createEserviceAddedEventV2 = (
@@ -179,8 +180,8 @@ export const createEserviceAddedEventV2 = (
   timestamp: new Date(),
   version: version || 1,
   data: {
-    eservice: eServiceV2,
-  },
+    eservice: eServiceV2
+  }
 });
 
 export const createEServiceDescriptorAddedEventV2 = (
@@ -196,8 +197,8 @@ export const createEServiceDescriptorAddedEventV2 = (
   version: version || 1,
   data: {
     descriptorId,
-    eservice: eServiceV2,
-  },
+    eservice: eServiceV2
+  }
 });
 
 export const createEServiceWithDescriptorsDeletedEventV2 = (
@@ -212,8 +213,8 @@ export const createEServiceWithDescriptorsDeletedEventV2 = (
   version: version || 1,
   data: {
     eserviceId: eServiceV2.id,
-    eservice: eServiceV2,
-  },
+    eservice: eServiceV2
+  }
 });
 
 export const createV2Event = (
@@ -223,7 +224,6 @@ export const createV2Event = (
   isSignalHubEnabled: boolean | undefined,
   eServiceDescriptorState: EServiceDescriptorStateV2,
   descriptors?: EServiceDescriptorV2[]
-  // eslint-disable-next-line max-params
 ): EServiceV2 => ({
   id: eServiceId,
   producerId,
@@ -239,9 +239,9 @@ export const createV2Event = (
     : [
         getDescriptorV2({
           id: descriptorId,
-          state: eServiceDescriptorState,
-        }),
-      ],
+          state: eServiceDescriptorState
+        })
+      ]
 });
 
 export const EServiceEventV2UpdateType = z.union([
@@ -251,7 +251,7 @@ export const EServiceEventV2UpdateType = z.union([
   z.literal("EServiceDescriptorPublished"),
   z.literal("EServiceDescriptorSuspended"),
   z.literal("EServiceDraftDescriptorUpdated"),
-  z.literal("EServiceDraftDescriptorDeleted"),
+  z.literal("EServiceDraftDescriptorDeleted")
 ]);
 
 export type EServiceEventV2UpdateType = z.infer<
@@ -272,8 +272,8 @@ export const createEServiceDescriptorUpdatedEventV2 = (
   version: version || 1,
   data: {
     descriptorId,
-    eservice: eServiceV2,
-  },
+    eservice: eServiceV2
+  }
 });
 
 export function randomArrayItem<T>(array: T[]): T {

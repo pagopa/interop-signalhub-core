@@ -6,8 +6,8 @@
   "main": "dist",
   "scripts": {
     "start": "node --watch --loader ts-node/esm -r 'dotenv-flow/config'  ./src/index.ts",
-    "lint": "eslint ./src/**",
-    "lint:autofix": "eslint ./src/** --fix",
+    "lint": "eslint ./src/** ./test/**",
+    "lint:autofix": "eslint ./src/** ./test/** --fix",
     "build": "tsc",
     "test": "vitest",
     "api:validate": "node --loader ts-node/esm -r 'dotenv-flow/config' ./scripts/validate-api.ts",

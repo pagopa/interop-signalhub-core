@@ -1,5 +1,6 @@
 import { createSignalPayload } from "pagopa-signalhub-commons-test";
 import { describe, expect, expectTypeOf, it } from "vitest";
+
 import { toSignalMessage } from "../src/models/domain/toSignalMessage.js";
 
 describe("A signal request from a producer", () => {

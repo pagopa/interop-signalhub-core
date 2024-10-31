@@ -1,6 +1,6 @@
 {
   "editor.formatOnSave": true,
-  "prettier.requireConfig": false,
+  "prettier.requireConfig": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit"
   },

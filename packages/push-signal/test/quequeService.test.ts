@@ -1,8 +1,9 @@
-import { beforeEach, describe, expect, inject, it } from "vitest";
 import { ApiError, genericLogger } from "pagopa-signalhub-commons";
-import { deleteAllSqsMessages, SqsConfig } from "pagopa-signalhub-commons-test";
-import { ErrorCodes } from "../src/models/domain/errors.js";
+import { SqsConfig, deleteAllSqsMessages } from "pagopa-signalhub-commons-test";
+import { beforeEach, describe, expect, inject, it } from "vitest";
+
 import { config } from "../src/config/env.js";
+import { ErrorCodes } from "../src/models/domain/errors.js";
 import { quequeService, sqsClient } from "./utils.js";
 
 const sqsConfig: SqsConfig = inject("sqsConfig");
@@ -15,7 +16,7 @@ describe("Queue service", () => {
 
   it("should send some generic dummy message", async () => {
     const message = {
-      some: "value",
+      some: "value"
     };
 
     await expect(
@@ -30,7 +31,7 @@ describe("Queue service", () => {
     const message = {
       omega,
       desertIslandEmoji,
-      tabulation,
+      tabulation
     };
     await expect(
       quequeService.send(JSON.stringify(message), genericLogger, queueUrl)
@@ -47,11 +48,12 @@ describe("Queue service", () => {
     const wrongQueueUrl = sqsConfig.queueUrl + "wrong";
     const response = expect(
       quequeService.send(JSON.stringify(""), genericLogger, wrongQueueUrl)
+      // eslint-disable-next-line vitest/valid-expect
     ).rejects;
 
     void response.toBeInstanceOf(ApiError<ErrorCodes>);
     void response.toMatchObject({
-      code: "signalNotSended",
+      code: "signalNotSended"
     });
   });
 });

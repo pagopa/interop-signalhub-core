@@ -1,24 +1,25 @@
-import { beforeEach, describe, expect, it } from "vitest";
 import { AgreementStateV1 } from "@pagopa/interop-outbound-models";
-import { truncateAgreementTable } from "pagopa-signalhub-commons-test";
 import { genericLogger } from "pagopa-signalhub-commons";
-import { handleMessageV1 } from "../src/handlers/index.js";
+import { truncateAgreementTable } from "pagopa-signalhub-commons-test";
+import { beforeEach, describe, expect, it } from "vitest";
+
 import { config } from "../src/config/env.js";
+import { handleMessageV1 } from "../src/handlers/index.js";
+import { getAnAgreementEntityBy } from "./databaseUtils.js";
 import {
   agreementService,
-  createAnAgreementV1,
   createAnAgreementActivatedEventV1,
   createAnAgreementAddedEventV1,
   createAnAgreementContractAddedEventV1,
   createAnAgreementDeletedEventV1,
   createAnAgreementUpdatedEventV1,
+  createAnAgreementV1,
+  createAndWriteAnAgreementEventV1,
+  fromEventToEntity,
   generateID,
   incrementVersion,
-  postgresDB,
-  fromEventToEntity,
-  createAndWriteAnAgreementEventV1,
+  postgresDB
 } from "./utils.js";
-import { getAnAgreementEntityBy } from "./databaseUtils.js";
 
 describe("Message Handler for V1 EVENTS", () => {
   beforeEach(() => truncateAgreementTable(postgresDB, config.interopSchema));
@@ -46,7 +47,7 @@ describe("Message Handler for V1 EVENTS", () => {
     );
     const agreementUpdatedV1 = {
       ...agreementV1,
-      state: AgreementStateV1.SUSPENDED,
+      state: AgreementStateV1.SUSPENDED
     };
     const agreementUpdateEventV1 = createAnAgreementUpdatedEventV1(
       agreementUpdatedV1,
@@ -79,7 +80,7 @@ describe("Message Handler for V1 EVENTS", () => {
     );
     const agreementActivatedV1 = {
       ...agreementV1,
-      state: AgreementStateV1.ACTIVE,
+      state: AgreementStateV1.ACTIVE
     };
     const agreementActivatedEventV1 = createAnAgreementActivatedEventV1(
       agreementActivatedV1,
@@ -138,7 +139,7 @@ describe("Message Handler for V1 EVENTS", () => {
       );
     const agreementUpdatedV1 = {
       ...agreementV1,
-      state: AgreementStateV1.SUSPENDED,
+      state: AgreementStateV1.SUSPENDED
     };
     const agreementUpdatedEventV1 = createAnAgreementUpdatedEventV1(
       agreementUpdatedV1,

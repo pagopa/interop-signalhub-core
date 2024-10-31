@@ -1,10 +1,10 @@
+import { genericLogger } from "pagopa-signalhub-commons";
 import { setupTestContainersVitest } from "pagopa-signalhub-commons-test";
 import { inject } from "vitest";
 
-import { genericLogger } from "pagopa-signalhub-commons";
+import { clockServiceBuilder } from "../src/services/clock.service.js";
 import { signalServiceBuilder } from "../src/services/signal.service.js";
 import { tracingBatchServiceCleanupBuilder } from "../src/services/tracingBatchCleanup.service.js";
-import { clockServiceBuilder } from "../src/services/clock.service.js";
 
 export const { cleanup, postgresDB } = setupTestContainersVitest(
   inject("signalHubStoreConfig")

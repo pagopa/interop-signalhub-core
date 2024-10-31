@@ -1,11 +1,12 @@
+import { SignalMessage, SignalResponse } from "pagopa-signalhub-commons";
 import {
   setupTestContainersVitest,
-  signalConsumer,
+  signalConsumer
 } from "pagopa-signalhub-commons-test";
 import { inject } from "vitest";
-import { SignalMessage, SignalResponse } from "pagopa-signalhub-commons";
-import { signalServiceBuilder } from "../src/services/signal.service";
-import { interopServiceBuilder } from "../src/services/interop.service";
+
+import { interopServiceBuilder } from "../src/services/interop.service.js";
+import { signalServiceBuilder } from "../src/services/signal.service.js";
 
 export const { cleanup, postgresDB, sqsClient } = setupTestContainersVitest(
   inject("signalHubStoreConfig"),
@@ -35,5 +36,5 @@ export const aValidMockAgreement = {
   purposeId: "fake-purpose-id",
   descriptorId: "fake-descriptor-id",
   producerId: "fake-producer-id",
-  state: "fake-state",
+  state: "fake-state"
 };

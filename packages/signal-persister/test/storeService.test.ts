@@ -1,15 +1,16 @@
-import { describe, expect, it } from "vitest";
-import { createSignal, writeSignal } from "pagopa-signalhub-commons-test";
 import { genericLogger } from "pagopa-signalhub-commons";
+import { createSignal, writeSignal } from "pagopa-signalhub-commons-test";
+import { describe, expect, it } from "vitest";
+
+import { config } from "../src/config/env.js";
 import {
   notRecoverableMessageError,
-  recoverableMessageError,
+  recoverableMessageError
 } from "../src/models/domain/errors.js";
-import { config } from "../src/config/env.js";
 import {
   postgresDB,
   storeSignalService,
-  wrongStoreSignalService,
+  wrongStoreSignalService
 } from "./utils.js";
 
 describe("Signal Store Service", () => {

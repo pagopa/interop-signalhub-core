@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
-import { createSignal } from "pagopa-signalhub-commons-test";
 import { genericLogger } from "pagopa-signalhub-commons";
+import { createSignal } from "pagopa-signalhub-commons-test";
+import { describe, expect, it } from "vitest";
+
 import { recoverableMessageError } from "../src/models/domain/errors.js";
 import { processMessageHandler, wrongStoreSignalService } from "./utils.js";
 
@@ -8,13 +9,13 @@ describe("Message handler", () => {
   it("should process a valid message and store it", async () => {
     const signal = createSignal();
     const queueMessage = {
-      Body: JSON.stringify(signal),
+      Body: JSON.stringify(signal)
     };
     await expect(processMessageHandler(queueMessage)).resolves.not.toThrow();
   });
   it("should NOT throw an error if message is not a Signal (NotRecoverableGenericMessageError)", async () => {
     const malformedNotASignalQueueMessage = {
-      Body: "Information about current NY Times fiction bestseller for week of 12/11/2016.",
+      Body: "Information about current NY Times fiction bestseller for week of 12/11/2016."
     };
     await expect(
       processMessageHandler(malformedNotASignalQueueMessage)
@@ -23,20 +24,20 @@ describe("Message handler", () => {
   it("should NOT throw an error ((NotRecoverableMessageError)) if message is a malformed Signal, with wrong signalType", async () => {
     const malformedSignal = {
       ...createSignal(),
-      signalType: "CREATEX",
+      signalType: "CREATEX"
     };
     const queueMessage = {
-      Body: JSON.stringify(malformedSignal),
+      Body: JSON.stringify(malformedSignal)
     };
     await expect(processMessageHandler(queueMessage)).resolves.not.toThrow();
   });
   it("should NOT throw an error (NotRecoverableMessageError) if message is a malformed Signal, with empty eserviceId", async () => {
     const malformedSignal = {
       ...createSignal(),
-      eserviceId: "",
+      eserviceId: ""
     };
     const queueMessage = {
-      Body: JSON.stringify(malformedSignal),
+      Body: JSON.stringify(malformedSignal)
     };
     await expect(processMessageHandler(queueMessage)).resolves.not.toThrow();
   });

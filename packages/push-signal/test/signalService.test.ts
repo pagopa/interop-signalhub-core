@@ -1,8 +1,9 @@
 import { genericLogger } from "pagopa-signalhub-commons";
-import { beforeEach, describe, expect, it } from "vitest";
 import { createSignal, writeSignal } from "pagopa-signalhub-commons-test";
-import { signalIdDuplicatedForEserviceId } from "../src/models/domain/errors.js";
+import { beforeEach, describe, expect, it } from "vitest";
+
 import { config } from "../src/config/env.js";
+import { signalIdDuplicatedForEserviceId } from "../src/models/domain/errors.js";
 import { cleanup, postgresDB, signalService } from "./utils.js";
 
 describe("Store service", () => {
