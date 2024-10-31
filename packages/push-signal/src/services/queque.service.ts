@@ -1,6 +1,7 @@
 import { Logger, SQS } from "pagopa-signalhub-commons";
-import { signalNotSendedToQueque } from "../models/domain/errors.js";
+
 import { config } from "../config/env.js";
+import { signalNotSendedToQueque } from "../models/domain/errors.js";
 
 interface IQueueService {
   readonly send: (
@@ -25,7 +26,7 @@ export function queueServiceBuilder(sqsClient: SQS.SQSClient): IQueueService {
         const requestId = error.$metadata ? error.$metadata.requestId : null;
         throw signalNotSendedToQueque(error, requestId);
       }
-    },
+    }
   };
 }
 

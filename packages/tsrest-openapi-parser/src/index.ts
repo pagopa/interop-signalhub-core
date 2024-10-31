@@ -84,14 +84,14 @@ const generateOpenAPIFromTsRestContract = (
       request: {
         body: body
           ? {
-            content: {
-              "application/json": {
-                schema: body as z.ZodType<unknown, z.ZodTypeDef, unknown>
-              }
-            },
-            description: "",
-            required: true
-          }
+              content: {
+                "application/json": {
+                  schema: body as z.ZodType<unknown, z.ZodTypeDef, unknown>
+                }
+              },
+              description: "",
+              required: true
+            }
           : undefined,
         headers,
         query: path.route.query as RouteParameter,
@@ -99,11 +99,11 @@ const generateOpenAPIFromTsRestContract = (
       },
       ...(options.setOperationId
         ? {
-          operationId:
-            options.setOperationId === "concatenated-path"
-              ? [...path.paths, path.id].join(".")
-              : path.id
-        }
+            operationId:
+              options.setOperationId === "concatenated-path"
+                ? [...path.paths, path.id].join(".")
+                : path.id
+          }
         : {}),
       path: path.path,
       responses
@@ -179,12 +179,12 @@ const getResponses = (
         description,
         ...(responseSchema
           ? {
-            content: {
-              [keyMediaObject]: {
-                schema: responseSchema
+              content: {
+                [keyMediaObject]: {
+                  schema: responseSchema
+                }
               }
             }
-          }
           : {})
       }
     };

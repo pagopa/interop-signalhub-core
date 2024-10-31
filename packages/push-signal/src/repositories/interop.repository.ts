@@ -1,4 +1,5 @@
-import { genericError, DB, TableName } from "pagopa-signalhub-commons";
+import { DB, TableName, genericError } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
 
 export interface IInteropRepository {
@@ -35,7 +36,7 @@ export const interopRepository = (db: DB): IInteropRepository => {
           `Error interopRepository::findByEserviceIdAndProducerId ${error}`
         );
       }
-    },
+    }
   };
 };
 

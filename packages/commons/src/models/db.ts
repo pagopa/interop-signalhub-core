@@ -1,13 +1,14 @@
 import { z } from "zod";
-import { SnakeCase } from "../utils/index.js";
+
 import { InteropSchema, SignalhubSchema } from "../index.js";
+import { SnakeCase } from "../utils/index.js";
 
 export const TracingBatch = z.object({
   batchId: z.string(),
   lastEventId: z.string(),
   type: z.string(),
   state: z.string(),
-  tmstCreated: z.string(),
+  tmstCreated: z.string()
 });
 
 export const TracingBatchCleanup = z.object({
@@ -16,7 +17,7 @@ export const TracingBatchCleanup = z.object({
   tmstEndAt: z.string().nullish(),
   error: z.unknown().optional().nullish(),
   tmstDeleteFrom: z.string().optional().nullish(),
-  countDeleted: z.number().optional().nullish(),
+  countDeleted: z.number().optional().nullish()
 });
 
 export const ProducerService = z.object({
@@ -27,7 +28,7 @@ export const ProducerService = z.object({
   state: z.string(),
   enabledSignalHub: z.boolean().optional(),
   tmstInsert: z.string(),
-  tmstLastEdit: z.string(),
+  tmstLastEdit: z.string()
 });
 
 export const Agreement = z.object({
@@ -38,7 +39,7 @@ export const Agreement = z.object({
   descriptorId: z.string(),
   state: z.string(),
   tmstInsert: z.string().optional(),
-  tmstLastEdit: z.string().optional(),
+  tmstLastEdit: z.string().optional()
 });
 
 export type ProducerService = z.infer<typeof ProducerService>;

@@ -1,9 +1,9 @@
-/* eslint-disable no-console */
+import { decodeOutboundAgreementEvent } from "@pagopa/interop-outbound-models";
 import { runConsumer } from "kafka-connector";
 import { EachMessagePayload } from "kafkajs";
-import { match } from "ts-pattern";
-import { decodeOutboundAgreementEvent } from "@pagopa/interop-outbound-models";
 import { kafkaMissingMessageValue } from "pagopa-signalhub-commons";
+import { match } from "ts-pattern";
+
 import { config } from "./config/env.js";
 import { handleMessageV1, handleMessageV2 } from "./handlers/index.js";
 import { serviceBuilder } from "./services/service.builder.js";
@@ -14,7 +14,7 @@ const { agreementService } = serviceBuilder();
 
 export async function processMessage({
   message,
-  partition,
+  partition
 }: EachMessagePayload): Promise<void> {
   if (!message.value) {
     throw kafkaMissingMessageValue(config.kafkaTopic);

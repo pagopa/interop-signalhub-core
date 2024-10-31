@@ -1,4 +1,5 @@
-import { genericError, DB, TableName } from "pagopa-signalhub-commons";
+import { DB, TableName, genericError } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
 
 export interface IAgreementRepository {
@@ -27,7 +28,7 @@ export const agreementRepository = (db: DB): IAgreementRepository => {
       } catch (error: any) {
         throw genericError(`Error eserviceRepository::findBy ${error.code}`);
       }
-    },
+    }
   };
 };
 

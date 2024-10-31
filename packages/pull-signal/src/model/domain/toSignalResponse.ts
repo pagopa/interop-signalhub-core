@@ -6,6 +6,6 @@ export function toSignalResponse(record: SignalRecord): SignalResponse {
     signalType: record.signal_type,
     objectId: record.object_id,
     eserviceId: record.eservice_id,
-    objectType: record.object_type,
+    objectType: record.object_type
   };
 }

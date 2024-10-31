@@ -1,13 +1,14 @@
 import {
   EServiceDescriptorStateV2,
   EServiceEventV2,
-  EServiceV2,
+  EServiceV2
 } from "@pagopa/interop-outbound-models";
 import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
+
+import { config } from "../config/env.js";
 import { EserviceV2Entity } from "../models/domain/model.js";
 import { EServiceService } from "../services/eservice.service.js";
-import { config } from "../config/env.js";
 
 export async function handleMessageV2(
   event: EServiceEventV2,
@@ -28,7 +29,7 @@ export async function handleMessageV2(
           "EServiceDescriptorPublished",
           "EServiceDescriptorSuspended",
           "EServiceDraftDescriptorUpdated"
-        ),
+        )
       },
       async (evt) => {
         const { eservice } = evt.data;
@@ -48,7 +49,7 @@ export async function handleMessageV2(
 
     .with(
       {
-        type: "EServiceDeleted",
+        type: "EServiceDeleted"
       },
       async (evt) => {
         const { eserviceId } = evt.data;
@@ -73,7 +74,7 @@ export async function handleMessageV2(
           "EServiceDescriptorDelegateSubmitted",
           "EServiceDescriptorDelegatorApproved",
           "EServiceDescriptorDelegatorRejected"
-        ),
+        )
       },
       async () => {
         logger.info(`Skip event (not relevant)`);
@@ -92,11 +93,11 @@ export const fromEserviceEventV2ToEserviceEntity = (
 
   descriptors: eService.descriptors.map((descriptor) => ({
     descriptor_id: descriptor.id,
-    state: EServiceDescriptorStateV2[descriptor.state],
+    state: EServiceDescriptorStateV2[descriptor.state]
   })),
 
   isSignalHubEnabled: eService?.isSignalHubEnabled,
 
   event_stream_id: streamId,
-  event_version_id: version,
+  event_version_id: version
 });

@@ -1,10 +1,11 @@
 import { randomUUID } from "crypto";
 import { DB, InteropSchema, SQS, TableName } from "pagopa-signalhub-commons";
-import { signalProducer, eserviceProducer, signalConsumer } from "./common.js";
+
+import { eserviceProducer, signalConsumer, signalProducer } from "./common.js";
 import {
   truncateAgreementTable,
   truncateEserviceTable,
-  truncatePurposeTable,
+  truncatePurposeTable
 } from "./databaseUtils.js";
 
 async function setupEserviceTable(
@@ -19,7 +20,7 @@ async function setupEserviceTable(
     for (const eservice of eservices) {
       const query = {
         text: `INSERT INTO ${eserviceTable} (eservice_id, producer_id, descriptor_id, state) values ($1, $2, $3, $4)`,
-        values: [eservice.id, id, eservice.descriptor, eservice.state],
+        values: [eservice.id, id, eservice.descriptor, eservice.state]
       };
       await db.none(query);
     }
@@ -42,7 +43,7 @@ async function setupPurposeTableForProducers(
 
       const query = {
         text: `INSERT INTO ${purposeTable}(purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id) values ($1, $2, $3, $4, $5)`,
-        values: [id, version, state, eservice, consumerId],
+        values: [id, version, state, eservice, consumerId]
       };
       await db.none(query);
     }
@@ -63,7 +64,7 @@ async function setupPurposeTableForConsumers(
 
     const query = {
       text: `INSERT INTO ${purposeTable} (purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id) values ($1, $2, $3, $4, $5)`,
-      values: [id, version, state, eservice, consumerId],
+      values: [id, version, state, eservice, consumerId]
     };
     await db.none(query);
   }
@@ -86,8 +87,8 @@ async function setupAgreementTable(
         agreement.eservice,
         id,
         agreement.descriptor,
-        agreement.state,
-      ],
+        agreement.state
+      ]
     };
     await db.none(query);
   }
@@ -119,7 +120,7 @@ export function getAnEservice(
     producerId: randomUUID(),
     state: "PUBLISHED",
     enabledSH: true,
-    ...eservice,
+    ...eservice
   };
 }
 export const createEservice = async (
@@ -131,7 +132,7 @@ export const createEservice = async (
   const { producerId, eServiceId, descriptorId, state, enabledSH } = eService;
   const query = {
     text: `INSERT INTO ${eserviceTable} (eservice_id, producer_id, descriptor_id, state, enabled_signal_hub) values ($1, $2, $3, $4,$5)`,
-    values: [eServiceId, producerId, descriptorId, state, enabledSH],
+    values: [eServiceId, producerId, descriptorId, state, enabledSH]
   };
   await db.none(query);
 };
@@ -153,7 +154,7 @@ export function getAnAgreement(
     descriptorId: randomUUID(),
     state: "ACTIVE",
     consumerId: randomUUID(),
-    ...agreement,
+    ...agreement
   };
 }
 
@@ -166,7 +167,7 @@ export const createAgreement = async (
   const { id, eserviceId, descriptorId, state, consumerId } = agreement;
   const query = {
     text: `INSERT INTO ${agreementTable} (agreement_id, eservice_id, consumer_id, descriptor_id,state) values ($1, $2, $3, $4, $5)`,
-    values: [id, eserviceId, consumerId, descriptorId, state],
+    values: [id, eserviceId, consumerId, descriptorId, state]
   };
   await db.none(query);
 };
@@ -186,7 +187,7 @@ export function getAPurpose(purpose: Partial<PurposeData> = {}): PurposeData {
     consumerId: randomUUID(),
     eserviceId: randomUUID(),
     state: "ACTIVE",
-    ...purpose,
+    ...purpose
   };
 }
 
@@ -199,7 +200,7 @@ export const createPurpose = async (
   const { id, version, state, eserviceId, consumerId } = purpose;
   const query = {
     text: `INSERT INTO ${purposeTable} (purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id) values ($1, $2, $3, $4, $5)`,
-    values: [id, version, state, eserviceId, consumerId],
+    values: [id, version, state, eserviceId, consumerId]
   };
   await db.none(query);
 };

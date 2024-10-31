@@ -1,6 +1,7 @@
 import { writeFileSync } from "fs";
-import { generateOpenAPISpec } from "pagopa-tsrest-openapi-parser";
 import * as yaml from "js-yaml";
+import { generateOpenAPISpec } from "pagopa-tsrest-openapi-parser";
+
 import { contract } from "../contract/contract.js";
 
 export function generateApi(version: string): void {
@@ -10,8 +11,8 @@ export function generateApi(version: string): void {
       servers: [
         {
           url: `https://api.signalhub.interop.pagopa.it`,
-          description: "Push signal Production URL",
-        },
+          description: "Push signal Production URL"
+        }
       ],
       info: {
         title: "Push signal Service API",
@@ -19,14 +20,14 @@ export function generateApi(version: string): void {
         version,
         license: {
           name: "ISC",
-          url: "https://opensource.org/license/isc-license-txt",
+          url: "https://opensource.org/license/isc-license-txt"
         },
         termsOfService:
-          "https://docs.pagopa.it/interoperabilita-1/normativa-e-approfondimenti",
-      },
+          "https://docs.pagopa.it/interoperabilita-1/normativa-e-approfondimenti"
+      }
     },
     {
-      setOperationId: true,
+      setOperationId: true
     },
     [
       {
@@ -37,9 +38,9 @@ export function generateApi(version: string): void {
           scheme: "bearer",
           bearerFormat: "JWT",
           description:
-            "A bearer token in the format of a JWS and conformed to the specifications included in [RFC8725](https://tools.ietf.org/html/RFC8725).",
-        },
-      },
+            "A bearer token in the format of a JWS and conformed to the specifications included in [RFC8725](https://tools.ietf.org/html/RFC8725)."
+        }
+      }
     ]
   );
 
@@ -50,7 +51,7 @@ export function generateApi(version: string): void {
     tags: document.tags,
     security: document.security,
     paths: document.paths,
-    components: document.components,
+    components: document.components
   };
 
   const fileOutputDocument = `../../docs/openAPI/push-signals_${openApiDocument.info.version}.yaml`;

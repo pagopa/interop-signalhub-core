@@ -1,4 +1,5 @@
 import { DB, Logger } from "pagopa-signalhub-commons";
+
 import { operationPullForbidden } from "../model/domain/errors.js";
 import { interopRepository } from "../repositories/interop.repository.js";
 
@@ -32,10 +33,10 @@ export function interopServiceBuilder(db: DB): IInteropService {
       if (thereAreNo(administrativeActs)) {
         throw operationPullForbidden({
           eserviceId,
-          consumerId,
+          consumerId
         });
       }
-    },
+    }
   };
 }
 

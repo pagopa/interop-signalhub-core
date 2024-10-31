@@ -2,8 +2,9 @@ import { ConnectionString } from "connection-string";
 import pgPromise, { IDatabase } from "pg-promise";
 import {
   IClient,
-  IConnectionParameters,
+  IConnectionParameters
 } from "pg-promise/typescript/pg-subset.js";
+
 import { logger } from "../logging/index.js";
 
 export type DB = IDatabase<unknown>;
@@ -15,7 +16,7 @@ export function createDbInstance({
   port,
   database,
   useSSL,
-  maxConnectionPool,
+  maxConnectionPool
 }: {
   username: string;
   password: string;
@@ -47,7 +48,7 @@ export function createDbInstance({
     port: conData.port,
     user: conData.user,
     max: maxConnectionPool,
-    ssl: useSSL ? { rejectUnauthorized: false } : undefined,
+    ssl: useSSL ? { rejectUnauthorized: false } : undefined
   };
 
   const loggerInstance = logger({});

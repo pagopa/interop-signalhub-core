@@ -1,16 +1,16 @@
 import { AppRouteImplementation, initServer } from "@ts-rest/express";
-import { logger, Problem, SignalPayload } from "pagopa-signalhub-commons";
+import { Problem, SignalPayload, logger } from "pagopa-signalhub-commons";
 import { match } from "ts-pattern";
+
 import { contract } from "../contract/contract.js";
-import { SignalService } from "../services/signal.service.js";
 import { makeApiProblem } from "../models/domain/errors.js";
-import { QueueService } from "../services/queque.service.js";
-import { InteropService } from "../services/interop.service.js";
 import { toSignalMessage } from "../models/domain/toSignalMessage.js";
+import { InteropService } from "../services/interop.service.js";
+import { QueueService } from "../services/queque.service.js";
+import { SignalService } from "../services/signal.service.js";
 
 const s = initServer();
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const pushRoutes = (
   signalService: SignalService,
   interopService: InteropService,
@@ -20,14 +20,14 @@ export const pushRoutes = (
     typeof contract.getStatus
   > = async () => ({
     status: 200,
-    body: "OK",
+    body: "OK"
   });
   const pushSignal: AppRouteImplementation<
     typeof contract.pushSignal
   > = async ({ body, req }) => {
     const log = logger({
       serviceName: req.ctx.serviceName,
-      correlationId: req.ctx.correlationId,
+      correlationId: req.ctx.correlationId
     });
     try {
       const { signalId, eserviceId } = body;
@@ -53,8 +53,8 @@ export const pushRoutes = (
       return {
         status: 200,
         body: {
-          signalId,
-        },
+          signalId
+        }
       };
     } catch (error) {
       const problem: Problem = makeApiProblem(
@@ -74,22 +74,22 @@ export const pushRoutes = (
         case 400:
           return {
             status: 400,
-            body: problem,
+            body: problem
           };
         case 401:
           return {
             status: 401,
-            body: problem,
+            body: problem
           };
         case 403:
           return {
             status: 403,
-            body: problem,
+            body: problem
           };
         default:
           return {
             status: 500,
-            body: problem,
+            body: problem
           };
       }
     }
@@ -97,6 +97,6 @@ export const pushRoutes = (
 
   return s.router(contract, {
     pushSignal,
-    getStatus,
+    getStatus
   });
 };

@@ -1,5 +1,6 @@
-import { z } from "zod";
 import { logLevel } from "kafkajs";
+import { z } from "zod";
+
 import { AwsConfig } from "./aws.config.js";
 const KafkaConfig = z
   .object({
@@ -16,7 +17,7 @@ const KafkaConfig = z
     KAFKA_REAUTHENTICATION_THRESHOLD: z
       .number()
       .default(20)
-      .transform((n) => n * 1000),
+      .transform((n) => n * 1000)
   })
   .transform((c) => ({
     kafkaBrokers: c.KAFKA_BROKERS,
@@ -24,7 +25,7 @@ const KafkaConfig = z
     kafkaGroupId: c.KAFKA_GROUP_ID,
     kafkaDisableAwsIamAuth: c.KAFKA_DISABLE_AWS_IAM_AUTH === "true",
     kafkaLogLevel: logLevel[c.KAFKA_LOG_LEVEL],
-    kafkaReauthenticationThreshold: c.KAFKA_REAUTHENTICATION_THRESHOLD,
+    kafkaReauthenticationThreshold: c.KAFKA_REAUTHENTICATION_THRESHOLD
   }));
 
 export const KafkaConsumerConfig = KafkaConfig.and(AwsConfig).and(
@@ -32,19 +33,19 @@ export const KafkaConsumerConfig = KafkaConfig.and(AwsConfig).and(
     .object({
       TOPIC_STARTING_OFFSET: z
         .union([z.literal("earliest"), z.literal("latest")])
-        .default("latest"),
+        .default("latest")
     })
     .transform((c) => ({
-      topicStartingOffset: c.TOPIC_STARTING_OFFSET,
+      topicStartingOffset: c.TOPIC_STARTING_OFFSET
     }))
 );
 export type KafkaConsumerConfig = z.infer<typeof KafkaConsumerConfig>;
 
 export const KafkaTopicConfig = z
   .object({
-    KAFKA_TOPIC: z.string(),
+    KAFKA_TOPIC: z.string()
   })
   .transform((c) => ({
-    kafkaTopic: c.KAFKA_TOPIC,
+    kafkaTopic: c.KAFKA_TOPIC
   }));
 export type KafkaTopicConfig = z.infer<typeof KafkaTopicConfig>;

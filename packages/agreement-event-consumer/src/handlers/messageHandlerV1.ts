@@ -1,15 +1,14 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import {
-  AgreementV1,
   AgreementEventV1,
   AgreementStateV1,
+  AgreementV1
 } from "@pagopa/interop-outbound-models";
-
+import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
-import { AgreementService } from "../services/agreement.service.js";
-import { AgreementEntity } from "../models/domain/model.js";
+
 import { config } from "../config/env.js";
+import { AgreementEntity } from "../models/domain/model.js";
+import { AgreementService } from "../services/agreement.service.js";
 
 export async function handleMessageV1(
   event: AgreementEventV1,
@@ -37,7 +36,7 @@ export async function handleMessageV1(
           "AgreementActivated",
           "AgreementSuspended",
           "AgreementDeactivated"
-        ),
+        )
       },
 
       async (evt) => {
@@ -66,7 +65,7 @@ export async function handleMessageV1(
           "AgreementConsumerDocumentAdded",
           "AgreementConsumerDocumentRemoved",
           "VerifiedAttributeUpdated"
-        ),
+        )
       },
       async () => {
         logger.info(`Skip event (not relevant)`);
@@ -91,6 +90,6 @@ export const toAgreementEntity = (
     consumer_id: agreement.consumerId,
     state: AgreementStateV1[agreement.state],
     event_stream_id: streamId,
-    event_version_id: version,
+    event_version_id: version
   };
 };

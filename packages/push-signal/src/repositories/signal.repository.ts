@@ -1,4 +1,5 @@
-import { genericInternalError, DB, TableName } from "pagopa-signalhub-commons";
+import { DB, TableName, genericInternalError } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
 
 export interface ISignalRepository {
@@ -20,7 +21,7 @@ export const signalRepository = (db: DB): ISignalRepository => {
           `Error findBySignalIdAndEServiceId: ${error}`
         );
       }
-    },
+    }
   };
 };
 

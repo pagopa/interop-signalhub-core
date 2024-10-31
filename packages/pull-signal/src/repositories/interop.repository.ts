@@ -1,4 +1,5 @@
-import { genericError, DB, TableName } from "pagopa-signalhub-commons";
+import { DB, TableName, genericError } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
 
 export interface IInteropRepository {
@@ -9,11 +10,11 @@ export interface IInteropRepository {
     purposeState: string,
     agreementState: string
   ) => Promise<
-    Array<{
+    {
       eserviceId: string;
       agreementId: string;
       purposeId: string;
-    }>
+    }[]
   >;
 }
 
@@ -29,11 +30,11 @@ export const interopRepository = (db: DB): IInteropRepository => {
       purposeState: string,
       agreementState: string
     ): Promise<
-      Array<{
+      {
         eserviceId: string;
         agreementId: string;
         purposeId: string;
-      }>
+      }[]
     > {
       const sqlConditionStates = eserviceAllowedStates
         .map(
@@ -62,7 +63,7 @@ export const interopRepository = (db: DB): IInteropRepository => {
       } catch (error: unknown) {
         throw genericError(`Error interopRepository::findBy ${error}`);
       }
-    },
+    }
   };
 };
 

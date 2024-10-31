@@ -1,20 +1,28 @@
 import {
   DB,
-  genericInternalError,
-  toProducerEservice,
   ProducerService,
-  getCurrentDate,
   TableName,
+  genericInternalError,
+  getCurrentDate,
+  toProducerEservice
 } from "pagopa-signalhub-commons";
-import { EserviceDescriptorEntity } from "../models/domain/model.js";
+
 import { config } from "../config/env.js";
+import { EserviceDescriptorEntity } from "../models/domain/model.js";
 
 export interface IEserviceRepository {
+  readonly delete: (eserviceId: string) => Promise<void>;
+  readonly deleteDescriptor: (
+    eserviceId: string,
+    descriptorId: string
+  ) => Promise<void>;
+
   readonly eventWasProcessed: (
     descriptorId: string,
     streamId: string,
     version: number
   ) => Promise<boolean>;
+
   readonly findByEserviceIdAndProducerIdAndDescriptorId: (
     eserviceId: string,
     producerId: string,
@@ -28,13 +36,6 @@ export interface IEserviceRepository {
     eventStreamId: string,
     eventVersionId: number,
     isSignalHubEnabled?: boolean
-  ) => Promise<void>;
-
-  readonly delete: (eserviceId: string) => Promise<void>;
-
-  readonly deleteDescriptor: (
-    eserviceId: string,
-    descriptorId: string
   ) => Promise<void>;
 }
 export const eServiceRepository = (db: DB): IEserviceRepository => {
@@ -81,7 +82,6 @@ export const eServiceRepository = (db: DB): IEserviceRepository => {
       }
     },
 
-    // eslint-disable-next-line max-params
     async upsertDescriptor(
       eServiceId: string,
       producerId: string,
@@ -115,7 +115,7 @@ export const eServiceRepository = (db: DB): IEserviceRepository => {
             eventStreamId,
             eventVersionId,
             isSignalHubEnabled,
-            tmstLastEdit,
+            tmstLastEdit
           ]
         );
       } catch (error) {
@@ -148,6 +148,6 @@ export const eServiceRepository = (db: DB): IEserviceRepository => {
           `Error deleteEserviceDescriptor:" ${error} `
         );
       }
-    },
+    }
   };
 };

@@ -1,8 +1,10 @@
 import { DB, TableName, genericInternalError } from "pagopa-signalhub-commons";
-import { PurposeEntity } from "../models/domain/model.js";
+
 import { config } from "../config/env.js";
+import { PurposeEntity } from "../models/domain/model.js";
 
 export interface IPurposeRepository {
+  readonly delete: (purposeId: string, streamId: string) => Promise<void>;
   readonly eventWasProcessed: (
     streamId: string,
     version: number
@@ -10,7 +12,6 @@ export interface IPurposeRepository {
   readonly insert: (purpose: PurposeEntity) => Promise<void>;
   readonly update: (purpose: PurposeEntity) => Promise<void>;
   readonly upsert: (purpose: PurposeEntity) => Promise<void>;
-  readonly delete: (purposeId: string, streamId: string) => Promise<void>;
 }
 
 export const purposeRepository = (db: DB): IPurposeRepository => {
@@ -38,7 +39,7 @@ export const purposeRepository = (db: DB): IPurposeRepository => {
           eserviceId,
           consumerId,
           eventStreamId,
-          eventVersionId,
+          eventVersionId
         } = purpose;
         await db.oneOrNone(
           `INSERT INTO ${purposeTable}(purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id, event_stream_id, event_version_id) VALUES($1, $2, $3, $4, $5, $6, $7)`,
@@ -49,7 +50,7 @@ export const purposeRepository = (db: DB): IPurposeRepository => {
             eserviceId,
             consumerId,
             eventStreamId,
-            eventVersionId,
+            eventVersionId
           ]
         );
       } catch (error) {
@@ -67,7 +68,7 @@ export const purposeRepository = (db: DB): IPurposeRepository => {
           consumerId,
           purposeState,
           eventStreamId,
-          eventVersionId,
+          eventVersionId
         } = purpose;
         await db.oneOrNone(
           `INSERT INTO ${purposeTable}(purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id, event_stream_id, event_version_id) 
@@ -87,7 +88,7 @@ export const purposeRepository = (db: DB): IPurposeRepository => {
             consumerId,
             eventStreamId,
             eventVersionId,
-            tmstLastEdit,
+            tmstLastEdit
           ]
         );
       } catch (error) {
@@ -104,7 +105,7 @@ export const purposeRepository = (db: DB): IPurposeRepository => {
           consumerId,
           purposeState,
           eventStreamId,
-          eventVersionId,
+          eventVersionId
         } = purpose;
         await db.none(
           `update ${purposeTable} set purpose_id = $1, purpose_version_id = $2, eservice_id = $3, consumer_id = $4, purpose_state = $5, event_stream_id = $6, event_version_id =$7, tmst_last_edit = $8  where purpose_id = $1 and purpose_version_id = $2 and event_stream_id = $6`,
@@ -116,7 +117,7 @@ export const purposeRepository = (db: DB): IPurposeRepository => {
             purposeState,
             eventStreamId,
             eventVersionId,
-            tmstLastEdit,
+            tmstLastEdit
           ]
         );
       } catch (error) {
@@ -128,7 +129,7 @@ export const purposeRepository = (db: DB): IPurposeRepository => {
         `delete from ${purposeTable} where purpose_id = $1 and event_stream_id = $2`,
         [purposeId, streamId]
       );
-    },
+    }
   };
 };
 

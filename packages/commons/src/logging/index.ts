@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import winston from "winston";
+
 import { LoggerConfig } from "../config/index.js";
 export type LoggerMetadata = {
   serviceName?: string;
@@ -18,7 +18,7 @@ export const parsedLoggerConfig = LoggerConfig.safeParse(process.env);
 const config: LoggerConfig = parsedLoggerConfig.success
   ? parsedLoggerConfig.data
   : {
-      logLevel: "info",
+      logLevel: "info"
     };
 
 const logFormat = (
@@ -35,7 +35,7 @@ const logFormat = (
     streamId,
     version,
     eserviceId,
-    purposeId,
+    purposeId
   }: LoggerMetadata
 ) => {
   const serviceLogPart = serviceName ? `[${serviceName}]` : undefined;
@@ -66,7 +66,7 @@ const logFormat = (
     streamIdPart,
     versionIdPart,
     eserviceIdPart,
-    purposeIdPart,
+    purposeIdPart
   ]
     .filter((e) => e !== undefined)
     .join(" ");
@@ -92,8 +92,8 @@ const getLogger = () =>
     level: config.logLevel,
     transports: [
       new winston.transports.Console({
-        stderrLevels: ["error"],
-      }),
+        stderrLevels: ["error"]
+      })
     ],
     format: winston.format.combine(
       winston.format.timestamp(),
@@ -101,7 +101,7 @@ const getLogger = () =>
       winston.format.errors({ stack: true }),
       customFormat()
     ),
-    silent: process.env.NODE_ENV === "test",
+    silent: process.env.NODE_ENV === "test"
   });
 
 const internalLoggerInstance = getLogger();
@@ -115,7 +115,7 @@ export const logger = (loggerMetadata: LoggerMetadata) => ({
   warn: (msg: (typeof internalLoggerInstance.warn.arguments)[0]) =>
     internalLoggerInstance.warn(msg, { loggerMetadata }),
   error: (msg: (typeof internalLoggerInstance.error.arguments)[0]) =>
-    internalLoggerInstance.error(msg, { loggerMetadata }),
+    internalLoggerInstance.error(msg, { loggerMetadata })
 });
 
 export type Logger = ReturnType<typeof logger>;

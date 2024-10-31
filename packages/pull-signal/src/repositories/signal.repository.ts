@@ -1,9 +1,10 @@
 import {
-  genericInternalError,
   DB,
   SignalRecord,
   TableName,
+  genericInternalError
 } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
 
 export interface ISignalRepository {
@@ -48,13 +49,13 @@ export const signalRepository = (db: DB): ISignalRepository => {
           `SELECT signal_id FROM ${signalTable} s WHERE s.eservice_id = $1 AND s.signal_id > $2 order by s.signal_id asc limit 1`,
           [eserviceId, lastReadSignalId],
           // leave this rule disabled
-          // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+
           (item) => item && item.signal_id
         );
       } catch (error) {
         throw genericInternalError(`Error get: ${error}`);
       }
-    },
+    }
   };
 };
 

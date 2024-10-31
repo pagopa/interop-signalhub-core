@@ -1,7 +1,8 @@
 import { DB, createDbInstance } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
-import { eServiceRepository } from "../repositories/eservice.repository.js";
 import { eServiceProducerRepository } from "../repositories/eServiceProducer.repository.js";
+import { eServiceRepository } from "../repositories/eservice.repository.js";
 import { EServiceService, eServiceServiceBuilder } from "./eservice.service.js";
 
 export function serviceBuilder(): {
@@ -14,7 +15,7 @@ export function serviceBuilder(): {
     port: config.signalhubStoreDbPort,
     database: config.signalhubStoreDbName,
     useSSL: config.signalhubStoreDbUseSSL,
-    maxConnectionPool: config.maxConnectionPool,
+    maxConnectionPool: config.maxConnectionPool
   });
 
   // Repository //

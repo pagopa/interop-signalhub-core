@@ -1,6 +1,7 @@
 import { DB, Logger, SignalResponse } from "pagopa-signalhub-commons";
-import { signalRepository } from "../repositories/signal.repository.js";
+
 import { toSignalResponse } from "../model/domain/toSignalResponse.js";
+import { signalRepository } from "../repositories/signal.repository.js";
 
 interface ISignalService {
   readonly getSignal: (
@@ -48,7 +49,7 @@ export function signalServiceBuilder(db: DB): ISignalService {
         `SignalService::getSignal, signals: ${signals.length}, lastSignalId: ${lastSignalId}, nextSignalId: ${nextSignalId}`
       );
       return { signals, lastSignalId, nextSignalId };
-    },
+    }
   };
 }
 

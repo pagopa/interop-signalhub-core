@@ -1,10 +1,10 @@
 import {
-  ProducerService,
-  ProducerEserviceEntity,
-  TracingBatch,
-  TracingBatchEntity,
   Agreement,
   AgreementEntity,
+  ProducerEserviceEntity,
+  ProducerService,
+  TracingBatch,
+  TracingBatchEntity
 } from "../db.js";
 
 export const toProducerEservice = (
@@ -16,7 +16,7 @@ export const toProducerEservice = (
   descriptorId: producerEserviceEntity.descriptor_id,
   state: producerEserviceEntity.state,
   tmstInsert: producerEserviceEntity.tmst_insert,
-  tmstLastEdit: producerEserviceEntity.tmst_last_edit,
+  tmstLastEdit: producerEserviceEntity.tmst_last_edit
 });
 
 export const toAgreement = (agreementEntity: AgreementEntity): Agreement => ({
@@ -27,7 +27,7 @@ export const toAgreement = (agreementEntity: AgreementEntity): Agreement => ({
   descriptorId: agreementEntity.descriptor_id,
   state: agreementEntity.state,
   tmstInsert: agreementEntity.tmst_insert,
-  tmstLastEdit: agreementEntity.tmst_last_edit,
+  tmstLastEdit: agreementEntity.tmst_last_edit
 });
 
 export const toTracingBatch = (
@@ -37,5 +37,5 @@ export const toTracingBatch = (
   lastEventId: batchEntity.last_event_id,
   state: batchEntity.state,
   type: batchEntity.type,
-  tmstCreated: batchEntity.tmst_created,
+  tmstCreated: batchEntity.tmst_created
 });

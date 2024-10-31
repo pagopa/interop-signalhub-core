@@ -1,7 +1,6 @@
 import fs from "fs";
 import path from "path";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function getActors() {
   const catalogInteropData = JSON.parse(
     Buffer.from(
@@ -43,7 +42,7 @@ function getActors() {
     purposeIdDifferentFromEservicePushSignals,
     authorizedPurposeIdForPushSignals,
     authorizedPurposeIdForPullSignals,
-    consumerAgreementDraftState,
+    consumerAgreementDraftState
   };
 }
 
@@ -60,5 +59,5 @@ export const {
   authorizedPurposeIdForPushSignals,
   authorizedPurposeIdForPullSignals,
   eServiceWithNotActiveAgreement,
-  consumerAgreementDraftState,
+  consumerAgreementDraftState
 } = getActors();

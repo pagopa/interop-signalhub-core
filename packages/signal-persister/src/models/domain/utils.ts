@@ -1,7 +1,8 @@
 import { SQS, SignalMessage } from "pagopa-signalhub-commons";
+
 import {
   notRecoverableGenericMessageError,
-  notRecoverableMessageError,
+  notRecoverableMessageError
 } from "./errors.js";
 
 export function parseQueueMessageToSignal(

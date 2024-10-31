@@ -1,16 +1,16 @@
-/* eslint-disable max-classes-per-file */
 import { Signal } from "pagopa-signalhub-commons";
+
 import { DeadSignal } from "./model.js";
 
 export class PersisterServiceError<T> extends Error {
   public code: T;
-  public title: string;
   public detail: string;
+  public title: string;
 
   constructor({
     code,
     title,
-    detail,
+    detail
   }: {
     code: T;
     title: string;
@@ -30,7 +30,7 @@ export class NotRecoverableGenericMessageError extends PersisterServiceError<Not
     code,
     title,
     detail,
-    signal,
+    signal
   }: {
     code: NotRecoverableMessageErrorCodes;
     title: string;
@@ -48,7 +48,7 @@ export class NotRecoverableMessageError extends PersisterServiceError<NotRecover
     code,
     title,
     detail,
-    signal,
+    signal
   }: {
     code: NotRecoverableMessageErrorCodes;
     title: string;
@@ -63,13 +63,13 @@ export class NotRecoverableMessageError extends PersisterServiceError<NotRecover
 export class RecoverableMessageError extends PersisterServiceError<RecoverableMessageErrorCodes> {}
 
 export const recoverableMessageErrorCode = {
-  dbConnection: "0001",
+  dbConnection: "0001"
 };
 export const notRecoverableMessageErrorCodes = {
   duplicateSignal: "0002",
   parsingError: "0010",
   genericError: "0011",
-  notValidJsonError: "0012",
+  notValidJsonError: "0012"
 };
 
 export function getErrorReason(type: ErrorCodes): string {
@@ -88,27 +88,27 @@ export type ErrorCodes =
   | RecoverableMessageErrorCodes;
 
 const errorDetails = new Map<ErrorCodes, string>([
-  ["duplicateSignal", "The signal is already saved on database"],
-  ["parsingError", "The signal could not be parsed"],
-  ["notValidJsonError", "The message is not a signal, not valid JSON"],
   ["dbConnection", "Database connection error"],
+  ["duplicateSignal", "The signal is already saved on database"],
   ["genericError", "Generic error"],
+  ["notValidJsonError", "The message is not a signal, not valid JSON"],
+  ["parsingError", "The signal could not be parsed"]
 ]);
 
 export function recoverableMessageError(
   errorCode: RecoverableMessageErrorCodes,
-  correlationId: string = ""
+  correlationId = ""
 ): RecoverableMessageError {
   return new RecoverableMessageError({
     detail: getErrorReason(errorCode),
     code: errorCode,
-    title: `[CID=${correlationId}] Recoverable message error`,
+    title: `[CID=${correlationId}] Recoverable message error`
   });
 }
 export function notRecoverableMessageError(
   errorCode: NotRecoverableMessageErrorCodes,
   signal: Signal,
-  correlationId: string = ""
+  correlationId = ""
 ): NotRecoverableMessageError {
   return new NotRecoverableMessageError({
     detail: getErrorReason(errorCode),
@@ -116,20 +116,20 @@ export function notRecoverableMessageError(
     title: `[CID=${correlationId}] Not recoverable error`,
     signal: {
       ...signal,
-      errorReason: getErrorReason(errorCode),
-    },
+      errorReason: getErrorReason(errorCode)
+    }
   });
 }
 
 export function notRecoverableGenericMessageError(
   errorCode: NotRecoverableMessageErrorCodes,
   signal: unknown,
-  correlationId: string = ""
+  correlationId = ""
 ): NotRecoverableGenericMessageError {
   return new NotRecoverableGenericMessageError({
     detail: getErrorReason(errorCode),
     code: errorCode,
     title: `[CID=${correlationId}] Not recoverable error`,
-    signal,
+    signal
   });
 }

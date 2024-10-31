@@ -12,10 +12,10 @@ export const JWTConfig = z
       .string()
       .transform((s) => s.split(","))
       .pipe(z.array(APIEndpoint)),
-    ACCEPTED_AUDIENCE: z.string(),
+    ACCEPTED_AUDIENCE: z.string()
   })
   .transform((c) => ({
     wellKnownUrls: c.WELL_KNOWN_URLS,
-    acceptedAudience: c.ACCEPTED_AUDIENCE,
+    acceptedAudience: c.ACCEPTED_AUDIENCE
   }));
 export type JWTConfig = z.infer<typeof JWTConfig>;

@@ -1,7 +1,7 @@
 import { DB, Logger } from "pagopa-signalhub-commons";
-import { signalRepository } from "../repositories/signal.repository.js";
 
 import { signalIdDuplicatedForEserviceId } from "../models/domain/errors.js";
+import { signalRepository } from "../repositories/signal.repository.js";
 
 interface ISignalService {
   readonly verifySignalDuplicated: (
@@ -28,7 +28,7 @@ export function signalServiceBuilder(db: DB): ISignalService {
       if (signalIsDuplicated(signalIdPresent)) {
         throw signalIdDuplicatedForEserviceId(signalId, eserviceId);
       }
-    },
+    }
   };
 }
 

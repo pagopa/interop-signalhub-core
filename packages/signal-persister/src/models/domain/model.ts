@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const DeadSignal = Signal.merge(
   z.object({
-    errorReason: z.string(),
+    errorReason: z.string()
   })
 );
 

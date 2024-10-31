@@ -1,19 +1,20 @@
 import { Logger } from "pagopa-signalhub-commons";
-import { IAgreementRepository } from "../repositories/agreement.repository.js";
+
 import { AgreementEntity } from "../models/domain/model.js";
+import { IAgreementRepository } from "../repositories/agreement.repository.js";
 
 export interface IAgreementService {
+  readonly delete: (
+    agreementId: string,
+    streamId: string,
+    logger: Logger
+  ) => Promise<void>;
   readonly insert: (
     agreement: AgreementEntity,
     logger: Logger
   ) => Promise<void>;
   readonly update: (
     agreement: AgreementEntity,
-    logger: Logger
-  ) => Promise<void>;
-  readonly delete: (
-    agreementId: string,
-    streamId: string,
     logger: Logger
   ) => Promise<void>;
 }
@@ -56,7 +57,7 @@ export function agreementServiceBuilder(
     ): Promise<void> {
       logger.info(`Deleting agreement with agreementId: ${agreementId}`);
       await agreementRepository.delete(agreementId, streamId);
-    },
+    }
   };
 }
 

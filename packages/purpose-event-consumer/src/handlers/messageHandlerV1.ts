@@ -1,17 +1,16 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import {
   PurposeEventV1,
   PurposeStateV1,
   PurposeV1,
-  PurposeVersionV1,
+  PurposeVersionV1
 } from "@pagopa/interop-outbound-models";
-
+import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
+
+import { config } from "../config/env.js";
+import { kafkaInvalidVersion } from "../models/domain/errors.js";
 import { PurposeEntity } from "../models/domain/model.js";
 import { PurposeService } from "../services/purpose.service.js";
-import { kafkaInvalidVersion } from "../models/domain/errors.js";
-import { config } from "../config/env.js";
 
 export async function handleMessageV1(
   event: PurposeEventV1,
@@ -25,7 +24,7 @@ export async function handleMessageV1(
           "PurposeVersionActivated",
           "PurposeVersionSuspended",
           "PurposeVersionArchived"
-        ),
+        )
       },
       async (evt) => {
         if (!evt.data.purpose) {
@@ -51,7 +50,7 @@ export async function handleMessageV1(
           "PurposeVersionDeleted",
           "PurposeVersionRejected",
           "PurposeDeleted"
-        ),
+        )
       },
 
       async () => {
@@ -77,7 +76,7 @@ export const toPurposeV1Entity = (
     purposeState: validVersion.state,
     purposeVersionId: validVersion.versionId,
     eventStreamId: streamId,
-    eventVersionId: version,
+    eventVersionId: version
   };
 };
 const validVersionInVersionsV1 = (
@@ -110,10 +109,13 @@ const getVersionBy = (
 } =>
   purposeVersions
     .filter((version) => version.state === purposeState)
-    .reduce((obj, version) => {
-      const { id, state } = version;
-      return { ...obj, versionId: id, state: PurposeStateV1[state] };
-    }, {} as { versionId: string; state: string });
+    .reduce(
+      (obj, version) => {
+        const { id, state } = version;
+        return { ...obj, versionId: id, state: PurposeStateV1[state] };
+      },
+      {} as { versionId: string; state: string }
+    );
 
 const purposeHasNoVersionInAValidState = (
   versions: PurposeVersionV1[]

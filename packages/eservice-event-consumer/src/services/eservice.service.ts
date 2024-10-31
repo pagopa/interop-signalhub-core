@@ -1,9 +1,9 @@
-import { Logger } from "pagopa-signalhub-commons";
 import { EServiceDescriptorV2 } from "@pagopa/interop-outbound-models";
-import { IEserviceRepository } from "../repositories/eservice.repository.js";
+import { Logger } from "pagopa-signalhub-commons";
 
 import { EserviceEntity, EserviceV2Entity } from "../models/domain/model.js";
 import { IEserviceProduceRepository } from "../repositories/eServiceProducer.repository.js";
+import { IEserviceRepository } from "../repositories/eservice.repository.js";
 
 export interface IEServiceService {
   readonly addEserviceProducer: (
@@ -11,24 +11,6 @@ export interface IEServiceService {
     producerId: string,
     eventStreamId: string,
     eventVersionId: number,
-    logger: Logger
-  ) => Promise<void>;
-
-  readonly upsertV1: (
-    eService: EserviceEntity,
-    logger: Logger
-  ) => Promise<void>;
-
-  readonly insertEserviceAndProducerId: (
-    eService: EserviceEntity,
-    producerId: string,
-    eventStreamId: string,
-    eventVersionId: number,
-    logger: Logger
-  ) => Promise<void>;
-
-  readonly upsertV2: (
-    eService: EserviceV2Entity,
     logger: Logger
   ) => Promise<void>;
 
@@ -45,6 +27,24 @@ export interface IEServiceService {
   readonly deleteDescritorV2: (
     eServiceId: string,
     descriptors: EServiceDescriptorV2[],
+    logger: Logger
+  ) => Promise<void>;
+
+  readonly insertEserviceAndProducerId: (
+    eService: EserviceEntity,
+    producerId: string,
+    eventStreamId: string,
+    eventVersionId: number,
+    logger: Logger
+  ) => Promise<void>;
+
+  readonly upsertV1: (
+    eService: EserviceEntity,
+    logger: Logger
+  ) => Promise<void>;
+
+  readonly upsertV2: (
+    eService: EserviceV2Entity,
     logger: Logger
   ) => Promise<void>;
 }
@@ -211,7 +211,7 @@ export function eServiceServiceBuilder(
         );
         await eServiceRepository.deleteDescriptor(eServiceId, descriptor.id);
       });
-    },
+    }
   };
 }
 export type EServiceService = ReturnType<typeof eServiceServiceBuilder>;

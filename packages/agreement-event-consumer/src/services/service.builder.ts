@@ -1,9 +1,10 @@
 import { DB, createDbInstance } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
 import { agreementRepository } from "../repositories/index.js";
 import {
   AgreementService,
-  agreementServiceBuilder,
+  agreementServiceBuilder
 } from "./agreement.service.js";
 export function serviceBuilder(): {
   agreementService: AgreementService;
@@ -15,13 +16,13 @@ export function serviceBuilder(): {
     port: config.signalhubStoreDbPort,
     database: config.signalhubStoreDbName,
     useSSL: config.signalhubStoreDbUseSSL,
-    maxConnectionPool: config.maxConnectionPool,
+    maxConnectionPool: config.maxConnectionPool
   });
 
   const agreementRepositoryInstance = agreementRepository(db);
   const agreementService = agreementServiceBuilder(agreementRepositoryInstance);
 
   return {
-    agreementService,
+    agreementService
   };
 }

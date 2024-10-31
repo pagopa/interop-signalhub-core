@@ -1,17 +1,18 @@
-import express, { Express } from "express";
 import { createExpressEndpoints } from "@ts-rest/express";
+import express, { Express } from "express";
 import {
   authenticationMiddleware,
   contextMiddleware,
   logger,
   loggerMiddleware,
-  skipForUrl,
+  skipForUrl
 } from "pagopa-signalhub-commons";
+
 import { contract } from "./contract/contract.js";
-import { pushRoutes } from "./routes/push.route.js";
-import { validationErrorHandler } from "./validation/validation.js";
-import { serviceBuilder } from "./services/service.builder.js";
 import { setupHealthRoute } from "./routes/health.route.js";
+import { pushRoutes } from "./routes/push.route.js";
+import { serviceBuilder } from "./services/service.builder.js";
+import { validationErrorHandler } from "./validation/validation.js";
 
 const serviceName = "push-signal";
 
@@ -34,9 +35,9 @@ const routes = pushRoutes(signalService, interopService, quequeService);
 createExpressEndpoints(contract, routes, app, {
   requestValidationErrorHandler: validationErrorHandler(
     logger({
-      serviceName,
+      serviceName
     })
-  ),
+  )
 });
 
 export default app;

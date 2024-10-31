@@ -1,4 +1,5 @@
 import { DB, TableName, genericInternalError } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
 
 export interface IEserviceProduceRepository {
@@ -6,15 +7,15 @@ export interface IEserviceProduceRepository {
     streamId: string,
     version: number
   ) => Promise<boolean>;
+  readonly findProducerIdByEserviceId: (
+    eServiceId: string
+  ) => Promise<string | null>;
   readonly insert: (
     eServiceId: string,
     producerId: string,
     eventStreamId: string,
     eventVersionId: number
   ) => Promise<void>;
-  readonly findProducerIdByEserviceId: (
-    eServiceId: string
-  ) => Promise<string | null>;
 }
 export const eServiceProducerRepository = (
   db: DB
@@ -70,6 +71,6 @@ export const eServiceProducerRepository = (
       } catch (error) {
         throw genericInternalError(`Error findProducerIdByEserviceId ${error}`);
       }
-    },
+    }
   };
 };

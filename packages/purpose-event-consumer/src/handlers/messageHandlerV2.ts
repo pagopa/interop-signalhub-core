@@ -1,17 +1,16 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import {
   PurposeEventV2,
   PurposeStateV2,
   PurposeV2,
-  PurposeVersionV2,
+  PurposeVersionV2
 } from "@pagopa/interop-outbound-models";
-
+import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
-import { PurposeService } from "../services/purpose.service.js";
-import { PurposeEntity } from "../models/domain/model.js";
+
 import { config } from "../config/env.js";
 import { kafkaInvalidVersion } from "../models/domain/errors.js";
+import { PurposeEntity } from "../models/domain/model.js";
+import { PurposeService } from "../services/purpose.service.js";
 
 export async function handleMessageV2(
   event: PurposeEventV2,
@@ -31,7 +30,7 @@ export async function handleMessageV2(
           "PurposeVersionSuspendedByConsumer",
           "PurposeVersionOverQuotaUnsuspended",
           "PurposeArchived"
-        ),
+        )
       },
       async (evt) => {
         if (!evt.data.purpose) {
@@ -58,7 +57,7 @@ export async function handleMessageV2(
           "WaitingForApprovalPurposeVersionDeleted",
           "PurposeVersionRejected",
           "PurposeCloned"
-        ),
+        )
       },
       async () => {
         logger.info(`Skip event (not relevant)`);
@@ -83,7 +82,7 @@ export const toPurposeV2Entity = (
     purposeState: validVersion.state,
     purposeVersionId: validVersion.versionId,
     eventStreamId: streamId,
-    eventVersionId: version,
+    eventVersionId: version
   };
 };
 const validVersionInVersionsV2 = (
@@ -116,10 +115,13 @@ function getVersionBy(
 } {
   return purposeVersions
     .filter((version) => version.state === purposeState)
-    .reduce((obj, version) => {
-      const { id, state } = version;
-      return { ...obj, versionId: id, state: PurposeStateV2[state] };
-    }, {} as { versionId: string; state: string });
+    .reduce(
+      (obj, version) => {
+        const { id, state } = version;
+        return { ...obj, versionId: id, state: PurposeStateV2[state] };
+      },
+      {} as { versionId: string; state: string }
+    );
 }
 
 const hasPurposeVersionInAValidState = (

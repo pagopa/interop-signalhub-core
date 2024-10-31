@@ -1,9 +1,10 @@
 import jwt, { JwtHeader, JwtPayload, Secret } from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
-import { Logger } from "../logging/index.js";
-import { invalidClaim, jwtDecodingError } from "../errors/index.js";
-import { SessionData, AuthToken } from "../models/index.js";
+
 import { JWTConfig } from "../config/jwt.config.js";
+import { invalidClaim, jwtDecodingError } from "../errors/index.js";
+import { Logger } from "../logging/index.js";
+import { AuthToken, SessionData } from "../models/index.js";
 
 const decodeJwtToken = (jwtToken: string): JwtPayload | null => {
   try {
@@ -20,7 +21,7 @@ export const readSessionDataFromJwtToken = (jwtToken: string): SessionData => {
     throw invalidClaim(token.error);
   } else {
     return {
-      organizationId: token.data.organizationId,
+      organizationId: token.data.organizationId
     };
   }
 };
@@ -38,7 +39,7 @@ const getPublicKey = async (
 ): Promise<Secret> => {
   const clientList = jwkClient.map((c, i) => ({
     client: c,
-    last: i === jwkClient.length - 1,
+    last: i === jwkClient.length - 1
   }));
   for (const { client, last } of clientList) {
     try {
@@ -67,38 +68,38 @@ export const validateToken = async (
 
   const clients = config.wellKnownUrls.map((url) =>
     jwksClient({
-      jwksUri: url,
+      jwksUri: url
     })
   );
   try {
     const pubKey = await getPublicKey(token, clients, logger);
-    return new Promise((resolve, _reject) => {
+    return new Promise((resolve) => {
       jwt.verify(
         token,
         pubKey,
         {
-          audience: config.acceptedAudience,
+          audience: config.acceptedAudience
         },
-        function (err, _decoded) {
+        function (err) {
           if (err) {
             logger.warn(`Authentication::validateToken, failed: ${err}`);
             resolve({
               success: false,
-              err,
+              err
             });
           }
           return resolve({
             success: true,
-            err: null,
+            err: null
           });
         }
       );
     });
   } catch (error) {
-    return new Promise((resolve, _reject) => {
+    return new Promise((resolve) => {
       resolve({
         success: false,
-        err: error as jwt.JsonWebTokenError,
+        err: error as jwt.JsonWebTokenError
       });
     });
   }

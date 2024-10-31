@@ -10,5 +10,5 @@ export const buildLoggerInstance = (
     eventType: agreementEvent.type,
     eventVersion: agreementEvent.event_version,
     streamId: agreementEvent.stream_id,
-    version: Number(agreementEvent.version),
+    version: Number(agreementEvent.version)
   });
