@@ -5,11 +5,11 @@ import { processMessage } from "./messageHandler.js";
 import { storeSignalServiceBuilder } from "./services/storeSignal.service.js";
 
 const loggerInstance = logger({
-  serviceName: "persister",
+  serviceName: "persister"
 });
 
 const sqsClient: SQS.SQSClient = SQS.instantiateClient({
-  endpoint: config.queueUrl,
+  endpoint: config.queueUrl
 });
 
 const db: DB = createDbInstance({
@@ -19,7 +19,7 @@ const db: DB = createDbInstance({
   port: config.signalhubStoreDbPort,
   database: config.signalhubStoreDbName,
   useSSL: config.signalhubStoreDbUseSSL,
-  maxConnectionPool: config.maxConnectionPool,
+  maxConnectionPool: config.maxConnectionPool
 });
 
 await SQS.runConsumer(
@@ -27,7 +27,7 @@ await SQS.runConsumer(
   {
     queueUrl: config.queueUrl,
     consumerPollingTimeout: 20,
-    runUntilQueueIsEmpty: false,
+    runUntilQueueIsEmpty: false
   },
   processMessage(storeSignalServiceBuilder(db)),
   loggerInstance

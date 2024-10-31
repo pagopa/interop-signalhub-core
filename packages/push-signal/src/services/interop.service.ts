@@ -1,6 +1,7 @@
 import { DB, Logger } from "pagopa-signalhub-commons";
-import { interopRepository } from "../repositories/interop.repository.js";
+
 import { operationPushForbidden } from "../models/domain/errors.js";
+import { interopRepository } from "../repositories/interop.repository.js";
 
 interface InteropServiceBuilder {
   readonly producerIsAuthorizedToPushSignals: (
@@ -30,10 +31,10 @@ export function interopServiceBuilder(db: DB): InteropServiceBuilder {
       if (isNotEserviceVersionPublishedOrDeprecated(result)) {
         throw operationPushForbidden({
           eserviceId,
-          producerId,
+          producerId
         });
       }
-    },
+    }
   };
 }
 

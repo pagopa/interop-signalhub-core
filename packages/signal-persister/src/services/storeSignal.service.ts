@@ -1,23 +1,24 @@
 import { DB, Logger, SignalMessage } from "pagopa-signalhub-commons";
-import { toSignal } from "../models/domain/toSignal.js";
-import { signalRepository } from "../repositories/signal.repository.js";
-import { deadSignalRepository } from "../repositories/deadSignal.repository.js";
-import { DeadSignal } from "../models/domain/model.js";
+
 import {
   NotRecoverableMessageError,
   notRecoverableMessageError,
-  recoverableMessageError,
+  recoverableMessageError
 } from "../models/domain/errors.js";
+import { DeadSignal } from "../models/domain/model.js";
+import { toSignal } from "../models/domain/toSignal.js";
+import { deadSignalRepository } from "../repositories/deadSignal.repository.js";
+import { signalRepository } from "../repositories/signal.repository.js";
 
 interface IStoreSignalServiceBuilder {
+  readonly isSignalAlreadyOnDatabase: (
+    signalRecordId: number | null
+  ) => boolean;
+  readonly storeDeadSignal: (deadSignal: DeadSignal) => Promise<void>;
   readonly storeSignal: (
     signalMessage: SignalMessage,
     logger: Logger
   ) => Promise<void>;
-  readonly storeDeadSignal: (deadSignal: DeadSignal) => Promise<void>;
-  readonly isSignalAlreadyOnDatabase: (
-    signalRecordId: number | null
-  ) => boolean;
 }
 
 export function storeSignalServiceBuilder(db: DB): IStoreSignalServiceBuilder {
@@ -68,7 +69,7 @@ export function storeSignalServiceBuilder(db: DB): IStoreSignalServiceBuilder {
 
     isSignalAlreadyOnDatabase(signalRecordId: number | null): boolean {
       return signalRecordId !== null;
-    },
+    }
   };
 }
 

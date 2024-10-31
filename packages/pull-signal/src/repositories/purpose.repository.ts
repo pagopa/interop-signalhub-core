@@ -1,4 +1,5 @@
-import { genericError, DB, TableName } from "pagopa-signalhub-commons";
+import { DB, TableName, genericError } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
 
 export interface IPurposeRepository {
@@ -19,7 +20,7 @@ export const purposeRepository = (db: DB): IPurposeRepository => {
       } catch (error: unknown) {
         throw genericError(`Error eserviceRepository::findBy ${error}`);
       }
-    },
+    }
   };
 };
 

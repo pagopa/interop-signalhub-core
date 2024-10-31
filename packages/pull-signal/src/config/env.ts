@@ -1,10 +1,10 @@
-import { z } from "zod";
 import {
-  HTTPServerConfig,
-  SignalHubStoreConfig,
-  JWTConfig,
   APIServiceConfig,
+  HTTPServerConfig,
+  JWTConfig,
+  SignalHubStoreConfig
 } from "pagopa-signalhub-commons";
+import { z } from "zod";
 
 const PullServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
   .and(JWTConfig)
@@ -24,5 +24,5 @@ if (!parsedFromEnv.success) {
 }
 
 export const config: PullServiceConfig = {
-  ...parsedFromEnv.data,
+  ...parsedFromEnv.data
 };

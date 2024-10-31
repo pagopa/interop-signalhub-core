@@ -1,4 +1,3 @@
-/* eslint-disable max-classes-per-file */
 import { P, match } from "ts-pattern";
 import { ZodError, z } from "zod";
 // import { fromZodError } from "zod-validation-error";
@@ -11,17 +10,17 @@ export class ApiError<T> extends Error {
     map ApiError to a specific HTTP status code.
     */
   public code: T;
-  public title: string;
-  public detail: string;
-  public errors: Array<{ code: T; detail: string }>;
   public correlationId?: string;
+  public detail: string;
+  public errors: { code: T; detail: string }[];
+  public title: string;
 
   constructor({
     code,
     title,
     detail,
     correlationId,
-    errors,
+    errors
   }: {
     code: T;
     title: string;
@@ -68,9 +67,9 @@ export const Problem = z.object({
   errors: z.array(
     z.object({
       code: z.string(),
-      detail: z.string(),
+      detail: z.string()
     })
-  ),
+  )
   // toString: z.function(),
 });
 export type Problem = z.infer<typeof Problem>;
@@ -94,6 +93,7 @@ const makeProblemLogString = (
 };
 
 export function makeApiProblemBuilder<T extends string>(errors: {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   [K in T]: string;
 }): MakeApiProblemFn<T> {
   const allErrors = { ...errorCodes, ...errors };
@@ -109,8 +109,8 @@ export function makeApiProblemBuilder<T extends string>(errors: {
       correlationId,
       errors: errors.map(({ code, detail }) => ({
         code: allErrors[code],
-        detail,
-      })),
+        detail
+      }))
     });
 
     return match<unknown, Problem>(error)
@@ -139,7 +139,7 @@ const errorCodes = {
   jwtNotPresent: "10000",
   kafkaMessageValueError: "9996",
   kafkaMessageProcessError: "9997",
-  kafkaMessageMissingData: "9998",
+  kafkaMessageMissingData: "9998"
 } as const;
 
 export type CommonErrorCodes = keyof typeof errorCodes;
@@ -168,7 +168,7 @@ export function genericInternalError(
 ): InternalError<CommonErrorCodes> {
   return new InternalError({
     code: "genericError",
-    detail: message,
+    detail: message
   });
 }
 
@@ -178,7 +178,7 @@ export function genericError(details: string): ApiError<CommonErrorCodes> {
   return new ApiError({
     detail: details,
     code: "genericError",
-    title: "Unexpected error",
+    title: "Unexpected error"
   });
 }
 
@@ -188,7 +188,7 @@ export function unauthorizedError(
   return new ApiError({
     detail: details,
     code: "unauthorizedError",
-    title: "Unauthorized",
+    title: "Unauthorized"
   });
 }
 
@@ -200,7 +200,7 @@ export function badRequestError(
     detail,
     code: "badRequestError",
     title: "Bad request",
-    errors,
+    errors
   });
 }
 
@@ -208,7 +208,7 @@ export function invalidClaim(error: unknown): ApiError<CommonErrorCodes> {
   return new ApiError({
     detail: `Claim not valid or missing: ${parseErrorMessage(error)}`,
     code: "invalidClaim",
-    title: "Claim not valid or missing",
+    title: "Claim not valid or missing"
   });
 }
 
@@ -216,7 +216,7 @@ export function jwtDecodingError(error: unknown): ApiError<CommonErrorCodes> {
   return new ApiError({
     detail: `Unexpected error on JWT decoding: ${parseErrorMessage(error)}`,
     code: "jwtDecodingError",
-    title: "JWT decoding error",
+    title: "JWT decoding error"
   });
 }
 
@@ -227,7 +227,7 @@ export function missingHeader(headerName?: string): ApiError<CommonErrorCodes> {
       ? `Header ${headerName} not existing in this request`
       : title,
     code: "missingHeader",
-    title,
+    title
   });
 }
 
@@ -241,7 +241,7 @@ export function kafkaMessageProcessError(
     code: "kafkaMessageProcessError",
     detail: `Error while handling kafka message from topic : ${topic} - partition ${partition} - offset ${offset}. ${
       error ? parseErrorMessage(error) : ""
-    }`,
+    }`
   });
 }
 
@@ -250,7 +250,7 @@ export function kafkaMissingMessageValue(
 ): InternalError<CommonErrorCodes> {
   return new InternalError({
     code: "kafkaMessageValueError",
-    detail: `Missing value message in kafka message from topic: ${topic}`,
+    detail: `Missing value message in kafka message from topic: ${topic}`
   });
 }
 export function kafkaMessageMissingData(
@@ -259,24 +259,24 @@ export function kafkaMessageMissingData(
 ): InternalError<CommonErrorCodes> {
   return new InternalError({
     code: "kafkaMessageMissingData",
-    detail: `Missing data in kafka message from topic: ${topic} and event type: ${eventType}`,
+    detail: `Missing data in kafka message from topic: ${topic} and event type: ${eventType}`
   });
 }
 
-export const missingBearer: ApiError<"missingHeader"> = new ApiError({
+export const missingBearer = new ApiError<"missingHeader">({
   detail: `Authorization Illegal header key.`,
   code: "missingHeader",
-  title: "Bearer token has not been passed",
+  title: "Bearer token has not been passed"
 });
 
-export const jwtNotPresent: ApiError<"jwtNotPresent"> = new ApiError({
+export const jwtNotPresent = new ApiError<"jwtNotPresent">({
   detail: `JWT token has not been passed`,
   code: "jwtNotPresent",
-  title: "JWT token has not been passed",
+  title: "JWT token has not been passed"
 });
 
-export const operationForbidden: ApiError<"operationForbidden"> = new ApiError({
+export const operationForbidden = new ApiError<"operationForbidden">({
   detail: `Insufficient privileges`,
   code: "operationForbidden",
-  title: "Insufficient privileges",
+  title: "Insufficient privileges"
 });

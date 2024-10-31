@@ -3,5 +3,5 @@
   "compilerOptions": {
     "outDir": "dist"
   },
-  "include": ["src", "scripts/generate-api.ts", "scripts/validate-api.ts"]
+  "include": ["src","test", "scripts/generate-api.ts", "scripts/validate-api.ts"]
 }

@@ -7,32 +7,32 @@ const StandardJWTClaims = z.object({
   exp: z.number(),
   nbf: z.number(),
   iat: z.number(),
-  jti: z.string(),
+  jti: z.string()
 });
 
 export const AuthToken = StandardJWTClaims.merge(
   z.object({
     organizationId: z.string().uuid(),
     client_id: z.string().uuid(),
-    sub: z.string(),
+    sub: z.string()
   })
 );
 export type AuthToken = z.infer<typeof AuthToken>;
 
 export const SessionData = z.object({
-  organizationId: z.string().uuid(),
+  organizationId: z.string().uuid()
 });
 export type SessionData = z.infer<typeof SessionData>;
 
 export const AppContext = z.object({
   serviceName: z.string(),
   correlationId: z.string(),
-  sessionData: SessionData,
+  sessionData: SessionData
 });
 
 export const Headers = z.object({
   authorization: z.string().nullish(),
-  "x-correlation-id": z.string().nullish(),
+  "x-correlation-id": z.string().nullish()
 });
 
 export type Headers = z.infer<typeof Headers>;
@@ -45,7 +45,7 @@ const SignalSchema = z.object({
   objectId: z.string(),
   eserviceId: z.string(),
   signalId: z.number(),
-  objectType: z.string(),
+  objectType: z.string()
 });
 
 export const SignalPayload = SignalSchema;
@@ -57,14 +57,14 @@ export type SignalResponse = z.infer<typeof SignalSchema>;
 export const SignalPushResponse = SignalSchema.pick({ signalId: true });
 export const SignalPullResponse = z.object({
   signals: z.array(SignalResponse),
-  lastSignalId: z.number().nullish(),
+  lastSignalId: z.number().nullish()
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SignalRecord = any;
 
 export const SignalMessage = SignalSchema.extend({
-  correlationId: z.string(),
+  correlationId: z.string()
 });
 
 export const SignalMessageSchema = {
@@ -73,23 +73,23 @@ export const SignalMessageSchema = {
   type: "object",
   properties: {
     correlationId: {
-      type: "string",
+      type: "string"
     },
     signalId: {
-      type: "number",
+      type: "number"
     },
     objectId: {
-      type: "string",
+      type: "string"
     },
     eserviceId: {
-      type: "string",
+      type: "string"
     },
     objectType: {
-      type: "string",
+      type: "string"
     },
     signalType: {
-      enum: ["CREATE", "UPDATE", "DELETE", "SEEDUPDATE"],
-    },
+      enum: ["CREATE", "UPDATE", "DELETE", "SEEDUPDATE"]
+    }
   },
   required: [
     "correlationId",
@@ -97,15 +97,15 @@ export const SignalMessageSchema = {
     "eserviceId",
     "signalId",
     "objectType",
-    "signalType",
-  ],
+    "signalType"
+  ]
 };
 
 export const SMessageSchema = z.object({
   value: z.preprocess(
     (v) => (v != null ? JSON.parse(v.toString()) : null),
     SignalMessage
-  ),
+  )
 });
 
 export type SignalMessage = z.infer<typeof SignalMessage>;

@@ -1,13 +1,13 @@
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { initContract } from "@ts-rest/core";
 import {
+  Problem as ProblemComponent,
   SignalPayload as SignalPayloadComponent,
   SignalPushResponse as SignalPushResponseComponent,
-  Problem as ProblemComponent,
-  SignalType,
+  SignalType
 } from "pagopa-signalhub-commons";
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-
 import { z } from "zod";
+
 import { config } from "../config/env.js";
 
 extendZodWithOpenApi(z);
@@ -23,7 +23,7 @@ const Problem = ProblemComponent.openapi("problem");
 const SignalPushResponse =
   SignalPushResponseComponent.openapi("SignalPushResponse");
 const SignalPayload = SignalPayloadComponent.extend({
-  signalType: SignalType.openapi("signalType"),
+  signalType: SignalType.openapi("signalType")
 }).openapi("SignalPayload");
 
 export const contract = c.router(
@@ -34,18 +34,18 @@ export const contract = c.router(
       method: "GET",
       path: "/status",
       responses: {
-        200: z.literal("OK"),
-      },
+        200: z.literal("OK")
+      }
     },
     pushSignal: {
       summary: "Push Signal",
       description: "Insert a signal",
       headers: z.object({
-        authorization: z.string(),
+        authorization: z.string()
       }),
       metadata: {
         auth: true,
-        role: "user",
+        role: "user"
       } as const,
       method: "POST",
       path: "/signals",
@@ -54,12 +54,12 @@ export const contract = c.router(
         400: Problem,
         401: Problem,
         403: Problem,
-        500: Problem,
+        500: Problem
       },
-      body: SignalPayload,
-    },
+      body: SignalPayload
+    }
   },
   {
-    pathPrefix,
+    pathPrefix
   }
 );

@@ -1,4 +1,5 @@
 import { DB, createDbInstance } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
 import { purposeRepository } from "../repositories/purpose.repository.js";
 import { PurposeService, purposeServiceBuilder } from "./purpose.service.js";
@@ -12,13 +13,13 @@ export function serviceBuilder(): {
     port: config.signalhubStoreDbPort,
     database: config.signalhubStoreDbName,
     useSSL: config.signalhubStoreDbUseSSL,
-    maxConnectionPool: config.maxConnectionPool,
+    maxConnectionPool: config.maxConnectionPool
   });
 
   const purposeRepositoryInstance = purposeRepository(db);
   const purposeService = purposeServiceBuilder(purposeRepositoryInstance);
 
   return {
-    purposeService,
+    purposeService
   };
 }

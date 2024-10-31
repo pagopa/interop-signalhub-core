@@ -1,4 +1,5 @@
 import { InteropSchema, TableName } from "pagopa-signalhub-commons";
+
 import { AgreementEntity } from "../src/models/domain/model.js";
 import { postgresDB } from "./utils.js";
 
@@ -14,7 +15,7 @@ export const getAnAgreementEntityBy = async (
   }
   return {
     ...agreement,
-    event_version_id: Number(agreement.event_version_id),
+    event_version_id: Number(agreement.event_version_id)
   };
 };
 export const writeAnAgreementEntity = async (
@@ -28,7 +29,7 @@ export const writeAnAgreementEntity = async (
     descriptor_id,
     state,
     event_stream_id,
-    event_version_id,
+    event_version_id
   } = agreement;
 
   const agreementTable: TableName = `${schema}.agreement`;
@@ -41,7 +42,7 @@ export const writeAnAgreementEntity = async (
       descriptor_id,
       state,
       event_stream_id,
-      event_version_id,
+      event_version_id
     ]
   );
 };

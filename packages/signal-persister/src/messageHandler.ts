@@ -1,12 +1,13 @@
-import { logger, Logger, SQS } from "pagopa-signalhub-commons";
+import { Logger, SQS, logger } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
-import { StoreSignalService } from "./services/storeSignal.service.js";
+
 import {
   NotRecoverableGenericMessageError,
   NotRecoverableMessageError,
-  RecoverableMessageError,
+  RecoverableMessageError
 } from "./models/domain/errors.js";
 import { parseQueueMessageToSignal } from "./models/domain/utils.js";
+import { StoreSignalService } from "./services/storeSignal.service.js";
 
 export function processMessage(
   storeSignalService: StoreSignalService
@@ -18,7 +19,7 @@ export function processMessage(
       const { correlationId, signalId } = signalMessage;
       loggerInstance = logger({
         serviceName: "persister",
-        correlationId,
+        correlationId
       });
       loggerInstance.info(
         `Processing: signalId: ${signalId}, messageId: ${message.MessageId}`
@@ -47,7 +48,7 @@ export function processMessage(
           throw error;
         })
 
-        .otherwise((_error: unknown) => {
+        .otherwise(() => {
           throw error;
         });
     }

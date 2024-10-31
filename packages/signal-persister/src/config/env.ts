@@ -1,5 +1,5 @@
+import { QuequeConfig, SignalHubStoreConfig } from "pagopa-signalhub-commons";
 import { z } from "zod";
-import { SignalHubStoreConfig, QuequeConfig } from "pagopa-signalhub-commons";
 
 const PersisterServiceConfig = SignalHubStoreConfig.and(QuequeConfig);
 
@@ -18,5 +18,5 @@ if (!parsedFromEnv.success) {
 export type PersisterServiceConfig = z.infer<typeof PersisterServiceConfig>;
 
 export const config: PersisterServiceConfig = {
-  ...parsedFromEnv.data,
+  ...parsedFromEnv.data
 };

@@ -1,6 +1,7 @@
 import { TableName } from "pagopa-signalhub-commons";
-import { PurposeEntity } from "../src/models/domain/model.js";
+
 import { config } from "../src/config/env.js";
+import { PurposeEntity } from "../src/models/domain/model.js";
 import { postgresDB, toPurposeEntity } from "./utils.js";
 
 const purposeTable: TableName = `${config.interopSchema}.purpose`;
@@ -27,7 +28,7 @@ export const writeAPurposeEntity = async (
     eserviceId,
     consumerId,
     eventStreamId,
-    eventVersionId,
+    eventVersionId
   } = purpose;
   await postgresDB.oneOrNone(
     `INSERT INTO ${purposeTable}(purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id, event_stream_id, event_version_id) VALUES($1, $2, $3, $4, $5, $6, $7)`,
@@ -38,7 +39,7 @@ export const writeAPurposeEntity = async (
       eserviceId,
       consumerId,
       eventStreamId,
-      eventVersionId,
+      eventVersionId
     ]
   );
 };

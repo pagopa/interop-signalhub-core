@@ -16,13 +16,13 @@ export const postgreSQLContainer = (
     .withEnvironment({
       POSTGRES_DB: config.signalhubStoreDbName,
       POSTGRES_USER: config.signalhubStoreDbUsername,
-      POSTGRES_PASSWORD: config.signalhubStoreDbPassword,
+      POSTGRES_PASSWORD: config.signalhubStoreDbPassword
     })
     .withCopyFilesToContainer([
       {
         source: "../../docker/postgres/signalhub-store-init.sql",
-        target: "/docker-entrypoint-initdb.d/signalhub-store-init.sql",
-      },
+        target: "/docker-entrypoint-initdb.d/signalhub-store-init.sql"
+      }
     ])
     .withExposedPorts(TEST_POSTGRES_DB_PORT);
 
@@ -31,7 +31,7 @@ export const elasticMQContainer = (): GenericContainer =>
     .withCopyFilesToContainer([
       {
         source: "../../docker/elasticmq/elasticmq.local.conf",
-        target: "/opt/elasticmq.conf",
-      },
+        target: "/opt/elasticmq.conf"
+      }
     ])
     .withExposedPorts(TEST_ELASTIC_MQ_PORT);

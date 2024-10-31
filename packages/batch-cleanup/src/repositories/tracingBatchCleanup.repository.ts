@@ -1,9 +1,10 @@
 import {
   DB,
-  genericInternalError,
   TableName,
   TracingBatchCleanup,
+  genericInternalError
 } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
 
 export interface ITracingBatchCleanupRepository {
@@ -42,6 +43,6 @@ export const tracingBatchCleanupRepository = (
           `Error update tracing batch State:" ${error} `
         );
       }
-    },
+    }
   };
 };

@@ -1,11 +1,12 @@
-import { DB, createDbInstance, Logger } from "pagopa-signalhub-commons";
+import { DB, Logger, createDbInstance } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
+import { clockServiceBuilder } from "./clock.service.js";
 import { SignalService, signalServiceBuilder } from "./signal.service.js";
 import {
   TracingBatchCleanupService,
-  tracingBatchServiceCleanupBuilder,
+  tracingBatchServiceCleanupBuilder
 } from "./tracingBatchCleanup.service.js";
-import { clockServiceBuilder } from "./clock.service.js";
 
 export async function serviceBuilder(logger: Logger): Promise<{
   signalService: SignalService;
@@ -19,7 +20,7 @@ export async function serviceBuilder(logger: Logger): Promise<{
     port: config.signalhubStoreDbPort,
     database: config.signalhubStoreDbName,
     useSSL: config.signalhubStoreDbUseSSL,
-    maxConnectionPool: config.maxConnectionPool,
+    maxConnectionPool: config.maxConnectionPool
   });
 
   const clockService = clockServiceBuilder();
@@ -33,6 +34,6 @@ export async function serviceBuilder(logger: Logger): Promise<{
   return {
     db,
     signalService,
-    tracingBatchCleanupService,
+    tracingBatchCleanupService
   };
 }

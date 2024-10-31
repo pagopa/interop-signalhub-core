@@ -1,25 +1,26 @@
-import { beforeAll, describe, expect, it } from "vitest";
-import { genericLogger } from "pagopa-signalhub-commons";
 import { EServiceDescriptorStateV1 } from "@pagopa/interop-outbound-models";
-import { handleMessageV1 } from "../src/handlers/messageHandlerV1.js";
+import { genericLogger } from "pagopa-signalhub-commons";
+import { beforeAll, describe, expect, it } from "vitest";
+
 import { config } from "../src/config/env.js";
-import {
-  createEServiceV1,
-  generateID,
-  eServiceService,
-  createEserviceAddedEventV1,
-  createEserviceDescriptorV1,
-  createEserviceDescriptorAddedEventV1,
-  createEserviceDescriptorUpdatedEventV1,
-  createEServiceWithDescriptorsDeletedEventV1,
-  createEServiceClonedEventV1,
-} from "./utils.js";
+import { handleMessageV1 } from "../src/handlers/messageHandlerV1.js";
 import {
   findByEserviceIdAndProducerIdAndDescriptorId,
   findProducerIdByEserviceId,
   insertEserviceDescriptor,
-  insertEserviceIdAndProducerId,
+  insertEserviceIdAndProducerId
 } from "./databaseUtils.js";
+import {
+  createEServiceClonedEventV1,
+  createEServiceV1,
+  createEServiceWithDescriptorsDeletedEventV1,
+  createEserviceAddedEventV1,
+  createEserviceDescriptorAddedEventV1,
+  createEserviceDescriptorUpdatedEventV1,
+  createEserviceDescriptorV1,
+  eServiceService,
+  generateID
+} from "./utils.js";
 
 describe("Message Handler for V1 EVENTS", () => {
   const producerId = "producer-test-id";
@@ -40,7 +41,7 @@ describe("Message Handler for V1 EVENTS", () => {
       const eserviceV1 = createEServiceV1({
         id: eServiceId,
         producerId,
-        descriptors: [],
+        descriptors: []
       });
 
       const eServiceV1Event = createEserviceAddedEventV1(
@@ -74,7 +75,7 @@ describe("Message Handler for V1 EVENTS", () => {
 
       const descriptor = createEserviceDescriptorV1({
         id: descriptorId,
-        state: EServiceDescriptorStateV1.PUBLISHED,
+        state: EServiceDescriptorStateV1.PUBLISHED
       });
 
       const eServiceV1Event = createEserviceDescriptorAddedEventV1(
@@ -119,13 +120,13 @@ describe("Message Handler for V1 EVENTS", () => {
 
       const descriptor = createEserviceDescriptorV1({
         id: descriptorId,
-        state: EServiceDescriptorStateV1.PUBLISHED,
+        state: EServiceDescriptorStateV1.PUBLISHED
       });
 
       const eService = createEServiceV1(
         {
           id: eServiceId,
-          producerId,
+          producerId
         },
         descriptor
       );
@@ -174,7 +175,7 @@ describe("Message Handler for V1 EVENTS", () => {
 
       const descriptor = createEserviceDescriptorV1({
         id: descriptorId,
-        state: EServiceDescriptorStateV1.PUBLISHED,
+        state: EServiceDescriptorStateV1.PUBLISHED
       });
 
       const eServiceV1Event = createEserviceDescriptorUpdatedEventV1(
@@ -227,13 +228,13 @@ describe("Message Handler for V1 EVENTS", () => {
 
       const descriptor = createEserviceDescriptorV1({
         id: descriptorId,
-        state: EServiceDescriptorStateV1.PUBLISHED,
+        state: EServiceDescriptorStateV1.PUBLISHED
       });
 
       const eService = createEServiceV1(
         {
           id: eServiceId,
-          producerId,
+          producerId
         },
         descriptor
       );

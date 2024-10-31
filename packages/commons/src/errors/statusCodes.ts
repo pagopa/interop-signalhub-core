@@ -7,7 +7,7 @@ export const SuccessfulHttpStatusCode = z.union([
   z.literal(204),
   z.literal(205),
   z.literal(206),
-  z.literal(207),
+  z.literal(207)
 ]);
 
 export type SuccessfulHttpStatusCode = z.infer<typeof SuccessfulHttpStatusCode>;
@@ -60,7 +60,7 @@ export const ErrorHttpStatusCode = z.union([
   z.literal(504),
   z.literal(505),
   z.literal(507),
-  z.literal(511),
+  z.literal(511)
 ]);
 
 export type ErrorHttpStatusCode = z.infer<typeof ErrorHttpStatusCode>;

@@ -1,33 +1,28 @@
-import { Request, Response, NextFunction } from "express";
 import { RequestValidationError } from "@ts-rest/express";
+import { Request, Response } from "express";
 import { Logger } from "pagopa-signalhub-commons";
+
 import { requestValidationError } from "../models/domain/errors.js";
 
 export const validationErrorHandler =
   (logger: Logger) =>
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  async (
-    err: RequestValidationError,
-    _req: Request,
-    res: Response,
-    _next: NextFunction
-  ) => {
+  async (err: RequestValidationError, _req: Request, res: Response) => {
     const errors = {
       context: err.body
         ? "body"
         : err.pathParams
-        ? "pathParams"
-        : err.query
-        ? "query"
-        : err.headers
-        ? "headers"
-        : "unknown",
+          ? "pathParams"
+          : err.query
+            ? "query"
+            : err.headers
+              ? "headers"
+              : "unknown",
       issues:
         err.body?.issues ||
         err.pathParams?.issues ||
         err.query?.issues ||
         err.headers?.issues ||
-        [],
+        []
     };
     const issues = errors.issues.map((e) => e.message).join(" - ");
     const errorMessage = `${errors.context}: ${issues}`;

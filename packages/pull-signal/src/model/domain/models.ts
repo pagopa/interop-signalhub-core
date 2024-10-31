@@ -5,7 +5,7 @@ export const Agreement = z.object({
   producerId: z.string(),
   consumerId: z.string(),
   descriptorId: z.string(),
-  state: z.string(),
+  state: z.string()
 });
 
 export type Agreement = z.infer<typeof Agreement>;

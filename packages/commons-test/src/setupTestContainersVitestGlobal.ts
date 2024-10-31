@@ -1,22 +1,20 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable functional/immutable-data */
-
 import type {} from "vitest";
-import { config as dotenv } from "dotenv-flow";
 import type { GlobalSetupContext } from "vitest/node";
+
+import { config as dotenv } from "dotenv-flow";
 import {
-  QuequeConfig,
-  SignalHubStoreConfig,
   AwsConfig,
+  QuequeConfig,
+  SignalHubStoreConfig
 } from "pagopa-signalhub-commons";
 import { StartedTestContainer } from "testcontainers";
 import { z } from "zod";
+
 import {
   TEST_ELASTIC_MQ_PORT,
   TEST_POSTGRES_DB_PORT,
   elasticMQContainer,
-  postgreSQLContainer,
+  postgreSQLContainer
 } from "./containerTestUtils.js";
 
 const SqsConfig = QuequeConfig.and(AwsConfig);
@@ -43,7 +41,7 @@ export function setupTestContainersVitestGlobal() {
   const sqsConfig = SqsConfig.safeParse(process.env);
 
   return async function ({
-    provide,
+    provide
   }: GlobalSetupContext): Promise<() => Promise<void>> {
     let startedPostgreSqlContainer: StartedTestContainer | undefined;
     let startedElasticMQContainer: StartedTestContainer | undefined;

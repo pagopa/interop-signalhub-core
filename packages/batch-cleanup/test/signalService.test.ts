@@ -1,18 +1,18 @@
-import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 import {
-  writeSignal,
-  createSignal,
   createMultipleSignals,
-  writeSignals,
+  createSignal,
+  writeSignal,
+  writeSignals
 } from "pagopa-signalhub-commons-test";
-import { config } from "../src/config/env.js";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
+import { config } from "../src/config/env.js";
 import {
-  cleanup,
   ONE_HOUR,
   ONE_MINUTE,
+  cleanup,
   postgresDB,
-  signalService,
+  signalService
 } from "./utils.js";
 
 describe("Signal service", () => {

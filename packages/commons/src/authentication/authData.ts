@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const CommaSeparatedStringToArray = <T extends z.ZodType>(t: T) =>
   z
     .string()
@@ -15,14 +14,14 @@ const StandardJWTClaims = z.object({
   exp: z.number(),
   nbf: z.number(),
   iat: z.number(),
-  jti: z.string(),
+  jti: z.string()
 });
 
 export const AuthToken = StandardJWTClaims.merge(
   z.object({
     organizationId: z.string().uuid(),
     client_id: z.string().uuid(),
-    sub: z.string(),
+    sub: z.string()
   })
 );
 export type AuthToken = z.infer<typeof AuthToken>;

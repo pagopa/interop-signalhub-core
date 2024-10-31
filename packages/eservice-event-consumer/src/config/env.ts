@@ -1,7 +1,7 @@
 import {
   KafkaConsumerConfig,
   KafkaTopicConfig,
-  SignalHubStoreConfig,
+  SignalHubStoreConfig
 } from "pagopa-signalhub-commons";
 import { z } from "zod";
 
@@ -25,5 +25,5 @@ if (!parsedFromEnv.success) {
 }
 
 export const config: AgreementEventConsumerConfig = {
-  ...parsedFromEnv.data,
+  ...parsedFromEnv.data
 };

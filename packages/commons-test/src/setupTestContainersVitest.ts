@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable functional/immutable-data */
 
 import {
   DB,
   SQS,
   SignalHubStoreConfig,
-  createDbInstance,
+  createDbInstance
 } from "pagopa-signalhub-commons";
+
 import { SqsConfig, truncateSignalTable } from "./index.js";
 /**
  * This function is a setup for vitest that initializes the postgres
@@ -73,7 +72,7 @@ export function setupTestContainersVitest(
       port: signalHubStoreConfig.signalhubStoreDbPort,
       database: signalHubStoreConfig.signalhubStoreDbName,
       useSSL: signalHubStoreConfig.signalhubStoreDbUseSSL,
-      maxConnectionPool: signalHubStoreConfig.maxConnectionPool,
+      maxConnectionPool: signalHubStoreConfig.maxConnectionPool
     });
   }
 
@@ -91,6 +90,6 @@ export function setupTestContainersVitest(
         signalHubStoreConfig?.signalHubSchema!
       );
       // TODO: clean queque messages
-    },
+    }
   };
 }

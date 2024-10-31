@@ -1,12 +1,13 @@
-import { Signal, DB, TableName } from "pagopa-signalhub-commons";
+import { DB, Signal, TableName } from "pagopa-signalhub-commons";
+
 import { config } from "../config/env.js";
 
 export interface ISignalRepository {
-  insertSignal: (signal: Signal) => Promise<number | null>;
   getSignalById: (
     signalId: number,
     eserviceId: string
   ) => Promise<number | null>;
+  insertSignal: (signal: Signal) => Promise<number | null>;
 }
 
 export const signalRepository = (db: DB): ISignalRepository => {
@@ -22,7 +23,7 @@ export const signalRepository = (db: DB): ISignalRepository => {
           signal.objectId,
           signal.eserviceId,
           signal.objectType,
-          signal.signalType,
+          signal.signalType
         ],
         (rec) => rec.id
       );
@@ -36,7 +37,7 @@ export const signalRepository = (db: DB): ISignalRepository => {
         `SELECT signal_id FROM ${signalTable} WHERE eservice_id = $1 AND signal_id = $2`,
         [eserviceId, signalId]
       );
-    },
+    }
   };
 };
 

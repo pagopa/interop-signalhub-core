@@ -1,21 +1,22 @@
-import { beforeEach, describe, expect, it } from "vitest";
 import { AgreementStateV2 } from "@pagopa/interop-outbound-models";
-import { truncateAgreementTable } from "pagopa-signalhub-commons-test";
 import { genericLogger } from "pagopa-signalhub-commons";
-import { handleMessageV2 } from "../src/handlers/index.js";
+import { truncateAgreementTable } from "pagopa-signalhub-commons-test";
+import { beforeEach, describe, expect, it } from "vitest";
+
 import { config } from "../src/config/env.js";
+import { handleMessageV2 } from "../src/handlers/index.js";
+import { getAnAgreementEntityBy } from "./databaseUtils.js";
 import {
   agreementService,
-  createAnAgreementV2,
+  createAnAgreementConsumerDocumentAddedEventV2,
   createAnAgreementEventV2,
+  createAnAgreementV2,
+  createAndWriteAnAgreementEventV2,
+  fromEventToEntity,
   generateID,
   incrementVersion,
-  postgresDB,
-  fromEventToEntity,
-  createAndWriteAnAgreementEventV2,
-  createAnAgreementConsumerDocumentAddedEventV2,
+  postgresDB
 } from "./utils.js";
-import { getAnAgreementEntityBy } from "./databaseUtils.js";
 
 describe("Message Handler for V2 EVENTS", () => {
   beforeEach(() => truncateAgreementTable(postgresDB, config.interopSchema));
@@ -61,12 +62,12 @@ describe("Message Handler for V2 EVENTS", () => {
       "AgreementUpgraded",
       "AgreementRejected",
       "DraftAgreementUpdated",
-      "AgreementSubmitted",
+      "AgreementSubmitted"
     ] as const;
 
     const agreementUpdatedV2 = {
       ...agreementV2,
-      state: AgreementStateV2.ACTIVE,
+      state: AgreementStateV2.ACTIVE
     };
 
     for (const eventType of eventTypes) {
@@ -122,7 +123,7 @@ describe("Message Handler for V2 EVENTS", () => {
       );
     const agreementUpdated = {
       ...agreementV2,
-      state: AgreementStateV2.ACTIVE,
+      state: AgreementStateV2.ACTIVE
     };
     const agreementEventUpdatedV2 = createAnAgreementEventV2(
       "AgreementActivated",

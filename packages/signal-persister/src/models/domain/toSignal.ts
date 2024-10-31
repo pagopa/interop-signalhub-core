@@ -7,6 +7,6 @@ export function toSignal(signalMessage: SignalMessage): Signal {
     signalType: signalMessage.signalType,
     objectId: signalMessage.objectId,
     eserviceId: signalMessage.eserviceId,
-    objectType: signalMessage.objectType,
+    objectType: signalMessage.objectType
   };
 }

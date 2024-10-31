@@ -1,15 +1,16 @@
-import { Response, Request, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import { P, match } from "ts-pattern";
-import { Logger, logger } from "../logging/index.js";
-import { Headers } from "../models/index.js";
+
 import {
   genericInternalError,
   jwtDecodingError,
   jwtNotPresent,
   makeApiProblemBuilder,
   missingBearer,
-  missingHeader,
+  missingHeader
 } from "../errors/index.js";
+import { Logger, logger } from "../logging/index.js";
+import { Headers } from "../models/index.js";
 import { readSessionDataFromJwtToken, validateToken } from "./jwt.js";
 
 const makeApiProblem = makeApiProblemBuilder({});
@@ -46,14 +47,13 @@ export const authenticationMiddleware = async (
       throw jwtDecodingError(validationResult.err);
     }
 
-    // eslint-disable-next-line functional/immutable-data
     req.ctx.sessionData = readSessionDataFromJwtToken(jwtToken);
   };
 
   const log = logger({
     serviceName: req.ctx?.serviceName,
     correlationId: req.ctx?.correlationId,
-    eserviceId: req.params.eserviceId,
+    eserviceId: req.params.eserviceId
   });
 
   try {
@@ -67,7 +67,7 @@ export const authenticationMiddleware = async (
     return await match(headers.data)
       .with(
         {
-          authorization: P.string,
+          authorization: P.string
         },
         async (headers) => {
           await validateTokenAndAddSessionDataToContext(
@@ -80,7 +80,7 @@ export const authenticationMiddleware = async (
       .with(
         {
           authorization: P.nullish,
-          "x-correlation-id": P._,
+          "x-correlation-id": P._
         },
         () => {
           log.warn(
@@ -93,7 +93,7 @@ export const authenticationMiddleware = async (
       .with(
         {
           authorization: P.string,
-          "x-correlation-id": P.nullish,
+          "x-correlation-id": P.nullish
         },
         () => {
           log.warn(

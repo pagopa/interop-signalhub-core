@@ -1,11 +1,11 @@
-import { z } from "zod";
 import {
-  HTTPServerConfig,
-  SignalHubStoreConfig,
-  QuequeConfig,
-  JWTConfig,
   APIServiceConfig,
+  HTTPServerConfig,
+  JWTConfig,
+  QuequeConfig,
+  SignalHubStoreConfig
 } from "pagopa-signalhub-commons";
+import { z } from "zod";
 
 const PushServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
   .and(QuequeConfig)
@@ -25,5 +25,5 @@ if (!parsedFromEnv.success) {
 }
 
 export const config: PushServiceConfig = {
-  ...parsedFromEnv.data,
+  ...parsedFromEnv.data
 };

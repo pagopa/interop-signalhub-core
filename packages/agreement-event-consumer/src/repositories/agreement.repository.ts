@@ -1,15 +1,16 @@
 import { DB, TableName, genericInternalError } from "pagopa-signalhub-commons";
-import { AgreementEntity } from "../models/domain/model.js";
+
 import { config } from "../config/env.js";
+import { AgreementEntity } from "../models/domain/model.js";
 
 export interface IAgreementRepository {
+  readonly delete: (agreementId: string, streamId: string) => Promise<void>;
   readonly eventWasProcessed: (
     streamId: string,
     version: number
   ) => Promise<boolean>;
   readonly insert: (agreement: AgreementEntity) => Promise<void>;
   readonly update: (agreement: AgreementEntity) => Promise<void>;
-  readonly delete: (agreementId: string, streamId: string) => Promise<void>;
 }
 
 export const agreementRepository = (db: DB): IAgreementRepository => {
@@ -35,7 +36,7 @@ export const agreementRepository = (db: DB): IAgreementRepository => {
         descriptor_id,
         state,
         event_stream_id,
-        event_version_id,
+        event_version_id
       } = agreement;
       try {
         await db.oneOrNone(
@@ -47,7 +48,7 @@ export const agreementRepository = (db: DB): IAgreementRepository => {
             descriptor_id,
             state,
             event_stream_id,
-            event_version_id,
+            event_version_id
           ]
         );
       } catch (error) {
@@ -66,7 +67,7 @@ export const agreementRepository = (db: DB): IAgreementRepository => {
         descriptor_id,
         state,
         event_stream_id,
-        event_version_id,
+        event_version_id
       } = agreement;
       try {
         await db.none(
@@ -79,7 +80,7 @@ export const agreementRepository = (db: DB): IAgreementRepository => {
             state,
             event_stream_id,
             event_version_id,
-            tmstLastEdit,
+            tmstLastEdit
           ]
         );
       } catch (error) {
@@ -93,7 +94,7 @@ export const agreementRepository = (db: DB): IAgreementRepository => {
         `delete from ${agreementTable} where agreement_id = $1 and event_stream_id = $2`,
         [agreementId, streamId]
       );
-    },
+    }
   };
 };
 

@@ -10,7 +10,7 @@ export const buildLoggerInstance = (
     eventType: eserviceEvent.type,
     eventVersion: eserviceEvent.event_version,
     streamId: eserviceEvent.stream_id,
-    version: eserviceEvent.version,
+    version: eserviceEvent.version
   });
 
 export function getSemanticMajorVersion(version: string): number | null {

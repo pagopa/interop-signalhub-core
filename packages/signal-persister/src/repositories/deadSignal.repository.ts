@@ -1,7 +1,8 @@
 import { DB, TableName } from "pagopa-signalhub-commons";
-import { DeadSignal } from "../models/domain/model.js";
-import { recoverableMessageError } from "../models/domain/errors.js";
+
 import { config } from "../config/env.js";
+import { recoverableMessageError } from "../models/domain/errors.js";
+import { DeadSignal } from "../models/domain/model.js";
 
 export interface IDeadSignalRepository {
   insertDeadSignal: (deadSignal: DeadSignal) => Promise<number | null>;
@@ -22,14 +23,14 @@ export const deadSignalRepository = (db: DB): IDeadSignalRepository => {
             deadSignal.eserviceId,
             deadSignal.objectType,
             deadSignal.signalType,
-            deadSignal.errorReason,
+            deadSignal.errorReason
           ],
           (rec) => rec.id
         );
       } catch (error) {
         throw recoverableMessageError("dbConnection");
       }
-    },
+    }
   };
 };
 

@@ -2,7 +2,7 @@ import fastJson from "fast-json-stringify";
 import {
   SignalMessage,
   SignalMessageSchema,
-  SignalPayload,
+  SignalPayload
 } from "pagopa-signalhub-commons";
 
 export function toSignalMessage(
@@ -16,7 +16,7 @@ const tolMessage = (
   correlationId: string
 ): SignalMessage => ({
   ...signalPayload,
-  correlationId,
+  correlationId
 });
 const toJson = (signalPayload: object, signalMessage: SignalMessage): string =>
   fastJson(signalPayload)(signalMessage);

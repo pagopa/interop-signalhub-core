@@ -1,10 +1,10 @@
 import {
   DB,
   InteropSchema,
-  SignalhubSchema,
   Signal,
   SignalPayload,
-  TableName,
+  SignalhubSchema,
+  TableName
 } from "pagopa-signalhub-commons";
 
 export async function truncatePurposeTable(
@@ -59,14 +59,14 @@ export async function writeSignal(
       signal.objectId,
       signal.eserviceId,
       signal.objectType,
-      signal.signalType,
+      signal.signalType
     ],
     (rec) => rec.id
   );
 }
 
 export async function writeSignals(
-  signals: Array<Partial<Signal>>,
+  signals: Partial<Signal>[],
   db: DB,
   schema: SignalhubSchema
 ): Promise<number[]> {
@@ -74,7 +74,6 @@ export async function writeSignals(
 
   const ids: number[] = [];
   for (const signal of signals) {
-    // eslint-disable-next-line functional/immutable-data
     ids.push(
       await db.oneOrNone(
         `INSERT INTO ${signalTable}(correlation_id, signal_id,object_id,eservice_id, object_type, signal_type) VALUES($1, $2, $3, $4, $5, $6) RETURNING id`,
@@ -84,7 +83,7 @@ export async function writeSignals(
           signal.objectId,
           signal.eserviceId,
           signal.objectType,
-          signal.signalType,
+          signal.signalType
         ],
         (rec) => rec.id
       )
@@ -114,7 +113,7 @@ export const createSignal = (partialSignal?: Partial<Signal>): Signal => ({
   ...createSignalPayload(),
   correlationId: `correlation-id-test-${getRandomInt()}`,
 
-  ...partialSignal,
+  ...partialSignal
 });
 
 export const createSignalPayload = (
@@ -126,7 +125,7 @@ export const createSignalPayload = (
   objectType: "object-type-test",
   signalType: "CREATE",
 
-  ...partialSignal,
+  ...partialSignal
 });
 
 export const createMultipleSignals = (
@@ -141,7 +140,6 @@ export const createMultipleOrderedSignals = (
 ): Signal[] => {
   const signals: Signal[] = [];
   for (let index = 1; index <= howMany; index++) {
-    // eslint-disable-next-line functional/immutable-data
     signals.push(createSignal({ signalId: index, ...partialSignal }));
   }
   return signals;

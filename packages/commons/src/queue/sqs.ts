@@ -1,17 +1,17 @@
-/* eslint-disable no-constant-condition */
 import {
-  SQSClient,
-  ReceiveMessageCommand,
-  SendMessageCommand,
+  DeleteMessageBatchCommand,
   DeleteMessageCommand,
   Message,
-  SQSClientConfig,
-  SendMessageCommandInput,
-  DeleteMessageBatchCommand,
+  ReceiveMessageCommand,
   ReceiveMessageCommandOutput,
+  SQSClient,
+  SQSClientConfig,
+  SendMessageCommand,
+  SendMessageCommandInput
 } from "@aws-sdk/client-sqs";
-import { Logger } from "../logging/index.js";
+
 import { QuequeConsumerConfig } from "../config/queque.consumer.js";
+import { Logger } from "../logging/index.js";
 
 export const instantiateClient = (config: SQSClientConfig): SQSClient =>
   new SQSClient(config);
@@ -54,10 +54,10 @@ const processQueue = async (
   const command = new ReceiveMessageCommand({
     QueueUrl: config.queueUrl,
     WaitTimeSeconds: 10,
-    MaxNumberOfMessages: 10,
+    MaxNumberOfMessages: 10
   });
 
-  let keepProcessingQueue: boolean = true;
+  let keepProcessingQueue = true;
 
   try {
     do {
@@ -106,7 +106,7 @@ export const sendMessage = async (
 ): Promise<void> => {
   const messageCommandInput: SendMessageCommandInput = {
     QueueUrl: queueUrl,
-    MessageBody: messageBody,
+    MessageBody: messageBody
   };
   const command = new SendMessageCommand(messageCommandInput);
   const result = await sqsClient.send(command);
@@ -125,7 +125,7 @@ export const deleteMessage = async (
   const correlationId = Body && (JSON.parse(Body).correlationId as unknown);
   const deleteCommand = new DeleteMessageCommand({
     QueueUrl: queueUrl,
-    ReceiptHandle,
+    ReceiptHandle
   });
   loggerInstance.info(`[CID=${correlationId}] Deleting message from queue`);
   await sqsClient.send(deleteCommand);
@@ -142,7 +142,7 @@ export const deleteBatchMessages = async (
       new ReceiveMessageCommand({
         MaxNumberOfMessages: 10,
         WaitTimeSeconds: 10,
-        QueueUrl: queueUrl,
+        QueueUrl: queueUrl
       })
     );
 
@@ -156,7 +156,7 @@ export const deleteBatchMessages = async (
     await sqsClient.send(
       new DeleteMessageCommand({
         QueueUrl: queueUrl,
-        ReceiptHandle: Messages[0].ReceiptHandle,
+        ReceiptHandle: Messages[0].ReceiptHandle
       })
     );
   } else {
@@ -165,8 +165,8 @@ export const deleteBatchMessages = async (
         QueueUrl: queueUrl,
         Entries: Messages.map((message) => ({
           Id: message.MessageId,
-          ReceiptHandle: message.ReceiptHandle,
-        })),
+          ReceiptHandle: message.ReceiptHandle
+        }))
       })
     );
   }
@@ -180,9 +180,9 @@ const serializeError = (error: unknown): string => {
   }
 };
 
-const processExit = async (exitStatusCode: number = 1): Promise<void> => {
+const processExit = async (exitStatusCode = 1): Promise<void> => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   process.exit(exitStatusCode);
 };
 
-export { SQSClient, SQSClientConfig, Message };
+export { Message, SQSClient, SQSClientConfig };

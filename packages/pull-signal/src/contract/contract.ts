@@ -1,12 +1,13 @@
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { initContract } from "@ts-rest/core";
 import {
   Problem as ProblemComponent,
   SignalPullResponse as SignalPullResponseComponent,
   SignalResponse,
-  SignalType,
+  SignalType
 } from "pagopa-signalhub-commons";
 import { z } from "zod";
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+
 import { config } from "../config/env.js";
 
 extendZodWithOpenApi(z);
@@ -22,9 +23,9 @@ const Problem = ProblemComponent.openapi("problem");
 const SignalPullResponse = SignalPullResponseComponent.extend({
   signals: z.array(
     SignalResponse.extend({
-      signalType: SignalType.openapi("signalType"),
+      signalType: SignalType.openapi("signalType")
     })
-  ),
+  )
 }).openapi("SignalPullResponse");
 
 export const contract = c.router(
@@ -35,8 +36,8 @@ export const contract = c.router(
       method: "GET",
       path: "/status",
       responses: {
-        200: z.literal("OK"),
-      },
+        200: z.literal("OK")
+      }
     },
     pullSignal: {
       summary: "Get a list of signals",
@@ -45,14 +46,14 @@ export const contract = c.router(
       method: "GET",
       path: "/signals/:eserviceId",
       pathParams: z.object({
-        eserviceId: z.string(),
+        eserviceId: z.string()
       }),
       headers: z.object({
-        authorization: z.string(),
+        authorization: z.string()
       }),
       query: z.object({
         signalId: z.coerce.number().min(0).default(0),
-        size: z.coerce.number().min(1).max(100).optional().default(10),
+        size: z.coerce.number().min(1).max(100).optional().default(10)
       }),
       responses: {
         200: SignalPullResponse,
@@ -60,11 +61,11 @@ export const contract = c.router(
         400: Problem,
         401: Problem,
         403: Problem,
-        500: Problem,
-      },
-    },
+        500: Problem
+      }
+    }
   },
   {
-    pathPrefix,
+    pathPrefix
   }
 );

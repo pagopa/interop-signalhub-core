@@ -1,13 +1,14 @@
 import {
   EServiceDescriptorStateV1,
   EServiceDescriptorV1,
-  EServiceEventV1,
+  EServiceEventV1
 } from "@pagopa/interop-outbound-models";
 import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
-import { EServiceService } from "../services/eservice.service.js";
-import { EserviceEntity } from "../models/domain/model.js";
+
 import { config } from "../config/env.js";
+import { EserviceEntity } from "../models/domain/model.js";
+import { EServiceService } from "../services/eservice.service.js";
 
 export async function handleMessageV1(
   event: EServiceEventV1,
@@ -17,7 +18,7 @@ export async function handleMessageV1(
   await match(event)
     .with(
       {
-        type: "EServiceAdded",
+        type: "EServiceAdded"
       },
       async (evt) => {
         if (!evt.data.eservice) {
@@ -37,7 +38,7 @@ export async function handleMessageV1(
     )
     .with(
       {
-        type: P.union("EServiceDescriptorAdded", "EServiceDescriptorUpdated"),
+        type: P.union("EServiceDescriptorAdded", "EServiceDescriptorUpdated")
       },
       async (evt) => {
         const { eserviceId, eserviceDescriptor } = evt.data;
@@ -59,7 +60,7 @@ export async function handleMessageV1(
 
     .with(
       {
-        type: "EServiceDeleted",
+        type: "EServiceDeleted"
       },
       async (evt) => {
         await eServiceService.delete(evt.data.eserviceId, logger);
@@ -67,7 +68,7 @@ export async function handleMessageV1(
     )
     .with(
       {
-        type: "EServiceWithDescriptorsDeleted",
+        type: "EServiceWithDescriptorsDeleted"
       },
       async (evt) => {
         if (!evt.data.eservice) {
@@ -85,7 +86,7 @@ export async function handleMessageV1(
     )
     .with(
       {
-        type: "ClonedEServiceAdded",
+        type: "ClonedEServiceAdded"
       },
       async (evt) => {
         if (!evt.data.eservice) {
@@ -116,7 +117,7 @@ export async function handleMessageV1(
           "EServiceDocumentDeleted",
           "EServiceDocumentUpdated",
           "MovedAttributesFromEserviceToDescriptors"
-        ),
+        )
       },
 
       async () => {
@@ -135,9 +136,9 @@ export const fromEserviceEventV1ToEserviceEntity = (
   eservice_id: eServiceId,
   descriptors: descriptorsData.map((descriptor) => ({
     descriptor_id: descriptor.id,
-    state: EServiceDescriptorStateV1[descriptor.state],
+    state: EServiceDescriptorStateV1[descriptor.state]
   })),
 
   event_stream_id: streamId,
-  event_version_id: version,
+  event_version_id: version
 });

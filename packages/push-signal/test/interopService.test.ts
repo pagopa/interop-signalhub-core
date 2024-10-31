@@ -1,11 +1,12 @@
 import { randomUUID } from "crypto";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { genericLogger } from "pagopa-signalhub-commons";
 import {
   createEservice,
   dataPreparationForSignalProducers,
-  dataResetForSignalProducers,
+  dataResetForSignalProducers
 } from "pagopa-signalhub-commons-test";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
+
 import { config } from "../src/config/env.js";
 import { operationPushForbidden } from "../src/models/domain/errors.js";
 import { interopService, postgresDB } from "./utils.js";
@@ -30,7 +31,7 @@ describe("PDND Interoperability service", () => {
       descriptorId,
       producerId,
       enabledSH: true,
-      state: "PUBLISHED",
+      state: "PUBLISHED"
     });
 
     await expect(
@@ -54,7 +55,7 @@ describe("PDND Interoperability service", () => {
       descriptorId,
       producerId,
       enabledSH: true,
-      state: "PUBLISHED",
+      state: "PUBLISHED"
     });
 
     await expect(
@@ -66,7 +67,7 @@ describe("PDND Interoperability service", () => {
     ).rejects.toThrowError(
       operationPushForbidden({
         producerId: differentProducerId,
-        eserviceId: eServiceId,
+        eserviceId: eServiceId
       })
     );
   });
@@ -81,7 +82,7 @@ describe("PDND Interoperability service", () => {
       descriptorId,
       producerId,
       enabledSH: true,
-      state: "DRAFT",
+      state: "DRAFT"
     });
 
     await expect(
@@ -105,7 +106,7 @@ describe("PDND Interoperability service", () => {
       descriptorId,
       producerId,
       enabledSH: false,
-      state: "PUBLISHED",
+      state: "PUBLISHED"
     });
 
     await expect(

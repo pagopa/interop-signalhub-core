@@ -1,8 +1,9 @@
-import { afterAll, beforeAll } from "vitest";
 import {
   dataPreparation,
-  dataPreparationCleanup,
+  dataPreparationCleanup
 } from "pagopa-signalhub-commons-test";
+import { afterAll, beforeAll } from "vitest";
+
 import { config } from "../src/config/env.js";
 import { postgresDB } from "./utils.js";
 

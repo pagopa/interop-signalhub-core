@@ -1,25 +1,24 @@
 import { generateAuthToken } from "aws-msk-iam-sasl-signer-js";
-
 import {
   Consumer,
   EachMessagePayload,
   Kafka,
   KafkaConfig,
   OauthbearerProviderResponse,
-  logLevel,
+  logLevel
 } from "kafkajs";
 import {
-  genericLogger,
   KafkaConsumerConfig,
   Logger,
-  kafkaMessageProcessError,
+  genericLogger,
+  kafkaMessageProcessError
 } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
 
 const errorTypes = ["unhandledRejection", "uncaughtException"];
 const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
 
-const processExit = (code: number = 1): void => {
+const processExit = (code = 1): void => {
   genericLogger.info(`Process exit with code ${code}`);
   process.exit(code);
 };
@@ -31,7 +30,7 @@ async function oauthBearerTokenProvider(
   logger.debug("Retrieving token from AWS");
 
   const authTokenResponse = await generateAuthToken({
-    region,
+    region
   });
 
   logger.debug(
@@ -39,7 +38,7 @@ async function oauthBearerTokenProvider(
   );
 
   return {
-    value: authTokenResponse.token,
+    value: authTokenResponse.token
   };
 }
 
@@ -53,13 +52,13 @@ const getKafkaConfig = (config: KafkaConsumerConfig): KafkaConfig => {
   const kafkaBaseConfig = {
     clientId: config.kafkaClientId,
     brokers: config.kafkaBrokers,
-    logLevel: config.kafkaLogLevel,
+    logLevel: config.kafkaLogLevel
   };
 
   return config.kafkaDisableAwsIamAuth
     ? {
         ...kafkaBaseConfig,
-        ssl: false,
+        ssl: false
       }
     : {
         ...kafkaBaseConfig,
@@ -69,8 +68,8 @@ const getKafkaConfig = (config: KafkaConsumerConfig): KafkaConfig => {
           mechanism: "oauthbearer",
           oauthBearerProvider: () =>
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            oauthBearerTokenProvider(config.awsRegion!, genericLogger),
-        },
+            oauthBearerTokenProvider(config.awsRegion!, genericLogger)
+        }
       };
 };
 
@@ -88,7 +87,7 @@ export const initConsumer = async (
   const kafka = new Kafka({
     ...kafkaConfig,
     logCreator:
-      (_logLevel) =>
+      () =>
       ({ level, log }) => {
         const { message, error } = log;
 
@@ -102,7 +101,6 @@ export const initConsumer = async (
           )
           .otherwise(() => level);
 
-        // eslint-disable-next-line sonarjs/no-nested-template-literals
         const msg = `${message}${error ? ` - ${error}` : ""}`;
 
         match(filteredLevel)
@@ -113,7 +111,7 @@ export const initConsumer = async (
           .with(logLevel.INFO, () => genericLogger.info(msg))
           .with(logLevel.DEBUG, () => genericLogger.debug(msg))
           .otherwise(() => genericLogger.error(msg));
-      },
+      }
   });
 
   // -- Consumer ---
@@ -127,8 +125,8 @@ export const initConsumer = async (
       restartOnFailure: (error) => {
         genericLogger.error(`Error on restarting service: ${error.message}`);
         return Promise.resolve(false);
-      },
-    },
+      }
+    }
   });
 
   kafkaEventsListener(consumer);
@@ -144,7 +142,7 @@ export const initConsumer = async (
 
   await consumer.subscribe({
     topics,
-    fromBeginning: config.topicStartingOffset === "earliest",
+    fromBeginning: config.topicStartingOffset === "earliest"
   });
 
   genericLogger.info(`Consumer subscribed topic ${topics}`);
@@ -163,7 +161,7 @@ export const initConsumer = async (
           e
         );
       }
-    },
+    }
   });
 
   return consumer;
@@ -237,7 +235,7 @@ export const validateTopicMetadata = async (
 
   try {
     const { topics } = await admin.fetchTopicMetadata({
-      topics: [...topicNames],
+      topics: [...topicNames]
     });
     genericLogger.debug(`Topic metadata: ${JSON.stringify(topics)} `);
     await admin.disconnect();
@@ -259,7 +257,7 @@ const kafkaCommitMessageOffsets = async (
 ): Promise<void> => {
   const { topic, partition, message } = payload;
   await consumer.commitOffsets([
-    { topic, partition, offset: (Number(message.offset) + 1).toString() },
+    { topic, partition, offset: (Number(message.offset) + 1).toString() }
   ]);
 
   genericLogger.debug(
