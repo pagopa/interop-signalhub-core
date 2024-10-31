@@ -13,7 +13,7 @@ export function clockServiceBuilder(): IClockService {
         dateToMilliSecs(currentDate),
         hoursToMilliSecs(hoursAgo)
       );
-    },
+    }
   };
 }
 

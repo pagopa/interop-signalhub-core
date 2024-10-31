@@ -3,10 +3,10 @@ import { z } from "zod";
 
 const ClenaupConfig = z
   .object({
-    SIGNALS_RETENTION_HOURS: z.coerce.number().min(1),
+    SIGNALS_RETENTION_HOURS: z.coerce.number().min(1)
   })
   .transform((c) => ({
-    signalsRetentionHours: c.SIGNALS_RETENTION_HOURS,
+    signalsRetentionHours: c.SIGNALS_RETENTION_HOURS
   }));
 
 const BatchCleanupConfig = SignalHubStoreConfig.and(ClenaupConfig);
@@ -26,5 +26,5 @@ if (!parsedFromEnv.success) {
 }
 
 export const config: BatchCleanupConfig = {
-  ...parsedFromEnv.data,
+  ...parsedFromEnv.data
 };

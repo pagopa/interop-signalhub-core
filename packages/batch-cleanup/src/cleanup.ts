@@ -1,4 +1,5 @@
 import { Logger, TracingBatchCleanup } from "pagopa-signalhub-commons";
+
 import { config } from "./config/env.js";
 import { SignalService } from "./services/signal.service.js";
 import { TracingBatchCleanupService } from "./services/tracingBatchCleanup.service.js";
@@ -19,7 +20,7 @@ export const cleanupBuilder = async (
       tmstEndAt: null,
       tmstDeleteFrom: null,
       error: null,
-      countDeleted: null,
+      countDeleted: null
     };
     const tmstStartAt = new Date().toISOString();
 
@@ -27,7 +28,7 @@ export const cleanupBuilder = async (
       const batchId = await tracingBatchCleanupService.start(tmstStartAt);
       tracingBatchCleanup = {
         batchId,
-        tmstStartAt,
+        tmstStartAt
       };
 
       const { countDeleted, dateInThePast } = await signalService.cleanup(
@@ -38,7 +39,7 @@ export const cleanupBuilder = async (
         ...tracingBatchCleanup,
         tmstEndAt: new Date().toISOString(),
         tmstDeleteFrom: dateInThePast.toISOString(),
-        countDeleted,
+        countDeleted
       };
       await tracingBatchCleanupService.end(tracingBatchCleanup);
     } catch (error) {
@@ -46,7 +47,7 @@ export const cleanupBuilder = async (
       if (tracingBatchCleanup.batchId) {
         tracingBatchCleanup = {
           error,
-          ...tracingBatchCleanup,
+          ...tracingBatchCleanup
         };
         await tracingBatchCleanupService.end(tracingBatchCleanup);
       }
@@ -57,6 +58,6 @@ export const cleanupBuilder = async (
   return {
     async executeTask(): Promise<void> {
       await cleanSignals();
-    },
+    }
   };
 };

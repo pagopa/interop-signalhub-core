@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node --watch --loader ts-node/esm -r 'dotenv-flow/config'  ./src/index.ts",
     "lint": "eslint ./src/**",
+    "lint:autofix": "eslint ./src/** --fix",
     "build": "tsc",
     "test": "vitest"
   },
