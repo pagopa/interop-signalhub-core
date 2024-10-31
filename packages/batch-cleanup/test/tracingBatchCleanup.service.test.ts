@@ -2,8 +2,8 @@ import { truncateTracingBatchCleanupTable } from "pagopa-signalhub-commons-test"
 import { beforeEach } from "vitest";
 import { describe, expect, it } from "vitest";
 
-import { config } from "../src/config/env";
-import { postgresDB, tracingBatchCleanupService } from "./utils";
+import { config } from "../src/config/env.js";
+import { postgresDB, tracingBatchCleanupService } from "./utils.js";
 
 describe("TracingBatchCleanup service", () => {
   it("should write an entry when start", async () => {
