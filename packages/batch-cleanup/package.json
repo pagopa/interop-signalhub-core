@@ -6,7 +6,7 @@
   "main": "dist",
   "scripts": {
     "start": "node --watch --loader ts-node/esm -r 'dotenv-flow/config'  ./src/index.ts",
-    "lint": "eslint . --ext .ts,.tsx",
+    "lint": "eslint ./src/**",
     "build": "tsc",
     "test": "vitest"
   },
@@ -21,7 +21,6 @@
   },
   "devDependencies": {
     "pagopa-signalhub-commons-test": "workspace:*",
-    "@pagopa/eslint-config": "^3.0.0",
     "@types/node": "^20.11.24",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",

@@ -12,8 +12,8 @@
     "build": "tsc",
     "format:check": "prettier --check src",
     "format:write": "prettier --write src",
-    "lint": "eslint . --ext .ts,.tsx",
-    "lint:autofix": "eslint . --ext .ts,.tsx --fix",
+    "lint": "eslint ./src/**",
+    "lint:autofix": "eslint ./src/** --fix",
     "check": "tsc --project tsconfig.check.json"
   },
   "keywords": [],
@@ -33,7 +33,6 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@pagopa/eslint-config": "^3.0.0",
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.11.24",

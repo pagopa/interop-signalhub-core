@@ -2,18 +2,18 @@ import {
   OpenAPIRegistry,
   OpenApiGeneratorV3,
   RouteConfig,
-  extendZodWithOpenApi,
+  extendZodWithOpenApi
 } from "@asteasolutions/zod-to-openapi";
+import { RouteParameter } from "@asteasolutions/zod-to-openapi/dist/openapi-registry.js";
 import {
   AppRoute,
   AppRouteResponse,
   AppRouter,
   ContractAnyType,
-  isZodType,
+  isZodType
 } from "@ts-rest/core";
-import { z } from "zod";
 import { InfoObject, OpenAPIObject, OperationObject } from "openapi3-ts";
-import { RouteParameter } from "@asteasolutions/zod-to-openapi/dist/openapi-registry.js";
+import { z } from "zod";
 
 extendZodWithOpenApi(z);
 
@@ -38,7 +38,7 @@ const mapMethod = {
   POST: "post",
   PUT: "put",
   DELETE: "delete",
-  PATCH: "patch",
+  PATCH: "patch"
 };
 const registry = new OpenAPIRegistry();
 
@@ -84,29 +84,29 @@ const generateOpenAPIFromTsRestContract = (
       request: {
         body: body
           ? {
-              content: {
-                "application/json": {
-                  schema: body as z.ZodType<unknown, z.ZodTypeDef, unknown>,
-                },
-              },
-              description: "",
-              required: true,
-            }
+            content: {
+              "application/json": {
+                schema: body as z.ZodType<unknown, z.ZodTypeDef, unknown>
+              }
+            },
+            description: "",
+            required: true
+          }
           : undefined,
         headers,
         query: path.route.query as RouteParameter,
-        params: path.route.pathParams as RouteParameter,
+        params: path.route.pathParams as RouteParameter
       },
       ...(options.setOperationId
         ? {
-            operationId:
-              options.setOperationId === "concatenated-path"
-                ? [...path.paths, path.id].join(".")
-                : path.id,
-          }
+          operationId:
+            options.setOperationId === "concatenated-path"
+              ? [...path.paths, path.id].join(".")
+              : path.id
+        }
         : {}),
       path: path.path,
-      responses,
+      responses
     };
 
     registry.registerPath(routeConfigPath);
@@ -114,7 +114,7 @@ const generateOpenAPIFromTsRestContract = (
 };
 export function generateOpenAPISpec(
   router: AppRouter,
-  apiDoc: Omit<OpenAPIObject, "paths" | "openapi"> & { info: InfoObject },
+  apiDoc: { info: InfoObject } & Omit<OpenAPIObject, "paths" | "openapi">,
   options: {
     setOperationId?: boolean | "concatenated-path";
     jsonQuery?: boolean;
@@ -134,7 +134,7 @@ export function generateOpenAPISpec(
 
   const apiDocuments = generator.generateDocument({
     openapi: "3.0.3",
-    ...apiDoc,
+    ...apiDoc
   });
 
   return apiDocuments as OpenAPIObject;
@@ -167,7 +167,7 @@ const getResponses = (
         ? responseSchema.description
         : statusCode;
 
-    const httpSuccessCodePattern: RegExp = /^2[0-9]{2}$/;
+    const httpSuccessCodePattern = /^2[0-9]{2}$/;
     const isSuccess = httpSuccessCodePattern.test(statusCode);
     const keyMediaObject = isSuccess
       ? "application/json"
@@ -179,14 +179,14 @@ const getResponses = (
         description,
         ...(responseSchema
           ? {
-              content: {
-                [keyMediaObject]: {
-                  schema: responseSchema,
-                },
-              },
+            content: {
+              [keyMediaObject]: {
+                schema: responseSchema
+              }
             }
-          : {}),
-      },
+          }
+          : {})
+      }
     };
   }, {});
 
@@ -202,15 +202,13 @@ export const getPathsFromRouter = (
     if (isAppRoute(value)) {
       const pathWithPathParams = value.path.replace(/:(\w+)/g, "{$1}");
 
-      // eslint-disable-next-line functional/immutable-data
       paths.push({
         id: key,
         path: pathWithPathParams,
         route: value,
-        paths: pathHistory ?? [],
+        paths: pathHistory ?? []
       });
     } else {
-      // eslint-disable-next-line functional/immutable-data
       paths.push(...getPathsFromRouter(value, [...(pathHistory ?? []), key]));
     }
   });

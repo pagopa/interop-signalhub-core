@@ -6,8 +6,8 @@
   "main": "dist",
   "scripts": {
     "start": "node --watch --loader ts-node/esm -r 'dotenv-flow/config'  ./src/index.ts",
-    "lint": "eslint . --ext .ts,.tsx",
-    "lint:autofix": "eslint . --ext .ts,.tsx --fix",
+    "lint": "eslint ./src/**",
+    "lint:autofix": "eslint ./src/** --fix",
     "build": "tsc",
     "test": "vitest",
     "api:validate": "node --loader ts-node/esm -r 'dotenv-flow/config' ./scripts/validate-api.ts",
@@ -34,7 +34,6 @@
   },
   "devDependencies": {
     "commander": "^12.1.0",
-    "@pagopa/eslint-config": "^3.0.0",
     "@types/express": "^4.17.21",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.11.24",
