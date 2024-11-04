@@ -30,7 +30,7 @@
     "api:generate:pull": "turbo api:generate --filter pagopa-signalhub-pull-signal --",
     "api:generate:push": "turbo api:generate --filter pagopa-signalhub-push-signal --",
     "dev": "turbo dev",
-    "prune-dist": "find . -name 'dist' -type d -exec rm -rf {} +",
+    "prune-dist": "find . -name 'dist' -type d -not -path '*node_modules/*' -exec rm -rf {} +",
     "prune-modules": "find . -name 'node_modules' -type d -exec rm -rf {} +",
     "code-review": "pnpm format:check lint check build"
   },
