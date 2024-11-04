@@ -73,7 +73,10 @@ const generateOpenAPIFromTsRestContract = (
     const headers = getHeaders(path.route.headers);
     const responses = getResponses(path.route.responses);
 
-    const body = path.route.method !== "GET" ? path.route.body : null;
+    const body =
+      path.route.method === "POST" || path.route.method === "PUT"
+        ? path.route.body
+        : null;
 
     const routeConfigPath: RouteConfig = {
       description: path.route.description,
