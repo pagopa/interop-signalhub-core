@@ -12,8 +12,8 @@ import { SignalService } from "../services/signal.service.js";
 const s = initServer();
 
 export const pushRoutes = (
-  signalService: SignalService,
-  interopService: InteropService,
+  _signalService: SignalService,
+  _interopService: InteropService,
   quequeService: QueueService
 ) => {
   const getStatus: AppRouteImplementation<
@@ -31,12 +31,12 @@ export const pushRoutes = (
     });
     try {
       const { signalId, eserviceId } = body;
-      const { organizationId } = req.ctx.sessionData;
+      // const { organizationId } = req.ctx.sessionData;
       log.info(`Pushing signalId: ${signalId} for e-service ${eserviceId}`);
       log.debug(
         `DUMP signal: objectType: ${body.signalType}, objectId: ${body.objectId}, signalType: ${body.signalType}`
       );
-
+      /*
       await interopService.producerIsAuthorizedToPushSignals(
         organizationId,
         eserviceId,
@@ -44,7 +44,7 @@ export const pushRoutes = (
       );
 
       await signalService.verifySignalDuplicated(signalId, eserviceId, log);
-
+      */
       const message = toSignalMessage(
         body as SignalPayload,
         req.ctx.correlationId
