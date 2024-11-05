@@ -28,8 +28,7 @@ export const interopRepository = (db: DB): IInteropRepository => {
           `SELECT eservice_id 
            FROM ${eserviceTable} 
            WHERE eservice_id = $1 and producer_id = $2
-           AND (UPPER(state) = 'PUBLISHED' OR UPPER(state) = 'DEPRECATED') 
-           AND enabled_signal_hub IS TRUE`,
+           `,
           [eserviceId, producerId]
         );
       } catch (error: unknown) {
