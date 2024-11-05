@@ -32,7 +32,7 @@ export const contract = c.router(
       summary: "Health status endpoint",
       description: "Should return OK",
       method: "GET",
-      path: "/status",
+      path: `${pathPrefix}/status`,
       responses: {
         200: z.literal("OK")
       }
@@ -48,7 +48,7 @@ export const contract = c.router(
         role: "user"
       } as const,
       method: "POST",
-      path: "/signals",
+      path: `${pathPrefix}/signals`,
       responses: {
         200: SignalPushResponse,
         400: Problem,
@@ -58,8 +58,8 @@ export const contract = c.router(
       },
       body: SignalPayload
     }
-  },
-  {
-    pathPrefix
   }
+  // {
+  //   pathPrefix
+  // }
 );
