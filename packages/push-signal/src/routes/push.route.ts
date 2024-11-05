@@ -12,8 +12,8 @@ import { SignalService } from "../services/signal.service.js";
 const s = initServer();
 
 export const pushRoutes = (
-  signalService: SignalService,
-  interopService: InteropService,
+  _signalService: SignalService,
+  _interopService: InteropService,
   quequeService: QueueService
 ) => {
   const getStatus: AppRouteImplementation<
