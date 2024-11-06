@@ -29,7 +29,7 @@ app.use(authenticationMiddleware);
 // Disable the "X-Powered-By: Express" HTTP header for security reasons: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#recommendation_16
 app.disable("x-powered-by");
 
-// ts-rest
+// ts-rest logic
 const routes = pullRoutes(signalService, interopService);
 createExpressEndpoints(contract, routes, app, {
   requestValidationErrorHandler: validationErrorHandler(
