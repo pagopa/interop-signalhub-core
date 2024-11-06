@@ -39,7 +39,7 @@ export function processMessage(
 
         .with(P.instanceOf(NotRecoverableMessageError), async (error) => {
           loggerInstance.warn(
-            `Not recoverable message saved it on DEAD_SIGNAL with error: ${error.code}`
+            `[DEAD_SIGNAL] Not recoverable message saved to dead_signal table with error: ${error.code}`
           );
           await storeSignalService.storeDeadSignal(error.signal);
         })
