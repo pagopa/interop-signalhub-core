@@ -16,19 +16,18 @@ export const interopRepository = (db: DB): IInteropRepository => {
     async findBy(
       eserviceId: string,
       producerId: string,
-      //eslint-disable-next-line
-      _eserviceAllowedStates: string[]
+      eserviceAllowedStates: string[]
     ): Promise<string[]> {
       try {
-        // const sqlConditionStates = eserviceAllowedStates
-        //   .map((eServiceState) => `UPPER(state) = UPPER('${eServiceState}')`)
-        //   .join(" OR ");
+        const sqlConditionStates = eserviceAllowedStates
+          .map((eServiceState) => `UPPER(state) = UPPER('${eServiceState}')`)
+          .join(" OR ");
 
         return await db.manyOrNone(
           `SELECT eservice_id 
            FROM ${eserviceTable} 
            WHERE eservice_id = $1 and producer_id = $2
-           AND (UPPER(state) = 'PUBLISHED' OR UPPER(state) = 'DEPRECATED') 
+           AND (${sqlConditionStates}) 
            AND enabled_signal_hub IS TRUE`,
           [eserviceId, producerId]
         );
