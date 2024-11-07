@@ -8,10 +8,10 @@ info:
     name: ISC
     url: https://opensource.org/license/isc-license-txt
 servers:
-  - url: https://api.signalhub.interop.pagopa.it
+  - url: https://api.signalhub.interop.pagopa.it/v1/pull
     description: Pull signal Production URL
 paths:
-  /v1/pull/status:
+  /status:
     get:
       description: Should return OK
       summary: Health status endpoint
@@ -25,7 +25,7 @@ paths:
                 type: string
                 enum:
                   - OK
-  /v1/pull/signals/{eserviceId}:
+  /signals/{eserviceId}:
     get:
       description: Retrieve a list o signals on a specific eservice starting from signalId
       summary: Get a list of signals

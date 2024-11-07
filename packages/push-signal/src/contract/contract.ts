@@ -14,7 +14,7 @@ extendZodWithOpenApi(z);
 
 const c = initContract();
 
-const pathPrefix = `/${config.apiPushVersion}/push`;
+export const pathPrefix = `/${config.apiPushVersion}/push`;
 
 // Here we use "extend" ZOD api only to add keyword "openapi" in order to generate openAPI document with component section
 // Read more here: https://github.com/asteasolutions/zod-to-openapi
