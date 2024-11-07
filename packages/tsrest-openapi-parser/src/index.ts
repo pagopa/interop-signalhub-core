@@ -51,7 +51,8 @@ const generateOpenAPIFromTsRestContract = (
       operation: OperationObject,
       appRoute: AppRoute
     ) => OperationObject;
-  } = {}
+  } = {},
+  pathPrefix?: string
 ): void => {
   const paths = getPathsFromRouter(router);
 
@@ -108,13 +109,28 @@ const generateOpenAPIFromTsRestContract = (
                 : path.id
           }
         : {}),
-      path: path.path,
+      path: removePathprefixFromRoutePath(path.path, pathPrefix),
       responses
     };
 
     registry.registerPath(routeConfigPath);
   });
 };
+
+function removePathprefixFromRoutePath(
+  routePath: string,
+  pathPrefix?: string
+): string {
+  if (!pathPrefix) return routePath;
+
+  if (routePath.includes(pathPrefix)) {
+    return routePath.split(pathPrefix).join("");
+  }
+  return routePath;
+}
+
+// Example usage:
+
 export function generateOpenAPISpec(
   router: AppRouter,
   apiDoc: { info: InfoObject } & Omit<OpenAPIObject, "paths" | "openapi">,
@@ -126,9 +142,10 @@ export function generateOpenAPISpec(
       appRoute: AppRoute
     ) => OperationObject;
   } = {},
-  customComponents: OpenAPICustomComponent[] = []
+  customComponents: OpenAPICustomComponent[] = [],
+  pathPrefix?: string
 ): OpenAPIObject {
-  generateOpenAPIFromTsRestContract(router, options);
+  generateOpenAPIFromTsRestContract(router, options, pathPrefix);
 
   // ---  registering custom components ----
   registerRowOpenAPIcomponents(customComponents);

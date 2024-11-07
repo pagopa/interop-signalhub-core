@@ -2,7 +2,7 @@ import { writeFileSync } from "fs";
 import * as yaml from "js-yaml";
 import { generateOpenAPISpec } from "pagopa-tsrest-openapi-parser";
 
-import { contract } from "../contract/contract.js";
+import { contract, pathPrefix } from "../contract/contract.js";
 
 export function generateApi(version: string): void {
   const openApiDocument = generateOpenAPISpec(
@@ -10,7 +10,7 @@ export function generateApi(version: string): void {
     {
       servers: [
         {
-          url: `https://api.signalhub.interop.pagopa.it`,
+          url: `https://api.signalhub.interop.pagopa.it${pathPrefix}`,
           description: "Pull signal Production URL"
         }
       ],
@@ -42,7 +42,8 @@ export function generateApi(version: string): void {
             "A bearer token in the format of a JWS and conformed to the specifications included in [RFC8725](https://tools.ietf.org/html/RFC8725)."
         }
       }
-    ]
+    ],
+    pathPrefix
   );
 
   const document = {
