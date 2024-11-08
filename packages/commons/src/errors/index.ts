@@ -1,6 +1,5 @@
 import { P, match } from "ts-pattern";
 import { ZodError, z } from "zod";
-// import { fromZodError } from "zod-validation-error";
 
 export class ApiError<T> extends Error {
   /* TODO consider refactoring how the code property is used:
@@ -139,7 +138,8 @@ const errorCodes = {
   jwtNotPresent: "10000",
   kafkaMessageValueError: "9996",
   kafkaMessageProcessError: "9997",
-  kafkaMessageMissingData: "9998"
+  kafkaMessageMissingData: "9998",
+  badJsonFormat: "9995"
 } as const;
 
 export type CommonErrorCodes = keyof typeof errorCodes;
@@ -280,3 +280,11 @@ export const operationForbidden = new ApiError<"operationForbidden">({
   code: "operationForbidden",
   title: "Insufficient privileges"
 });
+
+export const jsonMalformed = new ApiError<"jsonMalformed">({
+  detail: "Json is not formatted correctly",
+  code: "jsonMalformed",
+  title: "Body malformed"
+});
+
+export * from "./parser.middleware.js";
