@@ -11,12 +11,14 @@ export const parserErrorMiddleware =
       serviceName: serviceName,
       correlationId: correlationId()
     });
+
     log.info(`Request ${req.method} ${req.url}`);
 
     if (err instanceof SyntaxError) {
       log.warn(`Response 400 - JSON error parsing message: ${err.message}`);
       return res.status(400).json(jsonMalformed);
     }
+
     next();
     return;
   };
