@@ -24,16 +24,9 @@ const { signalService, quequeService, interopService } = serviceBuilder();
 const app: Express = express();
 app.use(express.json());
 setupHealthRoute(app);
-app.use(
-  parserErrorMiddlware(
-    logger({
-      serviceName
-    })
-  )
-);
-
 app.use(contextMiddleware(serviceName));
 app.use(skipForUrl("/status", loggerMiddleware()));
+app.use(parserErrorMiddlware);
 app.use(authenticationMiddleware);
 
 // Disable the "X-Powered-By: Express" HTTP header for security reasons: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#recommendation_16
