@@ -6,5 +6,6 @@ export * from "./errors/statusCodes.js";
 export * from "./logging/index.js";
 export * from "./models/index.js";
 export * from "./queue/index.js";
+export * from "./rate-limiter/index.js";
 export * from "./repositories/index.js";
 export * from "./utils/index.js";

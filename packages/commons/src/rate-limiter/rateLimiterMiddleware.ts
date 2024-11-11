@@ -7,8 +7,8 @@ import {
   tooManyRequestsError
 } from "../errors/index.js";
 import { Logger } from "../logging/index.js";
-import { RateLimiter } from "./rateLimiterModel.js";
 import { rateLimiterHeadersFromStatus } from "./rateLimiterUtils.js";
+import { RateLimiter } from "./redisRateLimiter.js";
 
 const makeApiProblem = makeApiProblemBuilder({});
 

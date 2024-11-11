@@ -6,6 +6,7 @@ import {
   logger,
   loggerMiddleware,
   parserErrorMiddlware,
+  rateLimiterMiddleware,
   skipForUrl
 } from "pagopa-signalhub-commons";
 
@@ -18,23 +19,24 @@ import { validationErrorHandler } from "./validation/validation.js";
 const serviceName = "push-signal";
 
 // services
-const { signalService, quequeService, interopService } = serviceBuilder();
+const { signalService, quequeService, interopService, rateLimiter } =
+  serviceBuilder();
+
+// logger
+const loggerInstance = logger({
+  serviceName
+});
 
 // express
 const app: Express = express();
 app.use(express.json());
 setupHealthRoute(app);
-app.use(
-  parserErrorMiddlware(
-    logger({
-      serviceName
-    })
-  )
-);
 
+app.use(parserErrorMiddlware(loggerInstance));
 app.use(contextMiddleware(serviceName));
 app.use(skipForUrl("/status", loggerMiddleware()));
 app.use(authenticationMiddleware);
+app.use(rateLimiterMiddleware(rateLimiter, loggerInstance));
 
 // Disable the "X-Powered-By: Express" HTTP header for security reasons: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#recommendation_16
 app.disable("x-powered-by");

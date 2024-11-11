@@ -15,7 +15,7 @@ import { RateLimiterStatus } from "./rateLimiterModel.js";
 
 const burstKeyPrefix = "BURST_";
 
-interface RateLimiter {
+export interface RateLimiter {
   getRateLimitBurstCountBy: (rateLimiterKey: string) => Promise<number>;
   getRateLimitCountBy: (rateLimiterKey: string) => Promise<number>;
   rateLimitBy: (
@@ -24,7 +24,7 @@ interface RateLimiter {
   ) => Promise<RateLimiterStatus>;
 }
 
-export async function initRedisRateLimiter(config: {
+export function initRedisRateLimiter(config: {
   limiterGroup: string;
   maxRequests: number;
   rateInterval: number;
@@ -32,8 +32,8 @@ export async function initRedisRateLimiter(config: {
   redisHost: string;
   redisPort: number;
   timeout: number;
-}): Promise<RateLimiter> {
-  const redisClient = await createRedisClient({
+}): RateLimiter {
+  const redisClient = createRedisClient({
     socket: {
       host: config.redisHost,
       port: config.redisPort,
@@ -113,7 +113,7 @@ export async function initRedisRateLimiter(config: {
   }
 
   async function getRateLimitCountBy(organizationId: string): Promise<number> {
-    return redisClient
+    return (await redisClient)
       .get(`${config.limiterGroup}:${organizationId}`)
       .then(Number);
   }
@@ -121,7 +121,7 @@ export async function initRedisRateLimiter(config: {
   async function getRateLimitBurstCountBy(
     organizationId: string
   ): Promise<number> {
-    return redisClient
+    return (await redisClient)
       .get(`${burstKeyPrefix}${config.limiterGroup}:${organizationId}`)
       .then(Number);
   }
