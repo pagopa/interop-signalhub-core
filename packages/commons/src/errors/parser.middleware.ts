@@ -4,7 +4,7 @@ import { correlationId } from "../index.js";
 import { logger } from "../logging/index.js";
 import { jsonMalformed } from "./index.js";
 
-export const parserErrorMiddlware =
+export const parserErrorMiddleware =
   (serviceName: string) =>
   (err: unknown, req: Request, res: Response, next: NextFunction) => {
     const log = logger({
