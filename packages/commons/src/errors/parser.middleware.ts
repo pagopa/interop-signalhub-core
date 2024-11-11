@@ -1,25 +1,22 @@
 import { NextFunction, Request, Response } from "express";
 
+import { correlationId } from "../index.js";
 import { logger } from "../logging/index.js";
 import { jsonMalformed } from "./index.js";
 
-export const parserErrorMiddlware = (
-  err: unknown,
-  request: Request,
-  response: Response,
-  next: NextFunction
-) => {
-  if (err instanceof SyntaxError) {
+export const parserErrorMiddlware =
+  (serviceName: string) =>
+  (err: unknown, req: Request, res: Response, next: NextFunction) => {
     const log = logger({
-      serviceName: request.ctx?.serviceName,
-      correlationId: request.ctx?.correlationId,
-      eserviceId: request.params.eserviceId
+      serviceName: serviceName,
+      correlationId: correlationId()
     });
-    // eslint-disable-next-line no-console
-    console.log(request.ctx);
-    log.warn(`Response 400 - JSON error parsing message: ${err.message}`);
-    return response.status(400).json(jsonMalformed);
-  }
-  next();
-  return;
-};
+    log.info(`Request ${req.method} ${req.url}`);
+
+    if (err instanceof SyntaxError) {
+      log.warn(`Response 400 - JSON error parsing message: ${err.message}`);
+      return res.status(400).json(jsonMalformed);
+    }
+    next();
+    return;
+  };
