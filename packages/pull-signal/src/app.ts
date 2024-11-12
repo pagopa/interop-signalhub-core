@@ -12,13 +12,15 @@ import {
 import { contract } from "./contract/contract.js";
 import { setupHealthRoute } from "./routes/health.route.js";
 import { pullRoutes } from "./routes/pull.route.js";
+import { rateLimiterBuilder } from "./services/rateLimiter.builder.js";
 import { serviceBuilder } from "./services/service.builder.js";
 import { validationErrorHandler } from "./validation/validation.js";
 
 const serviceName = "pull-signal";
 
 // services
-const { signalService, interopService, rateLimiter } = serviceBuilder();
+const { signalService, interopService } = serviceBuilder();
+const { rateLimiter } = await rateLimiterBuilder();
 
 // logger
 const loggerInstance = logger({

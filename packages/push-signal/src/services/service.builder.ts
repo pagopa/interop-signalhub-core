@@ -1,10 +1,4 @@
-import {
-  DB,
-  RateLimiter,
-  SQS,
-  createDbInstance,
-  initRedisRateLimiter
-} from "pagopa-signalhub-commons";
+import { DB, SQS, createDbInstance } from "pagopa-signalhub-commons";
 
 import { config } from "../config/env.js";
 import { InteropService, interopServiceBuilder } from "./interop.service.js";
@@ -14,7 +8,6 @@ export function serviceBuilder(): {
   signalService: SignalService;
   interopService: InteropService;
   quequeService: QueueService;
-  rateLimiter: RateLimiter;
 } {
   const db: DB = createDbInstance({
     username: config.signalhubStoreDbUsername,
@@ -33,22 +26,9 @@ export function serviceBuilder(): {
   });
   const quequeService = queueServiceBuilder(sqsClient);
 
-  // Rate limiter Init
-
-  const rateLimiter = initRedisRateLimiter({
-    limiterGroup: "PUSH-SIGNAL-RL",
-    maxRequests: config.rateLimiterMaxRequests,
-    rateInterval: config.rateLimiterRateInterval,
-    burstPercentage: config.rateLimiterBurstPercentage,
-    redisHost: config.rateLimiterRedisHost,
-    redisPort: config.rateLimiterRedisPort,
-    timeout: config.rateLimiterTimeout
-  });
-
   return {
     signalService,
     quequeService,
-    interopService,
-    rateLimiter
+    interopService
   };
 }
