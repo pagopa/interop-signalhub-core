@@ -5,7 +5,7 @@ import {
   contextMiddleware,
   logger,
   loggerMiddleware,
-  parserErrorMiddlware,
+  parserErrorMiddleware,
   rateLimiterMiddleware,
   skipForUrl
 } from "pagopa-signalhub-commons";
@@ -31,9 +31,8 @@ const loggerInstance = logger({
 const app: Express = express();
 app.use(express.json());
 setupHealthRoute(app);
-
-app.use(parserErrorMiddlware(loggerInstance));
 app.use(contextMiddleware(serviceName));
+app.use(parserErrorMiddleware(serviceName));
 app.use(skipForUrl("/status", loggerMiddleware()));
 app.use(authenticationMiddleware);
 app.use(rateLimiterMiddleware(rateLimiter, loggerInstance));
