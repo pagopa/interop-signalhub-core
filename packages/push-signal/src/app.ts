@@ -5,7 +5,7 @@ import {
   contextMiddleware,
   logger,
   loggerMiddleware,
-  parserErrorMiddlware,
+  parserErrorMiddleware,
   skipForUrl
 } from "pagopa-signalhub-commons";
 
@@ -24,14 +24,7 @@ const { signalService, quequeService, interopService } = serviceBuilder();
 const app: Express = express();
 app.use(express.json());
 setupHealthRoute(app);
-app.use(
-  parserErrorMiddlware(
-    logger({
-      serviceName
-    })
-  )
-);
-
+app.use(parserErrorMiddleware(serviceName));
 app.use(contextMiddleware(serviceName));
 app.use(skipForUrl("/status", loggerMiddleware()));
 app.use(authenticationMiddleware);

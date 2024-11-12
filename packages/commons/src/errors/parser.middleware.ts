@@ -1,15 +1,24 @@
 import { NextFunction, Request, Response } from "express";
 
-import { Logger } from "../logging/index.js";
+import { correlationId } from "../index.js";
+import { logger } from "../logging/index.js";
 import { jsonMalformed } from "./index.js";
 
-export const parserErrorMiddlware =
-  (logger: Logger) =>
-  (err: unknown, _request: Request, response: Response, next: NextFunction) => {
+export const parserErrorMiddleware =
+  (serviceName: string) =>
+  (err: unknown, req: Request, res: Response, next: NextFunction) => {
+    const log = logger({
+      serviceName: serviceName,
+      correlationId: correlationId()
+    });
+
+    log.info(`Request ${req.method} ${req.url}`);
+
     if (err instanceof SyntaxError) {
-      logger.warn(`Response 400 - JSON error parsing message: ${err.message}`);
-      return response.status(400).json(jsonMalformed);
+      log.warn(`Response 400 - JSON error parsing message: ${err.message}`);
+      return res.status(400).json(jsonMalformed);
     }
+
     next();
     return;
   };
