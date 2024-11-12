@@ -6,7 +6,7 @@ import { clockServiceBuilder } from "../src/services/clock.service.js";
 import { signalServiceBuilder } from "../src/services/signal.service.js";
 import { tracingBatchServiceCleanupBuilder } from "../src/services/tracingBatchCleanup.service.js";
 
-export const { cleanup, postgresDB } = setupTestContainersVitest(
+export const { cleanup, postgresDB } = await setupTestContainersVitest(
   inject("signalHubStoreConfig")
 );
 

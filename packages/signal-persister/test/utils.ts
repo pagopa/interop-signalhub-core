@@ -5,7 +5,7 @@ import { afterEach, inject } from "vitest";
 import { processMessage } from "../src/messageHandler.js";
 import { storeSignalServiceBuilder } from "../src/services/storeSignal.service.js";
 
-export const { cleanup, postgresDB } = setupTestContainersVitest(
+export const { cleanup, postgresDB } = await setupTestContainersVitest(
   inject("signalHubStoreConfig")
 );
 

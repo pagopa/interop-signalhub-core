@@ -22,7 +22,7 @@ import { eServiceProducerRepository } from "../src/repositories/eServiceProducer
 import { eServiceRepository } from "../src/repositories/eservice.repository.js";
 import { eServiceServiceBuilder } from "../src/services/eservice.service.js";
 
-export const { postgresDB } = setupTestContainersVitest(
+export const { postgresDB } = await setupTestContainersVitest(
   inject("signalHubStoreConfig")
 );
 
@@ -237,11 +237,11 @@ export const createV2Event = (
   descriptors: descriptors
     ? descriptors
     : [
-        getDescriptorV2({
-          id: descriptorId,
-          state: eServiceDescriptorState
-        })
-      ]
+      getDescriptorV2({
+        id: descriptorId,
+        state: eServiceDescriptorState
+      })
+    ]
 });
 
 export const EServiceEventV2UpdateType = z.union([

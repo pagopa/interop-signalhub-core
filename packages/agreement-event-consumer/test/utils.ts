@@ -18,7 +18,7 @@ import { agreementRepository } from "../src/repositories/index.js";
 import { agreementServiceBuilder } from "../src/services/index.js";
 import { writeAnAgreementEntity } from "./databaseUtils.js";
 
-export const { postgresDB } = setupTestContainersVitest(
+export const { postgresDB } = await setupTestContainersVitest(
   inject("signalHubStoreConfig")
 );
 

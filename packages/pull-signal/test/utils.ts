@@ -8,10 +8,11 @@ import { inject } from "vitest";
 import { interopServiceBuilder } from "../src/services/interop.service.js";
 import { signalServiceBuilder } from "../src/services/signal.service.js";
 
-export const { cleanup, postgresDB, sqsClient } = setupTestContainersVitest(
-  inject("signalHubStoreConfig"),
-  inject("sqsConfig")
-);
+export const { cleanup, postgresDB, sqsClient } =
+  await setupTestContainersVitest(
+    inject("signalHubStoreConfig"),
+    inject("sqsConfig")
+  );
 
 export const interopService = interopServiceBuilder(postgresDB);
 export const signalService = signalServiceBuilder(postgresDB);
