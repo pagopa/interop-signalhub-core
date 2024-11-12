@@ -106,7 +106,6 @@ export async function setupTestContainersVitest(
     sqsClient = SQS.instantiateClient({ endpoint: sqsConfig.queueUrl });
   }
 
-  console.log("config redis", redisRateLimiterConfig);
   if (redisRateLimiterConfig) {
     redisRateLimiter = await initRedisRateLimiter({
       limiterGroup: "TEST",

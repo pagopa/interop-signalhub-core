@@ -9,7 +9,8 @@ export const TEST_ELASTIC_MQ_IMAGE =
   "softwaremill/elasticmq-native:1.5.7@sha256:0cb5bcc04638c80af1631e8cf5da9b96b9fb6f46a4164462231065dc516c102f";
 export const TEST_ELASTIC_MQ_PORT = 9324;
 
-export const TEST_REDIS_IMAGE = "redis:7.2.5-alpine3.20";
+export const TEST_REDIS_IMAGE =
+  "redis:8.0-M02-alpine@sha256:ef38ca61f22e4dda9eaf98da2b332dd0f05fbb8e5b85a27e2bb2ab3f92d15ddf";
 export const TEST_REDIS_PORT = 6379;
 
 export const postgreSQLContainer = (

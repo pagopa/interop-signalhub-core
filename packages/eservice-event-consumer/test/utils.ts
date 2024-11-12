@@ -237,11 +237,11 @@ export const createV2Event = (
   descriptors: descriptors
     ? descriptors
     : [
-      getDescriptorV2({
-        id: descriptorId,
-        state: eServiceDescriptorState
-      })
-    ]
+        getDescriptorV2({
+          id: descriptorId,
+          state: eServiceDescriptorState
+        })
+      ]
 });
 
 export const EServiceEventV2UpdateType = z.union([

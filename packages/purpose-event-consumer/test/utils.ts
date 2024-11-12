@@ -59,9 +59,9 @@ export const getMockPurposeVersion = (
   ...partialPurposeVersion,
   ...(state !== PurposeStateV1.DRAFT
     ? {
-      updatedAt: dateToBigInt(new Date()),
-      firstActivationAt: dateToBigInt(new Date())
-    }
+        updatedAt: dateToBigInt(new Date()),
+        firstActivationAt: dateToBigInt(new Date())
+      }
     : {}),
   ...(state === PurposeStateV1.SUSPENDED
     ? { suspendedAt: dateToBigInt(new Date()) }
