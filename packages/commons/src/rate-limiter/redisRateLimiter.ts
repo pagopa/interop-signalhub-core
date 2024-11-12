@@ -24,7 +24,7 @@ export interface RateLimiter {
   ) => Promise<RateLimiterStatus>;
 }
 
-export function initRedisRateLimiter(config: {
+export async function initRedisRateLimiter(config: {
   limiterGroup: string;
   maxRequests: number;
   rateInterval: number;
@@ -32,8 +32,8 @@ export function initRedisRateLimiter(config: {
   redisHost: string;
   redisPort: number;
   timeout: number;
-}): RateLimiter {
-  const redisClient = createRedisClient({
+}): Promise<RateLimiter> {
+  const redisClient = await createRedisClient({
     socket: {
       host: config.redisHost,
       port: config.redisPort,
@@ -51,7 +51,7 @@ export function initRedisRateLimiter(config: {
   };
 
   const burstOptions: IRateLimiterRedisOptions = {
-    ...options,
+    storeClient: redisClient,
     keyPrefix: `${burstKeyPrefix}${config.limiterGroup}`,
     points: config.maxRequests * config.burstPercentage,
     duration: (config.rateInterval / 1000) * config.burstPercentage
@@ -68,6 +68,7 @@ export function initRedisRateLimiter(config: {
   ): Promise<RateLimiterStatus> {
     try {
       const rateLimiterResult = await rateLimiter.consume(rateLimiterKey);
+
       return {
         limitReached: false,
         maxRequests: config.maxRequests,
@@ -78,7 +79,7 @@ export function initRedisRateLimiter(config: {
       return match(error)
         .with(P.instanceOf(RateLimiterRes), (rejRes) => {
           logger.warn(
-            `Rate Limit triggered for organization ${rateLimiterKey}`
+            `Rate Limit triggered for rateLimiterKey: ${rateLimiterKey}`
           );
           return {
             limitReached: true,
@@ -89,7 +90,7 @@ export function initRedisRateLimiter(config: {
         })
         .with(P.intersection(P.instanceOf(ConnectionTimeoutError)), () => {
           logger.warn(
-            `Redis command timed out, making request pass for organization ${rateLimiterKey}`
+            `Redis command timed out, making request pass for rateLimiterKey ${rateLimiterKey}`
           );
           return {
             limitReached: false,
@@ -113,7 +114,7 @@ export function initRedisRateLimiter(config: {
   }
 
   async function getRateLimitCountBy(organizationId: string): Promise<number> {
-    return (await redisClient)
+    return redisClient
       .get(`${config.limiterGroup}:${organizationId}`)
       .then(Number);
   }
@@ -121,7 +122,7 @@ export function initRedisRateLimiter(config: {
   async function getRateLimitBurstCountBy(
     organizationId: string
   ): Promise<number> {
-    return (await redisClient)
+    return redisClient
       .get(`${burstKeyPrefix}${config.limiterGroup}:${organizationId}`)
       .then(Number);
   }

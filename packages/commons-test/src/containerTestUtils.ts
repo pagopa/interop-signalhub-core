@@ -9,6 +9,9 @@ export const TEST_ELASTIC_MQ_IMAGE =
   "softwaremill/elasticmq-native:1.5.7@sha256:0cb5bcc04638c80af1631e8cf5da9b96b9fb6f46a4164462231065dc516c102f";
 export const TEST_ELASTIC_MQ_PORT = 9324;
 
+export const TEST_REDIS_IMAGE = "redis:7.2.5-alpine3.20";
+export const TEST_REDIS_PORT = 6379;
+
 export const postgreSQLContainer = (
   config: SignalHubStoreConfig
 ): GenericContainer =>
@@ -35,3 +38,6 @@ export const elasticMQContainer = (): GenericContainer =>
       }
     ])
     .withExposedPorts(TEST_ELASTIC_MQ_PORT);
+
+export const redisContainer = (): GenericContainer =>
+  new GenericContainer(TEST_REDIS_IMAGE).withExposedPorts(TEST_REDIS_PORT);

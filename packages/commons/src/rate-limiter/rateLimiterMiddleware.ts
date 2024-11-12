@@ -38,7 +38,7 @@ export function rateLimiterMiddleware(
     if (rateLimiterStatus.limitReached) {
       const headers = rateLimiterHeadersFromStatus(rateLimiterStatus);
       return response
-        .status(429)
+        .status(constants.HTTP_STATUS_TOO_MANY_REQUESTS)
         .set(headers)
         .json(
           makeApiProblem(

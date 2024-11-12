@@ -11,7 +11,9 @@
     "format:write": "prettier --write src",
     "lint": "eslint ./src/**",
     "lint:autofix": "eslint ./src/** --fix",
-    "check": "tsc --project tsconfig.check.json"
+    "check": "tsc --project tsconfig.check.json",
+    "test": "vitest"
+
   },
   "keywords": [],
   "author": "",

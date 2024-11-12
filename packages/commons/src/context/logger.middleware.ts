@@ -4,17 +4,17 @@ import { logger } from "../index.js";
 
 export const loggerMiddleware =
   () =>
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const log = logger({
-      serviceName: req.ctx.serviceName,
-      correlationId: req.ctx.correlationId
-    });
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const log = logger({
+        serviceName: req.ctx.serviceName,
+        correlationId: req.ctx.correlationId
+      });
 
-    log.info(`Request ${req.method} ${req.url}`);
+      log.info(`Request ${req.method} ${req.url}`);
 
-    res.on("finish", () => {
-      log.info(`Response ${res.statusCode} ${res.statusMessage}`);
-    });
+      res.on("finish", () => {
+        log.info(`Response ${res.statusCode} ${res.statusMessage}`);
+      });
 
-    next();
-  };
+      next();
+    };

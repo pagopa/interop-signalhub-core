@@ -2,9 +2,12 @@
 
 import {
   DB,
+  RateLimiter,
+  RedisRateLimiterConfig,
   SQS,
   SignalHubStoreConfig,
-  createDbInstance
+  createDbInstance,
+  initRedisRateLimiter
 } from "pagopa-signalhub-commons";
 
 import { SqsConfig, truncateSignalTable } from "./index.js";
@@ -28,41 +31,64 @@ import { SqsConfig, truncateSignalTable } from "./index.js";
  * ```
  */
 
-export function setupTestContainersVitest(
+export async function setupTestContainersVitest(
   signalHubStoreConfig?: SignalHubStoreConfig
-): {
+): Promise<{
   postgresDB: DB;
   cleanup: () => Promise<void>;
-};
+}>;
 
-export function setupTestContainersVitest(
+export async function setupTestContainersVitest(
   signalHubStoreConfig?: SignalHubStoreConfig,
   sqsConfig?: SqsConfig
-): {
-  postgresDB: DB;
-  sqsClient: SQS.SQSClient;
-  cleanup: () => Promise<void>;
-};
-
-export function setupTestContainersVitest(
-  signalHubStoreConfig?: SignalHubStoreConfig,
-  sqsConfig?: SqsConfig
-): {
+): Promise<{
   postgresDB: DB;
   sqsClient: SQS.SQSClient;
   cleanup: () => Promise<void>;
-};
+}>;
 
-export function setupTestContainersVitest(
+export async function setupTestContainersVitest(
   signalHubStoreConfig?: SignalHubStoreConfig,
-  sqsConfig?: SqsConfig
-): {
+  sqsConfig?: SqsConfig,
+  redisRateLimiterConfig?: RedisRateLimiterConfig
+): Promise<{
   postgresDB?: DB;
   sqsClient?: SQS.SQSClient;
+  redisRateLimiter?: RateLimiter;
   cleanup: () => Promise<void>;
-} {
+}>;
+
+// export function setupTestContainersVitest(
+//   signalHubStoreConfig?: SignalHubStoreConfig,
+//   sqsConfig?: SqsConfig
+// ): {
+//   postgresDB: DB;
+//   sqsClient: SQS.SQSClient;
+//   cleanup: () => Promise<void>;
+// };
+
+// export function setupTestContainersVitest(
+//   signalHubStoreConfig?: SignalHubStoreConfig,
+//   sqsConfig?: SqsConfig
+// ): {
+//   postgresDB: DB;
+//   sqsClient: SQS.SQSClient;
+//   cleanup: () => Promise<void>;
+// };
+
+export async function setupTestContainersVitest(
+  signalHubStoreConfig?: SignalHubStoreConfig,
+  sqsConfig?: SqsConfig,
+  redisRateLimiterConfig?: RedisRateLimiterConfig
+): Promise<{
+  postgresDB?: DB;
+  sqsClient?: SQS.SQSClient;
+  redisRateLimiter?: RateLimiter;
+  cleanup: () => Promise<void>;
+}> {
   let postgresDB: DB | undefined;
   let sqsClient: SQS.SQSClient | undefined;
+  let redisRateLimiter: RateLimiter | undefined;
 
   if (signalHubStoreConfig) {
     postgresDB = createDbInstance({
@@ -80,9 +106,23 @@ export function setupTestContainersVitest(
     sqsClient = SQS.instantiateClient({ endpoint: sqsConfig.queueUrl });
   }
 
+  console.log("config redis", redisRateLimiterConfig);
+  if (redisRateLimiterConfig) {
+    redisRateLimiter = await initRedisRateLimiter({
+      limiterGroup: "TEST",
+      maxRequests: redisRateLimiterConfig.rateLimiterMaxRequests,
+      rateInterval: redisRateLimiterConfig.rateLimiterRateInterval,
+      burstPercentage: redisRateLimiterConfig.rateLimiterBurstPercentage,
+      redisHost: redisRateLimiterConfig.rateLimiterRedisHost,
+      redisPort: redisRateLimiterConfig.rateLimiterRedisPort,
+      timeout: redisRateLimiterConfig.rateLimiterTimeout
+    });
+  }
+
   return {
     postgresDB,
     sqsClient,
+    redisRateLimiter,
     cleanup: async (): Promise<void> => {
       await truncateSignalTable(
         postgresDB!,
