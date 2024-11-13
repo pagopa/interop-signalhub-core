@@ -4,9 +4,6 @@
   "description": "PagoPA Interop Signalhub common test utilities",
   "main": "dist",
   "type": "module",
-  "files": [
-    "dist/src/**"
-  ],
   "scripts": {
     "build": "tsc",
     "format:check": "prettier --check src",
