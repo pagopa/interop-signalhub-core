@@ -8,10 +8,9 @@
     "build": "tsc",
     "format:check": "prettier --check src",
     "format:write": "prettier --write src",
-    "lint": "eslint ./src/** ./test/**",
-    "lint:autofix": "eslint ./src/** ./test/** --fix",
-    "check": "tsc --project tsconfig.check.json",
-    "test": "vitest"
+    "lint": "eslint ./src/**",
+    "lint:autofix": "eslint ./src/**",
+    "check": "tsc --project tsconfig.check.json"
   },
   "keywords": [],
   "author": "",

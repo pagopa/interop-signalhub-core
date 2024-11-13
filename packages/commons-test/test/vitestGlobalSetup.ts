@@ -1,3 +1,3 @@
-import { setupTestContainersVitestGlobal } from "../src/setupTestContainersVitestGlobal.js";
+// import { setupTestContainersVitestGlobal } from "../src/setupTestContainersVitestGlobal.js";
 
-export default setupTestContainersVitestGlobal();
+// export default setupTestContainersVitestGlobal();
