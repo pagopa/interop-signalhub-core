@@ -2,7 +2,7 @@
   "name": "pagopa-signalhub-commons-test",
   "version": "1.0.0",
   "description": "PagoPA Interop Signalhub common test utilities",
-  "main": "dist/src/index.js",
+  "main": "dist",
   "type": "module",
   "scripts": {
     "build": "tsc",
