@@ -139,7 +139,8 @@ const errorCodes = {
   kafkaMessageValueError: "9996",
   kafkaMessageProcessError: "9997",
   kafkaMessageMissingData: "9998",
-  badJsonFormat: "9995"
+  badJsonFormat: "9995",
+  tooManyRequestsError: "10004"
 } as const;
 
 export type CommonErrorCodes = keyof typeof errorCodes;
@@ -228,6 +229,16 @@ export function missingHeader(headerName?: string): ApiError<CommonErrorCodes> {
       : title,
     code: "missingHeader",
     title
+  });
+}
+
+export function tooManyRequestsError(
+  organizationId: string
+): ApiError<CommonErrorCodes> {
+  return new ApiError({
+    code: "tooManyRequestsError",
+    title: "Too Many Requests",
+    detail: `Requests limit exceeded for organization ${organizationId}`
   });
 }
 
