@@ -8,7 +8,8 @@
     "start": "node --watch --loader ts-node/esm -r 'dotenv-flow/config'  ./src/index.ts",
     "lint": "eslint ./src/** ./test/**",
     "lint:autofix": "eslint ./src/** ./test/** --fix",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
