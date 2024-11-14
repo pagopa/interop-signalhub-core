@@ -46,8 +46,7 @@ export function rateLimiterMiddleware(rateLimiter: RateLimiter) {
             correlationId
           )
         );
-    } else {
-      return next();
     }
+    return next();
   };
 }
