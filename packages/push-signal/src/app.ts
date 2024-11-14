@@ -3,7 +3,6 @@ import express, { Express } from "express";
 import {
   authenticationMiddleware,
   contextMiddleware,
-  logger,
   loggerMiddleware,
   parserErrorMiddleware,
   rateLimiterMiddleware,
@@ -22,10 +21,6 @@ const serviceName = "push-signal";
 // services
 const { signalService, quequeService, interopService } = serviceBuilder();
 const { rateLimiter } = await rateLimiterBuilder();
-// logger
-const loggerInstance = logger({
-  serviceName
-});
 
 // express
 const app: Express = express();
@@ -35,7 +30,7 @@ app.use(contextMiddleware(serviceName));
 app.use(parserErrorMiddleware(serviceName));
 app.use(skipForUrl("/status", loggerMiddleware()));
 app.use(authenticationMiddleware);
-app.use(rateLimiterMiddleware(rateLimiter, loggerInstance));
+app.use(rateLimiterMiddleware(rateLimiter));
 
 // Disable the "X-Powered-By: Express" HTTP header for security reasons: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#recommendation_16
 app.disable("x-powered-by");
@@ -43,11 +38,7 @@ app.disable("x-powered-by");
 // ts-rest
 const routes = pushRoutes(signalService, interopService, quequeService);
 createExpressEndpoints(contract, routes, app, {
-  requestValidationErrorHandler: validationErrorHandler(
-    logger({
-      serviceName
-    })
-  )
+  requestValidationErrorHandler: validationErrorHandler()
 });
 
 export default app;
