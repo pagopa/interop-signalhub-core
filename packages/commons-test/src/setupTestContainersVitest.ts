@@ -58,24 +58,6 @@ export async function setupTestContainersVitest(
   cleanup: () => Promise<void>;
 }>;
 
-// export function setupTestContainersVitest(
-//   signalHubStoreConfig?: SignalHubStoreConfig,
-//   sqsConfig?: SqsConfig
-// ): {
-//   postgresDB: DB;
-//   sqsClient: SQS.SQSClient;
-//   cleanup: () => Promise<void>;
-// };
-
-// export function setupTestContainersVitest(
-//   signalHubStoreConfig?: SignalHubStoreConfig,
-//   sqsConfig?: SqsConfig
-// ): {
-//   postgresDB: DB;
-//   sqsClient: SQS.SQSClient;
-//   cleanup: () => Promise<void>;
-// };
-
 export async function setupTestContainersVitest(
   signalHubStoreConfig?: SignalHubStoreConfig,
   sqsConfig?: SqsConfig,
