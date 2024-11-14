@@ -62,7 +62,7 @@ jobs:
           set -euo pipefail
 
           NORM_REF="$(echo ${{ github.ref_name }} | sed -e 's/\//-/g')"
-          echo "NORM_REF=$NORM_REF" >> GITHUB_ENV
+          echo "NORM_REF=$NORM_REF" >> $GITHUB_ENV
 
       - name: (latest) Docker metadata
         id: meta_branch
