@@ -29,3 +29,4 @@ Now you're able to launch pull-signal service with this:
 You can launch test for this project with:
 
 `pnpm test:pull`
+
