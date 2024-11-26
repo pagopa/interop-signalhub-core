@@ -18,6 +18,10 @@ export function rateLimiterMiddleware(rateLimiter: RateLimiter) {
     const { organizationId } = sessionData;
     const log = logger({ serviceName, correlationId });
 
+    log.debug(
+      `RateLimiterMiddleware::rateLimiterMiddleware, organizationId: ${organizationId}`
+    );
+
     if (!organizationId) {
       const errorRes = makeApiProblem(
         genericError("Missing expected organizationId claim in token"),
