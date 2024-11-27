@@ -40,85 +40,110 @@ describe("Redis rate limiter tests", async () => {
     // At the begenning we expect that requests consumed (if no one has invoked rateLimiter) are 0.
     await expect(getRequestConsumedBy(organizationId)).resolves.toBe(0);
 
-    await expect(consumeRateLimiterRequest(organizationId)).resolves.toEqual({
-      limitReached: false,
-      maxRequests: 2,
-      rateInterval: 1000,
-      remainingRequests: 1
-    });
+    await expect(consumeRateLimiterRequest(organizationId)).resolves.toEqual(
+      expect.objectContaining({
+        limitReached: false,
+        maxRequests: 2,
+        rateInterval: 1000,
+        remainingRequests: 1,
+        rateLimitReset: expect.any(Number)
+      })
+    );
 
     await expect(getRequestConsumedBy(organizationId)).resolves.toBe(1);
 
-    await expect(consumeRateLimiterRequest(organizationId)).resolves.toEqual({
-      limitReached: false,
-      maxRequests: 2,
-      rateInterval: 1000,
-      remainingRequests: 0
-    });
+    await expect(consumeRateLimiterRequest(organizationId)).resolves.toEqual(
+      expect.objectContaining({
+        limitReached: false,
+        maxRequests: 2,
+        rateInterval: 1000,
+        remainingRequests: 0,
+        rateLimitReset: expect.any(Number)
+      })
+    );
 
     await expect(getRequestConsumedBy(organizationId)).resolves.toBe(2);
 
     // Burst rate limiter kicks in.
     // Burst percentage in config is 1.5, so we expect 3 requests to be allowed.
 
-    await expect(consumeRateLimiterRequest(organizationId)).resolves.toEqual({
-      limitReached: false,
-      maxRequests: 2,
-      rateInterval: 1000,
-      remainingRequests: 0
-    });
+    await expect(consumeRateLimiterRequest(organizationId)).resolves.toEqual(
+      expect.objectContaining({
+        limitReached: false,
+        maxRequests: 2,
+        rateInterval: 1000,
+        remainingRequests: 0,
+        rateLimitReset: expect.any(Number)
+      })
+    );
 
     await expect(getBurstRequestConsumedFor(organizationId)).resolves.toBe(1);
 
-    await expect(consumeRateLimiterRequest(organizationId)).resolves.toEqual({
-      limitReached: false,
-      maxRequests: 2,
-      rateInterval: 1000,
-      remainingRequests: 0
-    });
+    await expect(consumeRateLimiterRequest(organizationId)).resolves.toEqual(
+      expect.objectContaining({
+        limitReached: false,
+        maxRequests: 2,
+        rateInterval: 1000,
+        remainingRequests: 0,
+        rateLimitReset: expect.any(Number)
+      })
+    );
 
     await expect(getBurstRequestConsumedFor(organizationId)).resolves.toBe(2);
 
-    await expect(consumeRateLimiterRequest(organizationId)).resolves.toEqual({
-      limitReached: false,
-      maxRequests: 2,
-      rateInterval: 1000,
-      remainingRequests: 0
-    });
+    await expect(consumeRateLimiterRequest(organizationId)).resolves.toEqual(
+      expect.objectContaining({
+        limitReached: false,
+        maxRequests: 2,
+        rateInterval: 1000,
+        remainingRequests: 0,
+        rateLimitReset: expect.any(Number)
+      })
+    );
 
     await expect(getBurstRequestConsumedFor(organizationId)).resolves.toBe(3);
 
     // Limit reached
-    await expect(consumeRateLimiterRequest(organizationId)).resolves.toEqual({
-      limitReached: true,
-      maxRequests: 2,
-      rateInterval: 1000,
-      remainingRequests: 0
-    });
+    await expect(consumeRateLimiterRequest(organizationId)).resolves.toEqual(
+      expect.objectContaining({
+        limitReached: true,
+        maxRequests: 2,
+        rateInterval: 1000,
+        remainingRequests: 0,
+        rateLimitReset: expect.any(Number),
+        retryAfter: expect.any(Number)
+      })
+    );
   });
 
   it("should rate-limit reset requestsCount after rate interval", async () => {
-    const organizationId = "organization-test-id";
+    const organizationId = "orgazation-test-id";
 
     await expect(getRequestConsumedBy(organizationId)).resolves.toBe(0);
 
-    await expect(consumeRateLimiterRequest(organizationId)).resolves.toEqual({
-      limitReached: false,
-      maxRequests: 2,
-      rateInterval: 1000,
-      remainingRequests: 1
-    });
+    await expect(consumeRateLimiterRequest(organizationId)).resolves.toEqual(
+      expect.objectContaining({
+        limitReached: false,
+        maxRequests: 2,
+        rateInterval: 1000,
+        remainingRequests: 1,
+        rateLimitReset: expect.any(Number)
+      })
+    );
 
     await expect(getRequestConsumedBy(organizationId)).resolves.toBe(1);
 
     await sleep(1000);
 
-    await expect(consumeRateLimiterRequest(organizationId)).resolves.toEqual({
-      limitReached: false,
-      maxRequests: 2,
-      rateInterval: 1000,
-      remainingRequests: 1
-    });
+    await expect(consumeRateLimiterRequest(organizationId)).resolves.toEqual(
+      expect.objectContaining({
+        limitReached: false,
+        maxRequests: 2,
+        rateInterval: 1000,
+        remainingRequests: 1,
+        rateLimitReset: expect.any(Number)
+      })
+    );
 
     await expect(getRequestConsumedBy(organizationId)).resolves.toBe(1);
   });
