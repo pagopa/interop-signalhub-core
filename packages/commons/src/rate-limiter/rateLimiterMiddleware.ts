@@ -37,11 +37,12 @@ export function rateLimiterMiddleware(rateLimiter: RateLimiter) {
       log
     );
 
+    const headers = rateLimiterHeadersFromStatus(rateLimiterStatus);
+    response.set(headers);
+
     if (rateLimiterStatus.limitReached) {
-      const headers = rateLimiterHeadersFromStatus(rateLimiterStatus);
       return response
         .status(constants.HTTP_STATUS_TOO_MANY_REQUESTS)
-        .set(headers)
         .json(
           makeApiProblem(
             tooManyRequestsError(organizationId),
