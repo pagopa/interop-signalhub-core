@@ -17,6 +17,13 @@ import { z } from "zod";
 
 extendZodWithOpenApi(z);
 
+export type ResponseHeader = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  header: any;
+};
+
+export type AdddedInfo = Record<string, Record<string, ResponseHeader>>;
+
 type OpenAPIComponentTypeKey = Parameters<typeof registry.registerComponent>[0];
 export type OpenAPICustomComponent = {
   type: OpenAPIComponentTypeKey;
@@ -52,10 +59,15 @@ const generateOpenAPIFromTsRestContract = (
       appRoute: AppRoute
     ) => OperationObject;
   } = {},
-  pathPrefix?: string
+  pathPrefix?: string,
+
+  addedInfo?: AdddedInfo
 ): void => {
   const paths = getPathsFromRouter(router);
 
+  // const infoHeaders = JSON.parse(JSON.stringify(addedInfo));
+
+  const infoHeaders = addedInfo;
   const operationIds = new Map<string, string[]>();
 
   paths.forEach((path) => {
@@ -72,7 +84,19 @@ const generateOpenAPIFromTsRestContract = (
     // --- End check operationId ---
 
     const headers = getHeaders(path.route.headers);
+
     const responses = getResponses(path.route.responses);
+
+    for (const [statusCode] of Object.entries(responses)) {
+      if (
+        infoHeaders &&
+        infoHeaders[path.id] &&
+        infoHeaders[path.id][parseInt(statusCode, 10)]
+      ) {
+        responses[statusCode].headers =
+          infoHeaders[path.id][parseInt(statusCode, 10)].header;
+      }
+    }
 
     const body =
       path.route.method === "POST" || path.route.method === "PUT"
@@ -142,10 +166,18 @@ export function generateOpenAPISpec(
       appRoute: AppRoute
     ) => OperationObject;
   } = {},
+
   customComponents: OpenAPICustomComponent[] = [],
-  pathPrefix?: string
+  pathPrefix?: string,
+
+  addedInfo?: AdddedInfo
 ): OpenAPIObject {
-  generateOpenAPIFromTsRestContract(router, options, pathPrefix);
+  generateOpenAPIFromTsRestContract(
+    router,
+    options,
+    pathPrefix,
+    JSON.parse(JSON.stringify(addedInfo))
+  );
 
   // ---  registering custom components ----
   registerRowOpenAPIcomponents(customComponents);
