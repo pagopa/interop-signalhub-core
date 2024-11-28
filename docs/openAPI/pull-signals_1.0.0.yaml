@@ -17,8 +17,8 @@ paths:
       summary: Health status endpoint
       operationId: getStatus
       responses:
-        "200":
-          description: "200"
+        '200':
+          description: '200'
           content:
             application/json:
               schema:
@@ -58,61 +58,152 @@ paths:
           name: authorization
           in: header
       responses:
-        "200":
-          description: "200"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SignalPullResponse"
-        "206":
-          description: "206"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SignalPullResponse"
-        "400":
-          description: "400"
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/problem"
-        "401":
-          description: "401"
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/problem"
-        "403":
-          description: "403"
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/problem"
-        "429":
-          description: Too Many Requests
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
+        '200':
+          description: '200'
           headers:
-            "X-Rate-Limit-Limit":
+            X-Rate-Limit-Limit:
               schema:
                 type: integer
               description: Max allowed requests within time interval
-            "X-Rate-Limit-Remaining":
+            X-Rate-Limit-Remaining:
               schema:
                 type: integer
               description: Remaining requests within time interval
-            "X-Rate-Limit-Interval":
+            X-Rate-Limit-Interval:
               schema:
                 type: integer
-              description: Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available
-        "500":
-          description: "500"
+              description: >-
+                Time interval in milliseconds. Allowed requests will be
+                constantly replenished during the interval. At the end of the
+                interval the max allowed requests will be available
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+              description: Time at which the rate limit resets, specified in UTC epoch time
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignalPullResponse'
+        '206':
+          description: '206'
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                type: integer
+              description: Max allowed requests within time interval
+            X-Rate-Limit-Remaining:
+              schema:
+                type: integer
+              description: Remaining requests within time interval
+            X-Rate-Limit-Interval:
+              schema:
+                type: integer
+              description: >-
+                Time interval in milliseconds. Allowed requests will be
+                constantly replenished during the interval. At the end of the
+                interval the max allowed requests will be available
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+              description: Time at which the rate limit resets, specified in UTC epoch time
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignalPullResponse'
+        '400':
+          description: '400'
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                type: integer
+              description: Max allowed requests within time interval
+            X-Rate-Limit-Remaining:
+              schema:
+                type: integer
+              description: Remaining requests within time interval
+            X-Rate-Limit-Interval:
+              schema:
+                type: integer
+              description: >-
+                Time interval in milliseconds. Allowed requests will be
+                constantly replenished during the interval. At the end of the
+                interval the max allowed requests will be available
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+              description: Time at which the rate limit resets, specified in UTC epoch time
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/problem"
+                $ref: '#/components/schemas/problem'
+        '401':
+          description: '401'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/problem'
+        '403':
+          description: '403'
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                type: integer
+              description: Max allowed requests within time interval
+            X-Rate-Limit-Remaining:
+              schema:
+                type: integer
+              description: Remaining requests within time interval
+            X-Rate-Limit-Interval:
+              schema:
+                type: integer
+              description: >-
+                Time interval in milliseconds. Allowed requests will be
+                constantly replenished during the interval. At the end of the
+                interval the max allowed requests will be available
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+              description: Time at which the rate limit resets, specified in UTC epoch time
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/problem'
+        '429':
+          description: '429'
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                type: integer
+              description: Max allowed requests within time interval
+            X-Rate-Limit-Remaining:
+              schema:
+                type: integer
+              description: Remaining requests within time interval
+            X-Rate-Limit-Interval:
+              schema:
+                type: integer
+              description: >-
+                Time interval in milliseconds. Allowed requests will be
+                constantly replenished during the interval. At the end of the
+                interval the max allowed requests will be available
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+              description: Time at which the rate limit resets, specified in UTC epoch time
+            Retry-After:
+              schema:
+                type: integer
+              description: How long time to wait before making a new request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/problem'
+        '500':
+          description: '500'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/problem'
 components:
   securitySchemes:
     bearerAuth:
@@ -140,7 +231,7 @@ components:
             type: object
             properties:
               signalType:
-                $ref: "#/components/schemas/signalType"
+                $ref: '#/components/schemas/signalType'
               objectId:
                 type: string
               eserviceId:
