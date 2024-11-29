@@ -8,7 +8,7 @@ info:
     name: ISC
     url: https://opensource.org/license/isc-license-txt
 servers:
-  - url: https://api.signalhub.interop.pagopa.it/v1/pull
+  - url: https://api.signalhub.interop.pagopa.it/1.0/pull
     description: Pull signal Production URL
 paths:
   /status:

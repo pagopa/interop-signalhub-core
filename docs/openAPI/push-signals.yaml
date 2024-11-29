@@ -8,7 +8,7 @@ info:
     url: https://opensource.org/license/isc-license-txt
   termsOfService: https://docs.pagopa.it/interoperabilita-1/normativa-e-approfondimenti
 servers:
-  - url: https://api.signalhub.interop.pagopa.it/v1/push
+  - url: https://api.signalhub.interop.pagopa.it/1.0/push
     description: Push signal Production URL
 paths:
   /status:

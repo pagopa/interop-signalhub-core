@@ -40,6 +40,8 @@ export type AppContext = z.infer<typeof AppContext>;
 
 export const SignalType = z.enum(["CREATE", "UPDATE", "DELETE", "SEEDUPDATE"]);
 
+export const majorMinorRegex = /^([1-9]\d*|0)\.([1-9]\d*|0)$/;
+
 const SignalSchema = z.object({
   signalType: SignalType,
   objectId: z.string(),
