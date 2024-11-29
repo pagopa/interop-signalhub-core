@@ -32,7 +32,7 @@ const headerCommonResponse = {
     description:
       "Time at which the rate limit resets, specified in UTC epoch time"
   }
-};
+} as const;
 
 const headerResponseRateLimitExcedeed = {
   "Retry-After": {
@@ -41,7 +41,7 @@ const headerResponseRateLimitExcedeed = {
     },
     description: "How long time to wait before making a new request"
   }
-};
+} as const;
 
 export function generateApi(version: string): void {
   const openApiDocument = generateOpenAPISpec(
@@ -117,6 +117,6 @@ export function generateApi(version: string): void {
     components: openApiDocument.components
   };
 
-  const fileOutputDocument = `../../docs/openAPI/pull-signals.yaml`;
+  const fileOutputDocument = `../../docs/openAPI/pull-signals_${document.info.version}.yaml`;
   writeFileSync(fileOutputDocument, yaml.dump(document));
 }

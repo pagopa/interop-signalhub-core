@@ -23,7 +23,7 @@ import { z } from "zod";
 extendZodWithOpenApi(z);
 
 export type ResponseHeader = {
-  header: z.AnyZodObject | HeadersObject | undefined;
+  header: HeadersObject;
 };
 
 export type AdddedInfo = Record<string, Record<string, ResponseHeader>>;
