@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const majorMinorRegex = /^([1-9]\d*|0)\.([1-9]\d*|0)$/;
+import { majorMinorRegex } from "../models/index.js";
 
 export const APIServiceConfig = z
   .object({

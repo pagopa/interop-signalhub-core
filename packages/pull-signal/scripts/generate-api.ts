@@ -1,7 +1,7 @@
 import { Command, Option } from "commander";
 import { generateApi } from "../src/commands/generate-api.command.js";
+import { majorMinorRegex } from "pagopa-signalhub-commons";
 
-const majorMinorRegex = /^([1-9]\d*|0)\.([1-9]\d*|0)$/;
 
 function isValidSemanticVersion(version: string): boolean {
   return majorMinorRegex.test(version);
