@@ -12,14 +12,18 @@ import {
   ContractAnyType,
   isZodType
 } from "@ts-rest/core";
-import { InfoObject, OpenAPIObject, OperationObject } from "openapi3-ts";
+import {
+  HeadersObject,
+  InfoObject,
+  OpenAPIObject,
+  OperationObject
+} from "openapi3-ts";
 import { z } from "zod";
 
 extendZodWithOpenApi(z);
 
 export type ResponseHeader = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  header: any;
+  header: z.AnyZodObject | HeadersObject | undefined;
 };
 
 export type AdddedInfo = Record<string, Record<string, ResponseHeader>>;
@@ -64,8 +68,6 @@ const generateOpenAPIFromTsRestContract = (
   addedInfo?: AdddedInfo
 ): void => {
   const paths = getPathsFromRouter(router);
-
-  // const infoHeaders = JSON.parse(JSON.stringify(addedInfo));
 
   const infoHeaders = addedInfo;
   const operationIds = new Map<string, string[]>();

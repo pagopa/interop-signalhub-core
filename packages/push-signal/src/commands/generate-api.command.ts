@@ -116,6 +116,6 @@ export function generateApi(version: string): void {
     components: document.components
   };
 
-  const fileOutputDocument = `../../docs/openAPI/push-signals_${openApiDocument.info.version}.yaml`;
+  const fileOutputDocument = `../../docs/openAPI/push-signals.yaml`;
   writeFileSync(fileOutputDocument, yaml.dump(openApiDocument));
 }
