@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Pull signal Service API
   description: Exposes the API for Signal-hub pull service
-  version: 1.0.0
+  version: '1.0'
   termsOfService: https://docs.pagopa.it/interoperabilita-1/normativa-e-approfondimenti
   license:
     name: ISC

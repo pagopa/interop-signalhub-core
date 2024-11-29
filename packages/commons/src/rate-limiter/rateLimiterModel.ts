@@ -3,4 +3,6 @@ export type RateLimiterStatus = {
   maxRequests: number;
   rateInterval: number;
   remainingRequests: number;
+  retryAfter?: number;
+  rateLimitReset?: number;
 };

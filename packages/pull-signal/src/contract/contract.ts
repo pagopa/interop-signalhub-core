@@ -61,6 +61,7 @@ export const contract = c.router(
         400: Problem,
         401: Problem,
         403: Problem,
+        429: Problem,
         500: Problem
       }
     }

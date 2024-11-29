@@ -46,12 +46,52 @@ paths:
       responses:
         '200':
           description: '200'
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                type: integer
+              description: Max allowed requests within time interval
+            X-Rate-Limit-Remaining:
+              schema:
+                type: integer
+              description: Remaining requests within time interval
+            X-Rate-Limit-Interval:
+              schema:
+                type: integer
+              description: >-
+                Time interval in milliseconds. Allowed requests will be
+                constantly replenished during the interval. At the end of the
+                interval the max allowed requests will be available
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+              description: Time at which the rate limit resets, specified in UTC epoch time
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SignalPushResponse'
         '400':
           description: '400'
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                type: integer
+              description: Max allowed requests within time interval
+            X-Rate-Limit-Remaining:
+              schema:
+                type: integer
+              description: Remaining requests within time interval
+            X-Rate-Limit-Interval:
+              schema:
+                type: integer
+              description: >-
+                Time interval in milliseconds. Allowed requests will be
+                constantly replenished during the interval. At the end of the
+                interval the max allowed requests will be available
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+              description: Time at which the rate limit resets, specified in UTC epoch time
           content:
             application/problem+json:
               schema:
@@ -64,6 +104,56 @@ paths:
                 $ref: '#/components/schemas/problem'
         '403':
           description: '403'
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                type: integer
+              description: Max allowed requests within time interval
+            X-Rate-Limit-Remaining:
+              schema:
+                type: integer
+              description: Remaining requests within time interval
+            X-Rate-Limit-Interval:
+              schema:
+                type: integer
+              description: >-
+                Time interval in milliseconds. Allowed requests will be
+                constantly replenished during the interval. At the end of the
+                interval the max allowed requests will be available
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+              description: Time at which the rate limit resets, specified in UTC epoch time
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/problem'
+        '429':
+          description: '429'
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                type: integer
+              description: Max allowed requests within time interval
+            X-Rate-Limit-Remaining:
+              schema:
+                type: integer
+              description: Remaining requests within time interval
+            X-Rate-Limit-Interval:
+              schema:
+                type: integer
+              description: >-
+                Time interval in milliseconds. Allowed requests will be
+                constantly replenished during the interval. At the end of the
+                interval the max allowed requests will be available
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+              description: Time at which the rate limit resets, specified in UTC epoch time
+            Retry-After:
+              schema:
+                type: integer
+              description: How long time to wait before making a new request
           content:
             application/problem+json:
               schema:

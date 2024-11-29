@@ -1,10 +1,10 @@
 import { Command, Option } from "commander";
 import { generateApi } from "../src/commands/generate-api.command.js";
 
-const semanticVersionRegex = /^([1-9]\d*|0)(\.(([1-9]\d*)|0)){2}$/;
+const majorMinorRegex = /^([1-9]\d*|0)\.([1-9]\d*|0)$/;
 
 function isValidSemanticVersion(version: string): boolean {
-  return semanticVersionRegex.test(version);
+  return majorMinorRegex.test(version);
 }
 
 new Command()
