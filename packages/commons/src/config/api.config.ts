@@ -1,12 +1,12 @@
 import { z } from "zod";
 
+const majorMinorRegex = /^([1-9]\d*|0)\.([1-9]\d*|0)$/;
+
 export const APIServiceConfig = z
   .object({
-    API_PUSH_VERSION: z.string().default("v1"),
-    API_PULL_VERSION: z.string().default("v1")
+    API_VERSION: z.string().regex(majorMinorRegex)
   })
   .transform((c) => ({
-    apiPullVersion: c.API_PULL_VERSION,
-    apiPushVersion: c.API_PUSH_VERSION
+    apiVersion: c.API_VERSION
   }));
 export type APIServiceConfig = z.infer<typeof APIServiceConfig>;
