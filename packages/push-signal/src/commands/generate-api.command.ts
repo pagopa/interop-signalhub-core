@@ -32,7 +32,7 @@ const headerCommonResponse = {
     description:
       "Time at which the rate limit resets, specified in UTC epoch time"
   }
-};
+} as const;
 
 const headerResponseRateLimitExcedeed = {
   "Retry-After": {
@@ -41,7 +41,7 @@ const headerResponseRateLimitExcedeed = {
     },
     description: "How long time to wait before making a new request"
   }
-};
+} as const;
 
 export function generateApi(version: string): void {
   const document = generateOpenAPISpec(
