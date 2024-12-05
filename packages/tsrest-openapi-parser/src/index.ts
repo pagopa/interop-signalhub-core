@@ -12,10 +12,21 @@ import {
   ContractAnyType,
   isZodType
 } from "@ts-rest/core";
-import { InfoObject, OpenAPIObject, OperationObject } from "openapi3-ts";
+import {
+  HeadersObject,
+  InfoObject,
+  OpenAPIObject,
+  OperationObject
+} from "openapi3-ts";
 import { z } from "zod";
 
 extendZodWithOpenApi(z);
+
+export type ResponseHeader = {
+  header: HeadersObject;
+};
+
+export type AdddedInfo = Record<string, Record<string, ResponseHeader>>;
 
 type OpenAPIComponentTypeKey = Parameters<typeof registry.registerComponent>[0];
 export type OpenAPICustomComponent = {
@@ -52,10 +63,13 @@ const generateOpenAPIFromTsRestContract = (
       appRoute: AppRoute
     ) => OperationObject;
   } = {},
-  pathPrefix?: string
+  pathPrefix?: string,
+
+  addedInfo?: AdddedInfo
 ): void => {
   const paths = getPathsFromRouter(router);
 
+  const infoHeaders = addedInfo;
   const operationIds = new Map<string, string[]>();
 
   paths.forEach((path) => {
@@ -72,7 +86,19 @@ const generateOpenAPIFromTsRestContract = (
     // --- End check operationId ---
 
     const headers = getHeaders(path.route.headers);
+
     const responses = getResponses(path.route.responses);
+
+    for (const [statusCode] of Object.entries(responses)) {
+      if (
+        infoHeaders &&
+        infoHeaders[path.id] &&
+        infoHeaders[path.id][parseInt(statusCode, 10)]
+      ) {
+        responses[statusCode].headers =
+          infoHeaders[path.id][parseInt(statusCode, 10)].header;
+      }
+    }
 
     const body =
       path.route.method === "POST" || path.route.method === "PUT"
@@ -142,10 +168,18 @@ export function generateOpenAPISpec(
       appRoute: AppRoute
     ) => OperationObject;
   } = {},
+
   customComponents: OpenAPICustomComponent[] = [],
-  pathPrefix?: string
+  pathPrefix?: string,
+
+  addedInfo?: AdddedInfo
 ): OpenAPIObject {
-  generateOpenAPIFromTsRestContract(router, options, pathPrefix);
+  generateOpenAPIFromTsRestContract(
+    router,
+    options,
+    pathPrefix,
+    JSON.parse(JSON.stringify(addedInfo))
+  );
 
   // ---  registering custom components ----
   registerRowOpenAPIcomponents(customComponents);

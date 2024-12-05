@@ -4,6 +4,45 @@ import { generateOpenAPISpec } from "pagopa-tsrest-openapi-parser";
 
 import { contract, pathPrefix } from "../contract/contract.js";
 
+const headerCommonResponse = {
+  "X-Rate-Limit-Limit": {
+    schema: {
+      type: "integer"
+    },
+    description: "Max allowed requests within time interval"
+  },
+  "X-Rate-Limit-Remaining": {
+    schema: {
+      type: "integer"
+    },
+    description: "Remaining requests within time interval"
+  },
+  "X-Rate-Limit-Interval": {
+    schema: {
+      type: "integer"
+    },
+    description:
+      "Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available"
+  },
+
+  "X-RateLimit-Reset": {
+    schema: {
+      type: "integer"
+    },
+    description:
+      "Time at which the rate limit resets, specified in UTC epoch time"
+  }
+} as const;
+
+const headerResponseRateLimitExcedeed = {
+  "Retry-After": {
+    schema: {
+      type: "integer"
+    },
+    description: "How long time to wait before making a new request"
+  }
+} as const;
+
 export function generateApi(version: string): void {
   const openApiDocument = generateOpenAPISpec(
     contract,
@@ -43,7 +82,29 @@ export function generateApi(version: string): void {
         }
       }
     ],
-    pathPrefix
+    pathPrefix,
+    {
+      pullSignal: {
+        200: {
+          header: headerCommonResponse
+        },
+        206: {
+          header: headerCommonResponse
+        },
+        400: {
+          header: headerCommonResponse
+        },
+        403: {
+          header: headerCommonResponse
+        },
+        429: {
+          header: {
+            ...headerCommonResponse,
+            ...headerResponseRateLimitExcedeed
+          }
+        }
+      }
+    }
   );
 
   const document = {
@@ -55,6 +116,7 @@ export function generateApi(version: string): void {
     paths: openApiDocument.paths,
     components: openApiDocument.components
   };
-  const fileOutputDocument = `../../docs/openAPI/pull-signals_${document.info.version}.yaml`;
+
+  const fileOutputDocument = `../../docs/openAPI/pull-signals.yaml`;
   writeFileSync(fileOutputDocument, yaml.dump(document));
 }
