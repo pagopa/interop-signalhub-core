@@ -19,7 +19,7 @@ import { PurposeEntity } from "../src/models/domain/model.js";
 import { purposeRepository } from "../src/repositories/purpose.repository.js";
 import { purposeServiceBuilder } from "../src/services/purpose.service.js";
 import { writeAPurposeEntity } from "./databaseUtils.js";
-export const { postgresDB } = setupTestContainersVitest(
+export const { postgresDB } = await setupTestContainersVitest(
   inject("signalHubStoreConfig")
 );
 

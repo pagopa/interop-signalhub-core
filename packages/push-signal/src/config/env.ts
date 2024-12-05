@@ -3,6 +3,7 @@ import {
   HTTPServerConfig,
   JWTConfig,
   QuequeConfig,
+  RedisRateLimiterConfig,
   SignalHubStoreConfig
 } from "pagopa-signalhub-commons";
 import { z } from "zod";
@@ -10,7 +11,8 @@ import { z } from "zod";
 const PushServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
   .and(QuequeConfig)
   .and(JWTConfig)
-  .and(APIServiceConfig);
+  .and(APIServiceConfig)
+  .and(RedisRateLimiterConfig);
 export type PushServiceConfig = z.infer<typeof PushServiceConfig>;
 
 const parsedFromEnv = PushServiceConfig.safeParse(process.env);

@@ -5,6 +5,7 @@ import { config as dotenv } from "dotenv-flow";
 import {
   AwsConfig,
   QuequeConfig,
+  RedisRateLimiterConfig,
   SignalHubStoreConfig
 } from "pagopa-signalhub-commons";
 import { StartedTestContainer } from "testcontainers";
@@ -13,8 +14,10 @@ import { z } from "zod";
 import {
   TEST_ELASTIC_MQ_PORT,
   TEST_POSTGRES_DB_PORT,
+  TEST_REDIS_PORT,
   elasticMQContainer,
-  postgreSQLContainer
+  postgreSQLContainer,
+  redisContainer
 } from "./containerTestUtils.js";
 
 const SqsConfig = QuequeConfig.and(AwsConfig);
@@ -22,6 +25,7 @@ export type SqsConfig = z.infer<typeof SqsConfig>;
 
 declare module "vitest" {
   export interface ProvidedContext {
+    redisRateLimiterConfig?: RedisRateLimiterConfig;
     signalHubStoreConfig: SignalHubStoreConfig;
     sqsConfig: SqsConfig;
   }
@@ -37,14 +41,17 @@ declare module "vitest" {
  */
 export function setupTestContainersVitestGlobal() {
   dotenv();
+
   const signalHubStoreConfig = SignalHubStoreConfig.safeParse(process.env);
   const sqsConfig = SqsConfig.safeParse(process.env);
+  const redisRateLimiterConfig = RedisRateLimiterConfig.safeParse(process.env);
 
   return async function ({
     provide
   }: GlobalSetupContext): Promise<() => Promise<void>> {
     let startedPostgreSqlContainer: StartedTestContainer | undefined;
     let startedElasticMQContainer: StartedTestContainer | undefined;
+    let startedRedisContainer: StartedTestContainer | undefined;
 
     if (signalHubStoreConfig.success) {
       startedPostgreSqlContainer = await postgreSQLContainer(
@@ -83,6 +90,13 @@ export function setupTestContainersVitestGlobal() {
       provide("sqsConfig", sqsConfig.data);
     }
 
+    if (redisRateLimiterConfig.success) {
+      startedRedisContainer = await redisContainer().start();
+      redisRateLimiterConfig.data.rateLimiterRedisPort =
+        startedRedisContainer.getMappedPort(TEST_REDIS_PORT);
+
+      provide("redisRateLimiterConfig", redisRateLimiterConfig.data);
+    }
     return async (): Promise<void> => {
       // eslint-disable-next-line no-console
       console.info("Stopping test containers");

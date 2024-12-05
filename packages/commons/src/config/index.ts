@@ -7,3 +7,4 @@ export * from "./kafka.config.js";
 export * from "./logger.config.js";
 export * from "./queque.config.js";
 export * from "./queque.consumer.js";
+export * from "./redisRateLimiter.config.js";

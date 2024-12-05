@@ -22,7 +22,7 @@ import { eServiceProducerRepository } from "../src/repositories/eServiceProducer
 import { eServiceRepository } from "../src/repositories/eservice.repository.js";
 import { eServiceServiceBuilder } from "../src/services/eservice.service.js";
 
-export const { postgresDB } = setupTestContainersVitest(
+export const { postgresDB } = await setupTestContainersVitest(
   inject("signalHubStoreConfig")
 );
 

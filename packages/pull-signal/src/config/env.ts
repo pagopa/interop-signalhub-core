@@ -2,13 +2,15 @@ import {
   APIServiceConfig,
   HTTPServerConfig,
   JWTConfig,
+  RedisRateLimiterConfig,
   SignalHubStoreConfig
 } from "pagopa-signalhub-commons";
 import { z } from "zod";
 
 const PullServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
   .and(JWTConfig)
-  .and(APIServiceConfig);
+  .and(APIServiceConfig)
+  .and(RedisRateLimiterConfig);
 
 export type PullServiceConfig = z.infer<typeof PullServiceConfig>;
 

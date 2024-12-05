@@ -1,6 +1,8 @@
+import path from "path";
 import functional from "eslint-plugin-functional";
 import tseslint from "typescript-eslint";
 import pagopa from "@pagopa/eslint-config";
+import { fileURLToPath } from "url";
 
 export default tseslint.config({
   files: ["**/*.ts", "**/*.test.ts"],
@@ -9,7 +11,8 @@ export default tseslint.config({
   languageOptions: {
     parser: tseslint.parser,
     parserOptions: {
-      projectService: true
+      tsconfigRootDir: path.dirname(fileURLToPath(import.meta.url)),
+      project: "tsconfig.eslint.json"
     }
   },
   rules: {
