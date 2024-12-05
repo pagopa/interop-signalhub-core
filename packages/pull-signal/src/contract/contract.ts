@@ -14,7 +14,7 @@ extendZodWithOpenApi(z);
 
 const c = initContract();
 
-export const pathPrefix = `/${config.apiPullVersion}/pull`;
+export const pathPrefix = `/${config.apiVersion}/pull`;
 
 // Here we use "extend" ZOD api only to add keyword "openapi" in order to generate openAPI document with component section
 // Read more here: https://github.com/asteasolutions/zod-to-openapi.
@@ -61,6 +61,7 @@ export const contract = c.router(
         400: Problem,
         401: Problem,
         403: Problem,
+        429: Problem,
         500: Problem
       }
     }

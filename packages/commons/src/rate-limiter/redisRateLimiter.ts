@@ -73,7 +73,10 @@ export async function initRedisRateLimiter(config: {
         limitReached: false,
         maxRequests: config.maxRequests,
         remainingRequests: rateLimiterResult.remainingPoints,
-        rateInterval: config.rateInterval
+        rateInterval: config.rateInterval,
+        rateLimitReset: new Date(
+          Date.now() + rateLimiterResult.msBeforeNext
+        ).getTime()
       };
     } catch (error) {
       return match(error)
@@ -85,7 +88,9 @@ export async function initRedisRateLimiter(config: {
             limitReached: true,
             maxRequests: config.maxRequests,
             remainingRequests: rejRes.remainingPoints,
-            rateInterval: config.rateInterval
+            rateInterval: config.rateInterval,
+            retryAfter: rejRes.msBeforeNext / 1000,
+            rateLimitReset: new Date(Date.now() + rejRes.msBeforeNext).getTime()
           };
         })
         .with(P.intersection(P.instanceOf(ConnectionTimeoutError)), () => {
