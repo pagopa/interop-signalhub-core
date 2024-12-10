@@ -8,7 +8,7 @@ import { z } from "zod";
 const EserviceEventConsumerConfig =
   KafkaConsumerConfig.and(KafkaTopicConfig).and(SignalHubStoreConfig);
 
-export type AgreementEventConsumerConfig = z.infer<
+export type EserviceEventConsumerConfig = z.infer<
   typeof EserviceEventConsumerConfig
 >;
 const parsedFromEnv = EserviceEventConsumerConfig.safeParse(process.env);
@@ -18,12 +18,11 @@ if (!parsedFromEnv.success) {
     (issue) => issue.path
   );
   console.error(
-    "Invalid or missing env vars: Agreement Event Consumer " +
-      invalidEnvVars.join(", ")
+    `Invalid or missing env vars: Eservice Event Consumer ${invalidEnvVars.join(", ")}`
   );
   process.exit(1);
 }
 
-export const config: AgreementEventConsumerConfig = {
+export const config: EserviceEventConsumerConfig = {
   ...parsedFromEnv.data
 };
