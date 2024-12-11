@@ -219,8 +219,8 @@ importers:
   packages/delegation-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: ^1.0.12-c
-        version: 1.0.12-c
+        specifier: 1.0.12-f
+        version: 1.0.12-f
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -1171,8 +1171,8 @@ packages:
   '@pagopa/interop-outbound-models@1.0.11-a':
     resolution: {integrity: sha512-+hxMAO2ywfH03PZ4iMUn7VHiGEtQUiEa2cEqLp12s6y69b7ClM3dg0ZxTuXnGLUqiiLX4sbSAy26rc8IG0sIdg==}
 
-  '@pagopa/interop-outbound-models@1.0.12-c':
-    resolution: {integrity: sha512-NiOo3tR0DoretJFsopc8vzZFKA0MeILr0//JxISY/KEIgfkDGei26s7nSWYJChWNnS6D5a7Yo/XPqvnoQRzZvA==}
+  '@pagopa/interop-outbound-models@1.0.12-f':
+    resolution: {integrity: sha512-3yRcHyJgBvn43IQe59k7qdzBHIXziWjr/83e8BcMhjEdYkzLGTS5/ClOeNfJWnKFmd7zaKQaU7cyP32rnIMrMg==}
 
   '@pkgr/core@0.1.1':
     resolution: {integrity: sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==}
@@ -5013,7 +5013,7 @@ snapshots:
       ts-pattern: 5.2.0
       zod: 3.23.8
 
-  '@pagopa/interop-outbound-models@1.0.12-c':
+  '@pagopa/interop-outbound-models@1.0.12-f':
     dependencies:
       '@protobuf-ts/runtime': 2.9.4
       ts-pattern: 5.2.0

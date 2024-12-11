@@ -24,14 +24,20 @@ export function delegationServiceBuilder(
       logger: Logger
     ): Promise<void> {
       try {
-        const { id, delegate_id, delegator_id, e_service_id, state, kind } =
-          delegation;
+        const {
+          delegation_id,
+          delegate_id,
+          delegator_id,
+          e_service_id,
+          state,
+          kind
+        } = delegation;
         logger.info(
-          `Saving event (insert) : id: ${id}, delegateId: ${delegate_id}, delegatorId: ${delegator_id}, eServiceId: ${e_service_id}`
+          `Saving event (insert) : id: ${delegation_id}, delegateId: ${delegate_id}, delegatorId: ${delegator_id}, eServiceId: ${e_service_id}`
         );
 
         await delegationServiceRepository.insertDelegation(
-          id,
+          delegation_id,
           delegate_id,
           delegator_id,
           e_service_id,
@@ -48,14 +54,20 @@ export function delegationServiceBuilder(
       logger: Logger
     ): Promise<void> {
       try {
-        const { id, delegate_id, delegator_id, e_service_id, state, kind } =
-          delegation;
+        const {
+          delegation_id,
+          delegate_id,
+          delegator_id,
+          e_service_id,
+          state,
+          kind
+        } = delegation;
 
         logger.info(
-          `Saving event (update) : id: ${id}, delegateId: ${delegate_id}, delegatorId: ${delegator_id}, eServiceId: ${e_service_id}`
+          `Saving event (update) : id: ${delegation_id}, delegateId: ${delegate_id}, delegatorId: ${delegator_id}, eServiceId: ${e_service_id}`
         );
         await delegationServiceRepository.updateDelegation(
-          id,
+          delegation_id,
           delegate_id,
           delegator_id,
           e_service_id,

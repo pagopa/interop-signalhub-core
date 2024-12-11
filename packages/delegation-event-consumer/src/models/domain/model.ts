@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const DelegationV2Entity = z.object({
-  id: z.string(),
+  delegation_id: z.string(),
   delegate_id: z.string(),
   delegator_id: z.string(),
   e_service_id: z.string(),

@@ -1,4 +1,8 @@
-import { DelegationEventV2 } from "@pagopa/interop-outbound-models";
+import {
+  DelegationEventV2,
+  DelegationStateV2,
+  DelegationV2
+} from "@pagopa/interop-outbound-models";
 import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
 
@@ -65,7 +69,7 @@ export async function handleMessageV2(
 }
 
 export const fromDelegationEventV2ToDelegationEntity = (
-  delegation: DelegationEventV2["data"]["delegation"],
+  delegation: DelegationV2 | undefined,
   streamId: string,
   version: number,
   eventType: string
@@ -75,12 +79,12 @@ export const fromDelegationEventV2ToDelegationEntity = (
   }
 
   return {
-    id: delegation.id,
+    delegation_id: delegation.id,
     delegate_id: delegation.delegateId,
     delegator_id: delegation.delegatorId,
     e_service_id: delegation.eserviceId,
-    state: delegation.state as unknown as string, // TODO: Chiedere esportazione tipi eventi
-    kind: delegation.kind as unknown as string,
+    state: DelegationStateV2[delegation.state],
+    kind: DelegationStateV2[delegation.kind],
     event_version_id: version,
     event_stream_id: streamId
   };
