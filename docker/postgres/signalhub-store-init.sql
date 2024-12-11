@@ -26,6 +26,19 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."eservice" (
     UNIQUE (eservice_id, descriptor_id, producer_id),
     PRIMARY KEY (eservice_id, descriptor_id)
 );
+
+
+CREATE TABLE IF NOT EXISTS "dev_interop"."delegation" (
+    delegation_id              VARCHAR (255) NOT NULL,
+    delegate_id     VARCHAR (255) NOT NULL, 
+    delegator_id   VARCHAR (255) NOT NULL,
+    eservice_id     VARCHAR (255) NOT NULL,
+    "state"           VARCHAR (255) NOT NULL,
+    kind            VARCHAR (20) NOT NULL,
+    UNIQUE(delegate_id, delegator_id, eservice_id),
+    PRIMARY KEY (id)
+)
+
 CREATE INDEX IF NOT EXISTS ESERVICE_INDEX_ID_AND_PRODUCER_AND_ENABLED_SH_AND_STATE ON "dev_interop"."eservice"(eservice_id, producer_id, enabled_signal_hub, upper(state));
 
 CREATE TABLE IF NOT EXISTS "dev_interop"."agreement" (
