@@ -37,8 +37,8 @@ export async function handleMessageV2(
           "AgreementActivated",
           "AgreementArchivedByConsumer",
           "AgreementArchivedByUpgrade",
-          "AgreementSetDraftByPlatform", // ??
-          "AgreementSetMissingCertifiedAttributesByPlatform", // ??
+          "AgreementSetDraftByPlatform",
+          "AgreementSetMissingCertifiedAttributesByPlatform",
           "AgreementSuspendedByConsumer",
           "AgreementSuspendedByProducer",
           "AgreementSuspendedByPlatform",
