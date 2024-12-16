@@ -73,6 +73,38 @@ export const createDelegationApprovedEventV2 = (
   timestamp: new Date()
 });
 
+export const createDelegationRejectedEventV2 = (
+  type: "ConsumerDelegationRejected" | "ProducerDelegationRejected",
+  delegation: DelegationV2,
+  streamId?: string,
+  version?: number
+): DelegationEventV2 => ({
+  type: type,
+  data: {
+    delegation: delegation
+  },
+  event_version: 2,
+  stream_id: streamId || generateID(),
+  version: version || 1,
+  timestamp: new Date()
+});
+
+export const createDelegationRevokedEventV2 = (
+  type: "ConsumerDelegationRevoked" | "ProducerDelegationRevoked",
+  delegation: DelegationV2,
+  streamId?: string,
+  version?: number
+): DelegationEventV2 => ({
+  type: type,
+  data: {
+    delegation: delegation
+  },
+  event_version: 2,
+  stream_id: streamId || generateID(),
+  version: version || 1,
+  timestamp: new Date()
+});
+
 export const processDelegationInsertion = async (
   delegationId: string,
   delegateId: string,

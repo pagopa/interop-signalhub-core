@@ -39,7 +39,11 @@ export async function handleMessageV2(
       {
         type: P.union(
           "ConsumerDelegationApproved",
-          "ProducerDelegationApproved"
+          "ProducerDelegationApproved",
+          "ConsumerDelegationRejected",
+          "ConsumerDelegationRevoked",
+          "ProducerDelegationRejected",
+          "ProducerDelegationRevoked"
         )
       },
       async (evt) => {
@@ -51,19 +55,6 @@ export async function handleMessageV2(
         );
 
         await delegationService.updateDelegation(delegation, logger);
-      }
-    )
-    .with(
-      {
-        type: P.union(
-          "ConsumerDelegationRejected",
-          "ConsumerDelegationRevoked",
-          "ProducerDelegationRejected",
-          "ProducerDelegationRevoked"
-        )
-      },
-      async (evt) => {
-        logger.info(`Need to be implemented ${evt.data.delegation}`);
       }
     )
     .exhaustive();
