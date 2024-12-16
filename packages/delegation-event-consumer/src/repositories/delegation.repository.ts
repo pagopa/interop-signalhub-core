@@ -3,6 +3,11 @@ import { DB, TableName, genericInternalError } from "pagopa-signalhub-commons";
 import { config } from "../config/env.js";
 
 export interface IDelegationRepository {
+  readonly eventWasProcessed: (
+    streamId: string,
+    version: number
+  ) => Promise<boolean>;
+
   readonly insertDelegation: (
     delegationId: string,
     delegateId: string,
@@ -57,6 +62,21 @@ export const delegationRepository = (db: DB): IDelegationRepository => {
         );
       } catch (error) {
         throw genericInternalError(`Error updateDelegation:" ${error} `);
+      }
+    },
+
+    async eventWasProcessed(
+      streamId: string,
+      version: number
+    ): Promise<boolean> {
+      try {
+        const response = await db.oneOrNone(
+          `select event_stream_id, event_version_id from ${delegationTable} a where a.event_stream_id = $1 AND a.event_version_id = $2`,
+          [streamId, version]
+        );
+        return response ? true : false;
+      } catch (error) {
+        throw genericInternalError(`Error eventWasProcessed:" ${error} `);
       }
     }
   };

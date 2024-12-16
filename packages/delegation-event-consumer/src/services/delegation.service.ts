@@ -30,11 +30,25 @@ export function delegationServiceBuilder(
           delegator_id,
           e_service_id,
           state,
-          kind
+          kind,
+          event_stream_id,
+          event_version_id
         } = delegation;
+
         logger.info(
           `Saving event (insert) : id: ${delegation_id}, delegateId: ${delegate_id}, delegatorId: ${delegator_id}, eServiceId: ${e_service_id}`
         );
+
+        const eventWasProcessed =
+          await delegationServiceRepository.eventWasProcessed(
+            event_stream_id,
+            event_version_id
+          );
+
+        if (eventWasProcessed) {
+          logger.info(`Skip event (idempotence)`);
+          return;
+        }
 
         await delegationServiceRepository.insertDelegation(
           delegation_id,
@@ -60,8 +74,21 @@ export function delegationServiceBuilder(
           delegator_id,
           e_service_id,
           state,
-          kind
+          kind,
+          event_stream_id,
+          event_version_id
         } = delegation;
+
+        const eventWasProcessed =
+          await delegationServiceRepository.eventWasProcessed(
+            event_stream_id,
+            event_version_id
+          );
+
+        if (eventWasProcessed) {
+          logger.info(`Skip event (idempotence)`);
+          return;
+        }
 
         logger.info(
           `Saving event (update) : id: ${delegation_id}, delegateId: ${delegate_id}, delegatorId: ${delegator_id}, eServiceId: ${e_service_id}`
