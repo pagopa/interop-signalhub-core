@@ -14,7 +14,9 @@ export interface IDelegationRepository {
     delegatorId: string,
     eServiceId: string,
     state: string,
-    kind: string
+    kind: string,
+    eventStreamId: string,
+    eventVersionId: number
   ) => Promise<void>;
 
   readonly updateDelegation: (
@@ -23,7 +25,9 @@ export interface IDelegationRepository {
     delegatorId: string,
     eServiceId: string,
     state: string,
-    kind: string
+    kind: string,
+    eventStreamId: string,
+    eventVersionId: number
   ) => Promise<void>;
 }
 
@@ -36,12 +40,24 @@ export const delegationRepository = (db: DB): IDelegationRepository => {
       delegatorId: string,
       eServiceId: string,
       state: string,
-      kind: string
+      kind: string,
+      eventStreamId: string,
+      eventVersionId: number
     ): Promise<void> {
       try {
         await db.oneOrNone(
-          `INSERT INTO ${delegationTable} (delegation_id, delegate_id, delegator_id, e_service_id, state, kind) VALUES ($1, $2, $3, $4, $5, $6, )`,
-          [delegationId, delegateId, delegatorId, eServiceId, state, kind]
+          `INSERT INTO ${delegationTable} (delegation_id, delegate_id, delegator_id, eservice_id, state, kind,event_stream_id,event_version_id) 
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+          [
+            delegationId,
+            delegateId,
+            delegatorId,
+            eServiceId,
+            state,
+            kind,
+            eventStreamId,
+            eventVersionId
+          ]
         );
       } catch (error) {
         throw genericInternalError(`Error insertDelegation:" ${error} `);
@@ -53,12 +69,25 @@ export const delegationRepository = (db: DB): IDelegationRepository => {
       delegatorId: string,
       eServiceId: string,
       state: string,
-      kind: string
+      kind: string,
+      eventStreamId: string,
+      eventVersionId: number
     ): Promise<void> {
       try {
         await db.oneOrNone(
-          `UPDATE ${delegationTable} SET delegate_id = $2, delegator_id = $3, e_service_id = $4, state = $5, kind = $6, WHERE delegation_id = $1`,
-          [delegationId, delegateId, delegatorId, eServiceId, state, kind]
+          `UPDATE ${delegationTable} 
+           SET delegate_id = $2, delegator_id = $3, eservice_id = $4, state = $5, kind = $6, event_stream_id= $7, event_version_id= $8
+           WHERE delegation_id = $1`,
+          [
+            delegationId,
+            delegateId,
+            delegatorId,
+            eServiceId,
+            state,
+            kind,
+            eventStreamId,
+            eventVersionId
+          ]
         );
       } catch (error) {
         throw genericInternalError(`Error updateDelegation:" ${error} `);

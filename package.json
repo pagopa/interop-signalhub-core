@@ -19,6 +19,7 @@
     "test:event:eservice": "turbo test --filter pagoppa-signalhub-eservice-event-consumer",
     "test:event:purpose": "turbo test --filter pagoppa-signalhub-purpose-event-consumer",
     "test:event:agreement": "turbo test --filter pagoppa-signalhub-agreement-event-consumer",
+    "test:event:delegation": "turbo test --filter pagoppa-signalhub-delegation-event-consumer",
     "test:commons-test": "turbo test --filter pagopa-signalhub-commons-test",
     "build": "turbo build",
     "lint": "turbo lint",

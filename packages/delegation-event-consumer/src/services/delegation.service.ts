@@ -56,7 +56,9 @@ export function delegationServiceBuilder(
           delegator_id,
           e_service_id,
           state,
-          kind
+          kind,
+          event_stream_id,
+          event_version_id
         );
       } catch (error) {
         throw genericInternalError(`Error insertDelegation:" ${error} `);
@@ -99,7 +101,9 @@ export function delegationServiceBuilder(
           delegator_id,
           e_service_id,
           state,
-          kind
+          kind,
+          event_stream_id,
+          event_version_id
         );
       } catch (error) {
         throw genericInternalError(`Error updateDelegation:" ${error} `);

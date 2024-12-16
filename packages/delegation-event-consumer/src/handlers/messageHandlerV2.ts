@@ -1,5 +1,6 @@
 import {
   DelegationEventV2,
+  DelegationKindV2,
   DelegationStateV2,
   DelegationV2
 } from "@pagopa/interop-outbound-models";
@@ -31,7 +32,7 @@ export async function handleMessageV2(
           event.type
         );
 
-        delegationService.insertDelegation(delegation, logger);
+        await delegationService.insertDelegation(delegation, logger);
       }
     )
     .with(
@@ -49,7 +50,7 @@ export async function handleMessageV2(
           event.type
         );
 
-        delegationService.updateDelegation(delegation, logger);
+        await delegationService.updateDelegation(delegation, logger);
       }
     )
     .with(
@@ -84,7 +85,7 @@ export const fromDelegationEventV2ToDelegationEntity = (
     delegator_id: delegation.delegatorId,
     e_service_id: delegation.eserviceId,
     state: DelegationStateV2[delegation.state],
-    kind: DelegationStateV2[delegation.kind],
+    kind: DelegationKindV2[delegation.kind],
     event_version_id: version,
     event_stream_id: streamId
   };
