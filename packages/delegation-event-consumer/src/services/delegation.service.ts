@@ -76,7 +76,6 @@ export function delegationServiceBuilder(
           delegator_id,
           e_service_id,
           state,
-          kind,
           event_stream_id,
           event_version_id
         } = delegation;
@@ -97,11 +96,7 @@ export function delegationServiceBuilder(
         );
         await delegationServiceRepository.updateDelegation(
           delegation_id,
-          delegate_id,
-          delegator_id,
-          e_service_id,
           state,
-          kind,
           event_stream_id,
           event_version_id
         );

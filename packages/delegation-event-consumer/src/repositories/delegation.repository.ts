@@ -21,11 +21,7 @@ export interface IDelegationRepository {
 
   readonly updateDelegation: (
     delegationId: string,
-    delegateId: string,
-    delegatorId: string,
-    eServiceId: string,
     state: string,
-    kind: string,
     eventStreamId: string,
     eventVersionId: number
   ) => Promise<void>;
@@ -65,29 +61,16 @@ export const delegationRepository = (db: DB): IDelegationRepository => {
     },
     async updateDelegation(
       delegationId: string,
-      delegateId: string,
-      delegatorId: string,
-      eServiceId: string,
       state: string,
-      kind: string,
       eventStreamId: string,
       eventVersionId: number
     ): Promise<void> {
       try {
         await db.oneOrNone(
           `UPDATE ${delegationTable} 
-           SET delegate_id = $2, delegator_id = $3, eservice_id = $4, state = $5, kind = $6, event_stream_id= $7, event_version_id= $8
+           SET  state = $2, event_stream_id= $3, event_version_id= $4
            WHERE delegation_id = $1`,
-          [
-            delegationId,
-            delegateId,
-            delegatorId,
-            eServiceId,
-            state,
-            kind,
-            eventStreamId,
-            eventVersionId
-          ]
+          [delegationId, state, eventStreamId, eventVersionId]
         );
       } catch (error) {
         throw genericInternalError(`Error updateDelegation:" ${error} `);
