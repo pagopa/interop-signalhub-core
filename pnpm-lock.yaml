@@ -39,8 +39,8 @@ importers:
   packages/agreement-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: ^1.0.11a
-        version: 1.0.11-a
+        specifier: 1.0.12-f
+        version: 1.0.12-f
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -262,8 +262,8 @@ importers:
   packages/eservice-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: ^1.0.11a
-        version: 1.0.11-a
+        specifier: 1.0.12-f
+        version: 1.0.12-f
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -400,8 +400,8 @@ importers:
   packages/purpose-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: ^1.0.11a
-        version: 1.0.11-a
+        specifier: 1.0.12-f
+        version: 1.0.12-f
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -1167,9 +1167,6 @@ packages:
     resolution: {integrity: sha512-Ah6zt5wFEpf+e5CcPbRoDvHoTk+PyP7x5lpbrUhwBBgBZY+/x+LCrQGegMnlLGupjNdyF0FQxWl71BYgRrdXKQ==}
     peerDependencies:
       eslint: 8.57.0
-
-  '@pagopa/interop-outbound-models@1.0.11-a':
-    resolution: {integrity: sha512-+hxMAO2ywfH03PZ4iMUn7VHiGEtQUiEa2cEqLp12s6y69b7ClM3dg0ZxTuXnGLUqiiLX4sbSAy26rc8IG0sIdg==}
 
   '@pagopa/interop-outbound-models@1.0.12-f':
     resolution: {integrity: sha512-3yRcHyJgBvn43IQe59k7qdzBHIXziWjr/83e8BcMhjEdYkzLGTS5/ClOeNfJWnKFmd7zaKQaU7cyP32rnIMrMg==}
@@ -3792,8 +3789,8 @@ snapshots:
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sso-oidc': 3.583.0
-      '@aws-sdk/client-sts': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)
+      '@aws-sdk/client-sso-oidc': 3.583.0(@aws-sdk/client-sts@3.583.0)
+      '@aws-sdk/client-sts': 3.583.0
       '@aws-sdk/core': 3.582.0
       '@aws-sdk/credential-provider-node': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)(@aws-sdk/client-sts@3.583.0)
       '@aws-sdk/middleware-host-header': 3.577.0
@@ -3836,11 +3833,11 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@aws-sdk/client-sso-oidc@3.583.0':
+  '@aws-sdk/client-sso-oidc@3.583.0(@aws-sdk/client-sts@3.583.0)':
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sts': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)
+      '@aws-sdk/client-sts': 3.583.0
       '@aws-sdk/core': 3.582.0
       '@aws-sdk/credential-provider-node': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)(@aws-sdk/client-sts@3.583.0)
       '@aws-sdk/middleware-host-header': 3.577.0
@@ -3879,6 +3876,7 @@ snapshots:
       '@smithy/util-utf8': 3.0.0
       tslib: 2.6.2
     transitivePeerDependencies:
+      - '@aws-sdk/client-sts'
       - aws-crt
 
   '@aws-sdk/client-sso-oidc@3.592.0':
@@ -4100,11 +4098,11 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@aws-sdk/client-sts@3.583.0(@aws-sdk/client-sso-oidc@3.583.0)':
+  '@aws-sdk/client-sts@3.583.0':
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sso-oidc': 3.583.0
+      '@aws-sdk/client-sso-oidc': 3.583.0(@aws-sdk/client-sts@3.583.0)
       '@aws-sdk/core': 3.582.0
       '@aws-sdk/credential-provider-node': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)(@aws-sdk/client-sts@3.583.0)
       '@aws-sdk/middleware-host-header': 3.577.0
@@ -4143,7 +4141,6 @@ snapshots:
       '@smithy/util-utf8': 3.0.0
       tslib: 2.6.2
     transitivePeerDependencies:
-      - '@aws-sdk/client-sso-oidc'
       - aws-crt
 
   '@aws-sdk/client-sts@3.592.0(@aws-sdk/client-sso-oidc@3.592.0)':
@@ -4336,7 +4333,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-ini@3.583.0(@aws-sdk/client-sso-oidc@3.583.0)(@aws-sdk/client-sts@3.583.0)':
     dependencies:
-      '@aws-sdk/client-sts': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)
+      '@aws-sdk/client-sts': 3.583.0
       '@aws-sdk/credential-provider-env': 3.577.0
       '@aws-sdk/credential-provider-process': 3.577.0
       '@aws-sdk/credential-provider-sso': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)
@@ -4559,7 +4556,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-web-identity@3.577.0(@aws-sdk/client-sts@3.583.0)':
     dependencies:
-      '@aws-sdk/client-sts': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)
+      '@aws-sdk/client-sts': 3.583.0
       '@aws-sdk/types': 3.577.0
       '@smithy/property-provider': 3.0.0
       '@smithy/types': 3.0.0
@@ -4705,7 +4702,7 @@ snapshots:
 
   '@aws-sdk/token-providers@3.577.0(@aws-sdk/client-sso-oidc@3.583.0)':
     dependencies:
-      '@aws-sdk/client-sso-oidc': 3.583.0
+      '@aws-sdk/client-sso-oidc': 3.583.0(@aws-sdk/client-sts@3.583.0)
       '@aws-sdk/types': 3.577.0
       '@smithy/property-provider': 3.0.0
       '@smithy/shared-ini-file-loader': 3.0.0
@@ -5006,12 +5003,6 @@ snapshots:
       - typescript
       - vitest
       - vue-eslint-parser
-
-  '@pagopa/interop-outbound-models@1.0.11-a':
-    dependencies:
-      '@protobuf-ts/runtime': 2.9.4
-      ts-pattern: 5.2.0
-      zod: 3.23.8
 
   '@pagopa/interop-outbound-models@1.0.12-f':
     dependencies:
