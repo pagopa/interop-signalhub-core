@@ -31,8 +31,7 @@ export const AppContext = z.object({
 });
 
 export const Headers = z.object({
-  authorization: z.string().nullish(),
-  "x-correlation-id": z.string().nullish()
+  authorization: z.string().nullish()
 });
 
 export type Headers = z.infer<typeof Headers>;
