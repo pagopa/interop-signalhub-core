@@ -78,29 +78,13 @@ export const authenticationMiddleware = async (
         }
       )
       .with(
-        {
-          authorization: P.nullish,
-          "x-correlation-id": P._
-        },
+        P.union({ authorization: P.nullish }, P.not({ authorization: P._ })),
         () => {
           log.warn(
             `No authentication has been provided for this call ${req.method} ${req.url}`
           );
 
           throw jwtNotPresent;
-        }
-      )
-      .with(
-        {
-          authorization: P.string,
-          "x-correlation-id": P.nullish
-        },
-        () => {
-          log.warn(
-            `No authentication has been provided for this call ${req.method} ${req.url}`
-          );
-
-          throw missingHeader("jwtNotPresent");
         }
       )
       .otherwise(() => {
@@ -111,10 +95,16 @@ export const authenticationMiddleware = async (
       error,
       (err) =>
         match(err.code)
-          .with("unauthorizedError", () => 401)
-          .with("jwtDecodingError", () => 401)
+          .with(
+            P.union(
+              "unauthorizedError",
+              "jwtDecodingError",
+              "jwtNotPresent",
+              "missingHeader"
+            ),
+            () => 401
+          )
           .with("operationForbidden", () => 403)
-          .with("missingHeader", () => 400)
           .otherwise(() => 500),
       log,
       req.ctx.correlationId
