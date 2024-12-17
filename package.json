@@ -11,6 +11,7 @@
     "start:event:eservice": "turbo start --filter pagoppa-signalhub-eservice-event-consumer",
     "start:event:agreement": "turbo start --filter pagoppa-signalhub-agreement-event-consumer",
     "start:event:purpose": "turbo start --filter pagoppa-signalhub-purpose-event-consumer",
+    "start:event:delegation": "turbo start --filter pagoppa-signalhub-delegation-event-consumer",
     "test": "turbo test",
     "test:push": "turbo test --filter pagopa-signalhub-push-signal",
     "test:pull": "turbo test --filter pagopa-signalhub-pull-signal",
