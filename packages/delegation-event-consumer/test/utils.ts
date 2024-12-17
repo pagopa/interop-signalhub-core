@@ -5,10 +5,16 @@ import {
   DelegationV2
 } from "@pagopa/interop-outbound-models";
 import { randomUUID } from "crypto";
+import { EServiceId } from "pagopa-signalhub-commons";
 import { setupTestContainersVitest } from "pagopa-signalhub-commons-test/index.js";
 import { inject } from "vitest";
 
 import { config } from "../src/config/env.js";
+import {
+  DelegateId,
+  DelegationId,
+  DelegatorId
+} from "../src/models/brandedIds.js";
 import { DelegationV2Entity } from "../src/models/domain/model.js";
 import { delegationRepository } from "../src/repositories/delegation.repository.js";
 import { delegationServiceBuilder } from "../src/services/delegation.service.js";
@@ -114,10 +120,10 @@ export const processDelegationInsertion = async (
   state: DelegationStateV2
 ): Promise<void> => {
   const delegationEntity: DelegationV2Entity = {
-    delegation_id: delegationId,
-    delegate_id: delegateId,
-    delegator_id: delegatorId,
-    e_service_id: eserviceId,
+    delegation_id: DelegationId.parse(delegationId),
+    delegate_id: DelegateId.parse(delegateId),
+    delegator_id: DelegatorId.parse(delegatorId),
+    e_service_id: EServiceId.parse(eserviceId),
     event_stream_id: generateID(),
     event_version_id: 1,
     state: DelegationStateV2[state],

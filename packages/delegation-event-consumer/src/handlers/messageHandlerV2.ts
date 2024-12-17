@@ -4,10 +4,15 @@ import {
   DelegationStateV2,
   DelegationV2
 } from "@pagopa/interop-outbound-models";
-import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
+import {
+  EServiceId,
+  Logger,
+  kafkaMessageMissingData
+} from "pagopa-signalhub-commons";
 import { P, match } from "ts-pattern";
 
 import { config } from "../config/env.js";
+import { DelegateId, DelegationId, DelegatorId } from "../models/brandedIds.js";
 import { DelegationV2Entity } from "../models/domain/model.js";
 import { IDelegationService } from "../services/index.js";
 
@@ -71,10 +76,10 @@ export const fromDelegationEventV2ToDelegationEntity = (
   }
 
   return {
-    delegation_id: delegation.id,
-    delegate_id: delegation.delegateId,
-    delegator_id: delegation.delegatorId,
-    e_service_id: delegation.eserviceId,
+    delegation_id: DelegationId.parse(delegation.id),
+    delegate_id: DelegateId.parse(delegation.delegateId),
+    delegator_id: DelegatorId.parse(delegation.delegatorId),
+    e_service_id: EServiceId.parse(delegation.eserviceId),
     state: DelegationStateV2[delegation.state],
     kind: DelegationKindV2[delegation.kind],
     event_version_id: version,

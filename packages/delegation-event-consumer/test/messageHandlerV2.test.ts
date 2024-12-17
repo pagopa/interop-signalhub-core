@@ -25,8 +25,8 @@ describe("Message Handler for V2 EVENTS", () => {
       it("Should add a delegation with kind=CONSUMER", async () => {
         const delegationId = generateID();
         const eserviceId = generateID();
-        const delegateId = "delegate-entity-id";
-        const delegatorId = "delegator-entity-id";
+        const delegateId = generateID();
+        const delegatorId = generateID();
 
         const delegationV2 = createDelegationV2Event(
           delegationId,
@@ -62,8 +62,8 @@ describe("Message Handler for V2 EVENTS", () => {
       it("Should add a delegation with kind=CONSUMER", async () => {
         const delegationId = generateID();
         const eserviceId = generateID();
-        const delegateId = "delegate-entity-id";
-        const delegatorId = "delegator-entity-id";
+        const delegateId = generateID();
+        const delegatorId = generateID();
 
         const delegationV2 = createDelegationV2Event(
           delegationId,
@@ -98,8 +98,8 @@ describe("Message Handler for V2 EVENTS", () => {
     describe("ConsumerDelegationApproved", () => {
       it("Should update existed delegation available with state = ACTIVE", async () => {
         const delegationId = generateID();
-        const delegateId = "delegate-entity-id";
-        const delegatorId = "delegator-entity-id";
+        const delegateId = generateID();
+        const delegatorId = generateID();
         const eserviceId = generateID();
 
         await processDelegationInsertion(
@@ -145,8 +145,8 @@ describe("Message Handler for V2 EVENTS", () => {
     describe("ProducerDelegationApproved", () => {
       it("Should update existed delegation available with state = ACTIVE", async () => {
         const delegationId = generateID();
-        const delegateId = "delegate-entity-id";
-        const delegatorId = "delegator-entity-id";
+        const delegateId = generateID();
+        const delegatorId = generateID();
         const eserviceId = generateID();
 
         await processDelegationInsertion(
@@ -192,8 +192,8 @@ describe("Message Handler for V2 EVENTS", () => {
     describe("ConsumerDelegationRejected", () => {
       it("Should update existed delegation available with state = REJECTED", async () => {
         const delegationId = generateID();
-        const delegateId = "delegate-entity-id";
-        const delegatorId = "delegator-entity-id";
+        const delegateId = generateID();
+        const delegatorId = generateID();
         const eserviceId = generateID();
 
         await processDelegationInsertion(
@@ -239,8 +239,8 @@ describe("Message Handler for V2 EVENTS", () => {
     describe("ProducerDelegationRejected", () => {
       it("Should update existed delegation available with state = REJECTED", async () => {
         const delegationId = generateID();
-        const delegateId = "delegate-entity-id";
-        const delegatorId = "delegator-entity-id";
+        const delegateId = generateID();
+        const delegatorId = generateID();
         const eserviceId = generateID();
 
         await processDelegationInsertion(
@@ -287,8 +287,8 @@ describe("Message Handler for V2 EVENTS", () => {
     describe("ConsumerDelegationRevoked", () => {
       it("Should update existed delegation available with state = REVOKED", async () => {
         const delegationId = generateID();
-        const delegateId = "delegate-entity-id";
-        const delegatorId = "delegator-entity-id";
+        const delegateId = generateID();
+        const delegatorId = generateID();
         const eserviceId = generateID();
 
         await processDelegationInsertion(
@@ -335,8 +335,8 @@ describe("Message Handler for V2 EVENTS", () => {
     describe("ProducerDelegationRevoked", () => {
       it("Should update existed delegation available with state = REVOKED", async () => {
         const delegationId = generateID();
-        const delegateId = "delegate-entity-id";
-        const delegatorId = "delegator-entity-id";
+        const delegateId = generateID();
+        const delegatorId = generateID();
         const eserviceId = generateID();
 
         await processDelegationInsertion(
