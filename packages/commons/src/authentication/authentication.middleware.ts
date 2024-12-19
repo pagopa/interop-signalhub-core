@@ -47,7 +47,13 @@ export const authenticationMiddleware = async (
       throw jwtDecodingError(validationResult.err);
     }
 
-    req.ctx.sessionData = readSessionDataFromJwtToken(jwtToken);
+    const { organizationId, clientId } = readSessionDataFromJwtToken(jwtToken);
+    req.ctx.sessionData = {
+      organizationId
+    };
+    log.info(
+      `Authentication:: organizationID: ${organizationId} clientID: ${clientId}`
+    );
   };
 
   const log = logger({
