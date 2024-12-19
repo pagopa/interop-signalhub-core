@@ -13,7 +13,9 @@ const decodeJwtToken = (jwtToken: string): JwtPayload | null => {
     throw jwtDecodingError(err);
   }
 };
-export const readSessionDataFromJwtToken = (jwtToken: string): SessionData => {
+export const readSessionDataFromJwtToken = (
+  jwtToken: string
+): { clientId: string } & SessionData => {
   const decoded = decodeJwtToken(jwtToken);
 
   const token = AuthToken.safeParse(decoded);
@@ -21,6 +23,7 @@ export const readSessionDataFromJwtToken = (jwtToken: string): SessionData => {
     throw invalidClaim(token.error);
   } else {
     return {
+      clientId: token.data.client_id,
       organizationId: token.data.organizationId
     };
   }
