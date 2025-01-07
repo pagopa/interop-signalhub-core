@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."delegation" (
     event_version_id   BIGINT NOT NULL DEFAULT -1,
     tmst_insert     TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     tmst_last_edit  TIMESTAMPTZ,
-    UNIQUE(delegate_id, delegator_id, eservice_id),
+    UNIQUE (event_stream_id, event_version_id),
     PRIMARY KEY (delegation_id)
 );
 

@@ -33,7 +33,7 @@ export async function processMessage({
     .exhaustive();
 
   logger.info(
-    `Message was processed. Partition number: [${partition}] Offset: [$${message.offset}]`
+    `Message was processed. Partition number: [${partition}] Offset: [${message.offset}]`
   );
 }
 

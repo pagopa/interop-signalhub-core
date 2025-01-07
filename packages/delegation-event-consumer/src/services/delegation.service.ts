@@ -36,7 +36,7 @@ export function delegationServiceBuilder(
         } = delegation;
 
         logger.info(
-          `Saving event (insert) : id: ${delegation_id}, delegateId: ${delegate_id}, delegatorId: ${delegator_id}, eServiceId: ${e_service_id}`
+          `Saving event (insert) : delegationId: ${delegation_id}, delegateId: ${delegate_id}, delegatorId: ${delegator_id}, eServiceId: ${e_service_id}`
         );
 
         const eventWasProcessed =
@@ -92,7 +92,7 @@ export function delegationServiceBuilder(
         }
 
         logger.info(
-          `Saving event (update) : id: ${delegation_id}, delegateId: ${delegate_id}, delegatorId: ${delegator_id}, eServiceId: ${e_service_id}`
+          `Saving event (update) : delegationId: ${delegation_id}, delegateId: ${delegate_id}, delegatorId: ${delegator_id}, eServiceId: ${e_service_id}`
         );
         await delegationServiceRepository.updateDelegation(
           delegation_id,

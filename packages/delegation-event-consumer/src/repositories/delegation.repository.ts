@@ -83,7 +83,7 @@ export const delegationRepository = (db: DB): IDelegationRepository => {
     ): Promise<boolean> {
       try {
         const response = await db.oneOrNone(
-          `select event_stream_id, event_version_id from ${delegationTable} a where a.event_stream_id = $1 AND a.event_version_id = $2`,
+          `select event_stream_id, event_version_id from ${delegationTable} a where a.event_stream_id = $1 AND a.event_version_id >= $2`,
           [streamId, version]
         );
         return response ? true : false;

@@ -27,18 +27,13 @@ export async function processMessage({
 
   const logger = buildLoggerInstance(serviceName, delegationEvent);
   await match(delegationEvent)
-    .with(
-      {
-        event_version: 2
-      },
-      (event) => {
-        handleMessageV2(event, delegationService, logger);
-      }
+    .with({ event_version: 2 }, (event) =>
+      handleMessageV2(event, delegationService, logger)
     )
     .exhaustive();
 
   logger.info(
-    `Message was processed. Partition number: [${partition}] Offset: [$${message.offset}]`
+    `Message was processed. Partition number: [${partition}] Offset: [${message.offset}]`
   );
 }
 
