@@ -1,7 +1,7 @@
 {
-  "name": "pagoppa-signalhub-eservice-event-consumer",
+  "name": "pagoppa-signalhub-delegation-event-consumer",
   "version": "1.0.0",
-  "description": "PagoPA Interop Signalhub eservice event consumer",
+  "description": "PagoPA Interop Signalhub delegation event consumer",
   "type": "module",
   "main": "dist",
   "scripts": {
