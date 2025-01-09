@@ -21,32 +21,6 @@ export function interopServiceBuilder(db: DB): IInteropService {
         `InteropService::consumerIsAuthorizedToPullSignals with consumerId: ${consumerId}`
       );
 
-      // Castelfranco Veneto è delegante in fruizione con gestione del client
-      // Ferrara è delegato
-      // delegation = wyk
-      // e-service = abc
-
-      // Copparo è delegante in fruizione con gestione del client
-      // Ferrara è delegato
-      // delegation = xyz
-      // e-service = abc
-
-      // agreement
-      // consumerId: Copparo (in AgreementV2.consumerId)
-      // delegationId: xyz (in AgreementV2.AgreementStampsV2.submission.delegationId)
-
-      // purpose
-      // consumerId: Copparo (in PurposeV2.consumerId)
-      // delegationId: xyz (in PurposeV2.delegationId)
-
-      // esiste una DELEGA attiva con gestione del client per (consumerId, eserviceId)?
-      // NO: non c'è delega + gestione client, caso usuale: usare consumerId in input
-      // SI: delegationIds = [xyz.id, wyk.id], consumerIds = ['id Copparo', 'id Castelfranco']
-
-      // (CASO NO DELEGA) find in e-service, agreement, purpose by eserviceId, consumerId
-      // (CASO SI DELEGA) loop on delegationIds: find in e-service, agreement, purpose by eserviceId, consumerId, delegationId
-      // è sufficiente delegationId, senza usare consumerId?
-
       const eserviceState = ["PUBLISHED", "DEPRECATED"];
       const agreementState = "ACTIVE";
       const purposeState = "ACTIVE";
@@ -58,6 +32,39 @@ export function interopServiceBuilder(db: DB): IInteropService {
         agreementState
       );
       if (thereAreNo(administrativeActs)) {
+        // ci sono deleghe operative?
+        // Castelfranco Veneto è delegante in fruizione
+        // Ferrara è delegato
+        // delegation = wyk
+        // e-service = abc
+
+        // Copparo è delegante in fruizione
+        // Ferrara è delegato
+        // delegation = xyz
+        // e-service = abc
+
+        // agreement
+        // consumerId: Copparo (in AgreementV2.consumerId)
+        // delegationId: xyz (in AgreementV2.AgreementStampsV2.submission.delegationId)
+
+        // agreement
+        // consumerId: Castelfranco (in AgreementV2.consumerId)
+        // delegationId: wyk (in AgreementV2.AgreementStampsV2.submission.delegationId)
+
+        // purpose
+        // consumerId: Copparo (in PurposeV2.consumerId)
+        // delegationId: xyz (in PurposeV2.delegationId)
+
+        // esiste una DELEGA attiva con gestione del client per (consumerId, eserviceId)?
+        // find in delegation where eserviceId, delegateId = consumerId + find in eservice where eserviceId
+        // NO: not delega OR (delega and not gestione client), caso usuale: usare consumerId in input
+        // SI: (delega and gestione client) delegationIds = [xyz.id, wyk.id], consumerIds = ['id Copparo', 'id Castelfranco']
+
+        // (CASO SI DELEGA AND CLIENT) loop on delegationIds: find in e-service, agreement, purpose by eserviceId, delegationId
+        // - EServiceV2.isClientAccessDelegable = true
+        // - PurposeV2.delegationId = delegationId
+        // è sufficiente delegationId, senza usare consumerId?
+
         throw operationPullForbidden({
           eserviceId,
           consumerId
