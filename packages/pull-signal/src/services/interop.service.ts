@@ -21,29 +21,32 @@ export function interopServiceBuilder(db: DB): IInteropService {
         `InteropService::consumerIsAuthorizedToPullSignals with consumerId: ${consumerId}`
       );
 
-      // Castelfranco Veneto è delegante in fruizione
+      // Castelfranco Veneto è delegante in fruizione con gestione del client
       // Ferrara è delegato
-      // delegation = xxx
+      // delegation = wyk
       // e-service = abc
 
-      // Copparo è delegante in fruizione
+      // Copparo è delegante in fruizione con gestione del client
       // Ferrara è delegato
       // delegation = xyz
       // e-service = abc
 
       // agreement
-      // consumerId: Copparo
-      // delegationId: xyz
+      // consumerId: Copparo (in AgreementV2.consumerId)
+      // delegationId: xyz (in AgreementV2.AgreementStampsV2.submission.delegationId)
 
-      // esiste una DELEGA attiva per quel consumerId e eserviceId?
-      // NO: non c'è delega, quindi consumerIds = ['consumerId']
-      // SI: delegationId, ENTE = delegatorId
+      // purpose
+      // consumerId: Copparo (in PurposeV2.consumerId)
+      // delegationId: xyz (in PurposeV2.delegationId)
 
-      // delegationId --> agreement, purpose
-      // consumerIds = ['id Copparo', 'id Castelfranco']
+      // esiste una DELEGA attiva con gestione del client per (consumerId, eserviceId)?
+      // NO: non c'è delega + gestione client, caso usuale: usare consumerId in input
+      // SI: delegationIds = [xyz.id, wyk.id], consumerIds = ['id Copparo', 'id Castelfranco']
 
-      // E-SERVICE
-      // ENTE
+      // (CASO NO DELEGA) find in e-service, agreement, purpose by eserviceId, consumerId
+      // (CASO SI DELEGA) loop on delegationIds: find in e-service, agreement, purpose by eserviceId, consumerId, delegationId
+      // è sufficiente delegationId, senza usare consumerId?
+
       const eserviceState = ["PUBLISHED", "DEPRECATED"];
       const agreementState = "ACTIVE";
       const purposeState = "ACTIVE";
