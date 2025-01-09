@@ -20,6 +20,30 @@ export function interopServiceBuilder(db: DB): IInteropService {
       logger.info(
         `InteropService::consumerIsAuthorizedToPullSignals with consumerId: ${consumerId}`
       );
+
+      // Castelfranco Veneto è delegante in fruizione
+      // Ferrara è delegato
+      // delegation = xxx
+      // e-service = abc
+
+      // Copparo è delegante in fruizione
+      // Ferrara è delegato
+      // delegation = xyz
+      // e-service = abc
+
+      // agreement
+      // consumerId: Copparo
+      // delegationId: xyz
+
+      // esiste una DELEGA attiva per quel consumerId e eserviceId?
+      // NO: non c'è delega, quindi consumerIds = ['consumerId']
+      // SI: delegationId, ENTE = delegatorId
+
+      // delegationId --> agreement, purpose
+      // consumerIds = ['id Copparo', 'id Castelfranco']
+
+      // E-SERVICE
+      // ENTE
       const eserviceState = ["PUBLISHED", "DEPRECATED"];
       const agreementState = "ACTIVE";
       const purposeState = "ACTIVE";

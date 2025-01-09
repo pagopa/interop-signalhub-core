@@ -293,4 +293,32 @@ describe("PDND Interoperability service", () => {
       )
     ).resolves.not.toThrow();
   });
+
+  it.todo(
+    "Should deny permission to a delegated signal consumer without delegation",
+    () => {
+      expect(true).toBe(false);
+    }
+  );
+
+  it.todo(
+    "Should deny permission to a delegated signal consumer without ACTIVE delegation",
+    () => {
+      expect(true).toBe(false);
+    }
+  );
+
+  it.todo(
+    "Should deny permission to a delegated signal consumer with ACTIVE delegation without agreement",
+    () => {
+      expect(true).toBe(false);
+    }
+  );
+
+  it.todo(
+    "Should deny permission to a delegated signal consumer with ACTIVE delegation without purpose",
+    () => {
+      expect(true).toBe(false);
+    }
+  );
 });
