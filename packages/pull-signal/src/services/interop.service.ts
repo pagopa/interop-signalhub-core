@@ -1,8 +1,10 @@
 import { DB, Logger } from "pagopa-signalhub-commons";
 
 import { operationPullForbidden } from "../model/domain/errors.js";
-import { interopRepository } from "../repositories/interop.repository.js";
-
+import {
+  delegationRepository,
+  interopRepository
+} from "../repositories/index.js";
 interface IInteropService {
   readonly consumerIsAuthorizedToPullSignals: (
     consumerId: string,
@@ -11,6 +13,45 @@ interface IInteropService {
   ) => Promise<void>;
 }
 export function interopServiceBuilder(db: DB): IInteropService {
+  const consumerHasNotADelegation = async (
+    consumerId: string,
+    eserviceId: string,
+    logger: Logger
+  ): Promise<boolean> => {
+    const delegations = await delegationRepository(db).findBy(
+      consumerId,
+      eserviceId
+    );
+
+    // this means that the consumer has no delegations
+    if (thereAreNo(delegations)) {
+      return true;
+    }
+
+    // For each delegation we have to check if an agreement and at least one purpose is ACTIVE. Once find one we can skip the others
+    for (const delegation of delegations) {
+      const eserviceState = ["PUBLISHED", "DEPRECATED"];
+      const agreementState = "ACTIVE";
+      const purposeState = "ACTIVE";
+      const administrativeActs = await interopRepository(db).findBy(
+        delegation.eserviceId,
+        delegation.delegatorId, // delegante
+        eserviceState,
+        purposeState,
+        agreementState
+      );
+
+      if (administrativeActs.length > 0) {
+        logger.info(
+          `InteropService::consumerHasADelegation : delegate with id:${consumerId} has a delegation for eservice ${delegation.eserviceId} with delegationId ${delegation.delegationId} `
+        );
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   return {
     async consumerIsAuthorizedToPullSignals(
       consumerId: string,
@@ -31,40 +72,10 @@ export function interopServiceBuilder(db: DB): IInteropService {
         purposeState,
         agreementState
       );
-      if (thereAreNo(administrativeActs)) {
-        // ci sono deleghe operative?
-        // Castelfranco Veneto è delegante in fruizione
-        // Ferrara è delegato
-        // delegation = wyk
-        // e-service = abc
-
-        // Copparo è delegante in fruizione
-        // Ferrara è delegato
-        // delegation = xyz
-        // e-service = abc
-
-        // agreement
-        // consumerId: Copparo (in AgreementV2.consumerId)
-        // delegationId: xyz (in AgreementV2.AgreementStampsV2.submission.delegationId)
-
-        // agreement
-        // consumerId: Castelfranco (in AgreementV2.consumerId)
-        // delegationId: wyk (in AgreementV2.AgreementStampsV2.submission.delegationId)
-
-        // purpose
-        // consumerId: Copparo (in PurposeV2.consumerId)
-        // delegationId: xyz (in PurposeV2.delegationId)
-
-        // esiste una DELEGA attiva con gestione del client per (consumerId, eserviceId)?
-        // find in delegation where eserviceId, delegateId = consumerId + find in eservice where eserviceId
-        // NO: not delega OR (delega and not gestione client), caso usuale: usare consumerId in input
-        // SI: (delega and gestione client) delegationIds = [xyz.id, wyk.id], consumerIds = ['id Copparo', 'id Castelfranco']
-
-        // (CASO SI DELEGA AND CLIENT) loop on delegationIds: find in e-service, agreement, purpose by eserviceId, delegationId
-        // - EServiceV2.isClientAccessDelegable = true
-        // - PurposeV2.delegationId = delegationId
-        // è sufficiente delegationId, senza usare consumerId?
-
+      if (
+        thereAreNo(administrativeActs) &&
+        (await consumerHasNotADelegation(consumerId, eserviceId, logger))
+      ) {
         throw operationPullForbidden({
           eserviceId,
           consumerId

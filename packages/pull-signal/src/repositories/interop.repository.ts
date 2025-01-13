@@ -5,7 +5,7 @@ import { config } from "../config/env.js";
 export interface IInteropRepository {
   findBy: (
     eserviceId: string,
-    purposeId: string,
+    consumerId: string,
     eserviceAllowedStates: string[],
     purposeState: string,
     agreementState: string
