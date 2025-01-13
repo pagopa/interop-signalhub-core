@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."eservice" (
     event_stream_id VARCHAR (255) NOT NULL DEFAULT gen_random_uuid(),
     event_version_id   BIGINT NOT NULL DEFAULT -1,
     enabled_signal_hub  BOOLEAN,
+    client_access_delegable BOOLEAN,
     tmst_insert     TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     tmst_last_edit  TIMESTAMPTZ,
     UNIQUE (event_stream_id, event_version_id, descriptor_id),

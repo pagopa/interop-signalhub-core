@@ -28,7 +28,11 @@ export async function handleMessageV2(
           "EServiceDescriptorArchived",
           "EServiceDescriptorPublished",
           "EServiceDescriptorSuspended",
-          "EServiceDraftDescriptorUpdated"
+          "EServiceDraftDescriptorUpdated",
+          "EServiceIsDelegableDisabled",
+          "EServiceIsDelegableEnabled",
+          "EServiceIsClientAccessDelegableDisabled",
+          "EServiceIsClientAccessDelegableEnabled"
         )
       },
       async (evt) => {
@@ -72,11 +76,7 @@ export async function handleMessageV2(
           "EServiceDescriptorAttributesUpdated",
           "EServiceDescriptorApprovedByDelegator",
           "EServiceDescriptorRejectedByDelegator",
-          "EServiceDescriptorSubmittedByDelegate",
-          "EServiceIsDelegableDisabled",
-          "EServiceIsClientAccessDelegableDisabled",
-          "EServiceIsClientAccessDelegableEnabled",
-          "EServiceIsDelegableEnabled"
+          "EServiceDescriptorSubmittedByDelegate"
         )
       },
       async () => {
@@ -98,9 +98,8 @@ export const fromEserviceEventV2ToEserviceEntity = (
     descriptor_id: descriptor.id,
     state: EServiceDescriptorStateV2[descriptor.state]
   })),
-
   isSignalHubEnabled: eService?.isSignalHubEnabled,
-
+  isClientAccessDelegable: eService.isClientAccessDelegable,
   event_stream_id: streamId,
   event_version_id: version
 });
