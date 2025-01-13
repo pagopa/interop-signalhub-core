@@ -33,6 +33,7 @@ export function interopServiceBuilder(db: DB): IInteropService {
       const eserviceState = ["PUBLISHED", "DEPRECATED"];
       const agreementState = "ACTIVE";
       const purposeState = "ACTIVE";
+
       const administrativeActs = await interopRepository(db).findBy(
         delegation.eserviceId,
         delegation.delegatorId, // delegante

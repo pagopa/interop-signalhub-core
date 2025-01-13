@@ -4,7 +4,7 @@ import { config } from "../config/env.js";
 
 export interface IDelegationRepository {
   findBy: (
-    organizationId: string,
+    delegateId: string,
     eServiceId: string
   ) => Promise<
     {
@@ -19,7 +19,7 @@ export const delegationRepository = (db: DB): IDelegationRepository => {
   const delegationTable: TableName = `${config.interopSchema}.delegation`;
   return {
     async findBy(
-      organizationId: string,
+      delegateId: string,
       eServiceId: string
     ): Promise<
       {
@@ -29,10 +29,13 @@ export const delegationRepository = (db: DB): IDelegationRepository => {
       }[]
     > {
       try {
-        return await db.manyOrNone(
-          `SELECT delegation_id, eservice_id, delegator_id FROM ${delegationTable} WHERE delegator_id = $1 AND eservice_id = $2 AND state = 'ACTIVE'`,
-          [organizationId, eServiceId]
+        const response = await db.manyOrNone(
+          ` SELECT delegation_id  "delegationId", eservice_id  "eserviceId", delegator_id           "delegatorId", delegate_id "delegateId"
+           FROM ${delegationTable}
+           WHERE delegate_id = $1 AND eservice_id = $2 AND state = 'ACTIVE'`,
+          [delegateId, eServiceId]
         );
+        return response;
       } catch (error: unknown) {
         throw genericError(`Error eserviceRepository::findBy ${error}`);
       }

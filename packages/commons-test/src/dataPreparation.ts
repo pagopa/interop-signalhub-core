@@ -205,12 +205,52 @@ export const createPurpose = async (
   await db.none(query);
 };
 
+export type DelegationData = {
+  delegationId: string;
+  delegateId: string;
+  delegatorId: string;
+  eServiceId: string;
+  state: string;
+  kind: string;
+};
+
+export function getADelegation(
+  delegation: Partial<DelegationData> = {}
+): DelegationData {
+  return {
+    delegationId: randomUUID(),
+    delegateId: randomUUID(),
+    delegatorId: randomUUID(),
+    eServiceId: randomUUID(),
+    state: "ACTIVE",
+    kind: "DELEGATION_PRODUCER",
+    ...delegation
+  };
+}
+
+export const createDelegation = async (
+  db: DB,
+  schema: InteropSchema,
+  delegation: DelegationData
+): Promise<void> => {
+  const delegationTable: TableName = `${schema}.delegation`;
+  const { delegationId, delegateId, delegatorId, eServiceId, state, kind } =
+    delegation;
+
+  const query = {
+    text: `INSERT INTO ${delegationTable} (delegation_id, delegate_id, delegator_id, eservice_id, state, kind) values ($1, $2, $3, $4, $5, $6)`,
+    values: [delegationId, delegateId, delegatorId, eServiceId, state, kind]
+  };
+  await db.none(query);
+};
+
 export const createAdministrativeActsForConsumer = async (
   db: DB,
   schema: InteropSchema,
   eservice?: Partial<EserviceData>,
   agreement?: Partial<AgreementData>,
-  purpose?: Partial<PurposeData>
+  purpose?: Partial<PurposeData>,
+  delegation?: Partial<DelegationData>
 ): Promise<void> => {
   if (eservice) {
     await createEservice(db, schema, getAnEservice(eservice));
@@ -220,6 +260,10 @@ export const createAdministrativeActsForConsumer = async (
   }
   if (purpose) {
     await createPurpose(db, schema, getAPurpose(purpose));
+  }
+
+  if (delegation) {
+    await createDelegation(db, schema, getADelegation(delegation));
   }
 };
 
