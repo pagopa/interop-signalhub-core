@@ -19,7 +19,7 @@ describe("PDND Interoperability service", () => {
     await dataResetForSignalConsumers(postgresDB, config.interopSchema);
   });
 
-  describe.skip("Authorization flow without delegation", () => {
+  describe("Authorization flow without delegation", () => {
     it("Should deny permission to a signal consumer without agreement and purpose for a non existent e-service", async () => {
       const consumerId = getUUID();
       const eserviceId = getUUID();
@@ -60,7 +60,7 @@ describe("PDND Interoperability service", () => {
       );
     });
 
-    it("should deny permission to a signal consumer for an e-service not 'signal-hub enabled'", async () => {
+    it("Should deny permission to a signal consumer for an e-service not 'signal-hub enabled'", async () => {
       const consumerId = getUUID();
       const eserviceId = getUUID();
       const eservice = { eServiceId: eserviceId, enabledSH: false };
@@ -88,7 +88,7 @@ describe("PDND Interoperability service", () => {
       );
     });
 
-    it("should deny permission to a signal consumer for an e-service in state != 'PUBLISHED'", async () => {
+    it("Should deny permission to a signal consumer for an e-service in state != 'PUBLISHED'", async () => {
       const consumerId = getUUID();
       const eserviceId = getUUID();
       const eservice = { eServiceId: eserviceId, state: "DRAFT" };
@@ -141,7 +141,7 @@ describe("PDND Interoperability service", () => {
       );
     });
 
-    it("should deny permission to a signal consumer for an agreement != ACTIVE", async () => {
+    it("Should deny permission to a signal consumer for an agreement != ACTIVE", async () => {
       const consumerId = getUUID();
       const eserviceId = getUUID();
       const eservice = { eServiceId: eserviceId };
@@ -193,7 +193,7 @@ describe("PDND Interoperability service", () => {
       );
     });
 
-    it("should deny permission to a signal consumer with purpose != ACTIVE", async () => {
+    it("Should deny permission to a signal consumer with purpose != ACTIVE", async () => {
       const consumerId = getUUID();
       const eserviceId = getUUID();
       const eservice = { eServiceId: eserviceId };
@@ -218,7 +218,7 @@ describe("PDND Interoperability service", () => {
       );
     });
 
-    it("should give permission to a signals consumer to pull a signal", async () => {
+    it("Should give permission to a signals consumer to pull a signal", async () => {
       const consumerId = getUUID();
       const eserviceId = getUUID();
       const eservice = { eServiceId: eserviceId };
@@ -241,7 +241,7 @@ describe("PDND Interoperability service", () => {
       ).resolves.not.toThrow();
     });
 
-    it("should give permission to a signals consumer to pull a signal when at least one purpose is ACTIVE", async () => {
+    it("Should give permission to a signals consumer to pull a signal when at least one purpose is ACTIVE", async () => {
       const consumerId = getUUID();
       const eserviceId = getUUID();
       const eservice = { eServiceId: eserviceId };
@@ -269,7 +269,7 @@ describe("PDND Interoperability service", () => {
       ).resolves.not.toThrow();
     });
 
-    it("should give permission to a signals consumer to pull a signal when e-service has more the one version and last is PUBLISHED", async () => {
+    it("Should give permission to a signals consumer to pull a signal when e-service has more the one version and last is PUBLISHED", async () => {
       const consumerId = getUUID();
       const eserviceId = getUUID();
       const eservice = {
@@ -309,12 +309,16 @@ describe("PDND Interoperability service", () => {
   describe("Authorization flow with delegation", () => {
     it("Should authorize delegated signal consumer to pull signal on behalf of delegator if: delegation is ACTIVE , agreement is ACTIVE  and at least a purpose (created by delegate) is ACTIVE", async () => {
       const consumerId = getUUID();
+
+      const delegationId = getUUID();
       const delegateId = getUUID();
+
       const eserviceId = getUUID();
-      const eservice = { eServiceId: eserviceId };
+      const eservice = { eServiceId: eserviceId, clientAccessDelegable: true };
       const agreement = { eserviceId, consumerId };
-      const purpose = { eserviceId, consumerId };
+      const purpose = { eserviceId, consumerId, delegationId };
       const delegation = {
+        delegationId,
         delegatorId: consumerId, // delegante
         delegateId: delegateId, // delegato
         eServiceId: eserviceId
@@ -345,7 +349,148 @@ describe("PDND Interoperability service", () => {
       const agreement = { eserviceId, consumerId };
       const purpose = { eserviceId, consumerId };
 
-      const delegation = {};
+      const delegation = undefined;
+
+      await createAdministrativeActsForConsumer(
+        postgresDB,
+        config.interopSchema,
+        eservice,
+        agreement,
+        purpose,
+        delegation
+      );
+
+      await expect(
+        interopService.consumerIsAuthorizedToPullSignals(
+          delegateId,
+          eserviceId,
+          genericLogger
+        )
+      ).rejects.toThrowError(
+        operationPullForbidden({ eserviceId, consumerId: delegateId })
+      );
+    });
+
+    it("Should deny permission to a delegated signal consumer with ACTIVE delegation but without agreement", async () => {
+      const consumerId = getUUID();
+      const delegateId = getUUID();
+      const eserviceId = getUUID();
+      const eservice = { eServiceId: eserviceId };
+      const agreement = undefined;
+      const purpose = { eserviceId, consumerId };
+      const delegation = {
+        delegatorId: consumerId, // delegante
+        delegateId: delegateId, // delegato
+        eServiceId: eserviceId
+      };
+
+      await createAdministrativeActsForConsumer(
+        postgresDB,
+        config.interopSchema,
+        eservice,
+        agreement,
+        purpose,
+        delegation
+      );
+
+      await expect(
+        interopService.consumerIsAuthorizedToPullSignals(
+          delegateId,
+          eserviceId,
+          genericLogger
+        )
+      ).rejects.toThrowError(
+        operationPullForbidden({ eserviceId, consumerId: delegateId })
+      );
+    });
+
+    it("Should deny permission to a delegated signal consumer with ACTIVE delegation without purpose", async () => {
+      const consumerId = getUUID();
+      const delegateId = getUUID();
+      const eserviceId = getUUID();
+      const eservice = { eServiceId: eserviceId };
+      const agreement = { eserviceId, consumerId };
+      const purpose = undefined;
+
+      const delegation = {
+        delegatorId: consumerId, // delegante
+        delegateId: delegateId, // delegato
+        eServiceId: eserviceId
+      };
+
+      await createAdministrativeActsForConsumer(
+        postgresDB,
+        config.interopSchema,
+        eservice,
+        agreement,
+        purpose,
+        delegation
+      );
+
+      await expect(
+        interopService.consumerIsAuthorizedToPullSignals(
+          delegateId,
+          eserviceId,
+          genericLogger
+        )
+      ).rejects.toThrowError(
+        operationPullForbidden({ eserviceId, consumerId: delegateId })
+      );
+    });
+
+    it("Should deny permission to a delegated signal consumer where a delegation is ACTIVE, agreement is ACTIVE  purpose is ACTIVE but the Eservice is not available for client access by delegate", async () => {
+      const consumerId = getUUID();
+
+      const delegationId = getUUID();
+      const delegateId = getUUID();
+
+      const eserviceId = getUUID();
+      const eservice = { eServiceId: eserviceId, clientAccessDelegable: false };
+      const agreement = { eserviceId, consumerId };
+      const purpose = { eserviceId, consumerId, delegationId };
+      const delegation = {
+        delegationId,
+        delegatorId: consumerId, // delegante
+        delegateId: delegateId, // delegato
+        eServiceId: eserviceId
+      };
+
+      await createAdministrativeActsForConsumer(
+        postgresDB,
+        config.interopSchema,
+        eservice,
+        agreement,
+        purpose,
+        delegation
+      );
+
+      await expect(
+        interopService.consumerIsAuthorizedToPullSignals(
+          delegateId,
+          eserviceId,
+          genericLogger
+        )
+      ).rejects.toThrowError(
+        operationPullForbidden({ eserviceId, consumerId: delegateId })
+      );
+    });
+
+    it("Should deny permission to a delegated signal consumer where a delegation is ACTIVE, agreement is ACTIVE and purpose is ACTIVE but without a delegationId field", async () => {
+      const consumerId = getUUID();
+
+      const delegationId = getUUID();
+      const delegateId = getUUID();
+
+      const eserviceId = getUUID();
+      const eservice = { eServiceId: eserviceId, clientAccessDelegable: true };
+      const agreement = { eserviceId, consumerId };
+      const purpose = { eserviceId, consumerId, delegationId: undefined };
+      const delegation = {
+        delegationId,
+        delegatorId: consumerId, // delegante
+        delegateId: delegateId, // delegato
+        eServiceId: eserviceId
+      };
 
       await createAdministrativeActsForConsumer(
         postgresDB,
@@ -367,80 +512,4 @@ describe("PDND Interoperability service", () => {
       );
     });
   });
-
-  it("Should deny permission to a delegated signal consumer with ACTIVE delegation but without agreement", async () => {
-    const consumerId = getUUID();
-    const delegateId = getUUID();
-    const eserviceId = getUUID();
-    const eservice = { eServiceId: eserviceId };
-    const agreement = {};
-    const purpose = { eserviceId, consumerId };
-    const delegation = {
-      delegatorId: consumerId, // delegante
-      delegateId: delegateId, // delegato
-      eServiceId: eserviceId
-    };
-
-    await createAdministrativeActsForConsumer(
-      postgresDB,
-      config.interopSchema,
-      eservice,
-      agreement,
-      purpose,
-      delegation
-    );
-
-    await expect(
-      interopService.consumerIsAuthorizedToPullSignals(
-        delegateId,
-        eserviceId,
-        genericLogger
-      )
-    ).rejects.toThrowError(
-      operationPullForbidden({ eserviceId, consumerId: delegateId })
-    );
-  });
-
-  it("Should deny permission to a delegated signal consumer with ACTIVE delegation without purpose", async () => {
-    const consumerId = getUUID();
-    const delegateId = getUUID();
-    const eserviceId = getUUID();
-    const eservice = { eServiceId: eserviceId };
-    const agreement = { eserviceId, consumerId };
-    const purpose = {};
-
-    const delegation = {
-      delegatorId: consumerId, // delegante
-      delegateId: delegateId, // delegato
-      eServiceId: eserviceId
-    };
-
-    // Delegation doesn't exist
-    await createAdministrativeActsForConsumer(
-      postgresDB,
-      config.interopSchema,
-      eservice,
-      agreement,
-      purpose,
-      delegation
-    );
-
-    await expect(
-      interopService.consumerIsAuthorizedToPullSignals(
-        delegateId,
-        eserviceId,
-        genericLogger
-      )
-    ).rejects.toThrowError(
-      operationPullForbidden({ eserviceId, consumerId: delegateId })
-    );
-  });
-
-  it.todo(
-    "Should deny permission to a delegated signal consumer where a delegation is ACTIVE, agreement is ACTIVE  purpose is ACTIVE but the Eservice is not available for client access by delegate"
-  );
-
-  it.todo(
-    "Should deny permission to a delegated signal consumer where a delegation is ACTIVE, agreement is ACTIVE and purpose is  ACTIVE but without a delegationId field"
-  );
 });

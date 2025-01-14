@@ -109,6 +109,7 @@ export type EserviceData = {
   descriptorId: string;
   state: string;
   enabledSH: boolean;
+  clientAccessDelegable: boolean;
 };
 
 export function getAnEservice(
@@ -120,6 +121,7 @@ export function getAnEservice(
     producerId: randomUUID(),
     state: "PUBLISHED",
     enabledSH: true,
+    clientAccessDelegable: false,
     ...eservice
   };
 }
@@ -129,10 +131,24 @@ export const createEservice = async (
   eService: Partial<EserviceData> = {}
 ): Promise<void> => {
   const eserviceTable: TableName = `${schema}.eservice`;
-  const { producerId, eServiceId, descriptorId, state, enabledSH } = eService;
+  const {
+    producerId,
+    eServiceId,
+    descriptorId,
+    state,
+    enabledSH,
+    clientAccessDelegable
+  } = eService;
   const query = {
-    text: `INSERT INTO ${eserviceTable} (eservice_id, producer_id, descriptor_id, state, enabled_signal_hub) values ($1, $2, $3, $4,$5)`,
-    values: [eServiceId, producerId, descriptorId, state, enabledSH]
+    text: `INSERT INTO ${eserviceTable} (eservice_id, producer_id, descriptor_id, state, enabled_signal_hub, client_access_delegable) values ($1, $2, $3, $4, $5, $6)`,
+    values: [
+      eServiceId,
+      producerId,
+      descriptorId,
+      state,
+      enabledSH,
+      clientAccessDelegable
+    ]
   };
   await db.none(query);
 };
@@ -177,6 +193,7 @@ export type PurposeData = {
   version: string;
   consumerId: string;
   eserviceId: string;
+  delegationId?: string;
   state: string;
 };
 
@@ -186,6 +203,7 @@ export function getAPurpose(purpose: Partial<PurposeData> = {}): PurposeData {
     version: randomUUID(),
     consumerId: randomUUID(),
     eserviceId: randomUUID(),
+    delegationId: "",
     state: "ACTIVE",
     ...purpose
   };
@@ -197,10 +215,10 @@ export const createPurpose = async (
   purpose: PurposeData
 ): Promise<void> => {
   const purposeTable: TableName = `${schema}.purpose`;
-  const { id, version, state, eserviceId, consumerId } = purpose;
+  const { id, version, state, eserviceId, consumerId, delegationId } = purpose;
   const query = {
-    text: `INSERT INTO ${purposeTable} (purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id) values ($1, $2, $3, $4, $5)`,
-    values: [id, version, state, eserviceId, consumerId]
+    text: `INSERT INTO ${purposeTable} (purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id, delegation_id) values ($1, $2, $3, $4, $5, $6)`,
+    values: [id, version, state, eserviceId, consumerId, delegationId]
   };
   await db.none(query);
 };
