@@ -30,14 +30,14 @@ export const delegationRepository = (db: DB): IDelegationRepository => {
     > {
       try {
         const response = await db.manyOrNone(
-          ` SELECT delegation_id  "delegationId", eservice_id  "eserviceId", delegator_id           "delegatorId", delegate_id "delegateId"
+          `SELECT delegation_id   "delegationId", eservice_id  "eserviceId", delegator_id "delegatorId", delegate_id "delegateId"
            FROM ${delegationTable}
            WHERE delegate_id = $1 AND eservice_id = $2 AND state = 'ACTIVE'`,
           [delegateId, eServiceId]
         );
         return response;
       } catch (error: unknown) {
-        throw genericError(`Error eserviceRepository::findBy ${error}`);
+        throw genericError(`Error delegationRepository::findBy ${error}`);
       }
     }
   };

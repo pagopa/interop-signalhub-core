@@ -307,7 +307,7 @@ describe("PDND Interoperability service", () => {
   });
 
   describe("Authorization flow with delegation", () => {
-    it("Should authorize delegated signal consumer to pull signal on behalf of delegator if delegation is ACTIVE , ACTIVE agreement and ACTIVE purpose", async () => {
+    it("Should authorize delegated signal consumer to pull signal on behalf of delegator if: delegation is ACTIVE , agreement is ACTIVE  and at least a purpose (created by delegate) is ACTIVE", async () => {
       const consumerId = getUUID();
       const delegateId = getUUID();
       const eserviceId = getUUID();
@@ -345,13 +345,15 @@ describe("PDND Interoperability service", () => {
       const agreement = { eserviceId, consumerId };
       const purpose = { eserviceId, consumerId };
 
-      // Delegation doesn't exist
+      const delegation = {};
+
       await createAdministrativeActsForConsumer(
         postgresDB,
         config.interopSchema,
         eservice,
         agreement,
-        purpose
+        purpose,
+        delegation
       );
 
       await expect(
@@ -371,6 +373,7 @@ describe("PDND Interoperability service", () => {
     const delegateId = getUUID();
     const eserviceId = getUUID();
     const eservice = { eServiceId: eserviceId };
+    const agreement = {};
     const purpose = { eserviceId, consumerId };
     const delegation = {
       delegatorId: consumerId, // delegante
@@ -378,12 +381,11 @@ describe("PDND Interoperability service", () => {
       eServiceId: eserviceId
     };
 
-    // Delegation doesn't exist
     await createAdministrativeActsForConsumer(
       postgresDB,
       config.interopSchema,
       eservice,
-      undefined, // agreement field
+      agreement,
       purpose,
       delegation
     );
@@ -405,6 +407,7 @@ describe("PDND Interoperability service", () => {
     const eserviceId = getUUID();
     const eservice = { eServiceId: eserviceId };
     const agreement = { eserviceId, consumerId };
+    const purpose = {};
 
     const delegation = {
       delegatorId: consumerId, // delegante
@@ -418,7 +421,7 @@ describe("PDND Interoperability service", () => {
       config.interopSchema,
       eservice,
       agreement,
-      undefined, // purpose field
+      purpose,
       delegation
     );
 
@@ -432,4 +435,12 @@ describe("PDND Interoperability service", () => {
       operationPullForbidden({ eserviceId, consumerId: delegateId })
     );
   });
+
+  it.todo(
+    "Should deny permission to a delegated signal consumer where a delegation is ACTIVE, agreement is ACTIVE  purpose is ACTIVE but the Eservice is not available for client access by delegate"
+  );
+
+  it.todo(
+    "Should deny permission to a delegated signal consumer where a delegation is ACTIVE, agreement is ACTIVE and purpose is  ACTIVE but without a delegationId field"
+  );
 });
