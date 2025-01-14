@@ -36,12 +36,11 @@ export const agreementRepository = (db: DB): IAgreementRepository => {
         descriptor_id,
         state,
         event_stream_id,
-        event_version_id,
-        delegation_id
+        event_version_id
       } = agreement;
       try {
         await db.oneOrNone(
-          `INSERT INTO ${agreementTable}(agreement_id, eservice_id, consumer_id, descriptor_id, state, event_stream_id, event_version_id,delegation_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)`,
+          `INSERT INTO ${agreementTable}(agreement_id, eservice_id, consumer_id, descriptor_id, state, event_stream_id, event_version_id) VALUES($1, $2, $3, $4, $5, $6, $7)`,
           [
             agreement_id,
             eservice_id,
@@ -49,8 +48,7 @@ export const agreementRepository = (db: DB): IAgreementRepository => {
             descriptor_id,
             state,
             event_stream_id,
-            event_version_id,
-            delegation_id
+            event_version_id
           ]
         );
       } catch (error) {

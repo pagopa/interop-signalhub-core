@@ -1,6 +1,5 @@
 import {
   AgreementEventV2,
-  AgreementStampsV2,
   AgreementStateV2,
   AgreementV2
 } from "@pagopa/interop-outbound-models";
@@ -113,11 +112,6 @@ const toAgreementEntity = (
     consumer_id: agreement.consumerId,
     state: AgreementStateV2[agreement.state],
     event_stream_id: streamId,
-    event_version_id: version,
-    delegation_id: getDelegationId(agreement?.stamps)
+    event_version_id: version
   };
 };
-
-const getDelegationId = (stamps?: AgreementStampsV2): string | undefined =>
-  // If delegation has been submitted, delegationID will be available within submission's stamps
-  stamps?.submission?.delegationId;

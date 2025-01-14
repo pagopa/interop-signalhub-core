@@ -52,7 +52,6 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."agreement" (
     eservice_id     VARCHAR (255) NOT NULL,
     descriptor_id   VARCHAR (255) NOT NULL,
     consumer_id     VARCHAR (255) NOT NULL,
-    delegation_id   VARCHAR (255),
     "state"           VARCHAR (255) NOT NULL,
     event_stream_id VARCHAR (255) NOT NULL DEFAULT gen_random_uuid(),
     event_version_id   BIGINT NOT NULL DEFAULT -1,
