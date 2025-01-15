@@ -3,7 +3,7 @@ import { DB, TableName, genericError } from "pagopa-signalhub-commons";
 import { config } from "../config/env.js";
 
 export interface IInteropRepository {
-  findAdminActsBy: (
+  findAgreementAndPurposeBy: (
     eserviceId: string,
     consumerId: string,
     eserviceAllowedStates: string[],
@@ -17,7 +17,7 @@ export interface IInteropRepository {
     }[]
   >;
 
-  findAdminActsInDelegationBy: (
+  findAgreementAndPurposeInDelegationBy: (
     eserviceId: string,
     consumerId: string,
     eserviceAllowedStates: string[],
@@ -38,7 +38,7 @@ export const interopRepository = (db: DB): IInteropRepository => {
   const agreementTable: TableName = `${config.interopSchema}.agreement`;
   const purposeTable: TableName = `${config.interopSchema}.purpose`;
   return {
-    async findAdminActsBy(
+    async findAgreementAndPurposeBy(
       eserviceId: string,
       consumerId: string,
       eserviceAllowedStates: string[],
@@ -65,7 +65,7 @@ export const interopRepository = (db: DB): IInteropRepository => {
                 ${eserviceTable} eservice, ${agreementTable} agreement, ${purposeTable} purpose
            WHERE
                 eservice.eservice_id = $1
-           AND  eservice.enabled_signal_hub = true
+           AND  eservice.enabled_signal_hub is true
            AND  (${sqlConditionStates})
            AND  agreement.consumer_id = $2
            AND  agreement.eservice_id = eservice.eservice_id
@@ -80,7 +80,7 @@ export const interopRepository = (db: DB): IInteropRepository => {
       }
     },
 
-    async findAdminActsInDelegationBy(
+    async findAgreementAndPurposeInDelegationBy(
       eserviceId: string,
       consumerId: string,
       eserviceAllowedStates: string[],
@@ -108,17 +108,17 @@ export const interopRepository = (db: DB): IInteropRepository => {
                 ${eserviceTable} eservice, ${agreementTable} agreement, ${purposeTable} purpose
            WHERE
                 eservice.eservice_id = $1
-           AND  eservice.enabled_signal_hub = true
-           AND  eservice.client_access_delegable = true
+           AND  eservice.enabled_signal_hub is true
+           AND  eservice.client_access_delegable is true
            AND  (${sqlConditionStates})
            AND  agreement.consumer_id = $2
            AND  agreement.eservice_id = eservice.eservice_id
            AND  UPPER(agreement.state) = UPPER($3)
            AND  purpose.consumer_id = agreement.consumer_id
            AND  purpose.eservice_id = eservice.eservice_id
-           AND  purpose.delegation_id = $5
-           AND  UPPER(purpose.purpose_state) = UPPER($4)`,
-          [eserviceId, consumerId, agreementState, purposeState, delegationId]
+           AND  purpose.delegation_id = $4
+           AND  UPPER(purpose.purpose_state) = UPPER($5)`,
+          [eserviceId, consumerId, agreementState, delegationId, purposeState]
         );
       } catch (error: unknown) {
         throw genericError(`Error interopRepository::findBy ${error}`);

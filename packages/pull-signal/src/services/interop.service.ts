@@ -16,12 +16,15 @@ export function interopServiceBuilder(db: DB): IInteropService {
   const eserviceState = ["PUBLISHED", "DEPRECATED"];
   const agreementState = "ACTIVE";
   const purposeState = "ACTIVE";
+  const delegationState = "ACTIVE";
 
   const consumerHasAgreementAndPurpose = async (
     consumerId: string,
     eserviceId: string
   ) => {
-    const administrativeActs = await interopRepository(db).findAdminActsBy(
+    const administrativeActs = await interopRepository(
+      db
+    ).findAgreementAndPurposeBy(
       eserviceId,
       consumerId,
       eserviceState,
@@ -43,7 +46,8 @@ export function interopServiceBuilder(db: DB): IInteropService {
   ): Promise<boolean> => {
     const delegations = await delegationRepository(db).findBy(
       consumerId,
-      eserviceId
+      eserviceId,
+      delegationState
     );
 
     if (thereAreNo(delegations)) {
@@ -54,7 +58,7 @@ export function interopServiceBuilder(db: DB): IInteropService {
     for (const delegation of delegations) {
       const administrativeActs = await interopRepository(
         db
-      ).findAdminActsInDelegationBy(
+      ).findAgreementAndPurposeInDelegationBy(
         delegation.eserviceId,
         delegation.delegatorId,
         eserviceState,
