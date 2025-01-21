@@ -55,7 +55,8 @@ type InteropDatabaseTable =
   | "eservice"
   | "purpose"
   | "agreement"
-  | "eservice_producer";
+  | "eservice_producer"
+  | "delegation";
 
 type SignalHubDatabaseTable =
   | "signal"

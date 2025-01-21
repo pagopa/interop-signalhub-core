@@ -216,6 +216,49 @@ importers:
         specifier: ^3.23.8
         version: 3.23.8
 
+  packages/delegation-event-consumer:
+    dependencies:
+      '@pagopa/interop-outbound-models':
+        specifier: 1.0.12-f
+        version: 1.0.12-f
+      dotenv-flow:
+        specifier: ^4.1.0
+        version: 4.1.0
+      kafka-connector:
+        specifier: workspace:*
+        version: link:../kafka-connector
+      kafkajs:
+        specifier: ^2.2.4
+        version: 2.2.4
+      pagopa-signalhub-commons:
+        specifier: workspace:*
+        version: link:../commons
+      pg-promise:
+        specifier: ^11.9.1
+        version: 11.9.1
+      ts-pattern:
+        specifier: ^5.2.0
+        version: 5.2.0
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
+    devDependencies:
+      '@types/node':
+        specifier: ^20.11.24
+        version: 20.12.12
+      pagopa-signalhub-commons-test:
+        specifier: workspace:*
+        version: link:../commons-test
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@20.12.12)(typescript@5.6.3)
+      typescript:
+        specifier: ^5.6.3
+        version: 5.6.3
+      vitest:
+        specifier: ^1.6.0
+        version: 1.6.0(@types/node@20.12.12)
+
   packages/eservice-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':

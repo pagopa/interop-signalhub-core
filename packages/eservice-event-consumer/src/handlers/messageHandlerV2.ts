@@ -68,7 +68,6 @@ export async function handleMessageV2(
           "EServiceDescriptorInterfaceAdded",
           "EServiceDescriptorInterfaceDeleted",
           "EServiceDescriptorQuotasUpdated",
-          "EServiceDescriptorInterfaceDeleted",
           "EServiceDescriptorInterfaceUpdated",
           "EServiceDescriptorAttributesUpdated",
           "EServiceDescriptorApprovedByDelegator",
