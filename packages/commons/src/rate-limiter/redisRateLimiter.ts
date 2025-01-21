@@ -82,7 +82,7 @@ export async function initRedisRateLimiter(config: {
       return match(error)
         .with(P.instanceOf(RateLimiterRes), (rejRes) => {
           logger.warn(
-            `Rate Limit triggered for rateLimiterKey: ${rateLimiterKey}`
+            `[RATE_LIMITER]: triggered for rateLimiterKey: ${rateLimiterKey}`
           );
           return {
             limitReached: true,
