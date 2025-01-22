@@ -73,6 +73,7 @@ export async function handleMessageV2(
           "EServiceDescriptorApprovedByDelegator",
           "EServiceDescriptorRejectedByDelegator",
           "EServiceDescriptorSubmittedByDelegate",
+          "EServiceNameUpdated",
           "EServiceIsDelegableDisabled",
           "EServiceIsClientAccessDelegableDisabled",
           "EServiceIsClientAccessDelegableEnabled",
