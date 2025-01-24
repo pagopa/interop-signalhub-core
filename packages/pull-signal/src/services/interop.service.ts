@@ -32,11 +32,13 @@ export function interopServiceBuilder(db: DB): IInteropService {
       agreementState
     );
 
-    if (thereAreNo(administrativeActs)) {
-      return false;
+
+    if (hasItems(administrativeActs)) {
+      return true;
     }
 
-    return true;
+
+    return false;
   };
 
   const consumerHasADelegation = async (
@@ -67,7 +69,7 @@ export function interopServiceBuilder(db: DB): IInteropService {
         delegation.delegationId
       );
 
-      if (administrativeActs.length > 0) {
+      if (hasItems(administrativeActs)) {
         logger.info(
           `InteropService::consumerHasADelegation : delegate with id:${consumerId} has a delegation for eservice ${delegation.eserviceId} with delegationId ${delegation.delegationId} `
         );
@@ -107,4 +109,8 @@ export type InteropService = ReturnType<typeof interopServiceBuilder>;
 
 function thereAreNo(result: unknown[]): boolean {
   return !result?.length;
+}
+
+function hasItems(result: unknown[]): boolean {
+  return result.length > 0
 }
