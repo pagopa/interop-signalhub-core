@@ -75,12 +75,14 @@ export const toPurposeV2Entity = (
   if (!validVersion) {
     throw kafkaInvalidVersion();
   }
+
   return {
     purposeId: purpose.id,
     eserviceId: purpose.eserviceId,
     consumerId: purpose.consumerId,
     purposeState: validVersion.state,
     purposeVersionId: validVersion.versionId,
+    delegationId: purpose.delegationId,
     eventStreamId: streamId,
     eventVersionId: version
   };
