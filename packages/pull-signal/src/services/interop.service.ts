@@ -32,11 +32,9 @@ export function interopServiceBuilder(db: DB): IInteropService {
       agreementState
     );
 
-
     if (hasItems(administrativeActs)) {
       return true;
     }
-
 
     return false;
   };
@@ -112,5 +110,5 @@ function thereAreNo(result: unknown[]): boolean {
 }
 
 function hasItems(result: unknown[]): boolean {
-  return result.length > 0
+  return result.length > 0;
 }
