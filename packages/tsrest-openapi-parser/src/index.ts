@@ -95,6 +95,7 @@ const generateOpenAPIFromTsRestContract = (
         infoHeaders[path.id] &&
         infoHeaders[path.id][parseInt(statusCode, 10)]
       ) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         responses[statusCode].headers =
           infoHeaders[path.id][parseInt(statusCode, 10)].header;
       }

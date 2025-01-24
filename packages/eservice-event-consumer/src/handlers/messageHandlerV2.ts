@@ -76,7 +76,8 @@ export async function handleMessageV2(
           "EServiceDescriptorAttributesUpdated",
           "EServiceDescriptorApprovedByDelegator",
           "EServiceDescriptorRejectedByDelegator",
-          "EServiceDescriptorSubmittedByDelegate"
+          "EServiceDescriptorSubmittedByDelegate",
+          "EServiceNameUpdated",
         )
       },
       async () => {
