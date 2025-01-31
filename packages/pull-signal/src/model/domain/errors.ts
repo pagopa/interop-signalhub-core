@@ -4,7 +4,8 @@ export const errorCodes = {
   validationError: "0001",
   signalDuplicate: "0002",
   signalNotSended: "0003",
-  operationPullForbidden: "0004"
+  operationPullForbidden: "0004",
+  organizationIdNotInWhitelist: "0005"
 };
 
 export type ErrorCodes = keyof typeof errorCodes;
@@ -31,5 +32,13 @@ export function operationPullForbidden({
     code: "operationPullForbidden",
     title:
       "Insufficient privileges for operation pull signal - Invalid Agreement or Invalid Purpose"
+  });
+}
+
+export function notInWhitelistError(consumerId: string): ApiError<ErrorCodes> {
+  return new ApiError({
+    detail: `Insufficient privleges your organization  (id: ${consumerId})is not authorized to use Signal-hub`,
+    code: "organizationIdNotInWhitelist",
+    title: "Insufficient privileges for operation pull signal"
   });
 }
