@@ -1,5 +1,4 @@
-FROM node:20.14.0-slim@sha256:a16301294ba66d2ad22d3beded4a52720f96ab208c1db0973c034d0127a4ccb0 as build
-
+FROM node:20.14.0-slim@sha256:5e8ac65a0231d76a388683d07ca36a9769ab019a85d85169fe28e206f7a3208e as build
 RUN corepack enable
 
 WORKDIR /app
@@ -20,16 +19,16 @@ COPY ./packages/commons /app/packages/commons
 COPY ./packages/tsrest-openapi-parser /app/packages/tsrest-openapi-parser
 
 RUN pnpm build && \
-    rm -rf /app/node_modules/.modules.yaml && \
-    rm -rf /app/node_modules/.cache && \
-    mkdir /out && \
-    cp -a --parents -t /out \
-      node_modules packages/push-signal/node_modules \
-      package*.json packages/push-signal/package*.json \
-      packages/commons \
-      packages/tsrest-openapi-parser \
-      packages/push-signal/dist && \
-    find /out -exec touch -h --date=@0 {} \;
+  rm -rf /app/node_modules/.modules.yaml && \
+  rm -rf /app/node_modules/.cache && \
+  mkdir /out && \
+  cp -a --parents -t /out \
+  node_modules packages/push-signal/node_modules \
+  package*.json packages/push-signal/package*.json \
+  packages/commons \
+  packages/tsrest-openapi-parser \
+  packages/push-signal/dist && \
+  find /out -exec touch -h --date=@0 {} \;
 
 FROM node:20.14.0-slim@sha256:a16301294ba66d2ad22d3beded4a52720f96ab208c1db0973c034d0127a4ccb0 as final 
 
