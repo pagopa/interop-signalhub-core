@@ -29,7 +29,8 @@ export async function handleMessageV2(
           "PurposeVersionSuspendedByProducer",
           "PurposeVersionSuspendedByConsumer",
           "PurposeVersionOverQuotaUnsuspended",
-          "PurposeArchived"
+          "PurposeArchived",
+          "PurposeVersionArchivedByRevokedDelegation"
         )
       },
       async (evt) => {
@@ -56,7 +57,8 @@ export async function handleMessageV2(
           "NewPurposeVersionWaitingForApproval",
           "WaitingForApprovalPurposeVersionDeleted",
           "PurposeVersionRejected",
-          "PurposeCloned"
+          "PurposeCloned",
+          "PurposeDeletedByRevokedDelegation"
         )
       },
       async () => {
