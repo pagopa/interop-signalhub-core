@@ -46,6 +46,19 @@ export async function handleMessageV2(
         );
       }
     )
+    .with({ type: "PurposeDeletedByRevokedDelegation" }, async (evt) => {
+      if (!evt.data.purpose) {
+        throw kafkaMessageMissingData(config.kafkaTopic, event.type);
+      }
+      if (hasPurposeVersionInAValidState(evt.data.purpose.versions)) {
+        throw kafkaInvalidVersion();
+      }
+      await purposeService.delete(
+        toPurposeV2Entity(evt, evt.data.purpose),
+        logger
+      );
+    })
+
     .with(
       {
         type: P.union(
@@ -57,8 +70,7 @@ export async function handleMessageV2(
           "NewPurposeVersionWaitingForApproval",
           "WaitingForApprovalPurposeVersionDeleted",
           "PurposeVersionRejected",
-          "PurposeCloned",
-          "PurposeDeletedByRevokedDelegation"
+          "PurposeCloned"
         )
       },
       async () => {

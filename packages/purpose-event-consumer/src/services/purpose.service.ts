@@ -4,11 +4,7 @@ import { PurposeEntity } from "../models/domain/model.js";
 import { IPurposeRepository } from "../repositories/index.js";
 
 export interface IPurposeService {
-  readonly delete: (
-    purposeId: string,
-    streamId: string,
-    logger: Logger
-  ) => Promise<void>;
+  readonly delete: (purpose: PurposeEntity, logger: Logger) => Promise<void>;
   readonly upsert: (purpose: PurposeEntity, logger: Logger) => Promise<void>;
 }
 export function purposeServiceBuilder(
@@ -29,13 +25,19 @@ export function purposeServiceBuilder(
       );
       await purposeRepository.upsert(purpose);
     },
-    async delete(
-      purposeId: string,
-      streamId: string,
-      logger: Logger
-    ): Promise<void> {
-      logger.info(`Deleting purpose with purposeId: ${purposeId}`);
-      await purposeRepository.delete(purposeId, streamId);
+    async delete(purpose: PurposeEntity, logger: Logger): Promise<void> {
+      const { purposeId, eventStreamId } = purpose;
+      const eventWasProcessed = await purposeRepository.eventWasProcessed(
+        purpose.eventStreamId,
+        purpose.eventVersionId
+      );
+      if (eventWasProcessed) {
+        logger.info(`Skip event (idempotence)`);
+        return;
+      }
+
+      logger.info(`Delete purpose with purposeId: ${purposeId}`);
+      await purposeRepository.delete(purposeId, eventStreamId);
     }
   };
 }
