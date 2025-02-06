@@ -1,16 +1,17 @@
-import { decodeOutboundAgreementEvent } from "@pagopa/interop-outbound-models";
+import { decodeOutboundDelegationEvent } from "@pagopa/interop-outbound-models";
 import { runConsumer } from "kafka-connector";
 import { EachMessagePayload } from "kafkajs";
 import { kafkaMissingMessageValue } from "pagopa-signalhub-commons";
 import { match } from "ts-pattern";
 
 import { config } from "./config/env.js";
-import { handleMessageV1, handleMessageV2 } from "./handlers/index.js";
-import { serviceBuilder } from "./services/service.builder.js";
+import { handleMessageV2 } from "./handlers/index.js";
+import { serviceBuilder } from "./services/index.js";
 import { buildLoggerInstance } from "./utils/index.js";
 
-const serviceName = "agreement-event-consumer";
-const { agreementService } = serviceBuilder();
+const { delegationService } = serviceBuilder();
+
+const serviceName = "delegation-event-consumer";
 
 export async function processMessage({
   message,
@@ -19,16 +20,15 @@ export async function processMessage({
   if (!message.value) {
     throw kafkaMissingMessageValue(config.kafkaTopic);
   }
-  const agreementEvent = decodeOutboundAgreementEvent(message.value.toString());
 
-  const logger = buildLoggerInstance(serviceName, agreementEvent);
+  const delegationEvent = decodeOutboundDelegationEvent(
+    message.value.toString()
+  );
 
-  await match(agreementEvent)
-    .with({ event_version: 1 }, (event) =>
-      handleMessageV1(event, agreementService, logger)
-    )
+  const logger = buildLoggerInstance(serviceName, delegationEvent);
+  await match(delegationEvent)
     .with({ event_version: 2 }, (event) =>
-      handleMessageV2(event, agreementService, logger)
+      handleMessageV2(event, delegationService, logger)
     )
     .exhaustive();
 

@@ -39,8 +39,8 @@ importers:
   packages/agreement-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: 1.2.0
-        version: 1.2.0
+        specifier: 1.3.1
+        version: 1.3.1
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -216,11 +216,54 @@ importers:
         specifier: ^3.23.8
         version: 3.23.8
 
+  packages/delegation-event-consumer:
+    dependencies:
+      '@pagopa/interop-outbound-models':
+        specifier: 1.3.1
+        version: 1.3.1
+      dotenv-flow:
+        specifier: ^4.1.0
+        version: 4.1.0
+      kafka-connector:
+        specifier: workspace:*
+        version: link:../kafka-connector
+      kafkajs:
+        specifier: ^2.2.4
+        version: 2.2.4
+      pagopa-signalhub-commons:
+        specifier: workspace:*
+        version: link:../commons
+      pg-promise:
+        specifier: ^11.9.1
+        version: 11.9.1
+      ts-pattern:
+        specifier: ^5.2.0
+        version: 5.2.0
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
+    devDependencies:
+      '@types/node':
+        specifier: ^20.11.24
+        version: 20.12.12
+      pagopa-signalhub-commons-test:
+        specifier: workspace:*
+        version: link:../commons-test
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@20.12.12)(typescript@5.6.3)
+      typescript:
+        specifier: ^5.6.3
+        version: 5.6.3
+      vitest:
+        specifier: ^1.6.0
+        version: 1.6.0(@types/node@20.12.12)
+
   packages/eservice-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: 1.2.0
-        version: 1.2.0
+        specifier: 1.3.1
+        version: 1.3.1
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -357,8 +400,8 @@ importers:
   packages/purpose-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: 1.2.0
-        version: 1.2.0
+        specifier: 1.3.1
+        version: 1.3.1
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -1124,10 +1167,8 @@ packages:
     resolution: {integrity: sha512-Ah6zt5wFEpf+e5CcPbRoDvHoTk+PyP7x5lpbrUhwBBgBZY+/x+LCrQGegMnlLGupjNdyF0FQxWl71BYgRrdXKQ==}
     peerDependencies:
       eslint: 8.57.0
-
-  '@pagopa/interop-outbound-models@1.2.0':
-    resolution: {integrity: sha512-hg5W1+OXknBnCcIGSs0VJEPfCidABvQ1AmmVudvUSwgG4lNmxBXSyw8hSFl4Ejryl/h8wKxPgSg5sUvkabnh4w==}
-
+  '@pagopa/interop-outbound-models@1.3.1':
+    resolution: {integrity: sha512-MX3ZW2xeVMilp+X0BPODqQnC8pNNNlde9a2sg6lvvYRYGUX+huNSqxs7MZ2fnSoLnHpvYQMOffhJHnksKy+new==}
   '@pkgr/core@0.1.1':
     resolution: {integrity: sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
@@ -4960,8 +5001,7 @@ snapshots:
       - typescript
       - vitest
       - vue-eslint-parser
-
-  '@pagopa/interop-outbound-models@1.2.0':
+  '@pagopa/interop-outbound-models@1.3.1':
     dependencies:
       '@protobuf-ts/runtime': 2.9.4
       ts-pattern: 5.2.0
