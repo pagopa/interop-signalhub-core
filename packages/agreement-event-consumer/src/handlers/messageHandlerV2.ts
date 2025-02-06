@@ -47,7 +47,8 @@ export async function handleMessageV2(
           "AgreementUnsuspendedByPlatform",
           "AgreementRejected",
           "DraftAgreementUpdated",
-          "AgreementSubmitted"
+          "AgreementSubmitted",
+          "AgreementArchivedByRevokedDelegation"
         )
       },
 
@@ -64,7 +65,9 @@ export async function handleMessageV2(
       }
     )
     .with(
-      { type: "AgreementDeleted" },
+      {
+        type: P.union("AgreementDeletedByRevokedDelegation", "AgreementDeleted")
+      },
 
       async (evt) => {
         await agreementService.delete(
