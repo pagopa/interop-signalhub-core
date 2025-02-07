@@ -1,5 +1,7 @@
 FROM node:20.14.0-slim@sha256:a16301294ba66d2ad22d3beded4a52720f96ab208c1db0973c034d0127a4ccb0 as build
-RUN corepack enable
+
+RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
+
 WORKDIR /app
 COPY package.json /app/
 COPY pnpm-lock.yaml /app/

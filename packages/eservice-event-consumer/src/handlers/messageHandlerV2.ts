@@ -29,10 +29,10 @@ export async function handleMessageV2(
           "EServiceDescriptorPublished",
           "EServiceDescriptorSuspended",
           "EServiceDraftDescriptorUpdated",
-          "EServiceIsDelegableDisabled",
-          "EServiceIsDelegableEnabled",
           "EServiceIsClientAccessDelegableDisabled",
-          "EServiceIsClientAccessDelegableEnabled"
+          "EServiceIsClientAccessDelegableEnabled",
+          "EServiceIsConsumerDelegableDisabled",
+          "EServiceIsConsumerDelegableEnabled"
         )
       },
       async (evt) => {
