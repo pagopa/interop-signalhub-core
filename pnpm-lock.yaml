@@ -39,8 +39,8 @@ importers:
   packages/agreement-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: 1.4.1
-        version: 1.4.1
+        specifier: 1.4.2
+        version: 1.4.2
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -219,8 +219,8 @@ importers:
   packages/delegation-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: 1.4.1
-        version: 1.4.1
+        specifier: 1.4.2
+        version: 1.4.2
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -262,8 +262,8 @@ importers:
   packages/eservice-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: 1.4.1
-        version: 1.4.1
+        specifier: 1.4.2
+        version: 1.4.2
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -400,8 +400,8 @@ importers:
   packages/purpose-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: 1.4.1
-        version: 1.4.1
+        specifier: 1.4.2
+        version: 1.4.2
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -1168,8 +1168,8 @@ packages:
     peerDependencies:
       eslint: 8.57.0
 
-  '@pagopa/interop-outbound-models@1.4.1':
-    resolution: {integrity: sha512-HgNUtr22e+YNpidR8nn2yQFPfNSSH5g1gBvsAKWXwfoAOHwbRWSFna5YMluR/82IwGwG81PiHnWcQQ3D2QkJ+Q==}
+  '@pagopa/interop-outbound-models@1.4.2':
+    resolution: {integrity: sha512-dIPj4U798iwoL9KU8li+gfV852K/vsH3FyHrRlv/lOpWmxHJk5SCvqDYYcp88CQCm7Akm7WGXE2sKi5dFKrhpQ==}
 
   '@pkgr/core@0.1.1':
     resolution: {integrity: sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==}
@@ -5004,7 +5004,7 @@ snapshots:
       - vitest
       - vue-eslint-parser
 
-  '@pagopa/interop-outbound-models@1.4.1':
+  '@pagopa/interop-outbound-models@1.4.2':
     dependencies:
       '@protobuf-ts/runtime': 2.9.4
       ts-pattern: 5.2.0
