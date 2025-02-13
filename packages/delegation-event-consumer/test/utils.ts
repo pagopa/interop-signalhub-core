@@ -44,8 +44,7 @@ export const createDelegationV2Event = (
   eserviceId: eServiceId,
   state: state,
   kind: kind,
-  createdAt: 1n,
-  submittedAt: 1n
+  createdAt: 1n
 });
 
 export const createConsumerDelegationSubmittedEventV2 = (
