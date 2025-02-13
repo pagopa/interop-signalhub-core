@@ -9,6 +9,7 @@ import {
 } from "pagopa-signalhub-commons";
 
 import { contract } from "./contract/contract.js";
+import { whitelistMiddleware } from "./middleware/whitelist.middleware.js";
 import { setupHealthRoute } from "./routes/health.route.js";
 import { pullRoutes } from "./routes/pull.route.js";
 import { rateLimiterBuilder } from "./services/rateLimiter.builder.js";
@@ -27,6 +28,9 @@ setupHealthRoute(app);
 app.use(contextMiddleware(serviceName));
 app.use(skipForUrl("/status", loggerMiddleware()));
 app.use(authenticationMiddleware);
+
+// After Signal-hub trial period whitelist middleware must be removed
+app.use(whitelistMiddleware);
 app.use(rateLimiterMiddleware(rateLimiter));
 
 // Disable the "X-Powered-By: Express" HTTP header for security reasons: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#recommendation_16

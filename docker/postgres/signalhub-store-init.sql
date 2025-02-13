@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."purpose" (
 CREATE INDEX IF NOT EXISTS PURPOSE_INDEX_ESERVICE_AND_CONSUMER_AND_STATE ON "dev_interop"."purpose"(purpose_id, consumer_id, upper(purpose_state), eservice_id);
 
 CREATE TABLE IF NOT EXISTS "dev_signalhub"."signal" (
-    id             SERIAL PRIMARY KEY,
+    id             BIGSERIAL PRIMARY KEY,
     correlation_id VARCHAR(255) NOT NULL,
     signal_id      BIGINT        NOT NULL,
     object_id      VARCHAR (255)  NOT NULL,
@@ -94,7 +94,7 @@ CREATE INDEX IF NOT EXISTS SIGNAL_INDEX_ESERVICE_ID on "dev_signalhub"."signal"(
 CREATE UNIQUE INDEX IF NOT EXISTS SIGNAL_INDEX_ON_SIGNAL_ID_ESERVICE_ID ON "dev_signalhub"."signal"(eservice_id, signal_id);
 
 CREATE TABLE IF NOT EXISTS "dev_signalhub"."dead_signal" (
-    id             SERIAL PRIMARY KEY,
+    id             BIGSERIAL PRIMARY KEY,
     correlation_id VARCHAR(255)   NOT NULL,
     signal_id      BIGINT        NOT NULL,
     object_id      VARCHAR (255)  NOT NULL,
