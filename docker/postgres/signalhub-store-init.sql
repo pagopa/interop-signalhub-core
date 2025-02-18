@@ -20,13 +20,32 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."eservice" (
     event_stream_id VARCHAR (255) NOT NULL DEFAULT gen_random_uuid(),
     event_version_id   BIGINT NOT NULL DEFAULT -1,
     enabled_signal_hub  BOOLEAN,
+    client_access_delegable BOOLEAN,
     tmst_insert     TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     tmst_last_edit  TIMESTAMPTZ,
     UNIQUE (event_stream_id, event_version_id, descriptor_id),
     UNIQUE (eservice_id, descriptor_id, producer_id),
     PRIMARY KEY (eservice_id, descriptor_id)
 );
+
 CREATE INDEX IF NOT EXISTS ESERVICE_INDEX_ID_AND_PRODUCER_AND_ENABLED_SH_AND_STATE ON "dev_interop"."eservice"(eservice_id, producer_id, enabled_signal_hub, upper(state));
+
+
+CREATE TABLE IF NOT EXISTS "dev_interop"."delegation" (
+    delegation_id              VARCHAR (255) NOT NULL,
+    delegate_id     VARCHAR (255) NOT NULL, 
+    delegator_id   VARCHAR (255) NOT NULL,
+    eservice_id     VARCHAR (255) NOT NULL,
+    "state"           VARCHAR (255) NOT NULL,
+    kind            VARCHAR (20) NOT NULL,
+    event_stream_id VARCHAR (255) NOT NULL DEFAULT gen_random_uuid(),
+    event_version_id   BIGINT NOT NULL DEFAULT -1,
+    tmst_insert     TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    tmst_last_edit  TIMESTAMPTZ,
+    UNIQUE (event_stream_id, event_version_id),
+    PRIMARY KEY (delegation_id)
+);
+
 
 CREATE TABLE IF NOT EXISTS "dev_interop"."agreement" (
     agreement_id    VARCHAR (255) NOT NULL,
@@ -49,6 +68,7 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."purpose" (
     purpose_state    VARCHAR (255) NOT NULL,
     eservice_id     VARCHAR (255) NOT NULL,
     consumer_id     VARCHAR (255) NOT NULL,
+    delegation_id   VARCHAR (255),
     event_stream_id VARCHAR (255) NOT NULL DEFAULT gen_random_uuid(),
     event_version_id   BIGINT NOT NULL DEFAULT -1,
     tmst_insert     TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,

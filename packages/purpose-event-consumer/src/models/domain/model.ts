@@ -9,7 +9,8 @@ export const PurposeEntity = z.object({
   eventStreamId: z.string(),
   eventVersionId: z.number(),
   tmstInsert: z.string().nullable().optional(),
-  tmstLastEdit: z.string().nullable().optional()
+  tmstLastEdit: z.string().nullable().optional(),
+  delegationId: z.string().optional()
 });
 
 export type PurposeEntity = z.infer<typeof PurposeEntity>;

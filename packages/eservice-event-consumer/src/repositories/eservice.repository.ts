@@ -35,7 +35,8 @@ export interface IEserviceRepository {
     eServiceDescriptor: EserviceDescriptorEntity,
     eventStreamId: string,
     eventVersionId: number,
-    isSignalHubEnabled?: boolean
+    isSignalHubEnabled?: boolean,
+    isClientAccessDelegable?: boolean
   ) => Promise<void>;
 }
 export const eServiceRepository = (db: DB): IEserviceRepository => {
@@ -88,15 +89,16 @@ export const eServiceRepository = (db: DB): IEserviceRepository => {
       eServiceDescriptor: EserviceDescriptorEntity,
       eventStreamId: string,
       eventVersionId: number,
-      isSignalHubEnabled: boolean | undefined
+      isSignalHubEnabled: boolean | undefined,
+      isClientAccessDelegable: boolean | undefined
     ): Promise<void> {
       try {
         const tmstLastEdit = getCurrentDate();
         const { descriptor_id, state } = eServiceDescriptor;
 
         await db.oneOrNone(
-          `INSERT INTO ${eServiceTable}(eservice_id, producer_id, descriptor_id, state, event_stream_id, event_version_id, enabled_signal_hub, tmst_last_edit)
-             VALUES($1, $2, $3, $4, $5, $6, $7, $8)
+          `INSERT INTO ${eServiceTable}(eservice_id, producer_id, descriptor_id, state, event_stream_id, event_version_id, enabled_signal_hub, tmst_last_edit, client_access_delegable)
+             VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
              ON CONFLICT (eservice_id, descriptor_id)
              DO UPDATE SET
                 producer_id = EXCLUDED.producer_id,
@@ -104,7 +106,9 @@ export const eServiceRepository = (db: DB): IEserviceRepository => {
                 event_stream_id = EXCLUDED.event_stream_id,
                 event_version_id = EXCLUDED.event_version_id,
                 enabled_signal_hub = EXCLUDED.enabled_signal_hub,
-                tmst_last_edit= EXCLUDED.tmst_last_edit
+                tmst_last_edit= EXCLUDED.tmst_last_edit,
+                client_access_delegable = EXCLUDED.client_access_delegable
+
                 `,
 
           [
@@ -115,7 +119,8 @@ export const eServiceRepository = (db: DB): IEserviceRepository => {
             eventStreamId,
             eventVersionId,
             isSignalHubEnabled,
-            tmstLastEdit
+            tmstLastEdit,
+            isClientAccessDelegable
           ]
         );
       } catch (error) {

@@ -17,6 +17,7 @@ export const EserviceV2Entity = z.object({
   producer_id: z.string(),
   descriptors: z.array(EserviceDescriptorEntity),
   isSignalHubEnabled: z.boolean().optional(),
+  isClientAccessDelegable: z.boolean().optional(),
   event_version_id: z.number(),
   event_stream_id: z.string()
 });

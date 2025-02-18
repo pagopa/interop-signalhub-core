@@ -165,7 +165,8 @@ export function eServiceServiceBuilder(
           descriptor,
           eService.event_stream_id,
           eService.event_version_id,
-          eService?.isSignalHubEnabled
+          eService?.isSignalHubEnabled,
+          eService.isClientAccessDelegable
         );
       }
     },

@@ -29,7 +29,8 @@ export async function handleMessageV2(
           "PurposeVersionSuspendedByProducer",
           "PurposeVersionSuspendedByConsumer",
           "PurposeVersionOverQuotaUnsuspended",
-          "PurposeArchived"
+          "PurposeArchived",
+          "PurposeVersionArchivedByRevokedDelegation"
         )
       },
       async (evt) => {
@@ -45,6 +46,19 @@ export async function handleMessageV2(
         );
       }
     )
+    .with({ type: "PurposeDeletedByRevokedDelegation" }, async (evt) => {
+      if (!evt.data.purpose) {
+        throw kafkaMessageMissingData(config.kafkaTopic, event.type);
+      }
+      if (hasPurposeVersionInAValidState(evt.data.purpose.versions)) {
+        throw kafkaInvalidVersion();
+      }
+      await purposeService.delete(
+        toPurposeV2Entity(evt, evt.data.purpose),
+        logger
+      );
+    })
+
     .with(
       {
         type: P.union(
@@ -75,12 +89,14 @@ export const toPurposeV2Entity = (
   if (!validVersion) {
     throw kafkaInvalidVersion();
   }
+
   return {
     purposeId: purpose.id,
     eserviceId: purpose.eserviceId,
     consumerId: purpose.consumerId,
     purposeState: validVersion.state,
     purposeVersionId: validVersion.versionId,
+    delegationId: purpose.delegationId,
     eventStreamId: streamId,
     eventVersionId: version
   };
