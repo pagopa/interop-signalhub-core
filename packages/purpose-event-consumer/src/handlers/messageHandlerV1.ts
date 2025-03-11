@@ -30,9 +30,6 @@ export async function handleMessageV1(
         if (!evt.data.purpose) {
           throw kafkaMessageMissingData(config.kafkaTopic, event.type);
         }
-        if (purposeHasNoVersionInAValidState(evt.data.purpose.versions)) {
-          throw kafkaInvalidVersion();
-        }
         await purposeService.upsert(
           toPurposeV1Entity(evt, evt.data.purpose),
           logger
@@ -98,6 +95,23 @@ const validVersionInVersionsV1 = (
         versions.some((version) => version.state === PurposeStateV1.ARCHIVED),
       () => getVersionBy(PurposeStateV1.ARCHIVED, purposeVersions)
     )
+    .when(
+      (versions) =>
+        versions.some((version) => version.state === PurposeStateV1.REJECTED),
+      () => getVersionBy(PurposeStateV1.REJECTED, purposeVersions)
+    )
+    .when(
+      (versions) =>
+        versions.some((version) => version.state === PurposeStateV1.DRAFT),
+      () => getVersionBy(PurposeStateV1.DRAFT, purposeVersions)
+    )
+    .when(
+      (versions) =>
+        versions.some(
+          (version) => version.state === PurposeStateV1.WAITING_FOR_APPROVAL
+        ),
+      () => getVersionBy(PurposeStateV1.WAITING_FOR_APPROVAL, purposeVersions)
+    )
     .otherwise(() => undefined);
 
 const getVersionBy = (
@@ -116,7 +130,3 @@ const getVersionBy = (
       },
       {} as { versionId: string; state: string }
     );
-
-const purposeHasNoVersionInAValidState = (
-  versions: PurposeVersionV1[]
-): boolean => !validVersionInVersionsV1(versions);
