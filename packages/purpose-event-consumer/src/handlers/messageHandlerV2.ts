@@ -37,9 +37,6 @@ export async function handleMessageV2(
         if (!evt.data.purpose) {
           throw kafkaMessageMissingData(config.kafkaTopic, event.type);
         }
-        if (hasPurposeVersionInAValidState(evt.data.purpose.versions)) {
-          throw kafkaInvalidVersion();
-        }
         await purposeService.upsert(
           toPurposeV2Entity(evt, evt.data.purpose),
           logger
@@ -49,9 +46,6 @@ export async function handleMessageV2(
     .with({ type: "PurposeDeletedByRevokedDelegation" }, async (evt) => {
       if (!evt.data.purpose) {
         throw kafkaMessageMissingData(config.kafkaTopic, event.type);
-      }
-      if (hasPurposeVersionInAValidState(evt.data.purpose.versions)) {
-        throw kafkaInvalidVersion();
       }
       await purposeService.delete(
         toPurposeV2Entity(evt, evt.data.purpose),
@@ -120,6 +114,23 @@ const validVersionInVersionsV2 = (
         versions.some((version) => version.state === PurposeStateV2.ARCHIVED),
       () => getVersionBy(PurposeStateV2.ARCHIVED, purposeVersions)
     )
+    .when(
+      (versions) =>
+        versions.some((version) => version.state === PurposeStateV2.REJECTED),
+      () => getVersionBy(PurposeStateV2.REJECTED, purposeVersions)
+    )
+    .when(
+      (versions) =>
+        versions.some((version) => version.state === PurposeStateV2.DRAFT),
+      () => getVersionBy(PurposeStateV2.DRAFT, purposeVersions)
+    )
+    .when(
+      (versions) =>
+        versions.some(
+          (version) => version.state === PurposeStateV2.WAITING_FOR_APPROVAL
+        ),
+      () => getVersionBy(PurposeStateV2.WAITING_FOR_APPROVAL, purposeVersions)
+    )
     .otherwise(() => undefined);
 
 function getVersionBy(
@@ -139,7 +150,3 @@ function getVersionBy(
       {} as { versionId: string; state: string }
     );
 }
-
-const hasPurposeVersionInAValidState = (
-  versions: PurposeVersionV2[]
-): boolean => !validVersionInVersionsV2(versions);
