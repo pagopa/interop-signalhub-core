@@ -21,13 +21,14 @@ export const pullRoutes = (
   });
   const pullSignal: AppRouteImplementation<
     typeof contract.pullSignal
-  > = async ({ req, query }) => {
+  > = async ({ req, query, params }) => {
     const log = logger({
       serviceName: req.ctx.serviceName,
       correlationId: req.ctx.correlationId
     });
+
     try {
-      const { eserviceId } = req.params;
+      const { eserviceId } = params;
       const { organizationId } = req.ctx.sessionData;
       const { signalId, size } = query;
 
