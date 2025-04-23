@@ -13,6 +13,12 @@ export interface ISignalRepository {
     signalId: number,
     limit: number
   ) => Promise<SignalRecord[] | null>;
+  getByEserviceByTimeWindow: (
+    eserviceId: string,
+    signalId: number,
+    limit: number,
+    timeWindowInSeconds: number
+  ) => Promise<SignalRecord[] | null>;
   getNextSignalId: (
     eserviceId: string,
     signalId: number | null
@@ -30,7 +36,29 @@ export const signalRepository = (db: DB): ISignalRepository => {
     ): Promise<SignalRecord[] | null> {
       try {
         return await db.any<SignalRecord[]>(
-          `SELECT signal_id, object_id, eservice_id, object_type, signal_type FROM ${signalTable} s WHERE s.eservice_id = $1 AND s.signal_id > $2 order by s.signal_id asc limit $3`,
+          `SELECT signal_id, object_id, eservice_id, object_type, signal_type FROM ${signalTable} s 
+           WHERE s.eservice_id = $1 
+           AND s.signal_id > $2 
+           order by s.signal_id asc limit $3`,
+          [eserviceId, signalId, limit]
+        );
+      } catch (error) {
+        throw genericInternalError(`Error get: ${error}`);
+      }
+    },
+    async getByEserviceByTimeWindow(
+      eserviceId: string,
+      signalId: number,
+      limit: number,
+      timeWindowInSeconds: number
+    ): Promise<SignalRecord[] | null> {
+      try {
+        return await db.any<SignalRecord[]>(
+          `SELECT signal_id, object_id, eservice_id, object_type, signal_type FROM ${signalTable} s 
+           WHERE s.eservice_id = $1 
+           AND s.signal_id > $2 
+           AND s.tmst_insert < NOW() - INTERVAL '${timeWindowInSeconds} seconds'
+           order by s.signal_id asc limit $3`,
           [eserviceId, signalId, limit]
         );
       } catch (error) {

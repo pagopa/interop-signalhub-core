@@ -23,6 +23,13 @@ export const toSignal = (signal: SignalMessage): SignalResponse => {
   return expectedSignal;
 };
 
+export const waitForSeconds = (seconds: number): Promise<void> =>
+  new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, seconds * 1000);
+  });
+
 export const toSignals = (signals: SignalMessage[]): SignalResponse[] =>
   signals.map(toSignal);
 
