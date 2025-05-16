@@ -12,7 +12,20 @@ const PushServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
   .and(QuequeConfig)
   .and(JWTConfig)
   .and(APIServiceConfig)
-  .and(RedisRateLimiterConfig);
+  .and(RedisRateLimiterConfig)
+  .and(
+    z
+      .object({
+        CONSOLIDATION_TIME_WINDOW_IN_SECONDS: z
+          .string()
+          .optional()
+          .default("120")
+          .transform((value) => parseInt(value, 10))
+      })
+      .transform((c) => ({
+        consolidationTimeWindowInSeconds: c.CONSOLIDATION_TIME_WINDOW_IN_SECONDS
+      }))
+  );
 export type PushServiceConfig = z.infer<typeof PushServiceConfig>;
 
 const parsedFromEnv = PushServiceConfig.safeParse(process.env);
@@ -20,6 +33,7 @@ if (!parsedFromEnv.success) {
   const invalidEnvVars = parsedFromEnv.error.issues.flatMap(
     (issue) => issue.path
   );
+
   console.error(
     "Invalid or missing env vars: Push Service  " + invalidEnvVars.join(", ")
   );
