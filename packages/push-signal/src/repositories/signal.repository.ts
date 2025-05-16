@@ -27,6 +27,7 @@ export const signalRepository = (db: DB): ISignalRepository => {
         );
       }
     },
+
     async findSignalsWithSignalIdMajorThanAndAlreadyConsolidated(
       eserviceId: string,
       signalId: number,

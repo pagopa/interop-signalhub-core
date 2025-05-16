@@ -1,8 +1,10 @@
 import { DB, Logger } from "pagopa-signalhub-commons";
 
 import { config } from "../config/env.js";
-import { signalIdDuplicatedForEserviceId } from "../models/domain/errors.js";
-// import { signalIdDuplicatedForEserviceId } from "../models/domain/errors.js";
+import {
+  signalIdDuplicatedForEserviceId,
+  signalsConsolidatedWithHigherSignalId
+} from "../models/domain/errors.js";
 import { signalRepository } from "../repositories/signal.repository.js";
 
 interface ISignalService {
@@ -22,27 +24,31 @@ export function signalServiceBuilder(db: DB): ISignalService {
       logger.info(
         `SignalService::verifySignalDuplicated signald: ${signalId}, eserviceId: ${eserviceId}`
       );
-      // const signalIdPresent = await signalRepository(db).findBy(
-      //   signalId,
-      //   eserviceId
-      // );
+      const signalIdPresent = await signalRepository(db).findBy(
+        signalId,
+        eserviceId
+      );
 
-      const signalIsNotValid = await signalRepository(
+      const signalsWithHigherSignalId = await signalRepository(
         db
       ).findSignalsWithSignalIdMajorThanAndAlreadyConsolidated(
         eserviceId,
         signalId,
-        config.consolidationTimeWindowInSeconds
+        config.timeWindowInSeconds
       );
 
-      if (signalIsNotValid && signalIsNotValid?.length > 0) {
+      if (signalIsDuplicated(signalIdPresent)) {
         throw signalIdDuplicatedForEserviceId(signalId, eserviceId);
+      }
+
+      if (signalsWithHigherSignalId && signalsWithHigherSignalId.length > 0) {
+        throw signalsConsolidatedWithHigherSignalId(signalId, eserviceId);
       }
     }
   };
 }
 
-// const signalIsDuplicated = (signalIdPresent: number | null): boolean =>
-//   signalIdPresent !== null;
+const signalIsDuplicated = (signalIdPresent: number | null): boolean =>
+  signalIdPresent !== null;
 
 export type SignalService = ReturnType<typeof signalServiceBuilder>;

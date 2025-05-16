@@ -16,14 +16,14 @@ const PushServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
   .and(
     z
       .object({
-        CONSOLIDATION_TIME_WINDOW_IN_SECONDS: z
+        TIME_WINDOW_DURATION_IN_SECONDS: z
           .string()
           .optional()
           .default("120")
           .transform((value) => parseInt(value, 10))
       })
       .transform((c) => ({
-        consolidationTimeWindowInSeconds: c.CONSOLIDATION_TIME_WINDOW_IN_SECONDS
+        timeWindowInSeconds: c.TIME_WINDOW_DURATION_IN_SECONDS
       }))
   );
 export type PushServiceConfig = z.infer<typeof PushServiceConfig>;
