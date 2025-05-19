@@ -37,7 +37,7 @@ export const signalRepository = (db: DB): ISignalRepository => {
         return await db.manyOrNone(
           `SELECT signal_id FROM ${signalTable}
            WHERE eservice_id = $1
-           AND signal_id >= $2
+           AND signal_id > $2
            AND tmst_insert < NOW() - INTERVAL '${consolidationTimeWindowInSeconds} seconds'`,
           [eserviceId, signalId]
         );
