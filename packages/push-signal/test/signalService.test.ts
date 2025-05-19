@@ -49,7 +49,7 @@ describe("Store service", () => {
       await writeSignal(firstSignal, postgresDB, config.signalHubSchema);
 
       const TIME_TO_WAIT_BEFORE_DEPOSIT_SIGNAL =
-        config.timeWindowInSeconds * 1000 + 500;
+        config.timeWindowInSeconds * 1000 - 500;
 
       await sleep(TIME_TO_WAIT_BEFORE_DEPOSIT_SIGNAL);
 
