@@ -16,7 +16,7 @@ describe("Store service", () => {
       const signalId = 1;
       const eserviceId = "test-eservice-id";
       await expect(
-        signalService.verifySignalDuplicated(
+        signalService.verifySignalDuplicatedOrConsolidated(
           signalId,
           eserviceId,
           genericLogger
@@ -31,7 +31,7 @@ describe("Store service", () => {
       await writeSignal(signal, postgresDB, config.signalHubSchema);
 
       await expect(
-        signalService.verifySignalDuplicated(
+        signalService.verifySignalDuplicatedOrConsolidated(
           signalId,
           eserviceId,
           genericLogger
@@ -48,11 +48,14 @@ describe("Store service", () => {
       const firstSignal = createSignal({ signalId: firstSignalId, eserviceId });
       await writeSignal(firstSignal, postgresDB, config.signalHubSchema);
 
-      await sleep(config.timeWindowInSeconds * 1000 - 500);
+      const TIME_TO_WAIT_BEFORE_DEPOSIT_SIGNAL =
+        config.timeWindowInSeconds * 1000 + 500;
+
+      await sleep(TIME_TO_WAIT_BEFORE_DEPOSIT_SIGNAL);
 
       const secondSignalId = firstSignalId - 1;
       await expect(
-        signalService.verifySignalDuplicated(
+        signalService.verifySignalDuplicatedOrConsolidated(
           secondSignalId,
           eserviceId,
           genericLogger
@@ -68,11 +71,13 @@ describe("Store service", () => {
     const firstSignal = createSignal({ signalId: firstSignalId, eserviceId });
     await writeSignal(firstSignal, postgresDB, config.signalHubSchema);
 
-    await sleep(config.timeWindowInSeconds * 1000 + 500);
+    const TIME_TO_WAIT_BEFORE_DEPOSIT_SIGNAL =
+      config.timeWindowInSeconds * 1000 + 500;
+    await sleep(TIME_TO_WAIT_BEFORE_DEPOSIT_SIGNAL);
 
     const secondSignalId = firstSignalId - 1;
     await expect(
-      signalService.verifySignalDuplicated(
+      signalService.verifySignalDuplicatedOrConsolidated(
         secondSignalId,
         eserviceId,
         genericLogger

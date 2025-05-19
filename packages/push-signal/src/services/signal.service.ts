@@ -8,7 +8,7 @@ import {
 import { signalRepository } from "../repositories/signal.repository.js";
 
 interface ISignalService {
-  readonly verifySignalDuplicated: (
+  readonly verifySignalDuplicatedOrConsolidated: (
     signalId: number,
     eserviceId: string,
     logger: Logger
@@ -16,7 +16,7 @@ interface ISignalService {
 }
 export function signalServiceBuilder(db: DB): ISignalService {
   return {
-    async verifySignalDuplicated(
+    async verifySignalDuplicatedOrConsolidated(
       signalId: number,
       eserviceId: string,
       logger: Logger

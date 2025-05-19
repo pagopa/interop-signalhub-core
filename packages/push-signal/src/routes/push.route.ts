@@ -43,7 +43,11 @@ export const pushRoutes = (
         log
       );
 
-      await signalService.verifySignalDuplicated(signalId, eserviceId, log);
+      await signalService.verifySignalDuplicatedOrConsolidated(
+        signalId,
+        eserviceId,
+        log
+      );
 
       const message = toSignalMessage(
         body as SignalPayload,
