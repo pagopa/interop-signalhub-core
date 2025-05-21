@@ -84,7 +84,8 @@ export async function handleMessageV2(
           "EServiceDescriptorDocumentDeletedByTemplateUpdate",
           "EServiceDescriptorDocumentUpdatedByTemplateUpdate",
           "EServiceDescriptorQuotasUpdatedByTemplateUpdate",
-          "EServiceNameUpdatedByTemplateUpdate"
+          "EServiceNameUpdatedByTemplateUpdate",
+          "EServiceDescriptorAgreementApprovalPolicyUpdated"
         )
       },
       async () => {
