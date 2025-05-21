@@ -1,4 +1,6 @@
-FROM node:20.14.0-slim@sha256:a16301294ba66d2ad22d3beded4a52720f96ab208c1db0973c034d0127a4ccb0 as build
+ARG NODE_REGISTRY="docker.io"
+
+FROM ${NODE_REGISTRY}/node:20.14.0@sha256:02cd2205818f121c13612721876f28c18bd50148bb8af532ea121c96ffcb59bf AS build
 
 RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
 
@@ -31,9 +33,13 @@ RUN pnpm build && \
     packages/purpose-event-consumer/dist && \
     find /out -exec touch -h --date=@0 {} \;
 
-FROM node:20.14.0-slim@sha256:a16301294ba66d2ad22d3beded4a52720f96ab208c1db0973c034d0127a4ccb0 as final 
+FROM ${NODE_REGISTRY}/node:20.14.0@sha256:02cd2205818f121c13612721876f28c18bd50148bb8af532ea121c96ffcb59bf AS final 
 
 COPY --from=build /out /app
+
+RUN groupadd -r app && useradd -rm -g app app
+RUN chown -R app:app /app && chmod -R 700 /app
+USER app
 
 WORKDIR /app/packages/purpose-event-consumer
 
