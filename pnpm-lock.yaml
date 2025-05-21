@@ -39,13 +39,8 @@ importers:
   packages/agreement-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-<<<<<<< HEAD
         specifier: 1.6.1
         version: 1.6.1
-=======
-        specifier: 1.5.4
-        version: 1.5.4
->>>>>>> develop
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -224,13 +219,8 @@ importers:
   packages/delegation-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-<<<<<<< HEAD
         specifier: 1.6.1
         version: 1.6.1
-=======
-        specifier: 1.5.4
-        version: 1.5.4
->>>>>>> develop
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -272,13 +262,8 @@ importers:
   packages/eservice-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-<<<<<<< HEAD
         specifier: 1.6.1
         version: 1.6.1
-=======
-        specifier: 1.5.4
-        version: 1.5.4
->>>>>>> develop
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -415,13 +400,8 @@ importers:
   packages/purpose-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-<<<<<<< HEAD
         specifier: 1.6.1
         version: 1.6.1
-=======
-        specifier: 1.5.4
-        version: 1.5.4
->>>>>>> develop
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -1188,13 +1168,8 @@ packages:
     peerDependencies:
       eslint: 8.57.0
 
-<<<<<<< HEAD
   '@pagopa/interop-outbound-models@1.6.1':
     resolution: {integrity: sha512-bNd8hggBqRynW9zzKqx0dMsFvdTTuZyk05JXQJxlc6rkoWQuucypoNkH5ygSvhu0cQwGEDNHWojdbGubJQApMQ==}
-=======
-  '@pagopa/interop-outbound-models@1.5.4':
-    resolution: {integrity: sha512-d1OyacycQWA6B9hTumig5AH8eJbo9NRu5B3fdjt7RRl+dFGa28FVdaR97nEDDvSJX5SX5LoTALhbp8dcwtZqaw==}
->>>>>>> develop
 
   '@pkgr/core@0.1.1':
     resolution: {integrity: sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==}
@@ -5029,11 +5004,7 @@ snapshots:
       - vitest
       - vue-eslint-parser
 
-<<<<<<< HEAD
   '@pagopa/interop-outbound-models@1.6.1':
-=======
-  '@pagopa/interop-outbound-models@1.5.4':
->>>>>>> develop
     dependencies:
       '@protobuf-ts/runtime': 2.9.4
       ts-pattern: 5.2.0
