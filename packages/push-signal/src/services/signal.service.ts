@@ -33,16 +33,18 @@ export function signalServiceBuilder(db: DB): ISignalService {
         throw signalIdDuplicatedForEserviceId(signalId, eserviceId);
       }
 
-      const signalsWithHigherSignalId = await signalRepository(
-        db
-      ).findSignalsWithSignalIdMajorThanAndAlreadyStored(
-        eserviceId,
-        signalId,
-        config.timeWindowInSeconds
-      );
+      if (config.featureFlagTimeWindow) {
+        const signalsWithHigherSignalId = await signalRepository(
+          db
+        ).findSignalsWithSignalIdMajorThanAndAlreadyStored(
+          eserviceId,
+          signalId,
+          config.timeWindowInSeconds
+        );
 
-      if (signalsWithHigherSignalId && signalsWithHigherSignalId.length > 0) {
-        throw signalStoredWithHigherSignalId(signalId, eserviceId);
+        if (signalsWithHigherSignalId && signalsWithHigherSignalId.length > 0) {
+          throw signalStoredWithHigherSignalId(signalId, eserviceId);
+        }
       }
     }
   };

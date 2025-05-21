@@ -31,3 +31,9 @@ export const aValidMockAgreement = {
 export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export function getRandomInt(min = 1, max = 100): number {
+  const lower = Math.ceil(min);
+  const upper = Math.floor(max);
+  return Math.floor(Math.random() * (upper - lower + 1)) + lower;
+}
