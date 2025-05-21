@@ -4,7 +4,6 @@ import {
 } from "pagopa-signalhub-commons-test";
 import { inject } from "vitest";
 
-import { PushServiceConfig } from "../src/config/env.js";
 import { interopServiceBuilder } from "../src/services/interop.service.js";
 import { queueServiceBuilder } from "../src/services/queque.service.js";
 import { signalServiceBuilder } from "../src/services/signal.service.js";
