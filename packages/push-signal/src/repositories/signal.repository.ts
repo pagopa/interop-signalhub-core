@@ -35,10 +35,13 @@ export const signalRepository = (db: DB): ISignalRepository => {
     ): Promise<number[] | null> {
       try {
         return await db.manyOrNone(
-          `SELECT signal_id FROM ${signalTable}
+          `WITH now_once AS (
+            SELECT NOW() - INTERVAL '${consolidationTimeWindowInSeconds} seconds' AS cutoff_time
+          )
+          SELECT signal_id FROM ${signalTable}, now_once
            WHERE eservice_id = $1
            AND signal_id > $2
-           AND tmst_insert < NOW() - INTERVAL '${consolidationTimeWindowInSeconds} seconds'`,
+           AND tmst_insert < cutoff_time`,
           [eserviceId, signalId]
         );
       } catch (error) {
