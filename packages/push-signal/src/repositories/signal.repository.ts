@@ -4,7 +4,7 @@ import { config } from "../config/env.js";
 
 export interface ISignalRepository {
   findBy: (signalId: number, eserviceId: string) => Promise<number | null>;
-  findSignalsWithSignalIdMajorThanAndAlreadyConsolidated: (
+  findSignalsWithSignalIdMajorThanAndAlreadyStored: (
     eserviceId: string,
     signalId: number,
     consolidationTimeWindowInSeconds: number
@@ -28,7 +28,7 @@ export const signalRepository = (db: DB): ISignalRepository => {
       }
     },
 
-    async findSignalsWithSignalIdMajorThanAndAlreadyConsolidated(
+    async findSignalsWithSignalIdMajorThanAndAlreadyStored(
       eserviceId: string,
       signalId: number,
       consolidationTimeWindowInSeconds: number
@@ -46,7 +46,7 @@ export const signalRepository = (db: DB): ISignalRepository => {
         );
       } catch (error) {
         throw genericInternalError(
-          `Error findSignalsWithSignalIdMinorThanAndAlreadyConsolidated: ${error}`
+          `Error findSignalsWithSignalIdMajorThanAndAlreadyStored: ${error}`
         );
       }
     }

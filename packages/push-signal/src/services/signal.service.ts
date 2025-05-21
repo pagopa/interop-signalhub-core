@@ -22,7 +22,7 @@ export function signalServiceBuilder(db: DB): ISignalService {
       logger: Logger
     ): Promise<void> {
       logger.info(
-        `SignalService::verifySignalDuplicated signald: ${signalId}, eserviceId: ${eserviceId}`
+        `SignalService::verify signald: ${signalId}, eserviceId: ${eserviceId}`
       );
       const signalIdPresent = await signalRepository(db).findBy(
         signalId,
@@ -35,7 +35,7 @@ export function signalServiceBuilder(db: DB): ISignalService {
 
       const signalsWithHigherSignalId = await signalRepository(
         db
-      ).findSignalsWithSignalIdMajorThanAndAlreadyConsolidated(
+      ).findSignalsWithSignalIdMajorThanAndAlreadyStored(
         eserviceId,
         signalId,
         config.timeWindowInSeconds
