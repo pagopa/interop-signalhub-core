@@ -29,8 +29,6 @@ const PullServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
           .transform((value) => value === "true"),
         TIME_WINDOW_DURATION_IN_SECONDS: z
           .string()
-          .optional()
-          .default("120")
           .transform((value) => parseInt(value, 10))
       })
       .transform((c) => ({
