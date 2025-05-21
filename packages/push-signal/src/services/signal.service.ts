@@ -3,12 +3,12 @@ import { DB, Logger } from "pagopa-signalhub-commons";
 import { config } from "../config/env.js";
 import {
   signalIdDuplicatedForEserviceId,
-  signalsConsolidatedWithHigherSignalId
+  signalStoredWithHigherSignalId
 } from "../models/domain/errors.js";
 import { signalRepository } from "../repositories/signal.repository.js";
 
 interface ISignalService {
-  readonly verifySignalDuplicatedOrConsolidated: (
+  readonly verify: (
     signalId: number,
     eserviceId: string,
     logger: Logger
@@ -16,7 +16,7 @@ interface ISignalService {
 }
 export function signalServiceBuilder(db: DB): ISignalService {
   return {
-    async verifySignalDuplicatedOrConsolidated(
+    async verify(
       signalId: number,
       eserviceId: string,
       logger: Logger
@@ -29,6 +29,10 @@ export function signalServiceBuilder(db: DB): ISignalService {
         eserviceId
       );
 
+      if (signalIsDuplicated(signalIdPresent)) {
+        throw signalIdDuplicatedForEserviceId(signalId, eserviceId);
+      }
+
       const signalsWithHigherSignalId = await signalRepository(
         db
       ).findSignalsWithSignalIdMajorThanAndAlreadyConsolidated(
@@ -37,12 +41,8 @@ export function signalServiceBuilder(db: DB): ISignalService {
         config.timeWindowInSeconds
       );
 
-      if (signalIsDuplicated(signalIdPresent)) {
-        throw signalIdDuplicatedForEserviceId(signalId, eserviceId);
-      }
-
       if (signalsWithHigherSignalId && signalsWithHigherSignalId.length > 0) {
-        throw signalsConsolidatedWithHigherSignalId(signalId, eserviceId);
+        throw signalStoredWithHigherSignalId(signalId, eserviceId);
       }
     }
   };

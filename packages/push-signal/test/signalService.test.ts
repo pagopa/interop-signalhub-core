@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { config } from "../src/config/env.js";
 import {
   signalIdDuplicatedForEserviceId,
-  signalsConsolidatedWithHigherSignalId
+  signalStoredWithHigherSignalId
 } from "../src/models/domain/errors.js";
 import { cleanup, postgresDB, signalService, sleep } from "./utils.js";
 
@@ -16,11 +16,7 @@ describe("Store service", () => {
       const signalId = 1;
       const eserviceId = "test-eservice-id";
       await expect(
-        signalService.verifySignalDuplicatedOrConsolidated(
-          signalId,
-          eserviceId,
-          genericLogger
-        )
+        signalService.verify(signalId, eserviceId, genericLogger)
       ).resolves.not.toThrow();
     });
 
@@ -31,11 +27,7 @@ describe("Store service", () => {
       await writeSignal(signal, postgresDB, config.signalHubSchema);
 
       await expect(
-        signalService.verifySignalDuplicatedOrConsolidated(
-          signalId,
-          eserviceId,
-          genericLogger
-        )
+        signalService.verify(signalId, eserviceId, genericLogger)
       ).rejects.toThrowError(
         signalIdDuplicatedForEserviceId(signalId, eserviceId)
       );
@@ -55,11 +47,7 @@ describe("Store service", () => {
 
       const secondSignalId = firstSignalId - 1;
       await expect(
-        signalService.verifySignalDuplicatedOrConsolidated(
-          secondSignalId,
-          eserviceId,
-          genericLogger
-        )
+        signalService.verify(secondSignalId, eserviceId, genericLogger)
       ).resolves.not.toThrow();
     });
   });
@@ -77,13 +65,9 @@ describe("Store service", () => {
 
     const secondSignalId = firstSignalId - 1;
     await expect(
-      signalService.verifySignalDuplicatedOrConsolidated(
-        secondSignalId,
-        eserviceId,
-        genericLogger
-      )
+      signalService.verify(secondSignalId, eserviceId, genericLogger)
     ).rejects.toThrowError(
-      signalsConsolidatedWithHigherSignalId(secondSignalId, eserviceId)
+      signalStoredWithHigherSignalId(secondSignalId, eserviceId)
     );
   });
 });

@@ -5,7 +5,7 @@ export const errorCodes = {
   signalDuplicate: "0002",
   signalNotSended: "0003",
   operationPushForbidden: "0004",
-  signalsConsolidatedWithHigherSignalId: "0005"
+  signalStoredWithHigherSignalId: "0005"
 };
 
 export type ErrorCodes = keyof typeof errorCodes;
@@ -31,13 +31,13 @@ export function signalIdDuplicatedForEserviceId(
   });
 }
 
-export function signalsConsolidatedWithHigherSignalId(
+export function signalStoredWithHigherSignalId(
   signalId: number,
   eserviceId: string
 ): ApiError<ErrorCodes> {
   return new ApiError({
-    detail: `ApiError during Signal creation: At least one signal with signalId > ${signalId} for ${eserviceId} has already available on database`,
-    code: "signalsConsolidatedWithHigherSignalId",
+    detail: `ApiError during Signal creation: At least one signal with signalId > ${signalId} for ${eserviceId} has already stored`,
+    code: "signalStoredWithHigherSignalId",
     title: "Signal with higher value for signalId is already on database"
   });
 }
