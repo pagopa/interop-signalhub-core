@@ -60,7 +60,7 @@ export const signalRepository = (db: DB): ISignalRepository => {
           SELECT signal_id, object_id, eservice_id, object_type, signal_type FROM ${signalTable} s, now_once
            WHERE s.eservice_id = $1 
            AND s.signal_id > $2 
-           AND s.tmst_insert < cutoff_time'
+           AND s.tmst_insert < cutoff_time
            order by s.signal_id asc limit $3`,
           [eserviceId, signalId, limit]
         );
