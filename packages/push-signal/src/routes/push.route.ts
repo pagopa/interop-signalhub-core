@@ -63,6 +63,7 @@ export const pushRoutes = (
           match(err.code)
             .with("signalDuplicate", () => 400)
             .with("signalNotSended", () => 400)
+            .with("signalStoredWithHigherSignalId", () => 400)
             .with("unauthorizedError", () => 401)
             .with("operationPushForbidden", () => 403)
             .with("genericError", () => 500)
