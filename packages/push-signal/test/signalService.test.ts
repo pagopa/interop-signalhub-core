@@ -42,6 +42,43 @@ describe("Store service", () => {
         signalIdDuplicatedForEserviceId(signalId, eserviceId)
       );
     });
+
+    it("Should be able to deposit signal with higher signalId if the signalId is not consolidated yet", async () => {
+      const firstSignalId = 3;
+      const eserviceId = "test-eservice-id";
+
+      const firstSignal = createSignal({ signalId: firstSignalId, eserviceId });
+      await writeSignal(firstSignal, postgresDB, config.signalHubSchema);
+
+      const TIME_TO_WAIT_BEFORE_DEPOSIT_SIGNAL =
+        config.timeWindowInSeconds * 1000 - 500;
+
+      await sleep(TIME_TO_WAIT_BEFORE_DEPOSIT_SIGNAL);
+
+      const secondSignalId = firstSignalId - 1;
+      await expect(
+        signalService.verify(secondSignalId, eserviceId, genericLogger)
+      ).resolves.not.toThrow();
+    });
+  });
+
+  it("Should throw an error if the signalId is already consolidated on the db and signalId is lower thant the last signalId", async () => {
+    const firstSignalId = 8;
+    const eserviceId = "test-eservice-id";
+
+    const firstSignal = createSignal({ signalId: firstSignalId, eserviceId });
+    await writeSignal(firstSignal, postgresDB, config.signalHubSchema);
+
+    const TIME_TO_WAIT_BEFORE_DEPOSIT_SIGNAL =
+      config.timeWindowInSeconds * 1000 + 500;
+    await sleep(TIME_TO_WAIT_BEFORE_DEPOSIT_SIGNAL);
+
+    const secondSignalId = firstSignalId - 1;
+    await expect(
+      signalService.verify(secondSignalId, eserviceId, genericLogger)
+    ).rejects.toThrowError(
+      signalStoredWithHigherSignalId(secondSignalId, eserviceId)
+    );
   });
 
   describe("Push signal with time windows disabled", () => {
