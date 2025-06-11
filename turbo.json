@@ -1,7 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
-  "pipeline": {
+  "tasks": {
     "start": {
       "persistent": true,
       "cache": false,
@@ -16,11 +16,11 @@
     },
     "check": {
       "dependsOn": ["^build"],
-      "outputs": ["dist"]
+      "outputs": ["dist/**"]
     },
     "lint": {
       "dependsOn": ["^build"],
-      "outputs": ["dist"]
+      "outputs": [".eslintcache"]
     },
     "lint:autofix": {
       "dependsOn": ["^build"],
