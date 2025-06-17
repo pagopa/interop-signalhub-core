@@ -27,8 +27,8 @@ importers:
         specifier: ^7.1.0
         version: 7.1.0(eslint@9.13.0)(typescript@5.6.3)
       turbo:
-        specifier: ^1.13.3
-        version: 1.13.3
+        specifier: ^2.5.4
+        version: 2.5.4
       typescript:
         specifier: ^5.6.3
         version: 5.6.3
@@ -39,8 +39,8 @@ importers:
   packages/agreement-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: 1.6.1
-        version: 1.6.1
+        specifier: 1.6.4
+        version: 1.6.4
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -219,8 +219,8 @@ importers:
   packages/delegation-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: 1.6.1
-        version: 1.6.1
+        specifier: 1.6.4
+        version: 1.6.4
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -262,8 +262,8 @@ importers:
   packages/eservice-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: 1.6.1
-        version: 1.6.1
+        specifier: 1.6.4
+        version: 1.6.4
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -400,8 +400,8 @@ importers:
   packages/purpose-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: 1.6.1
-        version: 1.6.1
+        specifier: 1.6.4
+        version: 1.6.4
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -1168,8 +1168,8 @@ packages:
     peerDependencies:
       eslint: 8.57.0
 
-  '@pagopa/interop-outbound-models@1.6.1':
-    resolution: {integrity: sha512-bNd8hggBqRynW9zzKqx0dMsFvdTTuZyk05JXQJxlc6rkoWQuucypoNkH5ygSvhu0cQwGEDNHWojdbGubJQApMQ==}
+  '@pagopa/interop-outbound-models@1.6.4':
+    resolution: {integrity: sha512-7FFsV2Eh6mtxjg+PczM3ShnTR99uAWtHwHmXizpNafrKsJP3MYSRMy39yKIk+U0Ashb+7rjn8P2LDFwanOr0JQ==}
 
   '@pkgr/core@0.1.1':
     resolution: {integrity: sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==}
@@ -3419,38 +3419,38 @@ packages:
   tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
 
-  turbo-darwin-64@1.13.3:
-    resolution: {integrity: sha512-glup8Qx1qEFB5jerAnXbS8WrL92OKyMmg5Hnd4PleLljAeYmx+cmmnsmLT7tpaVZIN58EAAwu8wHC6kIIqhbWA==}
+  turbo-darwin-64@2.5.4:
+    resolution: {integrity: sha512-ah6YnH2dErojhFooxEzmvsoZQTMImaruZhFPfMKPBq8sb+hALRdvBNLqfc8NWlZq576FkfRZ/MSi4SHvVFT9PQ==}
     cpu: [x64]
     os: [darwin]
 
-  turbo-darwin-arm64@1.13.3:
-    resolution: {integrity: sha512-/np2xD+f/+9qY8BVtuOQXRq5f9LehCFxamiQnwdqWm5iZmdjygC5T3uVSYuagVFsZKMvX3ycySwh8dylGTl6lg==}
+  turbo-darwin-arm64@2.5.4:
+    resolution: {integrity: sha512-2+Nx6LAyuXw2MdXb7pxqle3MYignLvS7OwtsP9SgtSBaMlnNlxl9BovzqdYAgkUW3AsYiQMJ/wBRb7d+xemM5A==}
     cpu: [arm64]
     os: [darwin]
 
-  turbo-linux-64@1.13.3:
-    resolution: {integrity: sha512-G+HGrau54iAnbXLfl+N/PynqpDwi/uDzb6iM9hXEDG+yJnSJxaHMShhOkXYJPk9offm9prH33Khx2scXrYVW1g==}
+  turbo-linux-64@2.5.4:
+    resolution: {integrity: sha512-5May2kjWbc8w4XxswGAl74GZ5eM4Gr6IiroqdLhXeXyfvWEdm2mFYCSWOzz0/z5cAgqyGidF1jt1qzUR8hTmOA==}
     cpu: [x64]
     os: [linux]
 
-  turbo-linux-arm64@1.13.3:
-    resolution: {integrity: sha512-qWwEl5VR02NqRyl68/3pwp3c/olZuSp+vwlwrunuoNTm6JXGLG5pTeme4zoHNnk0qn4cCX7DFrOboArlYxv0wQ==}
+  turbo-linux-arm64@2.5.4:
+    resolution: {integrity: sha512-/2yqFaS3TbfxV3P5yG2JUI79P7OUQKOUvAnx4MV9Bdz6jqHsHwc9WZPpO4QseQm+NvmgY6ICORnoVPODxGUiJg==}
     cpu: [arm64]
     os: [linux]
 
-  turbo-windows-64@1.13.3:
-    resolution: {integrity: sha512-Nudr4bRChfJzBPzEmpVV85VwUYRCGKecwkBFpbp2a4NtrJ3+UP1VZES653ckqCu2FRyRuS0n03v9euMbAvzH+Q==}
+  turbo-windows-64@2.5.4:
+    resolution: {integrity: sha512-EQUO4SmaCDhO6zYohxIjJpOKRN3wlfU7jMAj3CgcyTPvQR/UFLEKAYHqJOnJtymbQmiiM/ihX6c6W6Uq0yC7mA==}
     cpu: [x64]
     os: [win32]
 
-  turbo-windows-arm64@1.13.3:
-    resolution: {integrity: sha512-ouJCgsVLd3icjRLmRvHQDDZnmGzT64GBupM1Y+TjtYn2LVaEBoV6hicFy8x5DUpnqdLy+YpCzRMkWlwhmkX7sQ==}
+  turbo-windows-arm64@2.5.4:
+    resolution: {integrity: sha512-oQ8RrK1VS8lrxkLriotFq+PiF7iiGgkZtfLKF4DDKsmdbPo0O9R2mQxm7jHLuXraRCuIQDWMIw6dpcr7Iykf4A==}
     cpu: [arm64]
     os: [win32]
 
-  turbo@1.13.3:
-    resolution: {integrity: sha512-n17HJv4F4CpsYTvKzUJhLbyewbXjq1oLCi90i5tW1TiWDz16ML1eDG7wi5dHaKxzh5efIM56SITnuVbMq5dk4g==}
+  turbo@2.5.4:
+    resolution: {integrity: sha512-kc8ZibdRcuWUG1pbYSBFWqmIjynlD8Lp7IB6U3vIzvOv9VG+6Sp8bzyeBWE3Oi8XV5KsQrznyRTBPvrf99E4mA==}
     hasBin: true
 
   tweetnacl@0.14.5:
@@ -3789,8 +3789,8 @@ snapshots:
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sso-oidc': 3.583.0(@aws-sdk/client-sts@3.583.0)
-      '@aws-sdk/client-sts': 3.583.0
+      '@aws-sdk/client-sso-oidc': 3.583.0
+      '@aws-sdk/client-sts': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)
       '@aws-sdk/core': 3.582.0
       '@aws-sdk/credential-provider-node': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)(@aws-sdk/client-sts@3.583.0)
       '@aws-sdk/middleware-host-header': 3.577.0
@@ -3833,11 +3833,11 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@aws-sdk/client-sso-oidc@3.583.0(@aws-sdk/client-sts@3.583.0)':
+  '@aws-sdk/client-sso-oidc@3.583.0':
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sts': 3.583.0
+      '@aws-sdk/client-sts': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)
       '@aws-sdk/core': 3.582.0
       '@aws-sdk/credential-provider-node': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)(@aws-sdk/client-sts@3.583.0)
       '@aws-sdk/middleware-host-header': 3.577.0
@@ -3876,7 +3876,6 @@ snapshots:
       '@smithy/util-utf8': 3.0.0
       tslib: 2.6.2
     transitivePeerDependencies:
-      - '@aws-sdk/client-sts'
       - aws-crt
 
   '@aws-sdk/client-sso-oidc@3.592.0':
@@ -4098,11 +4097,11 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@aws-sdk/client-sts@3.583.0':
+  '@aws-sdk/client-sts@3.583.0(@aws-sdk/client-sso-oidc@3.583.0)':
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sso-oidc': 3.583.0(@aws-sdk/client-sts@3.583.0)
+      '@aws-sdk/client-sso-oidc': 3.583.0
       '@aws-sdk/core': 3.582.0
       '@aws-sdk/credential-provider-node': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)(@aws-sdk/client-sts@3.583.0)
       '@aws-sdk/middleware-host-header': 3.577.0
@@ -4141,6 +4140,7 @@ snapshots:
       '@smithy/util-utf8': 3.0.0
       tslib: 2.6.2
     transitivePeerDependencies:
+      - '@aws-sdk/client-sso-oidc'
       - aws-crt
 
   '@aws-sdk/client-sts@3.592.0(@aws-sdk/client-sso-oidc@3.592.0)':
@@ -4333,7 +4333,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-ini@3.583.0(@aws-sdk/client-sso-oidc@3.583.0)(@aws-sdk/client-sts@3.583.0)':
     dependencies:
-      '@aws-sdk/client-sts': 3.583.0
+      '@aws-sdk/client-sts': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)
       '@aws-sdk/credential-provider-env': 3.577.0
       '@aws-sdk/credential-provider-process': 3.577.0
       '@aws-sdk/credential-provider-sso': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)
@@ -4556,7 +4556,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-web-identity@3.577.0(@aws-sdk/client-sts@3.583.0)':
     dependencies:
-      '@aws-sdk/client-sts': 3.583.0
+      '@aws-sdk/client-sts': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)
       '@aws-sdk/types': 3.577.0
       '@smithy/property-provider': 3.0.0
       '@smithy/types': 3.0.0
@@ -4702,7 +4702,7 @@ snapshots:
 
   '@aws-sdk/token-providers@3.577.0(@aws-sdk/client-sso-oidc@3.583.0)':
     dependencies:
-      '@aws-sdk/client-sso-oidc': 3.583.0(@aws-sdk/client-sts@3.583.0)
+      '@aws-sdk/client-sso-oidc': 3.583.0
       '@aws-sdk/types': 3.577.0
       '@smithy/property-provider': 3.0.0
       '@smithy/shared-ini-file-loader': 3.0.0
@@ -5004,7 +5004,7 @@ snapshots:
       - vitest
       - vue-eslint-parser
 
-  '@pagopa/interop-outbound-models@1.6.1':
+  '@pagopa/interop-outbound-models@1.6.4':
     dependencies:
       '@protobuf-ts/runtime': 2.9.4
       ts-pattern: 5.2.0
@@ -7665,32 +7665,32 @@ snapshots:
 
   tslib@2.6.2: {}
 
-  turbo-darwin-64@1.13.3:
+  turbo-darwin-64@2.5.4:
     optional: true
 
-  turbo-darwin-arm64@1.13.3:
+  turbo-darwin-arm64@2.5.4:
     optional: true
 
-  turbo-linux-64@1.13.3:
+  turbo-linux-64@2.5.4:
     optional: true
 
-  turbo-linux-arm64@1.13.3:
+  turbo-linux-arm64@2.5.4:
     optional: true
 
-  turbo-windows-64@1.13.3:
+  turbo-windows-64@2.5.4:
     optional: true
 
-  turbo-windows-arm64@1.13.3:
+  turbo-windows-arm64@2.5.4:
     optional: true
 
-  turbo@1.13.3:
+  turbo@2.5.4:
     optionalDependencies:
-      turbo-darwin-64: 1.13.3
-      turbo-darwin-arm64: 1.13.3
-      turbo-linux-64: 1.13.3
-      turbo-linux-arm64: 1.13.3
-      turbo-windows-64: 1.13.3
-      turbo-windows-arm64: 1.13.3
+      turbo-darwin-64: 2.5.4
+      turbo-darwin-arm64: 2.5.4
+      turbo-linux-64: 2.5.4
+      turbo-linux-arm64: 2.5.4
+      turbo-windows-64: 2.5.4
+      turbo-windows-arm64: 2.5.4
 
   tweetnacl@0.14.5: {}
 
