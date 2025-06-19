@@ -26,7 +26,7 @@
     "@zodios/core": "10.9.6",
     "dotenv-flow": "3.3.0",
     "jsonwebtoken": "9.0.2",
-    "pg-promise": "11.5.0",
+    "pg-promise": "11.5.5",
     "pagopa-signalhub-commons": "workspace:*",
     "testcontainers": "10.2.2",
     "ts-pattern": "5.0.6",
