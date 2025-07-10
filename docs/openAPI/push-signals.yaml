@@ -3,10 +3,10 @@ info:
   title: Push signal Service API
   description: Exposes the API for Signal-hub push service
   version: '1.0'
-  license:
-    name: ISC
-    url: https://opensource.org/license/isc-license-txt
-  termsOfService: https://docs.pagopa.it/interoperabilita-1/normativa-e-approfondimenti
+  contact:
+    name: API Support
+    url: https://github.com/pagopa/pdnd-interop-frontend/issues
+  termsOfService: https://selfcare.interop.pagopa.it/ui/it/termini-di-servizio
 servers:
   - url: https://api.signalhub.interop.pagopa.it/1.0/push
     description: Push signal Production URL
