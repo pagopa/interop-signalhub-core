@@ -9,7 +9,7 @@ info:
   termsOfService: https://selfcare.interop.pagopa.it/ui/it/termini-di-servizio
 servers:
   - url: https://api.signalhub.interop.pagopa.it/1.0/pull
-    description: Pull signal Production URL
+    description: Pull signal production environment URL
 paths:
   /status:
     get:
