@@ -14,15 +14,6 @@ const PullServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
   .and(
     z
       .object({
-        FEATURE_FLAG_SIGNALHUB_WHITELIST: z
-          .enum(["true", "false"])
-          .default("false")
-          .transform((value) => value === "true"),
-        SIGNALHUB_WHITELIST: z
-          .string()
-          .transform((value) => value.split(","))
-          .pipe(z.array(z.string().uuid()))
-          .optional(),
         FEATURE_FLAG_TIME_WINDOW: z
           .enum(["true", "false"])
           .default("false")
@@ -32,8 +23,6 @@ const PullServiceConfig = HTTPServerConfig.and(SignalHubStoreConfig)
           .transform((value) => parseInt(value, 10))
       })
       .transform((c) => ({
-        featureFlagSignalhubWhitelist: c.FEATURE_FLAG_SIGNALHUB_WHITELIST,
-        signalhubWhitelist: c.SIGNALHUB_WHITELIST,
         featureFlagTimeWindow: c.FEATURE_FLAG_TIME_WINDOW,
         timeWindowInSeconds: c.TIME_WINDOW_DURATION_IN_SECONDS
       }))
