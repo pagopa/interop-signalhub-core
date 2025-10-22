@@ -43,7 +43,7 @@
     "commander": "^12.1.0",
     "pagopa-signalhub-commons-test": "workspace:*",
     "pagopa-tsrest-openapi-parser": "workspace:*",
-    "prettier": "2.8.8",
+    "prettier": "3.1.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3",
     "vitest": "^1.6.0"

@@ -20,7 +20,9 @@ if (!parsedFromEnv.success) {
   );
 
   console.error(
-    `Invalid or missing env vars: Delegation Event Consumer ${invalidEnvVars.join(", ")}`
+    `Invalid or missing env vars: Delegation Event Consumer ${invalidEnvVars.join(
+      ", "
+    )}`
   );
   process.exit(1);
 }
