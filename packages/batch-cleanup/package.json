@@ -16,13 +16,14 @@
   "license": "ISC",
   "dependencies": {
     "dotenv-flow": "^4.1.0",
-    "pg-promise": "^11.8.0",
     "pagopa-signalhub-commons": "workspace:*",
+    "pg-promise": "^11.8.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "pagopa-signalhub-commons-test": "workspace:*",
     "@types/node": "^20.11.24",
+    "pagopa-signalhub-commons-test": "workspace:*",
+    "prettier": "2.8.8",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3",
     "vitest": "^1.6.0"

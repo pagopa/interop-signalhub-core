@@ -23,6 +23,7 @@
     "ts-pattern": "^5.2.0"
   },
   "devDependencies": {
+    "prettier": "2.8.8",
     "typescript": "^5.6.3"
   }
 }
