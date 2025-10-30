@@ -62,6 +62,17 @@ export async function handleMessageV2(
         await delegationService.updateDelegation(delegation, logger);
       }
     )
+    .with(
+      {
+        type: P.union(
+          "DelegationContractGenerated",
+          "DelegationSignedContractGenerated"
+        )
+      },
+      async () => {
+        logger.info(`Skip event (not relevant)`);
+      }
+    )
     .exhaustive();
 }
 

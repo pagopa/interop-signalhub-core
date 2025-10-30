@@ -64,7 +64,9 @@ export async function handleMessageV2(
           "NewPurposeVersionWaitingForApproval",
           "WaitingForApprovalPurposeVersionDeleted",
           "PurposeVersionRejected",
-          "PurposeCloned"
+          "PurposeCloned",
+          "RiskAnalysisDocumentGenerated",
+          "RiskAnalysisSignedDocumentGenerated"
         )
       },
       async () => {
