@@ -81,7 +81,9 @@ export async function handleMessageV2(
       {
         type: P.union(
           "AgreementConsumerDocumentAdded",
-          "AgreementConsumerDocumentRemoved"
+          "AgreementConsumerDocumentRemoved",
+          "AgreementContractGenerated",
+          "AgreementSignedContractGenerated"
         )
       },
       async () => {

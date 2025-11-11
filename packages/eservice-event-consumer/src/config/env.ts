@@ -18,7 +18,9 @@ if (!parsedFromEnv.success) {
     (issue) => issue.path
   );
   console.error(
-    `Invalid or missing env vars: Eservice Event Consumer ${invalidEnvVars.join(", ")}`
+    `Invalid or missing env vars: Eservice Event Consumer ${invalidEnvVars.join(
+      ", "
+    )}`
   );
   process.exit(1);
 }

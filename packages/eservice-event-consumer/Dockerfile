@@ -1,13 +1,11 @@
 ARG NODE_REGISTRY="docker.io"
 
-FROM ${NODE_REGISTRY}/node:20.14.0@sha256:02cd2205818f121c13612721876f28c18bd50148bb8af532ea121c96ffcb59bf AS build
+FROM ${NODE_REGISTRY}/node:20.19.4-slim@sha256:ef358d9fa0734e2c3b42482aa352c28a59245bc3d32e07ef57810cf8ba9092c5 AS build
 
-RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
+RUN corepack enable
 
 WORKDIR /app
-COPY package.json /app/
-COPY pnpm-lock.yaml /app/
-COPY pnpm-workspace.yaml /app/
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc /app/
 
 COPY ./packages/eservice-event-consumer/package.json /app/packages/eservice-event-consumer/package.json
 COPY ./packages/commons/package.json /app/packages/commons/package.json
@@ -33,7 +31,7 @@ RUN pnpm build && \
     packages/eservice-event-consumer/dist && \
     find /out -exec touch -h --date=@0 {} \;
 
-FROM ${NODE_REGISTRY}/node:20.14.0@sha256:02cd2205818f121c13612721876f28c18bd50148bb8af532ea121c96ffcb59bf AS final 
+FROM ${NODE_REGISTRY}/node:20.19.4-slim@sha256:ef358d9fa0734e2c3b42482aa352c28a59245bc3d32e07ef57810cf8ba9092c5 AS final 
 
 COPY --from=build /out /app
 
