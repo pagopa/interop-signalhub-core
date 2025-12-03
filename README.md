@@ -192,3 +192,4 @@ If you can check if openAPI created before is compliant on openAPI specification
 
 `pnpm run api:validate:<service_name> --version <version>`
 
+
