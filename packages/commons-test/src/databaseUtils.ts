@@ -2,18 +2,11 @@ import {
   DB,
   InteropSchema,
   Signal,
-  SignalPayload,
   SignalhubSchema,
+  SignalPayload,
   TableName
 } from "pagopa-signalhub-commons";
 
-export async function truncatePurposeTable(
-  db: DB,
-  schema: InteropSchema
-): Promise<void> {
-  const purposeTable: TableName = `${schema}.purpose`;
-  await db.none(`truncate ${purposeTable};`);
-}
 export async function truncateAgreementTable(
   db: DB,
   schema: InteropSchema
@@ -27,6 +20,13 @@ export async function truncateEserviceTable(
 ): Promise<void> {
   const eserviceTable: TableName = `${schema}.eservice`;
   await db.none(`truncate ${eserviceTable};`);
+}
+export async function truncatePurposeTable(
+  db: DB,
+  schema: InteropSchema
+): Promise<void> {
+  const purposeTable: TableName = `${schema}.purpose`;
+  await db.none(`truncate ${purposeTable};`);
 }
 
 export async function truncateSignalTable(

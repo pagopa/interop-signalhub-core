@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 
-export function getCurrentDate(): string {
-  return new Date().toISOString();
-}
-
 type MiddlewareFn = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => Promise<void | Response>;
+
+export function getCurrentDate(): string {
+  return new Date().toISOString();
+}
 
 export function skipForUrl(
   path: string,

@@ -7,12 +7,12 @@ async function consumeRateLimiterRequest(organizationId: string) {
   return await redisRateLimiter?.rateLimitBy(organizationId, genericLogger);
 }
 
-async function getRequestConsumedBy(organizationId: string) {
-  return await redisRateLimiter?.getRateLimitCountBy(organizationId);
-}
-
 function getBurstRequestConsumedFor(organizationId: string) {
   return redisRateLimiter?.getRateLimitBurstCountBy(organizationId);
+}
+
+async function getRequestConsumedBy(organizationId: string) {
+  return await redisRateLimiter?.getRateLimitCountBy(organizationId);
 }
 
 function sleep(ms: number): Promise<void> {
@@ -32,7 +32,6 @@ function sleep(ms: number): Promise<void> {
 
 */
 
-// eslint-disable-next-line vitest/valid-describe-callback
 describe("Redis rate limiter tests", async () => {
   it("should rate-limit follow BurstRateLimiter logic", async () => {
     const organizationId = "organization-test-id-2";

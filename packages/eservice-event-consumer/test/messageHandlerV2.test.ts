@@ -10,10 +10,10 @@ import {
   insertEserviceDescriptor
 } from "./databaseUtils.js";
 import {
+  createEserviceAddedEventV2,
   createEServiceDescriptorAddedEventV2,
   createEServiceDescriptorUpdatedEventV2,
   createEServiceWithDescriptorsDeletedEventV2,
-  createEserviceAddedEventV2,
   createV2Event,
   eServiceService,
   generateID,

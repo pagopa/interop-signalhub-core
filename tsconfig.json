@@ -1,5 +1,7 @@
 {
-  "extends": "@tsconfig/node-lts",
+  "extends": [
+    "@tsconfig/node-lts/tsconfig.json"
+  ],
   "compilerOptions": {
     "noUnusedLocals": true,
     "noUnusedParameters": true,

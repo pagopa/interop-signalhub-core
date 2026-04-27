@@ -1,10 +1,10 @@
-import { DB, createDbInstance } from "pagopa-signalhub-commons";
+import { createDbInstance, DB } from "pagopa-signalhub-commons";
 
 import { config } from "../config/env.js";
 import { delegationRepository } from "../repositories/delegation.repository.js";
 import {
-  IDelegationService,
-  delegationServiceBuilder
+  delegationServiceBuilder,
+  IDelegationService
 } from "./delegation.service.js";
 
 export function serviceBuilder(): {

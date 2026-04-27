@@ -22,6 +22,6 @@ export const EserviceV2Entity = z.object({
   event_stream_id: z.string()
 });
 
-export type EserviceEntity = z.infer<typeof EserviceEntity>;
 export type EserviceDescriptorEntity = z.infer<typeof EserviceDescriptorEntity>;
+export type EserviceEntity = z.infer<typeof EserviceEntity>;
 export type EserviceV2Entity = z.infer<typeof EserviceV2Entity>;

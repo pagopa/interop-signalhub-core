@@ -9,6 +9,7 @@ import { config } from "../config/env.js";
 import { toSignalResponse } from "../model/domain/toSignalResponse.js";
 import { signalRepository } from "../repositories/signal.repository.js";
 
+export type SignalService = ReturnType<typeof signalServiceBuilder>;
 interface ISignalService {
   readonly getSignal: (
     eserviceId: string,
@@ -21,6 +22,7 @@ interface ISignalService {
     nextSignalId: number | null;
   }>;
 }
+
 export function signalServiceBuilder(db: DB): ISignalService {
   return {
     async getSignal(
@@ -73,5 +75,3 @@ export function signalServiceBuilder(db: DB): ISignalService {
     }
   };
 }
-
-export type SignalService = ReturnType<typeof signalServiceBuilder>;

@@ -1,9 +1,9 @@
 import {
   DB,
-  ProducerService,
-  TableName,
   genericInternalError,
   getCurrentDate,
+  ProducerService,
+  TableName,
   toProducerEservice
 } from "pagopa-signalhub-commons";
 

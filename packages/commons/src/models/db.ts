@@ -42,13 +42,17 @@ export const Agreement = z.object({
   tmstLastEdit: z.string().optional()
 });
 
-export type ProducerService = z.infer<typeof ProducerService>;
 export type Agreement = z.infer<typeof Agreement>;
+export type AgreementEntity = SnakeCase<z.infer<typeof Agreement>>;
+export type ProducerEserviceEntity = SnakeCase<z.infer<typeof ProducerService>>;
+export type ProducerService = z.infer<typeof ProducerService>;
+
+export type TableName =
+  | `${InteropSchema}.${InteropDatabaseTable}`
+  | `${SignalhubSchema}.${SignalHubDatabaseTable}`;
 export type TracingBatch = z.infer<typeof TracingBatch>;
 export type TracingBatchCleanup = z.infer<typeof TracingBatchCleanup>;
 
-export type ProducerEserviceEntity = SnakeCase<z.infer<typeof ProducerService>>;
-export type AgreementEntity = SnakeCase<z.infer<typeof Agreement>>;
 export type TracingBatchEntity = SnakeCase<z.infer<typeof TracingBatch>>;
 
 type InteropDatabaseTable =
@@ -62,7 +66,3 @@ type SignalHubDatabaseTable =
   | "signal"
   | "dead_signal"
   | "tracing_batch_cleanup";
-
-export type TableName =
-  | `${InteropSchema}.${InteropDatabaseTable}`
-  | `${SignalhubSchema}.${SignalHubDatabaseTable}`;

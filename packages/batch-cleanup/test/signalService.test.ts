@@ -8,9 +8,9 @@ import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
 import { config } from "../src/config/env.js";
 import {
+  cleanup,
   ONE_HOUR,
   ONE_MINUTE,
-  cleanup,
   postgresDB,
   signalService
 } from "./utils.js";

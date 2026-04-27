@@ -12,12 +12,12 @@ import { StartedTestContainer } from "testcontainers";
 import { z } from "zod";
 
 import {
-  TEST_ELASTIC_MQ_PORT,
-  TEST_POSTGRES_DB_PORT,
-  TEST_REDIS_PORT,
   elasticMQContainer,
   postgreSQLContainer,
-  redisContainer
+  redisContainer,
+  TEST_ELASTIC_MQ_PORT,
+  TEST_POSTGRES_DB_PORT,
+  TEST_REDIS_PORT
 } from "./containerTestUtils.js";
 
 const SqsConfig = QuequeConfig.and(AwsConfig);

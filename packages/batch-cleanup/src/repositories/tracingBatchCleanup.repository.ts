@@ -1,8 +1,8 @@
 import {
   DB,
+  genericInternalError,
   TableName,
-  TracingBatchCleanup,
-  genericInternalError
+  TracingBatchCleanup
 } from "pagopa-signalhub-commons";
 
 import { config } from "../config/env.js";

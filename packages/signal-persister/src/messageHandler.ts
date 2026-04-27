@@ -1,5 +1,5 @@
-import { Logger, SQS, logger } from "pagopa-signalhub-commons";
-import { P, match } from "ts-pattern";
+import { Logger, logger, SQS } from "pagopa-signalhub-commons";
+import { match, P } from "ts-pattern";
 
 import {
   NotRecoverableGenericMessageError,

@@ -1,14 +1,14 @@
 import {
-  OpenAPIRegistry,
+  extendZodWithOpenApi,
   OpenApiGeneratorV3,
-  RouteConfig,
-  extendZodWithOpenApi
+  OpenAPIRegistry,
+  RouteConfig
 } from "@asteasolutions/zod-to-openapi";
 import { RouteParameter } from "@asteasolutions/zod-to-openapi/dist/openapi-registry.js";
 import {
   AppRoute,
-  AppRouteResponse,
   AppRouter,
+  AppRouteResponse,
   ContractAnyType,
   isZodType
 } from "@ts-rest/core";
@@ -22,18 +22,19 @@ import { z } from "zod";
 
 extendZodWithOpenApi(z);
 
-export type ResponseHeader = {
-  header: HeadersObject;
-};
-
 export type AdddedInfo = Record<string, Record<string, ResponseHeader>>;
 
-type OpenAPIComponentTypeKey = Parameters<typeof registry.registerComponent>[0];
 export type OpenAPICustomComponent = {
   type: OpenAPIComponentTypeKey;
   name: string;
   component: unknown;
 };
+
+export type ResponseHeader = {
+  header: HeadersObject;
+};
+
+type OpenAPIComponentTypeKey = Parameters<typeof registry.registerComponent>[0];
 
 type ResponseItems = RouteConfig["responses"];
 
@@ -52,6 +53,43 @@ const mapMethod = {
   PATCH: "patch"
 };
 const registry = new OpenAPIRegistry();
+
+export function generateOpenAPISpec(
+  router: AppRouter,
+  apiDoc: Omit<OpenAPIObject, "paths" | "openapi"> & { info: InfoObject },
+  options: {
+    setOperationId?: boolean | "concatenated-path";
+    jsonQuery?: boolean;
+    operationMapper?: (
+      operation: OperationObject,
+      appRoute: AppRoute
+    ) => OperationObject;
+  } = {},
+
+  customComponents: OpenAPICustomComponent[] = [],
+  pathPrefix?: string,
+
+  addedInfo?: AdddedInfo
+): OpenAPIObject {
+  generateOpenAPIFromTsRestContract(
+    router,
+    options,
+    pathPrefix,
+    JSON.parse(JSON.stringify(addedInfo))
+  );
+
+  // ---  registering custom components ----
+  registerRowOpenAPIcomponents(customComponents);
+
+  const generator = new OpenApiGeneratorV3(registry.definitions);
+
+  const apiDocuments = generator.generateDocument({
+    openapi: "3.0.3",
+    ...apiDoc
+  });
+
+  return apiDocuments as OpenAPIObject;
+}
 
 const generateOpenAPIFromTsRestContract = (
   router: AppRouter,
@@ -156,43 +194,6 @@ function removePathprefixFromRoutePath(
 }
 
 // Example usage:
-
-export function generateOpenAPISpec(
-  router: AppRouter,
-  apiDoc: { info: InfoObject } & Omit<OpenAPIObject, "paths" | "openapi">,
-  options: {
-    setOperationId?: boolean | "concatenated-path";
-    jsonQuery?: boolean;
-    operationMapper?: (
-      operation: OperationObject,
-      appRoute: AppRoute
-    ) => OperationObject;
-  } = {},
-
-  customComponents: OpenAPICustomComponent[] = [],
-  pathPrefix?: string,
-
-  addedInfo?: AdddedInfo
-): OpenAPIObject {
-  generateOpenAPIFromTsRestContract(
-    router,
-    options,
-    pathPrefix,
-    JSON.parse(JSON.stringify(addedInfo))
-  );
-
-  // ---  registering custom components ----
-  registerRowOpenAPIcomponents(customComponents);
-
-  const generator = new OpenApiGeneratorV3(registry.definitions);
-
-  const apiDocuments = generator.generateDocument({
-    openapi: "3.0.3",
-    ...apiDoc
-  });
-
-  return apiDocuments as OpenAPIObject;
-}
 
 const registerRowOpenAPIcomponents = (
   components: OpenAPICustomComponent[] = []

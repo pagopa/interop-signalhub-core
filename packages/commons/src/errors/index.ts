@@ -1,5 +1,10 @@
-import { P, match } from "ts-pattern";
-import { ZodError, z } from "zod";
+import { match, P } from "ts-pattern";
+import { z, ZodError } from "zod";
+
+export type ProblemError = {
+  code: string;
+  detail: string;
+};
 
 export class ApiError<T> extends Error {
   /* TODO consider refactoring how the code property is used:
@@ -50,11 +55,6 @@ export class InternalError<T> extends Error {
   }
 }
 
-export type ProblemError = {
-  code: string;
-  detail: string;
-};
-
 // zod object
 
 export const Problem = z.object({
@@ -71,8 +71,6 @@ export const Problem = z.object({
   )
   // toString: z.function(),
 });
-export type Problem = z.infer<typeof Problem>;
-
 export type MakeApiProblemFn<T extends string> = (
   error: unknown,
   httpMapper: (apiError: ApiError<T | CommonErrorCodes>) => number,
@@ -83,6 +81,8 @@ export type MakeApiProblemFn<T extends string> = (
   correlationId: string
 ) => Problem;
 
+export type Problem = z.infer<typeof Problem>;
+
 const makeProblemLogString = (
   problem: Problem,
   originalError: unknown
@@ -91,10 +91,9 @@ const makeProblemLogString = (
   return `Problem - title: ${problem.title} - detail: ${problem.detail} - errors: ${errorsString} - original error: ${originalError}`;
 };
 
-export function makeApiProblemBuilder<T extends string>(errors: {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  [K in T]: string;
-}): MakeApiProblemFn<T> {
+export function makeApiProblemBuilder<T extends string>(
+  errors: Record<T, string>
+): MakeApiProblemFn<T> {
   const allErrors = { ...errorCodes, ...errors };
   return (error, getErrorFromStatus, logger, correlationId) => {
     const makeProblem = (
@@ -145,54 +144,6 @@ const errorCodes = {
 
 export type CommonErrorCodes = keyof typeof errorCodes;
 
-export function parseErrorMessage(error: unknown): string {
-  if (error instanceof ZodError) {
-    return error.message;
-    // return fromZodError(error).message;
-  }
-
-  if (error instanceof Error) {
-    return error.message;
-  }
-
-  if (typeof error === "string") {
-    return error;
-  }
-
-  return `${JSON.stringify(error)}`;
-}
-
-/* ===== Internal Error ===== */
-
-export function genericInternalError(
-  message: string
-): InternalError<CommonErrorCodes> {
-  return new InternalError({
-    code: "genericError",
-    detail: message
-  });
-}
-
-/* ===== API Error ===== */
-
-export function genericError(details: string): ApiError<CommonErrorCodes> {
-  return new ApiError({
-    detail: details,
-    code: "genericError",
-    title: "Unexpected error"
-  });
-}
-
-export function unauthorizedError(
-  details: string
-): ApiError<"unauthorizedError"> {
-  return new ApiError({
-    detail: details,
-    code: "unauthorizedError",
-    title: "Unauthorized"
-  });
-}
-
 export function badRequestError(
   detail: string,
   errors: Error[]
@@ -202,6 +153,27 @@ export function badRequestError(
     code: "badRequestError",
     title: "Bad request",
     errors
+  });
+}
+
+/* ===== Internal Error ===== */
+
+export function genericError(details: string): ApiError<CommonErrorCodes> {
+  return new ApiError({
+    detail: details,
+    code: "genericError",
+    title: "Unexpected error"
+  });
+}
+
+/* ===== API Error ===== */
+
+export function genericInternalError(
+  message: string
+): InternalError<CommonErrorCodes> {
+  return new InternalError({
+    code: "genericError",
+    detail: message
   });
 }
 
@@ -221,24 +193,13 @@ export function jwtDecodingError(error: unknown): ApiError<CommonErrorCodes> {
   });
 }
 
-export function missingHeader(headerName?: string): ApiError<CommonErrorCodes> {
-  const title = "Header has not been passed";
-  return new ApiError({
-    detail: headerName
-      ? `Header ${headerName} not existing in this request`
-      : title,
-    code: "missingHeader",
-    title
-  });
-}
-
-export function tooManyRequestsError(
-  organizationId: string
-): ApiError<CommonErrorCodes> {
-  return new ApiError({
-    code: "tooManyRequestsError",
-    title: "Too Many Requests",
-    detail: `Requests limit exceeded for organization ${organizationId}`
+export function kafkaMessageMissingData(
+  topic: string,
+  eventType: string
+): InternalError<CommonErrorCodes> {
+  return new InternalError({
+    code: "kafkaMessageMissingData",
+    detail: `Missing data in kafka message from topic: ${topic} and event type: ${eventType}`
   });
 }
 
@@ -264,13 +225,51 @@ export function kafkaMissingMessageValue(
     detail: `Missing value message in kafka message from topic: ${topic}`
   });
 }
-export function kafkaMessageMissingData(
-  topic: string,
-  eventType: string
-): InternalError<CommonErrorCodes> {
-  return new InternalError({
-    code: "kafkaMessageMissingData",
-    detail: `Missing data in kafka message from topic: ${topic} and event type: ${eventType}`
+
+export function missingHeader(headerName?: string): ApiError<CommonErrorCodes> {
+  const title = "Header has not been passed";
+  return new ApiError({
+    detail: headerName
+      ? `Header ${headerName} not existing in this request`
+      : title,
+    code: "missingHeader",
+    title
+  });
+}
+
+export function parseErrorMessage(error: unknown): string {
+  if (error instanceof ZodError) {
+    return error.message;
+    // return fromZodError(error).message;
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (typeof error === "string") {
+    return error;
+  }
+
+  return `${JSON.stringify(error)}`;
+}
+
+export function tooManyRequestsError(
+  organizationId: string
+): ApiError<CommonErrorCodes> {
+  return new ApiError({
+    code: "tooManyRequestsError",
+    title: "Too Many Requests",
+    detail: `Requests limit exceeded for organization ${organizationId}`
+  });
+}
+export function unauthorizedError(
+  details: string
+): ApiError<"unauthorizedError"> {
+  return new ApiError({
+    detail: details,
+    code: "unauthorizedError",
+    title: "Unauthorized"
   });
 }
 

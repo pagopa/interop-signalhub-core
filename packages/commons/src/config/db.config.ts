@@ -1,11 +1,11 @@
 import { z } from "zod";
 
-type Env = "dev" | "uat" | "prod";
-type UpperAndLower<T extends string> = T | Uppercase<T>;
-type DatabaseEnv = UpperAndLower<Env>;
-
 export type InteropSchema = `${DatabaseEnv}_${UpperAndLower<"interop">}`;
 export type SignalhubSchema = `${DatabaseEnv}_${UpperAndLower<"signalhub">}`;
+type DatabaseEnv = UpperAndLower<Env>;
+
+type Env = "dev" | "uat" | "prod";
+type UpperAndLower<T extends string> = T | Uppercase<T>;
 
 export const SignalHubStoreConfig = z
   .object({

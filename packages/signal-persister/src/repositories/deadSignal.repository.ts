@@ -27,7 +27,7 @@ export const deadSignalRepository = (db: DB): IDeadSignalRepository => {
           ],
           (rec) => rec.id
         );
-      } catch (error) {
+      } catch {
         throw recoverableMessageError("dbConnection");
       }
     }

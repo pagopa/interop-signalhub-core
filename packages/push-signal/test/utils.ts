@@ -28,10 +28,6 @@ export const aValidMockAgreement = {
   state: "fake-state"
 };
 
-export function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export function getRandomInt(min = 1, max = 100): number {
   const lower = Math.ceil(min);
   const upper = Math.floor(max);
@@ -40,6 +36,10 @@ export function getRandomInt(min = 1, max = 100): number {
 
 export function outSideTimeWindow(timeWindowInSeconds: number) {
   return timeWindowInSeconds * 1000 + 500;
+}
+
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export function withinTimeWindow(timeWindowInSeconds: number) {

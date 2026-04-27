@@ -3,6 +3,7 @@ import { Logger } from "pagopa-signalhub-commons";
 import { AgreementEntity } from "../models/domain/model.js";
 import { IAgreementRepository } from "../repositories/agreement.repository.js";
 
+export type AgreementService = ReturnType<typeof agreementServiceBuilder>;
 export interface IAgreementService {
   readonly delete: (
     agreementId: string,
@@ -18,6 +19,7 @@ export interface IAgreementService {
     logger: Logger
   ) => Promise<void>;
 }
+
 export function agreementServiceBuilder(
   agreementRepository: IAgreementRepository
 ): IAgreementService {
@@ -60,5 +62,3 @@ export function agreementServiceBuilder(
     }
   };
 }
-
-export type AgreementService = ReturnType<typeof agreementServiceBuilder>;
