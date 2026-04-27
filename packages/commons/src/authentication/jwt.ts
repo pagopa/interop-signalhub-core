@@ -15,7 +15,7 @@ const decodeJwtToken = (jwtToken: string): JwtPayload | null => {
 };
 export const readSessionDataFromJwtToken = (
   jwtToken: string
-): { clientId: string } & SessionData => {
+): SessionData & { clientId: string } => {
   const decoded = decodeJwtToken(jwtToken);
 
   const token = AuthToken.safeParse(decoded);

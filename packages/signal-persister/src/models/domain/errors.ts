@@ -72,10 +72,9 @@ export const notRecoverableMessageErrorCodes = {
   notValidJsonError: "0012"
 };
 
-export function getErrorReason(type: ErrorCodes): string {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return errorDetails.get(type)!;
-}
+export type ErrorCodes =
+  | NotRecoverableMessageErrorCodes
+  | RecoverableMessageErrorCodes;
 
 export type NotRecoverableMessageErrorCodes =
   keyof typeof notRecoverableMessageErrorCodes;
@@ -83,9 +82,10 @@ export type NotRecoverableMessageErrorCodes =
 export type RecoverableMessageErrorCodes =
   keyof typeof recoverableMessageErrorCode;
 
-export type ErrorCodes =
-  | NotRecoverableMessageErrorCodes
-  | RecoverableMessageErrorCodes;
+export function getErrorReason(type: ErrorCodes): string {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return errorDetails.get(type)!;
+}
 
 const errorDetails = new Map<ErrorCodes, string>([
   ["dbConnection", "Database connection error"],
@@ -95,14 +95,16 @@ const errorDetails = new Map<ErrorCodes, string>([
   ["parsingError", "The signal could not be parsed"]
 ]);
 
-export function recoverableMessageError(
-  errorCode: RecoverableMessageErrorCodes,
+export function notRecoverableGenericMessageError(
+  errorCode: NotRecoverableMessageErrorCodes,
+  signal: unknown,
   correlationId = ""
-): RecoverableMessageError {
-  return new RecoverableMessageError({
+): NotRecoverableGenericMessageError {
+  return new NotRecoverableGenericMessageError({
     detail: getErrorReason(errorCode),
     code: errorCode,
-    title: `[CID=${correlationId}] Recoverable message error`
+    title: `[CID=${correlationId}] Not recoverable error`,
+    signal
   });
 }
 export function notRecoverableMessageError(
@@ -121,15 +123,13 @@ export function notRecoverableMessageError(
   });
 }
 
-export function notRecoverableGenericMessageError(
-  errorCode: NotRecoverableMessageErrorCodes,
-  signal: unknown,
+export function recoverableMessageError(
+  errorCode: RecoverableMessageErrorCodes,
   correlationId = ""
-): NotRecoverableGenericMessageError {
-  return new NotRecoverableGenericMessageError({
+): RecoverableMessageError {
+  return new RecoverableMessageError({
     detail: getErrorReason(errorCode),
     code: errorCode,
-    title: `[CID=${correlationId}] Not recoverable error`,
-    signal
+    title: `[CID=${correlationId}] Recoverable message error`
   });
 }

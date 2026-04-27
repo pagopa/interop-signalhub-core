@@ -34,8 +34,8 @@ export const Headers = z.object({
   authorization: z.string().nullish()
 });
 
-export type Headers = z.infer<typeof Headers>;
 export type AppContext = z.infer<typeof AppContext>;
+export type Headers = z.infer<typeof Headers>;
 
 export const SignalType = z.enum(["CREATE", "UPDATE", "DELETE", "SEEDUPDATE"]);
 

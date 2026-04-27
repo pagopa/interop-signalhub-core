@@ -1,5 +1,5 @@
 import { AppRouteImplementation, initServer } from "@ts-rest/express";
-import { Problem, SignalPayload, logger } from "pagopa-signalhub-commons";
+import { logger, Problem, SignalPayload } from "pagopa-signalhub-commons";
 import { match } from "ts-pattern";
 
 import { contract } from "../contract/contract.js";

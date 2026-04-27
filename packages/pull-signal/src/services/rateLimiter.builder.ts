@@ -1,4 +1,4 @@
-import { RateLimiter, initRedisRateLimiter } from "pagopa-signalhub-commons";
+import { initRedisRateLimiter, RateLimiter } from "pagopa-signalhub-commons";
 
 import { config } from "../config/env.js";
 

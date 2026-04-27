@@ -1,4 +1,4 @@
-import { DB, TableName, genericInternalError } from "pagopa-signalhub-commons";
+import { DB, genericInternalError, TableName } from "pagopa-signalhub-commons";
 
 import { config } from "../config/env.js";
 import { AgreementEntity } from "../models/domain/model.js";

@@ -1,7 +1,10 @@
+export type ClockService = ReturnType<typeof clockServiceBuilder>;
+
 interface IClockService {
   readonly getCurrentDate: () => Date;
   readonly getPastDate: (currentDate: Date, hoursAgo: number) => Date;
 }
+
 export function clockServiceBuilder(): IClockService {
   return {
     getCurrentDate(): Date {
@@ -16,8 +19,6 @@ export function clockServiceBuilder(): IClockService {
     }
   };
 }
-
-export type ClockService = ReturnType<typeof clockServiceBuilder>;
 
 function dateToMilliSecs(date: Date): number {
   return date.getTime();

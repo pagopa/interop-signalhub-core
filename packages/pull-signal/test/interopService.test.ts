@@ -4,8 +4,8 @@ import {
   createEservice,
   createPurpose,
   dataResetForSignalConsumers,
-  getAPurpose,
   getAnEservice,
+  getAPurpose,
   getUUID
 } from "pagopa-signalhub-commons-test";
 import { beforeAll, describe, expect, it } from "vitest";

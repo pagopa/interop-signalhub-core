@@ -1,5 +1,5 @@
 import { ApiError, genericLogger } from "pagopa-signalhub-commons";
-import { SqsConfig, deleteAllSqsMessages } from "pagopa-signalhub-commons-test";
+import { deleteAllSqsMessages, SqsConfig } from "pagopa-signalhub-commons-test";
 import { beforeEach, describe, expect, inject, it } from "vitest";
 
 import { config } from "../src/config/env.js";

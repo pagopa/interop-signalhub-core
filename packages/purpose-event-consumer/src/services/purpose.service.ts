@@ -7,6 +7,8 @@ export interface IPurposeService {
   readonly delete: (purpose: PurposeEntity, logger: Logger) => Promise<void>;
   readonly upsert: (purpose: PurposeEntity, logger: Logger) => Promise<void>;
 }
+export type PurposeService = ReturnType<typeof purposeServiceBuilder>;
+
 export function purposeServiceBuilder(
   purposeRepository: IPurposeRepository
 ): IPurposeService {
@@ -41,5 +43,3 @@ export function purposeServiceBuilder(
     }
   };
 }
-
-export type PurposeService = ReturnType<typeof purposeServiceBuilder>;

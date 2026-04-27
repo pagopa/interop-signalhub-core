@@ -12,6 +12,21 @@ export type ErrorCodes = keyof typeof errorCodes;
 
 export const makeApiProblem = makeApiProblemBuilder(errorCodes);
 
+export function operationPushForbidden({
+  producerId,
+  eserviceId
+}: {
+  producerId: string;
+  eserviceId: string;
+}): ApiError<ErrorCodes> {
+  return new ApiError({
+    detail: `Insufficient privileges: producerId: ${producerId} cannot deposit signal for e-service with id ${eserviceId}; please verify if your e-service is published,in a valid state and if you enabled the use of Signal-hub`,
+    code: "operationPushForbidden",
+    title:
+      "Insufficient privileges for operation push signal - Invalid e-service status or option 'use signal hub' is disabled"
+  });
+}
+
 export function requestValidationError(message: string): ApiError<ErrorCodes> {
   return new ApiError({
     detail: `ApiError during request validation: ${message}`,
@@ -31,17 +46,6 @@ export function signalIdDuplicatedForEserviceId(
   });
 }
 
-export function signalStoredWithHigherSignalId(
-  signalId: number,
-  eserviceId: string
-): ApiError<ErrorCodes> {
-  return new ApiError({
-    detail: `ApiError during Signal creation: At least one signal with signalId > ${signalId} for ${eserviceId} has already stored`,
-    code: "signalStoredWithHigherSignalId",
-    title: "Signal with higher value for signalId is already on database"
-  });
-}
-
 export function signalNotSendedToQueque(
   error: string,
   requestId?: number
@@ -53,17 +57,13 @@ export function signalNotSendedToQueque(
   });
 }
 
-export function operationPushForbidden({
-  producerId,
-  eserviceId
-}: {
-  producerId: string;
-  eserviceId: string;
-}): ApiError<ErrorCodes> {
+export function signalStoredWithHigherSignalId(
+  signalId: number,
+  eserviceId: string
+): ApiError<ErrorCodes> {
   return new ApiError({
-    detail: `Insufficient privileges: producerId: ${producerId} cannot deposit signal for e-service with id ${eserviceId}; please verify if your e-service is published,in a valid state and if you enabled the use of Signal-hub`,
-    code: "operationPushForbidden",
-    title:
-      "Insufficient privileges for operation push signal - Invalid e-service status or option 'use signal hub' is disabled"
+    detail: `ApiError during Signal creation: At least one signal with signalId > ${signalId} for ${eserviceId} has already stored`,
+    code: "signalStoredWithHigherSignalId",
+    title: "Signal with higher value for signalId is already on database"
   });
 }

@@ -5,6 +5,7 @@ import {
   delegationRepository,
   interopRepository
 } from "../repositories/index.js";
+export type InteropService = ReturnType<typeof interopServiceBuilder>;
 interface IInteropService {
   readonly consumerIsAuthorizedToPullSignals: (
     consumerId: string,
@@ -12,6 +13,7 @@ interface IInteropService {
     logger: Logger
   ) => Promise<void>;
 }
+
 export function interopServiceBuilder(db: DB): IInteropService {
   const eserviceState = ["PUBLISHED", "DEPRECATED"];
   const agreementState = "ACTIVE";
@@ -103,12 +105,10 @@ export function interopServiceBuilder(db: DB): IInteropService {
   };
 }
 
-export type InteropService = ReturnType<typeof interopServiceBuilder>;
+function hasItems(result: unknown[]): boolean {
+  return result.length > 0;
+}
 
 function thereAreNo(result: unknown[]): boolean {
   return !result?.length;
-}
-
-function hasItems(result: unknown[]): boolean {
-  return result.length > 0;
 }

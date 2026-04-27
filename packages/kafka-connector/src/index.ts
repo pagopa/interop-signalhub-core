@@ -4,16 +4,16 @@ import {
   EachMessagePayload,
   Kafka,
   KafkaConfig,
-  OauthbearerProviderResponse,
-  logLevel
+  logLevel,
+  OauthbearerProviderResponse
 } from "kafkajs";
 import {
-  KafkaConsumerConfig,
-  Logger,
   genericLogger,
-  kafkaMessageProcessError
+  KafkaConsumerConfig,
+  kafkaMessageProcessError,
+  Logger
 } from "pagopa-signalhub-commons";
-import { P, match } from "ts-pattern";
+import { match, P } from "ts-pattern";
 
 const errorTypes = ["unhandledRejection", "uncaughtException"];
 const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];

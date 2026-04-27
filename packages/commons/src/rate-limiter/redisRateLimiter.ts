@@ -8,9 +8,9 @@ import {
   ConnectionTimeoutError,
   createClient as createRedisClient
 } from "redis";
-import { P, match } from "ts-pattern";
+import { match, P } from "ts-pattern";
 
-import { Logger, genericLogger } from "../logging/index.js";
+import { genericLogger, Logger } from "../logging/index.js";
 import { RateLimiterStatus } from "./rateLimiterModel.js";
 
 const burstKeyPrefix = "BURST_";

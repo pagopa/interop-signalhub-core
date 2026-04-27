@@ -1,8 +1,8 @@
 import {
   DB,
+  genericInternalError,
   SignalRecord,
-  TableName,
-  genericInternalError
+  TableName
 } from "pagopa-signalhub-commons";
 
 import { config } from "../config/env.js";

@@ -1,4 +1,4 @@
-import { DB, TableName, genericError } from "pagopa-signalhub-commons";
+import { DB, genericError, TableName } from "pagopa-signalhub-commons";
 
 import { config } from "../config/env.js";
 

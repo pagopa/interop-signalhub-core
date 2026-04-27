@@ -12,11 +12,11 @@ export type ErrorCodes = keyof typeof errorCodes;
 
 export const makeApiProblem = makeApiProblemBuilder(errorCodes);
 
-export function requestValidationError(message: string): ApiError<ErrorCodes> {
+export function notInWhitelistError(consumerId: string): ApiError<ErrorCodes> {
   return new ApiError({
-    detail: `ApiError during request validation: ${message}`,
-    code: "validationError",
-    title: "Validation signal request"
+    detail: `Insufficient privleges your organization  (id: ${consumerId})is not authorized to use Signal-hub`,
+    code: "organizationIdNotInWhitelist",
+    title: "Insufficient privileges for operation pull signal"
   });
 }
 
@@ -35,10 +35,10 @@ export function operationPullForbidden({
   });
 }
 
-export function notInWhitelistError(consumerId: string): ApiError<ErrorCodes> {
+export function requestValidationError(message: string): ApiError<ErrorCodes> {
   return new ApiError({
-    detail: `Insufficient privleges your organization  (id: ${consumerId})is not authorized to use Signal-hub`,
-    code: "organizationIdNotInWhitelist",
-    title: "Insufficient privileges for operation pull signal"
+    detail: `ApiError during request validation: ${message}`,
+    code: "validationError",
+    title: "Validation signal request"
   });
 }

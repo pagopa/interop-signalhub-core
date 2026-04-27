@@ -8,6 +8,29 @@ import {
   truncatePurposeTable
 } from "./databaseUtils.js";
 
+async function setupAgreementTable(
+  db: DB,
+  schema: InteropSchema
+): Promise<void> {
+  const { id, agreements } = signalConsumer;
+  const agreementTable: TableName = `${schema}.agreement`;
+  for (const agreement of agreements.filter(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (e: any) => !("skip_insert" in e)
+  )) {
+    const query = {
+      text: `INSERT INTO ${agreementTable} (agreement_id, eservice_id, consumer_id, descriptor_id,state) values ($1, $2, $3, $4, $5)`,
+      values: [
+        agreement.id,
+        agreement.eservice,
+        id,
+        agreement.descriptor,
+        agreement.state
+      ]
+    };
+    await db.none(query);
+  }
+}
 async function setupEserviceTable(
   db: DB,
   schema: InteropSchema
@@ -21,29 +44,6 @@ async function setupEserviceTable(
       const query = {
         text: `INSERT INTO ${eserviceTable} (eservice_id, producer_id, descriptor_id, state) values ($1, $2, $3, $4)`,
         values: [eservice.id, id, eservice.descriptor, eservice.state]
-      };
-      await db.none(query);
-    }
-  }
-}
-async function setupPurposeTableForProducers(
-  db: DB,
-  schema: InteropSchema
-): Promise<void> {
-  const producers = [signalProducer, eserviceProducer];
-
-  const purposeTable: TableName = `${schema}.purpose`;
-  for (const producer of producers) {
-    const { id: consumerId, purposes } = producer;
-    for (const purpose of purposes.filter(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (e: any) => !("skip_insert" in e)
-    )) {
-      const { state, version, eservice, id } = purpose;
-
-      const query = {
-        text: `INSERT INTO ${purposeTable}(purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id) values ($1, $2, $3, $4, $5)`,
-        values: [id, version, state, eservice, consumerId]
       };
       await db.none(query);
     }
@@ -70,27 +70,27 @@ async function setupPurposeTableForConsumers(
   }
 }
 
-async function setupAgreementTable(
+async function setupPurposeTableForProducers(
   db: DB,
   schema: InteropSchema
 ): Promise<void> {
-  const { id, agreements } = signalConsumer;
-  const agreementTable: TableName = `${schema}.agreement`;
-  for (const agreement of agreements.filter(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (e: any) => !("skip_insert" in e)
-  )) {
-    const query = {
-      text: `INSERT INTO ${agreementTable} (agreement_id, eservice_id, consumer_id, descriptor_id,state) values ($1, $2, $3, $4, $5)`,
-      values: [
-        agreement.id,
-        agreement.eservice,
-        id,
-        agreement.descriptor,
-        agreement.state
-      ]
-    };
-    await db.none(query);
+  const producers = [signalProducer, eserviceProducer];
+
+  const purposeTable: TableName = `${schema}.purpose`;
+  for (const producer of producers) {
+    const { id: consumerId, purposes } = producer;
+    for (const purpose of purposes.filter(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (e: any) => !("skip_insert" in e)
+    )) {
+      const { state, version, eservice, id } = purpose;
+
+      const query = {
+        text: `INSERT INTO ${purposeTable}(purpose_id, purpose_version_id, purpose_state, eservice_id, consumer_id) values ($1, $2, $3, $4, $5)`,
+        values: [id, version, state, eservice, consumerId]
+      };
+      await db.none(query);
+    }
   }
 }
 

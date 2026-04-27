@@ -18,8 +18,8 @@ import { setupTestContainersVitest } from "pagopa-signalhub-commons-test";
 import { inject } from "vitest";
 import { z } from "zod";
 
-import { eServiceProducerRepository } from "../src/repositories/eServiceProducer.repository.js";
 import { eServiceRepository } from "../src/repositories/eservice.repository.js";
+import { eServiceProducerRepository } from "../src/repositories/eServiceProducer.repository.js";
 import { eServiceServiceBuilder } from "../src/services/eservice.service.js";
 
 export const { postgresDB } = await setupTestContainersVitest(

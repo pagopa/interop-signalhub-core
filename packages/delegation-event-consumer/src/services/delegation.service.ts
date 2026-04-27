@@ -1,4 +1,4 @@
-import { Logger, genericInternalError } from "pagopa-signalhub-commons";
+import { genericInternalError, Logger } from "pagopa-signalhub-commons";
 
 import { DelegationV2Entity } from "../models/domain/model.js";
 import { IDelegationRepository } from "../repositories/index.js";

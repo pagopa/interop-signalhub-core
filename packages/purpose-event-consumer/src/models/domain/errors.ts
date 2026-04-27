@@ -1,6 +1,6 @@
 import { InternalError } from "pagopa-signalhub-commons";
 
-const errorCodes = {
+export const errorCodes = {
   noVersionsInValidState: "0001"
 } as const;
 
