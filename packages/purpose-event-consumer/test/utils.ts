@@ -10,7 +10,7 @@ import {
 } from "@pagopa/interop-outbound-models";
 import { randomUUID } from "crypto";
 import { setupTestContainersVitest } from "pagopa-signalhub-commons-test";
-import { P, match } from "ts-pattern";
+import { match, P } from "ts-pattern";
 import { inject } from "vitest";
 import { z } from "zod";
 

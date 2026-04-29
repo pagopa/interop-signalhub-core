@@ -3,6 +3,8 @@ import { DB, Logger } from "pagopa-signalhub-commons";
 import { operationPushForbidden } from "../models/domain/errors.js";
 import { interopRepository } from "../repositories/interop.repository.js";
 
+export type InteropService = ReturnType<typeof interopServiceBuilder>;
+
 interface InteropServiceBuilder {
   readonly producerIsAuthorizedToPushSignals: (
     producerId: string,
@@ -41,5 +43,3 @@ export function interopServiceBuilder(db: DB): InteropServiceBuilder {
 function isNotEserviceVersionPublishedOrDeprecated(list: string[]): boolean {
   return !list?.length;
 }
-
-export type InteropService = ReturnType<typeof interopServiceBuilder>;

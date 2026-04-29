@@ -3,8 +3,8 @@ import {
   AgreementStateV2,
   AgreementV2
 } from "@pagopa/interop-outbound-models";
-import { Logger, kafkaMessageMissingData } from "pagopa-signalhub-commons";
-import { P, match } from "ts-pattern";
+import { kafkaMessageMissingData, Logger } from "pagopa-signalhub-commons";
+import { match, P } from "ts-pattern";
 
 import { config } from "../config/env.js";
 import { AgreementEntity } from "../models/domain/model.js";

@@ -3,6 +3,7 @@ import { Logger, SQS } from "pagopa-signalhub-commons";
 import { config } from "../config/env.js";
 import { signalNotSendedToQueque } from "../models/domain/errors.js";
 
+export type QueueService = ReturnType<typeof queueServiceBuilder>;
 interface IQueueService {
   readonly send: (
     message: string,
@@ -10,6 +11,7 @@ interface IQueueService {
     queueUrl?: string
   ) => Promise<void>;
 }
+
 export function queueServiceBuilder(sqsClient: SQS.SQSClient): IQueueService {
   return {
     async send(
@@ -29,5 +31,3 @@ export function queueServiceBuilder(sqsClient: SQS.SQSClient): IQueueService {
     }
   };
 }
-
-export type QueueService = ReturnType<typeof queueServiceBuilder>;

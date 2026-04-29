@@ -11,13 +11,13 @@ import {
   insertEserviceIdAndProducerId
 } from "./databaseUtils.js";
 import {
-  createEServiceClonedEventV1,
-  createEServiceV1,
-  createEServiceWithDescriptorsDeletedEventV1,
   createEserviceAddedEventV1,
+  createEServiceClonedEventV1,
   createEserviceDescriptorAddedEventV1,
   createEserviceDescriptorUpdatedEventV1,
   createEserviceDescriptorV1,
+  createEServiceV1,
+  createEServiceWithDescriptorsDeletedEventV1,
   eServiceService,
   generateID
 } from "./utils.js";

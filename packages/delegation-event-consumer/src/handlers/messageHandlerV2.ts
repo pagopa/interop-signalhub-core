@@ -6,10 +6,10 @@ import {
 } from "@pagopa/interop-outbound-models";
 import {
   EServiceId,
-  Logger,
-  kafkaMessageMissingData
+  kafkaMessageMissingData,
+  Logger
 } from "pagopa-signalhub-commons";
-import { P, match } from "ts-pattern";
+import { match, P } from "ts-pattern";
 
 import { config } from "../config/env.js";
 import { DelegateId, DelegationId, DelegatorId } from "../models/brandedIds.js";

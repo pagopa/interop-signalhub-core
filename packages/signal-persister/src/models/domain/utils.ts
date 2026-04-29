@@ -1,4 +1,4 @@
-import { SQS, SignalMessage } from "pagopa-signalhub-commons";
+import { SignalMessage, SQS } from "pagopa-signalhub-commons";
 
 import {
   notRecoverableGenericMessageError,
@@ -14,7 +14,7 @@ export function parseQueueMessageToSignal(
       throw notRecoverableGenericMessageError("parsingError", queueMessage);
     }
     parsedMessage = JSON.parse(queueMessage.Body);
-  } catch (error) {
+  } catch {
     throw notRecoverableGenericMessageError(
       "notValidJsonError",
       queueMessage.Body

@@ -12,9 +12,9 @@ import { config } from "../src/config/env.js";
 import { handleMessageV1 } from "../src/handlers/index.js";
 import { getAPurposeEntityBy } from "./databaseUtils.js";
 import {
+  createAndWriteAPurposeEventV1,
   createAPurposeEventV1,
   createAPurposeVersionEventV1,
-  createAndWriteAPurposeEventV1,
   fromEventToEntity,
   generateId,
   getMockPurpose,

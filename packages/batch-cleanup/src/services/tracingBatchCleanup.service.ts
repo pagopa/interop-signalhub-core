@@ -2,10 +2,14 @@ import { DB, Logger, TracingBatchCleanup } from "pagopa-signalhub-commons";
 
 import { tracingBatchCleanupRepository } from "../repositories/tracingBatchCleanup.repository.js";
 
+export type TracingBatchCleanupService = ReturnType<
+  typeof tracingBatchServiceCleanupBuilder
+>;
 interface ITracingBatchCleanupService {
   end: (tracingBatchCleanup: TracingBatchCleanup) => Promise<void>;
   start: (tmstStartAt: string) => Promise<number>;
 }
+
 export function tracingBatchServiceCleanupBuilder(
   db: DB,
   logger: Logger
@@ -27,7 +31,3 @@ export function tracingBatchServiceCleanupBuilder(
     }
   };
 }
-
-export type TracingBatchCleanupService = ReturnType<
-  typeof tracingBatchServiceCleanupBuilder
->;

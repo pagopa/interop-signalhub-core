@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import {
+  createDbInstance,
   DB,
+  initRedisRateLimiter,
   RateLimiter,
   RedisRateLimiterConfig,
-  SQS,
   SignalHubStoreConfig,
-  createDbInstance,
-  initRedisRateLimiter
+  SQS
 } from "pagopa-signalhub-commons";
 
 import { SqsConfig, truncateSignalTable } from "./index.js";

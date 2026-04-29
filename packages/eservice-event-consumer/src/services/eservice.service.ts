@@ -2,9 +2,10 @@ import { EServiceDescriptorV2 } from "@pagopa/interop-outbound-models";
 import { Logger } from "pagopa-signalhub-commons";
 
 import { EserviceEntity, EserviceV2Entity } from "../models/domain/model.js";
-import { IEserviceProduceRepository } from "../repositories/eServiceProducer.repository.js";
 import { IEserviceRepository } from "../repositories/eservice.repository.js";
+import { IEserviceProduceRepository } from "../repositories/eServiceProducer.repository.js";
 
+export type EServiceService = ReturnType<typeof eServiceServiceBuilder>;
 export interface IEServiceService {
   readonly addEserviceProducer: (
     eServiceId: string,
@@ -215,4 +216,3 @@ export function eServiceServiceBuilder(
     }
   };
 }
-export type EServiceService = ReturnType<typeof eServiceServiceBuilder>;

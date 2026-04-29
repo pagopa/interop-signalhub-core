@@ -1,13 +1,15 @@
-import { DB, Logger, genericInternalError } from "pagopa-signalhub-commons";
+import { DB, genericInternalError, Logger } from "pagopa-signalhub-commons";
 
 import { signalRepository } from "../repositories/index.js";
 import { ClockService } from "./clock.service.js";
 
+export type SignalService = ReturnType<typeof signalServiceBuilder>;
 interface ISignalService {
   readonly cleanup: (
     signalRetentionPeriodInHours: number
   ) => Promise<{ countDeleted: number; dateInThePast: Date }>;
 }
+
 export function signalServiceBuilder(
   db: DB,
   clockService: ClockService,
@@ -42,5 +44,3 @@ export function signalServiceBuilder(
     }
   };
 }
-
-export type SignalService = ReturnType<typeof signalServiceBuilder>;

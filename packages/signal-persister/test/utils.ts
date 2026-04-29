@@ -1,4 +1,4 @@
-import { DB, createDbInstance } from "pagopa-signalhub-commons";
+import { createDbInstance, DB } from "pagopa-signalhub-commons";
 import { setupTestContainersVitest } from "pagopa-signalhub-commons-test";
 import { afterEach, inject } from "vitest";
 

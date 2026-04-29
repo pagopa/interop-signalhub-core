@@ -1,4 +1,4 @@
-import { DB, createDbInstance } from "pagopa-signalhub-commons";
+import { createDbInstance, DB } from "pagopa-signalhub-commons";
 
 import { config } from "../config/env.js";
 import { purposeRepository } from "../repositories/purpose.repository.js";

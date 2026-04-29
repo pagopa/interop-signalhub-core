@@ -4,10 +4,10 @@ import {
   Message,
   ReceiveMessageCommand,
   ReceiveMessageCommandOutput,
-  SQSClient,
-  SQSClientConfig,
   SendMessageCommand,
-  SendMessageCommandInput
+  SendMessageCommandInput,
+  SQSClient,
+  SQSClientConfig
 } from "@aws-sdk/client-sqs";
 
 import { QuequeConsumerConfig } from "../config/queque.consumer.js";
@@ -18,10 +18,10 @@ export const instantiateClient = (config: SQSClientConfig): SQSClient =>
 
 export const runConsumer = async (
   sqsClient: SQSClient,
-  config: {
+  config: QuequeConsumerConfig & {
     queueUrl: string;
     runUntilQueueIsEmpty?: boolean;
-  } & QuequeConsumerConfig,
+  },
   consumerHandler: (messagePayload: Message) => Promise<void>,
   loggerInstance: Logger
 ): Promise<void> => {
@@ -43,10 +43,10 @@ export const runConsumer = async (
 
 const processQueue = async (
   sqsClient: SQSClient,
-  config: {
+  config: QuequeConsumerConfig & {
     queueUrl: string;
     runUntilQueueIsEmpty?: boolean;
-  } & QuequeConsumerConfig,
+  },
   consumerHandler: (messagePayload: Message) => Promise<void>,
   loggerInstance: Logger
 ): Promise<void> => {
@@ -175,7 +175,7 @@ export const deleteBatchMessages = async (
 const serializeError = (error: unknown): string => {
   try {
     return JSON.stringify(error, Object.getOwnPropertyNames(error));
-  } catch (e) {
+  } catch {
     return `${error}`;
   }
 };

@@ -10,6 +10,8 @@ import { toSignal } from "../models/domain/toSignal.js";
 import { deadSignalRepository } from "../repositories/deadSignal.repository.js";
 import { signalRepository } from "../repositories/signal.repository.js";
 
+export type StoreSignalService = ReturnType<typeof storeSignalServiceBuilder>;
+
 interface IStoreSignalServiceBuilder {
   readonly isSignalAlreadyOnDatabase: (
     signalRecordId: number | null
@@ -72,5 +74,3 @@ export function storeSignalServiceBuilder(db: DB): IStoreSignalServiceBuilder {
     }
   };
 }
-
-export type StoreSignalService = ReturnType<typeof storeSignalServiceBuilder>;
