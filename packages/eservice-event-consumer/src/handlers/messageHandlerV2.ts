@@ -89,7 +89,9 @@ export async function handleMessageV2(
           "EServiceNameUpdatedByTemplateUpdate",
           "EServiceDescriptorAgreementApprovalPolicyUpdated",
           "EServicePersonalDataFlagUpdatedAfterPublication",
-          "EServicePersonalDataFlagUpdatedByTemplateUpdate"
+          "EServicePersonalDataFlagUpdatedByTemplateUpdate",
+          "EServiceInstanceLabelUpdated",
+          "MaintenanceEServicePersonalDataFlagReset",
         )
       },
       async () => {
