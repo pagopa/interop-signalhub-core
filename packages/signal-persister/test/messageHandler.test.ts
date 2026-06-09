@@ -46,6 +46,8 @@ describe("Message handler", () => {
     const { correlationId } = oneSignal;
     await expect(
       wrongStoreSignalService.storeSignal(oneSignal, genericLogger)
-    ).rejects.toThrowError(recoverableMessageError("dbConnection", correlationId));
+    ).rejects.toThrowError(
+      recoverableMessageError("dbConnection", correlationId)
+    );
   });
 });
