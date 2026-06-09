@@ -42,8 +42,10 @@ describe("Message handler", () => {
     await expect(processMessageHandler(queueMessage)).resolves.not.toThrow();
   });
   it("should throw a RecoverableMessageError for a temporary db error", async () => {
+    const oneSignal = createSignal({ signalId: 1 });
+    const { correlationId } = oneSignal;
     await expect(
-      wrongStoreSignalService.storeSignal(createSignal(), genericLogger)
-    ).rejects.toThrowError(recoverableMessageError("dbConnection"));
+      wrongStoreSignalService.storeSignal(oneSignal, genericLogger)
+    ).rejects.toThrowError(recoverableMessageError("dbConnection", correlationId));
   });
 });
