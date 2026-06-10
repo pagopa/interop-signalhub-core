@@ -21,7 +21,40 @@ describe("PDND Interoperability service", () => {
     await dataResetForSignalProducers(postgresDB, config.interopSchema);
   });
 
-  it("Should give permission to a signal producer authorized to use signal-hub push service", async () => {
+  const validStates: string[] = ["PUBLISHED", "DEPRECATED", "ARCHIVING"];
+  it.each(validStates)(
+    "Should give permission to a signal producer authorized to use signal-hub push service when e-service is in %s state",
+    async (state) => {
+      const producerId = randomUUID();
+      const eServiceId = randomUUID();
+      const descriptorId = randomUUID();
+
+      await createEservice(postgresDB, config.interopSchema, {
+        eServiceId,
+        descriptorId,
+        producerId,
+        enabledSH: true,
+        state
+      });
+
+      await expect(
+        interopService.producerIsAuthorizedToPushSignals(
+          producerId,
+          eServiceId,
+          genericLogger
+        )
+      ).resolves.not.toThrow();
+    }
+  );
+
+  const invalidStates: string[] = [
+    "DRAFT",
+    "SUSPENDED",
+    "ARCHIVING_SUSPENDED",
+    "ARCHIVED",
+    "WAITING_FOR_APPROVAL",
+  ];
+  it.each(invalidStates)("should deny permission to a signals producer who is owner of an e-service with state '%s'", async (state) => {
     const producerId = randomUUID();
     const eServiceId = randomUUID();
     const descriptorId = randomUUID();
@@ -31,7 +64,7 @@ describe("PDND Interoperability service", () => {
       descriptorId,
       producerId,
       enabledSH: true,
-      state: "PUBLISHED"
+      state
     });
 
     await expect(
@@ -40,7 +73,9 @@ describe("PDND Interoperability service", () => {
         eServiceId,
         genericLogger
       )
-    ).resolves.not.toThrow();
+    ).rejects.toThrowError(
+      operationPushForbidden({ producerId, eserviceId: eServiceId })
+    );
   });
 
   it("should deny permission to a signals producer who isn't eservice's owner", async () => {

@@ -15,7 +15,7 @@ interface IInteropService {
 }
 
 export function interopServiceBuilder(db: DB): IInteropService {
-  const eserviceState = ["PUBLISHED", "DEPRECATED"];
+  const eserviceState = ["PUBLISHED", "DEPRECATED", "ARCHIVING"];
   const agreementState = "ACTIVE";
   const purposeState = "ACTIVE";
   const delegationState = "ACTIVE";
