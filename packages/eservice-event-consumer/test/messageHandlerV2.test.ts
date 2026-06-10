@@ -289,6 +289,62 @@ describe("Message Handler for V2 EVENTS", () => {
         expect(response).toBe(null);
       });
     });
+
+    describe("EServiceDescriptorArchivingScheduled event", () => {
+      it("Should update a state with ARCHIVING on EService table", async () => {
+        const eServiceId = generateID();
+        const descriptorId = generateID();
+        const producerId =
+          "producer-test-id-eserviceDescriptorArchivingScheduled";
+        const isSignalHubEnabled = randomArrayItem([false, true, undefined]);
+        const initalVersion = 1;
+        const eventStreamId = generateID();
+
+        await insertEserviceDescriptor(
+          eServiceId,
+          descriptorId,
+          producerId,
+          EServiceDescriptorStateV2.PUBLISHED.toString(),
+          eventStreamId,
+          initalVersion,
+          config.interopSchema
+        );
+
+        const eServiceV2 = createV2Event(
+          eServiceId,
+          descriptorId,
+          producerId,
+          isSignalHubEnabled,
+          EServiceDescriptorStateV2.ARCHIVING
+        );
+
+        const eventV2 = createEServiceDescriptorUpdatedEventV2(
+          "EServiceDescriptorArchivingScheduled",
+          eServiceV2,
+          descriptorId,
+          eventStreamId,
+          incrementVersion(initalVersion)
+        );
+
+        await handleMessageV2(eventV2, eServiceService, genericLogger);
+
+        const result = await findByEserviceIdAndProducerIdAndDescriptorId(
+          eServiceId,
+          descriptorId,
+          producerId,
+          config.interopSchema
+        );
+
+        expect(result).not.toBeNull();
+        expect(result?.eservice_id).toEqual(eServiceId);
+        expect(result?.descriptor_id).toEqual(descriptorId);
+        expect(result?.producer_id).toEqual(producerId);
+        expect(result?.enabled_signal_hub).toEqual(isSignalHubEnabled ?? null);
+        expect(result?.state).toEqual(
+          EServiceDescriptorStateV2[EServiceDescriptorStateV2.ARCHIVING]
+        );
+      });
+    });
   });
 
   describe("Logic handling where there are several descriptors for the same eservice", () => {
