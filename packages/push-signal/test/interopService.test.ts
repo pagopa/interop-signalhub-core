@@ -52,31 +52,34 @@ describe("PDND Interoperability service", () => {
     "SUSPENDED",
     "ARCHIVING_SUSPENDED",
     "ARCHIVED",
-    "WAITING_FOR_APPROVAL",
+    "WAITING_FOR_APPROVAL"
   ];
-  it.each(invalidStates)("should deny permission to a signals producer who is owner of an e-service with state '%s'", async (state) => {
-    const producerId = randomUUID();
-    const eServiceId = randomUUID();
-    const descriptorId = randomUUID();
+  it.each(invalidStates)(
+    "should deny permission to a signals producer who is owner of an e-service with state '%s'",
+    async (state) => {
+      const producerId = randomUUID();
+      const eServiceId = randomUUID();
+      const descriptorId = randomUUID();
 
-    await createEservice(postgresDB, config.interopSchema, {
-      eServiceId,
-      descriptorId,
-      producerId,
-      enabledSH: true,
-      state
-    });
-
-    await expect(
-      interopService.producerIsAuthorizedToPushSignals(
-        producerId,
+      await createEservice(postgresDB, config.interopSchema, {
         eServiceId,
-        genericLogger
-      )
-    ).rejects.toThrowError(
-      operationPushForbidden({ producerId, eserviceId: eServiceId })
-    );
-  });
+        descriptorId,
+        producerId,
+        enabledSH: true,
+        state
+      });
+
+      await expect(
+        interopService.producerIsAuthorizedToPushSignals(
+          producerId,
+          eServiceId,
+          genericLogger
+        )
+      ).rejects.toThrowError(
+        operationPushForbidden({ producerId, eserviceId: eServiceId })
+      );
+    }
+  );
 
   it("should deny permission to a signals producer who isn't eservice's owner", async () => {
     const producerId = randomUUID();
