@@ -251,7 +251,10 @@ export const EServiceEventV2UpdateType = z.union([
   z.literal("EServiceDescriptorPublished"),
   z.literal("EServiceDescriptorSuspended"),
   z.literal("EServiceDraftDescriptorUpdated"),
-  z.literal("EServiceDraftDescriptorDeleted")
+  z.literal("EServiceDraftDescriptorDeleted"),
+  z.literal("EServiceDescriptorArchivingScheduled"),
+  z.literal("EServiceDescriptorArchivingCanceled"),
+  z.literal("EServiceDescriptorArchivingCompleted")
 ]);
 
 export type EServiceEventV2UpdateType = z.infer<

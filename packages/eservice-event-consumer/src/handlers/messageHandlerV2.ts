@@ -34,7 +34,14 @@ export async function handleMessageV2(
           "EServiceIsConsumerDelegableDisabled",
           "EServiceIsConsumerDelegableEnabled",
           "EServiceSignalHubEnabled",
-          "EServiceSignalHubDisabled"
+          "EServiceSignalHubDisabled",
+          "EServiceArchivingScheduled",
+          "EServiceArchivingCanceled",
+          "EServiceArchivingCompleted",
+          "EServiceDescriptorArchivingScheduled",
+          "EServiceDescriptorArchivingCanceled",
+          "EServiceDescriptorArchivingCompleted",
+          "MaintenanceEServiceDescriptorUnarchived"
         )
       },
       async (evt) => {
@@ -91,7 +98,11 @@ export async function handleMessageV2(
           "EServicePersonalDataFlagUpdatedAfterPublication",
           "EServicePersonalDataFlagUpdatedByTemplateUpdate",
           "EServiceInstanceLabelUpdated",
-          "MaintenanceEServicePersonalDataFlagReset"
+          "MaintenanceEServicePersonalDataFlagReset",
+          "EServiceDescriptorAttributeDailyCallsPerConsumerUpdated",
+          "EServiceDescriptorAsyncExchangeCallbackInterfaceAdded",
+          "EServiceDescriptorAsyncExchangeCallbackInterfaceUpdated",
+          "EServiceDescriptorAsyncExchangeCallbackInterfaceDeleted"
         )
       },
       async () => {

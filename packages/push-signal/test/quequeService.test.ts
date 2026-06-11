@@ -3,7 +3,6 @@ import { deleteAllSqsMessages, SqsConfig } from "pagopa-signalhub-commons-test";
 import { beforeEach, describe, expect, inject, it } from "vitest";
 
 import { config } from "../src/config/env.js";
-import { ErrorCodes } from "../src/models/domain/errors.js";
 import { quequeService, sqsClient } from "./utils.js";
 
 const sqsConfig: SqsConfig = inject("sqsConfig");
@@ -46,13 +45,19 @@ describe("Queue service", () => {
 
   it("should throw a signalNotSendedToQueque error for a non existent queue", async () => {
     const wrongQueueUrl = sqsConfig.queueUrl + "wrong";
-    const response = expect(
-      quequeService.send(JSON.stringify(""), genericLogger, wrongQueueUrl)
-      // eslint-disable-next-line vitest/valid-expect
-    ).rejects;
-
-    void response.toBeInstanceOf(ApiError<ErrorCodes>);
-    void response.toMatchObject({
+    let thrownError: unknown;
+    try {
+      await quequeService.send(
+        JSON.stringify(""),
+        genericLogger,
+        wrongQueueUrl
+      );
+    } catch (error) {
+      thrownError = error;
+    }
+    expect(thrownError).toBeDefined();
+    expect(thrownError).toBeInstanceOf(ApiError);
+    expect(thrownError).toMatchObject({
       code: "signalNotSended"
     });
   });

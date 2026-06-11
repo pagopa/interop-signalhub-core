@@ -16,11 +16,12 @@ import {
 describe("Signal Store Service", () => {
   it("should throw an unrecoverable error if signal already exist on db", async () => {
     const signal = createSignal({ signalId: 1 });
+    const { correlationId } = signal;
     await writeSignal(signal, postgresDB, config.signalHubSchema);
     await expect(
       storeSignalService.storeSignal(signal, genericLogger)
     ).rejects.toThrowError(
-      notRecoverableMessageError("duplicateSignal", signal)
+      notRecoverableMessageError("duplicateSignal", signal, correlationId)
     );
   });
   it("should save a signal", async () => {
@@ -38,8 +39,12 @@ describe("Signal Store Service", () => {
     ).resolves.not.toThrow();
   });
   it("should throw an recoverable error if db is down", async () => {
+    const oneSignal = createSignal({ signalId: 1 });
+    const { correlationId } = oneSignal;
     await expect(
-      wrongStoreSignalService.storeSignal(createSignal(), genericLogger)
-    ).rejects.toThrowError(recoverableMessageError("dbConnection"));
+      wrongStoreSignalService.storeSignal(oneSignal, genericLogger)
+    ).rejects.toThrowError(
+      recoverableMessageError("dbConnection", correlationId)
+    );
   });
 });
