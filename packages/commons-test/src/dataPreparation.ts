@@ -316,6 +316,8 @@ export const dataResetForSignalProducers = async (
   schema: InteropSchema
 ): Promise<void> => {
   await truncateEserviceTable(db, schema);
+  await truncateAgreementTable(db, schema);
+  await truncatePurposeTable(db, schema);
 };
 
 export const dataResetForSignalConsumers = async (

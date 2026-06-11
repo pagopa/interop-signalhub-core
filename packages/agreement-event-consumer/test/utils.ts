@@ -213,6 +213,7 @@ export const createAnAgreementV2 = (
   producerId: generateID(),
   consumerId: generateID(),
   certifiedAttributes: [],
+  certifiedDiscreteAttributes: [],
   consumerDocuments: [],
   declaredAttributes: [],
   verifiedAttributes: [],

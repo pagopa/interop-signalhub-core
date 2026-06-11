@@ -23,7 +23,7 @@ export function interopServiceBuilder(db: DB): InteropServiceBuilder {
       logger.info(
         `InteropService::producerIsAuthorizedToPushSignals with producerId: ${producerId}`
       );
-      const eserviceStatesAllowed = ["PUBLISHED", "DEPRECATED"];
+      const eserviceStatesAllowed = ["PUBLISHED", "DEPRECATED", "ARCHIVING"];
       const result = await interopRepository(db).findBy(
         eserviceId,
         producerId,
