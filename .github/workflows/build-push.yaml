@@ -58,10 +58,12 @@ jobs:
 
       - name: Normalize ref name
         id: norm_ref
+        env:
+          INPUT_REF_NAME: ${{ github.ref_name }}
         run: |
           set -euo pipefail
 
-          NORM_REF="$(echo ${{ github.ref_name }} | sed -e 's/\//-/g')"
+          NORM_REF="$(echo "$INPUT_REF_NAME" | sed -e 's/\//-/g')"
           echo "NORM_REF=$NORM_REF" >> $GITHUB_ENV
 
       - name: (latest) Docker metadata
