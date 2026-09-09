@@ -41,7 +41,9 @@ export async function handleMessageV2(
           "EServiceDescriptorArchivingScheduled",
           "EServiceDescriptorArchivingCanceled",
           "EServiceDescriptorArchivingCompleted",
-          "MaintenanceEServiceDescriptorUnarchived"
+          "MaintenanceEServiceDescriptorUnarchived",
+          "EServiceDescriptorArchivingRequestApprovedByDelegator",
+          "EServiceArchivingRequestApprovedByDelegator"
         )
       },
       async (evt) => {
@@ -102,7 +104,15 @@ export async function handleMessageV2(
           "EServiceDescriptorAttributeDailyCallsPerConsumerUpdated",
           "EServiceDescriptorAsyncExchangeCallbackInterfaceAdded",
           "EServiceDescriptorAsyncExchangeCallbackInterfaceUpdated",
-          "EServiceDescriptorAsyncExchangeCallbackInterfaceDeleted"
+          "EServiceDescriptorAsyncExchangeCallbackInterfaceDeleted",
+          "EServiceDescriptorArchivingRequestedByDelegate",
+          "EServiceDescriptorArchivingRequestRejectedByDelegator",
+          "EServiceDescriptorArchivingRequestCanceledByDelegate",
+          "EServiceDescriptorArchivingRequestCanceledByRevokedDelegation",
+          "EServiceArchivingRequestedByDelegate",
+          "EServiceArchivingRequestRejectedByDelegator",
+          "EServiceArchivingRequestCanceledByDelegate",
+          "EServiceArchivingRequestCanceledByRevokedDelegation"
         )
       },
       async () => {
