@@ -39,8 +39,8 @@ importers:
   packages/agreement-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: 1.8.21
-        version: 1.8.21
+        specifier: 1.8.23
+        version: 1.8.23
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -234,8 +234,8 @@ importers:
   packages/delegation-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: 1.8.21
-        version: 1.8.21
+        specifier: 1.8.23
+        version: 1.8.23
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -280,8 +280,8 @@ importers:
   packages/eservice-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: 1.8.21
-        version: 1.8.21
+        specifier: 1.8.23
+        version: 1.8.23
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -427,8 +427,8 @@ importers:
   packages/purpose-event-consumer:
     dependencies:
       '@pagopa/interop-outbound-models':
-        specifier: 1.8.21
-        version: 1.8.21
+        specifier: 1.8.23
+        version: 1.8.23
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -1220,8 +1220,8 @@ packages:
     peerDependencies:
       eslint: ^9.39.2
 
-  '@pagopa/interop-outbound-models@1.8.21':
-    resolution: {integrity: sha512-lm12PsMlznGZoswIuab8cNnHXy6oHamTEPLm5XquT6QVjuuKvxZZOoDC92Lp9e9Y9asX2Oo4TJKKKP3A/pyuEg==}
+  '@pagopa/interop-outbound-models@1.8.23':
+    resolution: {integrity: sha512-PkU54huG3giPE/x+4JtrAMNxEFzX0CUD5V24uRiuzuTA3S5KLBsGd/nWqE0AG4NpTOiTwkQkB7toMZTzKnplCg==}
 
   '@pkgr/core@0.2.9':
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
@@ -2530,6 +2530,7 @@ packages:
   eslint@9.39.2:
     resolution: {integrity: sha512-LEyamqS7W5HB3ujJyvi0HQK/dtVINZvd5mAAp9eT5S/ujByGjiZLCzPcHVzuXbpJDJF/cxwHlfceVUDZ2lnSTw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -5077,7 +5078,7 @@ snapshots:
       - supports-color
       - vitest
 
-  '@pagopa/interop-outbound-models@1.8.21':
+  '@pagopa/interop-outbound-models@1.8.23':
     dependencies:
       '@protobuf-ts/runtime': 2.9.4
       ts-pattern: 5.2.0
