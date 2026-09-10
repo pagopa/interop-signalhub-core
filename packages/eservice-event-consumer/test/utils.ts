@@ -65,6 +65,7 @@ export const getDescriptorV2 = (
   version: 1n,
   voucherLifespan: 100,
   rejectionReasons: [],
+  delegatedArchivingRequest: [],
   ...partialDescriptorV2
 });
 
@@ -241,7 +242,8 @@ export const createV2Event = (
           id: descriptorId,
           state: eServiceDescriptorState
         })
-      ]
+      ],
+  delegatedArchivingRequest: []
 });
 
 export const EServiceEventV2UpdateType = z.union([
