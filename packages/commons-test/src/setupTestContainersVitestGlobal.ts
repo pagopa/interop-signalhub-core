@@ -1,5 +1,5 @@
 import type {} from "vitest";
-import type { GlobalSetupContext } from "vitest/node";
+import type { TestProject } from "vitest/node";
 
 import { config as dotenv } from "dotenv-flow";
 import {
@@ -48,7 +48,7 @@ export function setupTestContainersVitestGlobal() {
 
   return async function ({
     provide
-  }: GlobalSetupContext): Promise<() => Promise<void>> {
+  }: TestProject): Promise<() => Promise<void>> {
     let startedPostgreSqlContainer: StartedTestContainer | undefined;
     let startedElasticMQContainer: StartedTestContainer | undefined;
     let startedRedisContainer: StartedTestContainer | undefined;

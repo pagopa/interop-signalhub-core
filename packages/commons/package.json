@@ -37,7 +37,7 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
-    "@types/node": "^20.11.24",
+    "@types/node": "^20.19.43",
     "prettier": "3.1.0",
     "typescript": "^5.6.3"
   }
