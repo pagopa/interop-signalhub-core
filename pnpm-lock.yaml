@@ -178,10 +178,10 @@ importers:
     devDependencies:
       '@anatine/zod-mock':
         specifier: 3.14.0
-        version: 3.14.0(@faker-js/faker@9.0.0)(zod@3.23.8)
+        version: 3.14.0(@faker-js/faker@10.5.0)(zod@3.23.8)
       '@faker-js/faker':
-        specifier: 9.0.0
-        version: 9.0.0
+        specifier: 10.5.0
+        version: 10.5.0
       '@testcontainers/postgresql':
         specifier: 10.2.2
         version: 10.2.2
@@ -1163,10 +1163,9 @@ packages:
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@faker-js/faker@9.0.0':
-    resolution: {integrity: sha512-dTDHJSmz6c1OJ6HO7jiUiIb4sB20Dlkb3pxYsKm0qTXm2Bmj97rlXIhlvaFsW2rvCi+OLlwKLVSS6ZxFUVZvjQ==}
-    engines: {node: '>=18.0.0', npm: '>=9.0.0'}
-    deprecated: Please update to a newer version
+  '@faker-js/faker@10.5.0':
+    resolution: {integrity: sha512-bsxD8WLS5lIj7aaoCx1YJkktqYj5vlBUE6HWzu2Q51ksrGJ0H737ECCKlFU7Yf8Br45z9t99frBp/J7kzbMPAg==}
+    engines: {node: ^20.19.0 || ^22.13.0 || ^23.5.0 || >=24.0.0, npm: '>=10'}
 
   '@fastify/merge-json-schemas@0.1.1':
     resolution: {integrity: sha512-fERDVz7topgNjtXsJTTW1JKLy0rhuLRcquYqNR9rF7OcVpCa2OVW49ZPDIhaRRCaUuvVxI+N416xUoF76HNSXA==}
@@ -3785,9 +3784,9 @@ packages:
 
 snapshots:
 
-  '@anatine/zod-mock@3.14.0(@faker-js/faker@9.0.0)(zod@3.23.8)':
+  '@anatine/zod-mock@3.14.0(@faker-js/faker@10.5.0)(zod@3.23.8)':
     dependencies:
-      '@faker-js/faker': 9.0.0
+      '@faker-js/faker': 10.5.0
       randexp: 0.5.3
       zod: 3.23.8
 
@@ -5020,7 +5019,7 @@ snapshots:
       '@eslint/core': 0.17.0
       levn: 0.4.1
 
-  '@faker-js/faker@9.0.0': {}
+  '@faker-js/faker@10.5.0': {}
 
   '@fastify/merge-json-schemas@0.1.1':
     dependencies:
