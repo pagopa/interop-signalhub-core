@@ -13,7 +13,7 @@ importers:
         version: 9.39.2
       '@pagopa/eslint-config':
         specifier: 5.1.2
-        version: 5.1.2(@types/eslint@9.6.1)(@typescript-eslint/eslint-plugin@8.59.0(@typescript-eslint/parser@8.59.0(eslint@9.39.2)(typescript@5.6.3))(eslint@9.39.2)(typescript@5.6.3))(eslint@9.39.2)(prettier@3.1.0)(vitest@4.1.11(@types/node@20.19.43)(yaml@2.5.1))
+        version: 5.1.2(@types/eslint@9.6.1)(@typescript-eslint/eslint-plugin@8.59.0(@typescript-eslint/parser@8.59.0(eslint@9.39.2)(typescript@5.6.3))(eslint@9.39.2)(typescript@5.6.3))(eslint@9.39.2)(prettier@3.1.0)(vitest@4.1.11(@types/node@20.19.43)(yaml@2.9.1))
       '@tsconfig/node-lts':
         specifier: ^20.1.3
         version: 20.1.3
@@ -60,8 +60,8 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0
       zod:
-        specifier: ^4.0.0
-        version: 4.6.7
+        specifier: ^4.6.6
+        version: 4.6.6
     devDependencies:
       '@types/node':
         specifier: ^20.19.43
@@ -80,7 +80,7 @@ importers:
         version: 5.5.4
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@20.19.43)(yaml@2.5.1)
+        version: 4.1.11(@types/node@20.19.43)(yaml@2.9.1)
 
   packages/batch-cleanup:
     dependencies:
@@ -94,8 +94,8 @@ importers:
         specifier: ^11.8.0
         version: 11.8.0
       zod:
-        specifier: ^4.0.0
-        version: 4.6.7
+        specifier: ^4.6.6
+        version: 4.6.6
     devDependencies:
       '@types/node':
         specifier: ^20.19.43
@@ -114,7 +114,7 @@ importers:
         version: 5.6.3
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@20.19.43)(yaml@2.5.1)
+        version: 4.1.11(@types/node@20.19.43)(yaml@2.9.1)
 
   packages/commons:
     dependencies:
@@ -155,8 +155,8 @@ importers:
         specifier: ^3.13.0
         version: 3.13.0
       zod:
-        specifier: ^4.0.0
-        version: 4.6.7
+        specifier: ^4.6.6
+        version: 4.6.6
     devDependencies:
       '@types/express':
         specifier: ^4.17.21
@@ -178,7 +178,7 @@ importers:
     devDependencies:
       '@anatine/zod-mock':
         specifier: 3.14.0
-        version: 3.14.0(@faker-js/faker@10.5.0)(zod@4.6.7)
+        version: 3.14.0(@faker-js/faker@10.5.0)(zod@4.6.6)
       '@faker-js/faker':
         specifier: 10.5.0
         version: 10.5.0
@@ -199,7 +199,7 @@ importers:
         version: 9.0.8
       '@zodios/core':
         specifier: 10.9.6
-        version: 10.9.6(axios@1.20.0)(zod@4.6.7)
+        version: 10.9.6(axios@1.20.0)(zod@4.6.6)
       dotenv-flow:
         specifier: 3.3.0
         version: 3.3.0
@@ -229,10 +229,10 @@ importers:
         version: 14.0.0
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@20.19.43)(yaml@2.5.1)
+        version: 4.1.11(@types/node@20.19.43)(yaml@2.9.1)
       zod:
-        specifier: ^4.0.0
-        version: 4.6.7
+        specifier: ^4.6.6
+        version: 4.6.6
 
   packages/delegation-event-consumer:
     dependencies:
@@ -258,8 +258,8 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0
       zod:
-        specifier: ^4.0.0
-        version: 4.6.7
+        specifier: ^4.6.6
+        version: 4.6.6
     devDependencies:
       '@types/node':
         specifier: ^20.19.43
@@ -278,7 +278,7 @@ importers:
         version: 5.6.3
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@20.19.43)(yaml@2.5.1)
+        version: 4.1.11(@types/node@20.19.43)(yaml@2.9.1)
 
   packages/eservice-event-consumer:
     dependencies:
@@ -304,8 +304,8 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0
       zod:
-        specifier: ^4.0.0
-        version: 4.6.7
+        specifier: ^4.6.6
+        version: 4.6.6
     devDependencies:
       '@types/node':
         specifier: ^20.19.43
@@ -324,7 +324,7 @@ importers:
         version: 5.6.3
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@20.19.43)(yaml@2.5.1)
+        version: 4.1.11(@types/node@20.19.43)(yaml@2.9.1)
 
   packages/kafka-connector:
     dependencies:
@@ -351,14 +351,14 @@ importers:
   packages/pull-signal:
     dependencies:
       '@asteasolutions/zod-to-openapi':
-        specifier: ^7.1.1
-        version: 7.1.1(zod@4.6.7)
+        specifier: ^9.1.0
+        version: 9.1.0(zod@4.6.6)
       '@ts-rest/core':
-        specifier: ^3.45.2
-        version: 3.45.2(zod@4.6.7)
+        specifier: 3.53.0-rc.1
+        version: 3.53.0-rc.1(@types/node@20.19.43)
       '@ts-rest/express':
-        specifier: ^3.45.2
-        version: 3.45.2(express@4.20.0)(zod@4.6.7)
+        specifier: 3.53.0-rc.1
+        version: 3.53.0-rc.1(@ts-rest/core@3.53.0-rc.1(@types/node@20.19.43))(express@4.20.0)
       axios:
         specifier: ^1.6.8
         version: 1.20.0
@@ -390,8 +390,8 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1
       zod:
-        specifier: ^4.0.0
-        version: 4.6.7
+        specifier: ^4.6.6
+        version: 4.6.6
     devDependencies:
       '@types/express':
         specifier: ^4.17.21
@@ -425,7 +425,7 @@ importers:
         version: 5.6.3
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@20.19.43)(yaml@2.5.1)
+        version: 4.1.11(@types/node@20.19.43)(yaml@2.9.1)
 
   packages/purpose-event-consumer:
     dependencies:
@@ -451,8 +451,8 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0
       zod:
-        specifier: ^4.0.0
-        version: 4.6.7
+        specifier: ^4.6.6
+        version: 4.6.6
     devDependencies:
       '@types/node':
         specifier: ^20.19.43
@@ -471,19 +471,19 @@ importers:
         version: 5.6.3
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@20.19.43)(yaml@2.5.1)
+        version: 4.1.11(@types/node@20.19.43)(yaml@2.9.1)
 
   packages/push-signal:
     dependencies:
       '@asteasolutions/zod-to-openapi':
-        specifier: ^7.1.1
-        version: 7.1.1(zod@4.6.7)
+        specifier: ^9.1.0
+        version: 9.1.0(zod@4.6.6)
       '@ts-rest/core':
-        specifier: ^3.45.2
-        version: 3.45.2(zod@4.6.7)
+        specifier: 3.53.0-rc.1
+        version: 3.53.0-rc.1(@types/node@20.19.43)
       '@ts-rest/express':
-        specifier: ^3.45.2
-        version: 3.45.2(express@4.20.0)(zod@4.6.7)
+        specifier: 3.53.0-rc.1
+        version: 3.53.0-rc.1(@ts-rest/core@3.53.0-rc.1(@types/node@20.19.43))(express@4.20.0)
       axios:
         specifier: ^1.6.8
         version: 1.20.0
@@ -515,8 +515,8 @@ importers:
         specifier: ^5.1.1
         version: 5.1.2
       zod:
-        specifier: ^4.0.0
-        version: 4.6.7
+        specifier: ^4.6.6
+        version: 4.6.6
     devDependencies:
       '@types/express':
         specifier: ^4.17.21
@@ -550,7 +550,7 @@ importers:
         version: 5.6.3
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@20.19.43)(yaml@2.5.1)
+        version: 4.1.11(@types/node@20.19.43)(yaml@2.9.1)
 
   packages/signal-persister:
     dependencies:
@@ -573,8 +573,8 @@ importers:
         specifier: ^5.1.1
         version: 5.2.0
       zod:
-        specifier: ^4.0.0
-        version: 4.6.7
+        specifier: ^4.6.6
+        version: 4.6.6
     devDependencies:
       '@types/express':
         specifier: ^4.17.21
@@ -596,22 +596,22 @@ importers:
         version: 5.6.3
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@20.19.43)(yaml@2.5.1)
+        version: 4.1.11(@types/node@20.19.43)(yaml@2.9.1)
 
   packages/tsrest-openapi-parser:
     dependencies:
       '@asteasolutions/zod-to-openapi':
-        specifier: ^7.1.1
-        version: 7.1.1(zod@4.6.7)
+        specifier: ^9.1.0
+        version: 9.1.0(zod@4.6.6)
       '@ts-rest/core':
-        specifier: ^3.45.2
-        version: 3.45.2(zod@4.6.7)
+        specifier: 3.53.0-rc.1
+        version: 3.53.0-rc.1(@types/node@20.19.43)
       openapi3-ts:
-        specifier: ^2.0.2
-        version: 2.0.2
+        specifier: ^4.6.2
+        version: 4.6.2
       zod:
-        specifier: ^4.0.0
-        version: 4.6.7
+        specifier: ^4.6.6
+        version: 4.6.6
     devDependencies:
       '@types/node':
         specifier: ^20.19.43
@@ -631,10 +631,10 @@ packages:
       '@faker-js/faker': ^7.0.0 || ^8.0.0 || ^9.0.0
       zod: ^3.21.4
 
-  '@asteasolutions/zod-to-openapi@7.1.1':
-    resolution: {integrity: sha512-lF0d1gAc0lYLO9/BAGivwTwE2Sh9h6CHuDcbk5KnGBfIuAsAkDC+Fdat4dkQY3CS/zUWKHRmFEma0B7X132Ymw==}
+  '@asteasolutions/zod-to-openapi@9.1.0':
+    resolution: {integrity: sha512-pLMeRgRYS7/vZIgAAkOe2P6+XGTifR1MT9pqDoxZ11EmcJJ+DPmdPqLN8ZZF4U8R9KHCCQCS9c2wtuE8wSrfkw==}
     peerDependencies:
-      zod: ^3.20.2
+      zod: ^4.0.0
 
   '@aws-crypto/ie11-detection@3.0.0':
     resolution: {integrity: sha512-341lBBkiY1DfDNKai/wXM3aujNBkXR7tq1URPQDL9wi3AUbI80NR74uF1TXHMm7po1AcnFk8iu2S2IeU/+/A+Q==}
@@ -1578,22 +1578,19 @@ packages:
   '@testcontainers/postgresql@10.2.2':
     resolution: {integrity: sha512-G1xJKe8omeNzngK0dj4R2cSYxWyOUdTXD/oBA03AqIwdReq/gi4WjT6CJqGbkqQy9opXZV6ug3gHMja+wM5BCA==}
 
-  '@ts-rest/core@3.45.2':
-    resolution: {integrity: sha512-Eiv+Sa23MbsAd1Gx9vNJ+IFCDyLZNdJ+UuGMKbFvb+/NmgcBR1VL1UIVtEkd5DJxpYMMd8SLvW91RgB2TS8iPw==}
+  '@ts-rest/core@3.53.0-rc.1':
+    resolution: {integrity: sha512-hDMXqKHSys6w+kXFW1Q6EvN8QgRvtXKXJ2TpYByKI4TquaPjiTOv99aLD26X4LNRzdna8Ci1PVyzr0jYZv0oNQ==}
     peerDependencies:
-      zod: ^3.22.3
+      '@types/node': ^18.18.7 || >=20.8.4
     peerDependenciesMeta:
-      zod:
+      '@types/node':
         optional: true
 
-  '@ts-rest/express@3.45.2':
-    resolution: {integrity: sha512-GypL5auYuh3WS2xCc58J9OpgpYYJoPY2NvBxJxHOLdhMOoGHhYI8oIUtxfxIxWZcPJOAokrrQJ2zb2hrPUuR1A==}
+  '@ts-rest/express@3.53.0-rc.1':
+    resolution: {integrity: sha512-TPF2kFdxCF6fI41z2yXexPjSdjN5e65sanmCiUx/4HNp5/ObcGLkHbdHSnvDhNkmkPn3jcd6g2EOvQgsQ8mkfg==}
     peerDependencies:
-      express: ^4.0.0
-      zod: ^3.22.3
-    peerDependenciesMeta:
-      zod:
-        optional: true
+      '@ts-rest/core': 3.53.0-rc.1
+      express: ^4.0.0 || ^5.0.0
 
   '@tsconfig/node-lts@20.1.3':
     resolution: {integrity: sha512-m3b7EP2U+h5tNSpaBMfcTuHmHn04wrgRPQQrfKt75YIPq6kPs2153/KfPHdqkEWGx5pEBvS6rnvToT+yTtC1iw==}
@@ -2949,11 +2946,8 @@ packages:
   one-time@1.0.0:
     resolution: {integrity: sha512-5DXOiRKwuSEcQ/l0kGCF6Q3jcADFv5tSmRaJck/OqkVFcOzutB134KRSfF0xDrL39MNnqxbHBbUUcjZIhTgb2g==}
 
-  openapi3-ts@2.0.2:
-    resolution: {integrity: sha512-TxhYBMoqx9frXyOgnRHufjQfPXomTIHYKhSKJ6jHfj13kS8OEIhvmE8CTuQyKtjjWttAjX5DPxM1vmalEpo8Qw==}
-
-  openapi3-ts@4.4.0:
-    resolution: {integrity: sha512-9asTNB9IkKEzWMcHmVZE7Ts3kC9G7AFHfs8i7caD8HbI76gEjdkId4z/AkP83xdZsH7PLAnnbl47qZkXuxpArw==}
+  openapi3-ts@4.6.2:
+    resolution: {integrity: sha512-gyyil3DweqhXiEhTqtAs9wwRLfWHmetwhI4kmM5Rn0d6gtmK863Ki7qqbQnp9+Wwlqoe3B1LFWj7kMp5ctE4rQ==}
 
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
@@ -3667,13 +3661,9 @@ packages:
   yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
 
-  yaml@1.10.2:
-    resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
-    engines: {node: '>= 6'}
-
-  yaml@2.5.1:
-    resolution: {integrity: sha512-bLQOjaX/ADgQ20isPJRvF0iRUHIxVhYvr53Of7wGcWlO2jvtUlH5m87DsmulFVxRpNLOnI4tB6p/oh8D7kpn9Q==}
-    engines: {node: '>= 14'}
+  yaml@2.9.1:
+    resolution: {integrity: sha512-3NxN8+78OdzbT7C/WjGsyfPAtJaN3FNDsWxv7Y7mcDsT/oOmgW8BpyQQFFBnvZE3j9Y2Sdz1ULFLezL7Eb2yFw==}
+    engines: {node: '>= 14.6'}
     hasBin: true
 
   yn@3.1.1:
@@ -3691,21 +3681,21 @@ packages:
   zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
-  zod@4.6.7:
-    resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
+  zod@4.6.6:
+    resolution: {integrity: sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA==}
 
 snapshots:
 
-  '@anatine/zod-mock@3.14.0(@faker-js/faker@10.5.0)(zod@4.6.7)':
+  '@anatine/zod-mock@3.14.0(@faker-js/faker@10.5.0)(zod@4.6.6)':
     dependencies:
       '@faker-js/faker': 10.5.0
       randexp: 0.5.3
-      zod: 4.6.7
+      zod: 4.6.6
 
-  '@asteasolutions/zod-to-openapi@7.1.1(zod@4.6.7)':
+  '@asteasolutions/zod-to-openapi@9.1.0(zod@4.6.6)':
     dependencies:
-      openapi3-ts: 4.4.0
-      zod: 4.6.7
+      openapi3-ts: 4.6.2
+      zod: 4.6.6
 
   '@aws-crypto/ie11-detection@3.0.0':
     dependencies:
@@ -3826,8 +3816,8 @@ snapshots:
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sso-oidc': 3.583.0
-      '@aws-sdk/client-sts': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)
+      '@aws-sdk/client-sso-oidc': 3.583.0(@aws-sdk/client-sts@3.583.0)
+      '@aws-sdk/client-sts': 3.583.0
       '@aws-sdk/core': 3.582.0
       '@aws-sdk/credential-provider-node': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)(@aws-sdk/client-sts@3.583.0)
       '@aws-sdk/middleware-host-header': 3.577.0
@@ -3870,11 +3860,11 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@aws-sdk/client-sso-oidc@3.583.0':
+  '@aws-sdk/client-sso-oidc@3.583.0(@aws-sdk/client-sts@3.583.0)':
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sts': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)
+      '@aws-sdk/client-sts': 3.583.0
       '@aws-sdk/core': 3.582.0
       '@aws-sdk/credential-provider-node': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)(@aws-sdk/client-sts@3.583.0)
       '@aws-sdk/middleware-host-header': 3.577.0
@@ -3913,6 +3903,7 @@ snapshots:
       '@smithy/util-utf8': 3.0.0
       tslib: 2.6.2
     transitivePeerDependencies:
+      - '@aws-sdk/client-sts'
       - aws-crt
 
   '@aws-sdk/client-sso-oidc@3.592.0':
@@ -4134,11 +4125,11 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@aws-sdk/client-sts@3.583.0(@aws-sdk/client-sso-oidc@3.583.0)':
+  '@aws-sdk/client-sts@3.583.0':
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sso-oidc': 3.583.0
+      '@aws-sdk/client-sso-oidc': 3.583.0(@aws-sdk/client-sts@3.583.0)
       '@aws-sdk/core': 3.582.0
       '@aws-sdk/credential-provider-node': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)(@aws-sdk/client-sts@3.583.0)
       '@aws-sdk/middleware-host-header': 3.577.0
@@ -4177,7 +4168,6 @@ snapshots:
       '@smithy/util-utf8': 3.0.0
       tslib: 2.6.2
     transitivePeerDependencies:
-      - '@aws-sdk/client-sso-oidc'
       - aws-crt
 
   '@aws-sdk/client-sts@3.592.0(@aws-sdk/client-sso-oidc@3.592.0)':
@@ -4370,7 +4360,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-ini@3.583.0(@aws-sdk/client-sso-oidc@3.583.0)(@aws-sdk/client-sts@3.583.0)':
     dependencies:
-      '@aws-sdk/client-sts': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)
+      '@aws-sdk/client-sts': 3.583.0
       '@aws-sdk/credential-provider-env': 3.577.0
       '@aws-sdk/credential-provider-process': 3.577.0
       '@aws-sdk/credential-provider-sso': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)
@@ -4543,7 +4533,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-web-identity@3.577.0(@aws-sdk/client-sts@3.583.0)':
     dependencies:
-      '@aws-sdk/client-sts': 3.583.0(@aws-sdk/client-sso-oidc@3.583.0)
+      '@aws-sdk/client-sts': 3.583.0
       '@aws-sdk/types': 3.577.0
       '@smithy/property-provider': 3.0.0
       '@smithy/types': 3.0.0
@@ -4689,7 +4679,7 @@ snapshots:
 
   '@aws-sdk/token-providers@3.577.0(@aws-sdk/client-sso-oidc@3.583.0)':
     dependencies:
-      '@aws-sdk/client-sso-oidc': 3.583.0
+      '@aws-sdk/client-sso-oidc': 3.583.0(@aws-sdk/client-sts@3.583.0)
       '@aws-sdk/types': 3.577.0
       '@smithy/property-provider': 3.0.0
       '@smithy/shared-ini-file-loader': 3.0.0
@@ -4906,10 +4896,10 @@ snapshots:
 
   '@oxc-project/types@0.149.0': {}
 
-  '@pagopa/eslint-config@5.1.2(@types/eslint@9.6.1)(@typescript-eslint/eslint-plugin@8.59.0(@typescript-eslint/parser@8.59.0(eslint@9.39.2)(typescript@5.6.3))(eslint@9.39.2)(typescript@5.6.3))(eslint@9.39.2)(prettier@3.1.0)(vitest@4.1.11(@types/node@20.19.43)(yaml@2.5.1))':
+  '@pagopa/eslint-config@5.1.2(@types/eslint@9.6.1)(@typescript-eslint/eslint-plugin@8.59.0(@typescript-eslint/parser@8.59.0(eslint@9.39.2)(typescript@5.6.3))(eslint@9.39.2)(typescript@5.6.3))(eslint@9.39.2)(prettier@3.1.0)(vitest@4.1.11(@types/node@20.19.43)(yaml@2.9.1))':
     dependencies:
       '@eslint/js': 9.39.2
-      '@vitest/eslint-plugin': 1.6.16(@typescript-eslint/eslint-plugin@8.59.0(@typescript-eslint/parser@8.59.0(eslint@9.39.2)(typescript@5.6.3))(eslint@9.39.2)(typescript@5.6.3))(eslint@9.39.2)(typescript@5.8.3)(vitest@4.1.11(@types/node@20.19.43)(yaml@2.5.1))
+      '@vitest/eslint-plugin': 1.6.16(@typescript-eslint/eslint-plugin@8.59.0(@typescript-eslint/parser@8.59.0(eslint@9.39.2)(typescript@5.6.3))(eslint@9.39.2)(typescript@5.6.3))(eslint@9.39.2)(typescript@5.8.3)(vitest@4.1.11(@types/node@20.19.43)(yaml@2.9.1))
       eslint: 9.39.2
       eslint-config-prettier: 10.1.8(eslint@9.39.2)
       eslint-plugin-perfectionist: 4.15.1(eslint@9.39.2)(typescript@5.8.3)
@@ -5621,15 +5611,14 @@ snapshots:
       - encoding
       - supports-color
 
-  '@ts-rest/core@3.45.2(zod@4.6.7)':
+  '@ts-rest/core@3.53.0-rc.1(@types/node@20.19.43)':
     optionalDependencies:
-      zod: 4.6.7
+      '@types/node': 20.19.43
 
-  '@ts-rest/express@3.45.2(express@4.20.0)(zod@4.6.7)':
+  '@ts-rest/express@3.53.0-rc.1(@ts-rest/core@3.53.0-rc.1(@types/node@20.19.43))(express@4.20.0)':
     dependencies:
+      '@ts-rest/core': 3.53.0-rc.1(@types/node@20.19.43)
       express: 4.20.0
-    optionalDependencies:
-      zod: 4.6.7
 
   '@tsconfig/node-lts@20.1.3': {}
 
@@ -6011,7 +6000,7 @@ snapshots:
       '@typescript-eslint/types': 8.59.0
       eslint-visitor-keys: 5.0.1
 
-  '@vitest/eslint-plugin@1.6.16(@typescript-eslint/eslint-plugin@8.59.0(@typescript-eslint/parser@8.59.0(eslint@9.39.2)(typescript@5.6.3))(eslint@9.39.2)(typescript@5.6.3))(eslint@9.39.2)(typescript@5.8.3)(vitest@4.1.11(@types/node@20.19.43)(yaml@2.5.1))':
+  '@vitest/eslint-plugin@1.6.16(@typescript-eslint/eslint-plugin@8.59.0(@typescript-eslint/parser@8.59.0(eslint@9.39.2)(typescript@5.6.3))(eslint@9.39.2)(typescript@5.6.3))(eslint@9.39.2)(typescript@5.8.3)(vitest@4.1.11(@types/node@20.19.43)(yaml@2.9.1))':
     dependencies:
       '@typescript-eslint/scope-manager': 8.59.0
       '@typescript-eslint/utils': 8.59.0(eslint@9.39.2)(typescript@5.8.3)
@@ -6019,7 +6008,7 @@ snapshots:
     optionalDependencies:
       '@typescript-eslint/eslint-plugin': 8.59.0(@typescript-eslint/parser@8.59.0(eslint@9.39.2)(typescript@5.6.3))(eslint@9.39.2)(typescript@5.6.3)
       typescript: 5.8.3
-      vitest: 4.1.11(@types/node@20.19.43)(yaml@2.5.1)
+      vitest: 4.1.11(@types/node@20.19.43)(yaml@2.9.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -6032,13 +6021,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.1
 
-  '@vitest/mocker@4.1.11(vite@8.2.2(@types/node@20.19.43)(yaml@2.5.1))':
+  '@vitest/mocker@4.1.11(vite@8.2.2(@types/node@20.19.43)(yaml@2.9.1))':
     dependencies:
       '@vitest/spy': 4.1.11
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 8.2.2(@types/node@20.19.43)(yaml@2.5.1)
+      vite: 8.2.2(@types/node@20.19.43)(yaml@2.9.1)
 
   '@vitest/pretty-format@4.1.11':
     dependencies:
@@ -6064,10 +6053,10 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.1
 
-  '@zodios/core@10.9.6(axios@1.20.0)(zod@4.6.7)':
+  '@zodios/core@10.9.6(axios@1.20.0)(zod@4.6.6)':
     dependencies:
       axios: 1.20.0
-      zod: 4.6.7
+      zod: 4.6.6
 
   accepts@1.3.8:
     dependencies:
@@ -6415,7 +6404,7 @@ snapshots:
 
   docker-compose@0.24.8:
     dependencies:
-      yaml: 2.5.1
+      yaml: 2.9.1
 
   docker-modem@3.0.8:
     dependencies:
@@ -7131,13 +7120,9 @@ snapshots:
     dependencies:
       fn.name: 1.1.0
 
-  openapi3-ts@2.0.2:
+  openapi3-ts@4.6.2:
     dependencies:
-      yaml: 1.10.2
-
-  openapi3-ts@4.4.0:
-    dependencies:
-      yaml: 2.5.1
+      yaml: 2.9.1
 
   optionator@0.9.4:
     dependencies:
@@ -7802,7 +7787,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite@8.2.2(@types/node@20.19.43)(yaml@2.5.1):
+  vite@8.2.2(@types/node@20.19.43)(yaml@2.9.1):
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.7
@@ -7812,12 +7797,12 @@ snapshots:
     optionalDependencies:
       '@types/node': 20.19.43
       fsevents: 2.3.3
-      yaml: 2.5.1
+      yaml: 2.9.1
 
-  vitest@4.1.11(@types/node@20.19.43)(yaml@2.5.1):
+  vitest@4.1.11(@types/node@20.19.43)(yaml@2.9.1):
     dependencies:
       '@vitest/expect': 4.1.11
-      '@vitest/mocker': 4.1.11(vite@8.2.2(@types/node@20.19.43)(yaml@2.5.1))
+      '@vitest/mocker': 4.1.11(vite@8.2.2(@types/node@20.19.43)(yaml@2.9.1))
       '@vitest/pretty-format': 4.1.11
       '@vitest/runner': 4.1.11
       '@vitest/snapshot': 4.1.11
@@ -7834,7 +7819,7 @@ snapshots:
       tinyexec: 1.3.0
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.1
-      vite: 8.2.2(@types/node@20.19.43)(yaml@2.5.1)
+      vite: 8.2.2(@types/node@20.19.43)(yaml@2.9.1)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.19.43
@@ -7896,9 +7881,7 @@ snapshots:
 
   yallist@4.0.0: {}
 
-  yaml@1.10.2: {}
-
-  yaml@2.5.1: {}
+  yaml@2.9.1: {}
 
   yn@3.1.1: {}
 
@@ -7912,4 +7895,4 @@ snapshots:
 
   zod@3.23.8: {}
 
-  zod@4.6.7: {}
+  zod@4.6.6: {}

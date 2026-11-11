@@ -1,6 +1,8 @@
 import { z } from "zod";
 
-const CommaSeparatedStringToArray = <T extends z.ZodType>(t: T) =>
+const CommaSeparatedStringToArray = <T extends z.ZodType<unknown, string>>(
+  t: T
+) =>
   z
     .string()
     .nonempty()

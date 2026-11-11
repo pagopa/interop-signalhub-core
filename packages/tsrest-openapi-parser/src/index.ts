@@ -2,14 +2,19 @@ import {
   extendZodWithOpenApi,
   OpenApiGeneratorV3,
   OpenAPIRegistry,
+  ResponseConfig,
   RouteConfig
 } from "@asteasolutions/zod-to-openapi";
-import { RouteParameter } from "@asteasolutions/zod-to-openapi/dist/openapi-registry.js";
+import {
+  ComponentTypeOf,
+  RouteParameter
+} from "@asteasolutions/zod-to-openapi/dist/openapi-registry.js";
 import {
   AppRoute,
   AppRouter,
   AppRouteResponse,
   ContractAnyType,
+  ContractAnyTypeLegacy,
   isZodType
 } from "@ts-rest/core";
 import {
@@ -17,7 +22,7 @@ import {
   InfoObject,
   OpenAPIObject,
   OperationObject
-} from "openapi3-ts";
+} from "openapi3-ts/oas30";
 import { z } from "zod";
 
 extendZodWithOpenApi(z);
@@ -25,10 +30,12 @@ extendZodWithOpenApi(z);
 export type AdddedInfo = Record<string, Record<string, ResponseHeader>>;
 
 export type OpenAPICustomComponent = {
-  type: OpenAPIComponentTypeKey;
-  name: string;
-  component: unknown;
-};
+  [Type in OpenAPIComponentTypeKey]: {
+    type: Type;
+    name: string;
+    component: ComponentTypeOf<Type>;
+  };
+}[OpenAPIComponentTypeKey];
 
 export type ResponseHeader = {
   header: HeadersObject;
@@ -36,7 +43,7 @@ export type ResponseHeader = {
 
 type OpenAPIComponentTypeKey = Parameters<typeof registry.registerComponent>[0];
 
-type ResponseItems = RouteConfig["responses"];
+type ResponseItems = Record<string, ResponseConfig>;
 
 type RouterPath = {
   id: string;
@@ -154,7 +161,7 @@ const generateOpenAPIFromTsRestContract = (
           ? {
               content: {
                 "application/json": {
-                  schema: body as z.ZodType<unknown, z.ZodTypeDef, unknown>
+                  schema: body as z.ZodType
                 }
               },
               description: "",
@@ -207,7 +214,7 @@ const registerRowOpenAPIcomponents = (
   });
 };
 const getHeaders = (
-  headers: ContractAnyType | undefined
+  headers: Record<string, ContractAnyType> | ContractAnyTypeLegacy | undefined
 ): RouteParameter | undefined =>
   headers && Object.keys(headers).length === 0
     ? undefined
