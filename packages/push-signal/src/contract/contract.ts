@@ -1,4 +1,3 @@
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { initContract } from "@ts-rest/core";
 import {
   Problem as ProblemComponent,
@@ -10,21 +9,17 @@ import { z } from "zod";
 
 import { config } from "../config/env.js";
 
-extendZodWithOpenApi(z);
-
 const c = initContract();
 
 export const pathPrefix = `/${config.apiVersion}/push`;
 
-// Here we use "extend" ZOD api only to add keyword "openapi" in order to generate openAPI document with component section
-// Read more here: https://github.com/asteasolutions/zod-to-openapi
-
-const Problem = ProblemComponent.openapi("problem");
-const SignalPushResponse =
-  SignalPushResponseComponent.openapi("SignalPushResponse");
+const Problem = ProblemComponent.meta({ id: "problem" });
+const SignalPushResponse = SignalPushResponseComponent.meta({
+  id: "SignalPushResponse"
+});
 const SignalPayload = SignalPayloadComponent.extend({
-  signalType: SignalType.openapi("signalType")
-}).openapi("SignalPayload");
+  signalType: SignalType.meta({ id: "signalType" })
+}).meta({ id: "SignalPayload" });
 
 export const contract = c.router(
   {
