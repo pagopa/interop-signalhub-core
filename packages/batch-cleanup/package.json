@@ -18,7 +18,7 @@
     "dotenv-flow": "^4.1.0",
     "pagopa-signalhub-commons": "workspace:*",
     "pg-promise": "^11.8.0",
-    "zod": "^4.0.0"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@types/node": "^20.19.43",
