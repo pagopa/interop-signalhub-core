@@ -60,8 +60,8 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0
       zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+        specifier: ^4.0.0
+        version: 4.6.7
     devDependencies:
       '@types/node':
         specifier: ^20.19.43
@@ -94,8 +94,8 @@ importers:
         specifier: ^11.8.0
         version: 11.8.0
       zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+        specifier: ^4.0.0
+        version: 4.6.7
     devDependencies:
       '@types/node':
         specifier: ^20.19.43
@@ -155,8 +155,8 @@ importers:
         specifier: ^3.13.0
         version: 3.13.0
       zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+        specifier: ^4.0.0
+        version: 4.6.7
     devDependencies:
       '@types/express':
         specifier: ^4.17.21
@@ -178,7 +178,7 @@ importers:
     devDependencies:
       '@anatine/zod-mock':
         specifier: 3.14.0
-        version: 3.14.0(@faker-js/faker@10.5.0)(zod@3.23.8)
+        version: 3.14.0(@faker-js/faker@10.5.0)(zod@4.6.7)
       '@faker-js/faker':
         specifier: 10.5.0
         version: 10.5.0
@@ -199,7 +199,7 @@ importers:
         version: 9.0.8
       '@zodios/core':
         specifier: 10.9.6
-        version: 10.9.6(axios@1.20.0)(zod@3.23.8)
+        version: 10.9.6(axios@1.20.0)(zod@4.6.7)
       dotenv-flow:
         specifier: 3.3.0
         version: 3.3.0
@@ -231,8 +231,8 @@ importers:
         specifier: ^4.1.11
         version: 4.1.11(@types/node@20.19.43)(yaml@2.5.1)
       zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+        specifier: ^4.0.0
+        version: 4.6.7
 
   packages/delegation-event-consumer:
     dependencies:
@@ -258,8 +258,8 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0
       zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+        specifier: ^4.0.0
+        version: 4.6.7
     devDependencies:
       '@types/node':
         specifier: ^20.19.43
@@ -304,8 +304,8 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0
       zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+        specifier: ^4.0.0
+        version: 4.6.7
     devDependencies:
       '@types/node':
         specifier: ^20.19.43
@@ -352,13 +352,13 @@ importers:
     dependencies:
       '@asteasolutions/zod-to-openapi':
         specifier: ^7.1.1
-        version: 7.1.1(zod@3.23.8)
+        version: 7.1.1(zod@4.6.7)
       '@ts-rest/core':
         specifier: ^3.45.2
-        version: 3.45.2(zod@3.23.8)
+        version: 3.45.2(zod@4.6.7)
       '@ts-rest/express':
         specifier: ^3.45.2
-        version: 3.45.2(express@4.20.0)(zod@3.23.8)
+        version: 3.45.2(express@4.20.0)(zod@4.6.7)
       axios:
         specifier: ^1.6.8
         version: 1.20.0
@@ -390,8 +390,8 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1
       zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+        specifier: ^4.0.0
+        version: 4.6.7
     devDependencies:
       '@types/express':
         specifier: ^4.17.21
@@ -451,8 +451,8 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0
       zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+        specifier: ^4.0.0
+        version: 4.6.7
     devDependencies:
       '@types/node':
         specifier: ^20.19.43
@@ -477,13 +477,13 @@ importers:
     dependencies:
       '@asteasolutions/zod-to-openapi':
         specifier: ^7.1.1
-        version: 7.1.1(zod@3.23.8)
+        version: 7.1.1(zod@4.6.7)
       '@ts-rest/core':
         specifier: ^3.45.2
-        version: 3.45.2(zod@3.23.8)
+        version: 3.45.2(zod@4.6.7)
       '@ts-rest/express':
         specifier: ^3.45.2
-        version: 3.45.2(express@4.20.0)(zod@3.23.8)
+        version: 3.45.2(express@4.20.0)(zod@4.6.7)
       axios:
         specifier: ^1.6.8
         version: 1.20.0
@@ -515,8 +515,8 @@ importers:
         specifier: ^5.1.1
         version: 5.1.2
       zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+        specifier: ^4.0.0
+        version: 4.6.7
     devDependencies:
       '@types/express':
         specifier: ^4.17.21
@@ -573,8 +573,8 @@ importers:
         specifier: ^5.1.1
         version: 5.2.0
       zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+        specifier: ^4.0.0
+        version: 4.6.7
     devDependencies:
       '@types/express':
         specifier: ^4.17.21
@@ -602,16 +602,16 @@ importers:
     dependencies:
       '@asteasolutions/zod-to-openapi':
         specifier: ^7.1.1
-        version: 7.1.1(zod@3.23.8)
+        version: 7.1.1(zod@4.6.7)
       '@ts-rest/core':
         specifier: ^3.45.2
-        version: 3.45.2(zod@3.23.8)
+        version: 3.45.2(zod@4.6.7)
       openapi3-ts:
         specifier: ^2.0.2
         version: 2.0.2
       zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+        specifier: ^4.0.0
+        version: 4.6.7
     devDependencies:
       '@types/node':
         specifier: ^20.19.43
@@ -3691,18 +3691,21 @@ packages:
   zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
+  zod@4.6.7:
+    resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
+
 snapshots:
 
-  '@anatine/zod-mock@3.14.0(@faker-js/faker@10.5.0)(zod@3.23.8)':
+  '@anatine/zod-mock@3.14.0(@faker-js/faker@10.5.0)(zod@4.6.7)':
     dependencies:
       '@faker-js/faker': 10.5.0
       randexp: 0.5.3
-      zod: 3.23.8
+      zod: 4.6.7
 
-  '@asteasolutions/zod-to-openapi@7.1.1(zod@3.23.8)':
+  '@asteasolutions/zod-to-openapi@7.1.1(zod@4.6.7)':
     dependencies:
       openapi3-ts: 4.4.0
-      zod: 3.23.8
+      zod: 4.6.7
 
   '@aws-crypto/ie11-detection@3.0.0':
     dependencies:
@@ -5618,15 +5621,15 @@ snapshots:
       - encoding
       - supports-color
 
-  '@ts-rest/core@3.45.2(zod@3.23.8)':
+  '@ts-rest/core@3.45.2(zod@4.6.7)':
     optionalDependencies:
-      zod: 3.23.8
+      zod: 4.6.7
 
-  '@ts-rest/express@3.45.2(express@4.20.0)(zod@3.23.8)':
+  '@ts-rest/express@3.45.2(express@4.20.0)(zod@4.6.7)':
     dependencies:
       express: 4.20.0
     optionalDependencies:
-      zod: 3.23.8
+      zod: 4.6.7
 
   '@tsconfig/node-lts@20.1.3': {}
 
@@ -6061,10 +6064,10 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.1
 
-  '@zodios/core@10.9.6(axios@1.20.0)(zod@3.23.8)':
+  '@zodios/core@10.9.6(axios@1.20.0)(zod@4.6.7)':
     dependencies:
       axios: 1.20.0
-      zod: 3.23.8
+      zod: 4.6.7
 
   accepts@1.3.8:
     dependencies:
@@ -7908,3 +7911,5 @@ snapshots:
       readable-stream: 3.6.2
 
   zod@3.23.8: {}
+
+  zod@4.6.7: {}
