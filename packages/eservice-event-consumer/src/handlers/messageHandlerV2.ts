@@ -112,7 +112,8 @@ export async function handleMessageV2(
           "EServiceArchivingRequestedByDelegate",
           "EServiceArchivingRequestRejectedByDelegator",
           "EServiceArchivingRequestCanceledByDelegate",
-          "EServiceArchivingRequestCanceledByRevokedDelegation"
+          "EServiceArchivingRequestCanceledByRevokedDelegation",
+          "EServiceDescriptorRestoredToDraftByRevokedDelegation"
         )
       },
       async () => {
