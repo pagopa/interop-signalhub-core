@@ -78,6 +78,7 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."purpose" (
     PRIMARY KEY (purpose_id)
 );
 CREATE INDEX IF NOT EXISTS PURPOSE_INDEX_ESERVICE_AND_CONSUMER_AND_STATE ON "dev_interop"."purpose"(purpose_id, consumer_id, upper(purpose_state), eservice_id);
+CREATE INDEX IF NOT EXISTS purpose_pull_lookup_idx ON "dev_interop"."purpose"(eservice_id, consumer_id, upper(purpose_state));
 
 CREATE TABLE IF NOT EXISTS "dev_signalhub"."signal" (
     id             BIGSERIAL PRIMARY KEY,
