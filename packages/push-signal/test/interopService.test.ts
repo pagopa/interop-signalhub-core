@@ -21,7 +21,12 @@ describe("PDND Interoperability service", () => {
     await dataResetForSignalProducers(postgresDB, config.interopSchema);
   });
 
-  const validStates: string[] = ["PUBLISHED", "DEPRECATED", "ARCHIVING"];
+  const validStates: string[] = [
+    "PUBLISHED",
+    "DEPRECATED",
+    "ARCHIVING",
+    "published"
+  ];
   it.each(validStates)(
     "Should give permission to a signal producer authorized to use signal-hub push service when e-service is in %s state",
     async (state) => {
