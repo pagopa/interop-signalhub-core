@@ -3,37 +3,35 @@ import { DB, genericError, TableName } from "pagopa-signalhub-commons";
 import { config } from "../config/env.js";
 
 export interface IInteropRepository {
-  findBy: (
+  hasEnabledDescriptor: (
     eserviceId: string,
     producerId: string,
-    eserviceAllowedStates: string[]
-  ) => Promise<string[]>;
+    allowedStates: readonly string[]
+  ) => Promise<boolean>;
 }
 
 export const interopRepository = (db: DB): IInteropRepository => {
   const eserviceTable: TableName = `${config.interopSchema}.eservice`;
   return {
-    async findBy(
+    async hasEnabledDescriptor(
       eserviceId: string,
       producerId: string,
-      eserviceAllowedStates: string[]
-    ): Promise<string[]> {
+      allowedStates: readonly string[]
+    ): Promise<boolean> {
       try {
-        const sqlConditionStates = eserviceAllowedStates
-          .map((eServiceState) => `UPPER(state) = UPPER('${eServiceState}')`)
-          .join(" OR ");
-
-        return await db.manyOrNone(
-          `SELECT eservice_id 
-           FROM ${eserviceTable} 
-           WHERE eservice_id = $1 and producer_id = $2
-           AND (${sqlConditionStates}) 
-           AND enabled_signal_hub IS TRUE`,
-          [eserviceId, producerId]
+        const { found } = await db.one<{ found: boolean }>(
+          `SELECT EXISTS (
+             SELECT 1 FROM ${eserviceTable}
+             WHERE eservice_id = $1 AND producer_id = $2
+             AND enabled_signal_hub IS TRUE
+             AND UPPER(state) = ANY($3::text[])
+           ) AS found`,
+          [eserviceId, producerId, allowedStates]
         );
+        return found;
       } catch (error: unknown) {
         throw genericError(
-          `Error interopRepository::findByEserviceIdAndProducerId ${error}`
+          `Error interopRepository::hasEnabledDescriptor ${error}`
         );
       }
     }

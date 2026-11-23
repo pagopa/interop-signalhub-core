@@ -14,6 +14,9 @@ interface InteropServiceBuilder {
 }
 
 export function interopServiceBuilder(db: DB): InteropServiceBuilder {
+  const repository = interopRepository(db);
+  const allowedStates = ["PUBLISHED", "DEPRECATED", "ARCHIVING"] as const;
+
   return {
     async producerIsAuthorizedToPushSignals(
       producerId: string,
@@ -23,14 +26,13 @@ export function interopServiceBuilder(db: DB): InteropServiceBuilder {
       logger.info(
         `InteropService::producerIsAuthorizedToPushSignals with producerId: ${producerId}`
       );
-      const eserviceStatesAllowed = ["PUBLISHED", "DEPRECATED", "ARCHIVING"];
-      const result = await interopRepository(db).findBy(
+      const hasEnabledDescriptor = await repository.hasEnabledDescriptor(
         eserviceId,
         producerId,
-        eserviceStatesAllowed
+        allowedStates
       );
 
-      if (isNotEserviceVersionPublishedOrDeprecated(result)) {
+      if (!hasEnabledDescriptor) {
         throw operationPushForbidden({
           eserviceId,
           producerId
@@ -38,8 +40,4 @@ export function interopServiceBuilder(db: DB): InteropServiceBuilder {
       }
     }
   };
-}
-
-function isNotEserviceVersionPublishedOrDeprecated(list: string[]): boolean {
-  return !list?.length;
 }
