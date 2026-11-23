@@ -1,9 +1,4 @@
-import {
-  DB,
-  Logger,
-  SignalRecord,
-  SignalResponse
-} from "pagopa-signalhub-commons";
+import { DB, Logger, SignalResponse } from "pagopa-signalhub-commons";
 
 import { config } from "../config/env.js";
 import { toSignalResponse } from "../model/domain/toSignalResponse.js";
@@ -24,6 +19,8 @@ interface ISignalService {
 }
 
 export function signalServiceBuilder(db: DB): ISignalService {
+  const repository = signalRepository(db);
+
   return {
     async getSignal(
       eserviceId: string,
@@ -39,32 +36,23 @@ export function signalServiceBuilder(db: DB): ISignalService {
         `SignalService::getSignal, signalId: ${signalId}, limit: ${limit}`
       );
 
-      // eslint-disable-next-line functional/no-let
-      let records: SignalRecord[] | null = [];
-
       if (config.featureFlagTimeWindow) {
         logger.debug(
           `SignalService::getSignal with config FEATURE_FLAG_TIME_WINDOW = true, timeWindowInSeconds: ${config.timeWindowInSeconds} seconds`
         );
-        records = await signalRepository(db).getByEserviceByTimeWindow(
-          eserviceId,
-          signalId,
-          limit,
-          config.timeWindowInSeconds
-        );
-      } else {
-        records = await signalRepository(db).getByEservice(
-          eserviceId,
-          signalId,
-          limit
-        );
       }
 
-      const signals: SignalResponse[] = (records || []).map(toSignalResponse);
-      const lastSignalId = signals.length
-        ? signals[signals.length - 1].signalId
-        : null;
-      const nextSignalId = await signalRepository(db).getNextSignalId(
+      const records = config.featureFlagTimeWindow
+        ? await repository.getByEserviceByTimeWindow(
+            eserviceId,
+            signalId,
+            limit,
+            config.timeWindowInSeconds
+          )
+        : await repository.getByEservice(eserviceId, signalId, limit);
+      const signals = records.map(toSignalResponse);
+      const lastSignalId = signals.at(-1)?.signalId ?? null;
+      const nextSignalId = await repository.getNextSignalId(
         eserviceId,
         lastSignalId
       );

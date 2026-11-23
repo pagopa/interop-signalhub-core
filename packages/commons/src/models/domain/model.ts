@@ -61,8 +61,13 @@ export const SignalPullResponse = z.object({
   lastSignalId: z.number().nullish()
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type SignalRecord = any;
+export type SignalRecord = {
+  signal_id: string;
+  object_id: string;
+  eservice_id: string;
+  object_type: string;
+  signal_type: SignalResponse["signalType"];
+};
 
 export const SignalMessage = SignalSchema.extend({
   correlationId: z.string()
