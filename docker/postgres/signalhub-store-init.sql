@@ -91,7 +91,8 @@ CREATE TABLE IF NOT EXISTS "dev_signalhub"."signal" (
 );
 CREATE INDEX IF NOT EXISTS SIGNAL_INDEX_SIGNAL_ID ON "dev_signalhub"."signal"(signal_id);
 CREATE INDEX IF NOT EXISTS SIGNAL_INDEX_ESERVICE_ID on "dev_signalhub"."signal"(eservice_id);
-CREATE UNIQUE INDEX IF NOT EXISTS SIGNAL_INDEX_ON_SIGNAL_ID_ESERVICE_ID ON "dev_signalhub"."signal"(eservice_id, signal_id);
+CREATE UNIQUE INDEX IF NOT EXISTS signal_eservice_id_signal_id_covering_idx
+    ON "dev_signalhub"."signal"(eservice_id, signal_id) INCLUDE (tmst_insert);
 
 CREATE TABLE IF NOT EXISTS "dev_signalhub"."dead_signal" (
     id             BIGSERIAL PRIMARY KEY,

@@ -7,6 +7,8 @@ import {
 } from "../models/domain/errors.js";
 import { signalRepository } from "../repositories/signal.repository.js";
 
+export type SignalService = ReturnType<typeof signalServiceBuilder>;
+
 interface ISignalService {
   readonly verify: (
     signalId: number,
@@ -14,7 +16,10 @@ interface ISignalService {
     logger: Logger
   ) => Promise<void>;
 }
+
 export function signalServiceBuilder(db: DB): ISignalService {
+  const repository = signalRepository(db);
+
   return {
     async verify(
       signalId: number,
@@ -24,33 +29,19 @@ export function signalServiceBuilder(db: DB): ISignalService {
       logger.info(
         `SignalService::verify signald: ${signalId}, eserviceId: ${eserviceId}`
       );
-      const signalIdPresent = await signalRepository(db).findBy(
+      const storedSignalId = await repository.findFirstMatchingSignalId(
+        eserviceId,
         signalId,
-        eserviceId
+        config.featureFlagTimeWindow ? config.timeWindowInSeconds : null
       );
 
-      if (signalIsDuplicated(signalIdPresent)) {
+      if (storedSignalId === String(signalId)) {
         throw signalIdDuplicatedForEserviceId(signalId, eserviceId);
       }
 
-      if (config.featureFlagTimeWindow) {
-        const signalsWithHigherSignalId = await signalRepository(
-          db
-        ).findSignalsWithSignalIdMajorThanAndAlreadyStored(
-          eserviceId,
-          signalId,
-          config.timeWindowInSeconds
-        );
-
-        if (signalsWithHigherSignalId && signalsWithHigherSignalId.length > 0) {
-          throw signalStoredWithHigherSignalId(signalId, eserviceId);
-        }
+      if (storedSignalId !== null) {
+        throw signalStoredWithHigherSignalId(signalId, eserviceId);
       }
     }
   };
 }
-
-const signalIsDuplicated = (signalIdPresent: number | null): boolean =>
-  signalIdPresent !== null;
-
-export type SignalService = ReturnType<typeof signalServiceBuilder>;

@@ -82,6 +82,55 @@ describe("Store service", () => {
       config.timeWindowInSeconds = 5;
     });
 
+    it("Should report a duplicate before an older stored signal with a higher ID", async () => {
+      const signalId = 1;
+      const eserviceId = "test-eservice-id";
+      await writeSignal(
+        createSignal({ signalId, eserviceId }),
+        postgresDB,
+        config.signalHubSchema
+      );
+      await writeSignal(
+        createSignal({ signalId: signalId + 1, eserviceId }),
+        postgresDB,
+        config.signalHubSchema
+      );
+      await postgresDB.none(
+        `UPDATE ${config.signalHubSchema}.signal
+         SET tmst_insert = NOW() - INTERVAL '1 minute'
+         WHERE eservice_id = $1 AND signal_id = $2`,
+        [eserviceId, signalId + 1]
+      );
+
+      await expect(
+        signalService.verify(signalId, eserviceId, genericLogger)
+      ).rejects.toThrowError(
+        signalIdDuplicatedForEserviceId(signalId, eserviceId)
+      );
+    });
+
+    it("Should distinguish adjacent bigint IDs that round to the same number", async () => {
+      const signalId = Number.MAX_SAFE_INTEGER + 1;
+      const eserviceId = "test-eservice-id";
+      await writeSignal(
+        createSignal({ signalId, eserviceId }),
+        postgresDB,
+        config.signalHubSchema
+      );
+      await postgresDB.none(
+        `UPDATE ${config.signalHubSchema}.signal
+         SET signal_id = signal_id + 1, tmst_insert = NOW() - INTERVAL '1 minute'
+         WHERE eservice_id = $1 AND signal_id = $2`,
+        [eserviceId, signalId]
+      );
+
+      await expect(
+        signalService.verify(signalId, eserviceId, genericLogger)
+      ).rejects.toThrowError(
+        signalStoredWithHigherSignalId(signalId, eserviceId)
+      );
+    });
+
     it("Should be able to deposit signal if the signalId is higher than the last stored signalId", async () => {
       const firstSignalId = getRandomInt();
       const eserviceId = "test-eservice-id";

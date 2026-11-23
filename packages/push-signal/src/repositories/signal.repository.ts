@@ -3,50 +3,37 @@ import { DB, genericInternalError, TableName } from "pagopa-signalhub-commons";
 import { config } from "../config/env.js";
 
 export interface ISignalRepository {
-  findBy: (signalId: number, eserviceId: string) => Promise<number | null>;
-  findSignalsWithSignalIdMajorThanAndAlreadyStored: (
+  findFirstMatchingSignalId: (
     eserviceId: string,
     signalId: number,
-    consolidationTimeWindowInSeconds: number
-  ) => Promise<number[] | null>;
+    consolidationTimeWindowInSeconds: number | null
+  ) => Promise<string | null>;
 }
 
 export const signalRepository = (db: DB): ISignalRepository => {
   const signalTable: TableName = `${config.signalHubSchema}.signal`;
 
   return {
-    async findBy(signalId: number, eserviceId: string): Promise<number | null> {
-      try {
-        return await db.oneOrNone(
-          `SELECT signal_id FROM ${signalTable} WHERE eservice_id = $1 AND signal_id = $2`,
-          [eserviceId, signalId]
-        );
-      } catch (error) {
-        throw genericInternalError(
-          `Error findBySignalIdAndEServiceId: ${error}`
-        );
-      }
-    },
-
-    async findSignalsWithSignalIdMajorThanAndAlreadyStored(
+    async findFirstMatchingSignalId(
       eserviceId: string,
       signalId: number,
-      consolidationTimeWindowInSeconds: number
-    ): Promise<number[] | null> {
+      consolidationTimeWindowInSeconds: number | null
+    ): Promise<string | null> {
       try {
-        return await db.manyOrNone(
-          `WITH now_once AS (
-            SELECT NOW() - INTERVAL '${consolidationTimeWindowInSeconds} seconds' AS cutoff_time
-          )
-          SELECT signal_id FROM ${signalTable}, now_once
+        const row = await db.oneOrNone<{ signal_id: string }>(
+          `SELECT signal_id
+           FROM ${signalTable}
            WHERE eservice_id = $1
-           AND signal_id > $2
-           AND tmst_insert < cutoff_time`,
-          [eserviceId, signalId]
+           AND signal_id >= $2
+           AND (signal_id = $2 OR tmst_insert < NOW() - $3 * INTERVAL '1 second')
+           ORDER BY signal_id
+           LIMIT 1`,
+          [eserviceId, signalId, consolidationTimeWindowInSeconds]
         );
+        return row?.signal_id ?? null;
       } catch (error) {
         throw genericInternalError(
-          `Error findSignalsWithSignalIdMajorThanAndAlreadyStored: ${error}`
+          `Error signalRepository::findFirstMatchingSignalId: ${error}`
         );
       }
     }
