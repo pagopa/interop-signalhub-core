@@ -12,13 +12,13 @@ export interface ISignalRepository {
     eserviceId: string,
     signalId: number,
     limit: number
-  ) => Promise<SignalRecord[] | null>;
+  ) => Promise<SignalRecord[]>;
   getByEserviceByTimeWindow: (
     eserviceId: string,
     signalId: number,
     limit: number,
     timeWindowInSeconds: number
-  ) => Promise<SignalRecord[] | null>;
+  ) => Promise<SignalRecord[]>;
   getNextSignalId: (
     eserviceId: string,
     signalId: number | null
@@ -33,9 +33,9 @@ export const signalRepository = (db: DB): ISignalRepository => {
       eserviceId: string,
       signalId: number,
       limit: number
-    ): Promise<SignalRecord[] | null> {
+    ): Promise<SignalRecord[]> {
       try {
-        return await db.any<SignalRecord[]>(
+        return await db.any<SignalRecord>(
           `SELECT signal_id, object_id, eservice_id, object_type, signal_type FROM ${signalTable} s 
            WHERE s.eservice_id = $1 
            AND s.signal_id > $2 
@@ -51,9 +51,9 @@ export const signalRepository = (db: DB): ISignalRepository => {
       signalId: number,
       limit: number,
       timeWindowInSeconds: number
-    ): Promise<SignalRecord[] | null> {
+    ): Promise<SignalRecord[]> {
       try {
-        return await db.any<SignalRecord[]>(
+        return await db.any<SignalRecord>(
           `WITH now_once AS (
             SELECT NOW() - INTERVAL '${timeWindowInSeconds} seconds' AS cutoff_time
           )

@@ -15,6 +15,8 @@ interface IInteropService {
 }
 
 export function interopServiceBuilder(db: DB): IInteropService {
+  const interop = interopRepository(db);
+  const delegationStore = delegationRepository(db);
   const eserviceState = ["PUBLISHED", "DEPRECATED", "ARCHIVING"];
   const agreementState = "ACTIVE";
   const purposeState = "ACTIVE";
@@ -24,9 +26,7 @@ export function interopServiceBuilder(db: DB): IInteropService {
     consumerId: string,
     eserviceId: string
   ) => {
-    const administrativeActs = await interopRepository(
-      db
-    ).findAgreementAndPurposeBy(
+    const administrativeActs = await interop.findAgreementAndPurposeBy(
       eserviceId,
       consumerId,
       eserviceState,
@@ -46,7 +46,7 @@ export function interopServiceBuilder(db: DB): IInteropService {
     eserviceId: string,
     logger: Logger
   ): Promise<boolean> => {
-    const delegations = await delegationRepository(db).findBy(
+    const delegations = await delegationStore.findBy(
       consumerId,
       eserviceId,
       delegationState
@@ -58,16 +58,15 @@ export function interopServiceBuilder(db: DB): IInteropService {
 
     // For each delegation we have to check if an agreement and at least one purpose is ACTIVE. Once find one we can skip the others
     for (const delegation of delegations) {
-      const administrativeActs = await interopRepository(
-        db
-      ).findAgreementAndPurposeInDelegationBy(
-        delegation.eserviceId,
-        delegation.delegatorId,
-        eserviceState,
-        purposeState,
-        agreementState,
-        delegation.delegationId
-      );
+      const administrativeActs =
+        await interop.findAgreementAndPurposeInDelegationBy(
+          delegation.eserviceId,
+          delegation.delegatorId,
+          eserviceState,
+          purposeState,
+          agreementState,
+          delegation.delegationId
+        );
 
       if (hasItems(administrativeActs)) {
         logger.info(

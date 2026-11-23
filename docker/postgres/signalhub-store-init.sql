@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."delegation" (
     UNIQUE (event_stream_id, event_version_id),
     PRIMARY KEY (delegation_id)
 );
+CREATE INDEX IF NOT EXISTS delegation_pull_lookup_idx ON "dev_interop"."delegation"(delegate_id, eservice_id, upper(state));
 
 
 CREATE TABLE IF NOT EXISTS "dev_interop"."agreement" (
@@ -78,6 +79,7 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."purpose" (
     PRIMARY KEY (purpose_id)
 );
 CREATE INDEX IF NOT EXISTS PURPOSE_INDEX_ESERVICE_AND_CONSUMER_AND_STATE ON "dev_interop"."purpose"(purpose_id, consumer_id, upper(purpose_state), eservice_id);
+CREATE INDEX IF NOT EXISTS purpose_pull_lookup_idx ON "dev_interop"."purpose"(eservice_id, consumer_id, upper(purpose_state));
 
 CREATE TABLE IF NOT EXISTS "dev_signalhub"."signal" (
     id             BIGSERIAL PRIMARY KEY,
