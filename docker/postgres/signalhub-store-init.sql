@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS "dev_interop"."delegation" (
     UNIQUE (event_stream_id, event_version_id),
     PRIMARY KEY (delegation_id)
 );
+CREATE INDEX IF NOT EXISTS delegation_pull_lookup_idx ON "dev_interop"."delegation"(delegate_id, eservice_id, upper(state));
 
 
 CREATE TABLE IF NOT EXISTS "dev_interop"."agreement" (
