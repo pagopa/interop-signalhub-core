@@ -1,0 +1,33 @@
+{
+  "name": "pagopa-signalhub-datalake-data-exporter",
+  "version": "1.0.0",
+  "description": "PagoPA Interop Signalhub export of signals to datalake",
+  "type": "module",
+  "main": "dist",
+  "scripts": {
+    "start": "node --watch --loader ts-node/esm -r 'dotenv-flow/config'  ./src/index.ts",
+    "build": "tsc",
+    "test": "vitest",
+    "format:check": "prettier --check src test",
+    "format:write": "prettier --write src test",
+    "lint": "eslint ./src/** ./test/**",
+    "lint:autofix": "eslint ./src/** ./test/** --fix",
+    "check": "tsc --project tsconfig.check.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv-flow": "^4.1.0",
+    "pagopa-signalhub-commons": "workspace:*",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "pagopa-signalhub-commons-test": "workspace:*",
+    "prettier": "3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3",
+    "vitest": "^4.1.11"
+  }
+}

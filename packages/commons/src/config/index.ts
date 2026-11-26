@@ -1,6 +1,7 @@
 export * from "./api.config.js";
 export * from "./aws.config.js";
 export * from "./db.config.js";
+export * from "./fileManager.config.js";
 export * from "./http.config.js";
 export * from "./jwt.config.js";
 export * from "./kafka.config.js";
