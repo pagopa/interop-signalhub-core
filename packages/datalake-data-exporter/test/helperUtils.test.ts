@@ -3,8 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   arrayToNdjson,
   getDataCountBucketKey,
-  getNdjsonBucketKey,
-  splitArrayIntoChunks
+  getNdjsonBucketKey
 } from "../src/utils/helperUtils.js";
 
 vi.mock("crypto", () => ({
@@ -29,24 +28,6 @@ describe("helperUtils", () => {
       expect(getDataCountBucketKey(date)).toBe(
         "count/signal/20260102/20260102_030405.json"
       );
-    });
-  });
-
-  describe("splitArrayIntoChunks", () => {
-    it("should split the array into chunks of the given size", () => {
-      expect(splitArrayIntoChunks([1, 2, 3, 4, 5], 2)).toEqual([
-        [1, 2],
-        [3, 4],
-        [5]
-      ]);
-    });
-
-    it("should return one chunk if the array is smaller than the chunk size", () => {
-      expect(splitArrayIntoChunks([1, 2], 3)).toEqual([[1, 2]]);
-    });
-
-    it("should return no chunks if the array is empty", () => {
-      expect(splitArrayIntoChunks([], 3)).toEqual([]);
     });
   });
 

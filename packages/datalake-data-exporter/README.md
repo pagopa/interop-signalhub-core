@@ -6,7 +6,7 @@ This job exports all signals to the datalake bucket.
 
 For each run it uploads:
 
-- `data/signal/yyyyMMdd/yyyyMMdd_HHmmss_<random_uuid>.ndjson`: signals, 1000 per file
+- `data/signal/yyyyMMdd/yyyyMMdd_HHmmss_<random_uuid>.ndjson`: signals, 100000 per file
 - `count/signal/yyyyMMdd/yyyyMMdd_HHmmss.json`: number of exported signals
 
 ### Getting started

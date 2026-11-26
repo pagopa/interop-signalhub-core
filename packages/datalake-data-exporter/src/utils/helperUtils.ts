@@ -21,9 +21,3 @@ export function getNdjsonBucketKey(date: Date): string {
   const { day, time } = formatDate(date);
   return `data/signal/${day}/${day}_${time}_${randomUUID()}.ndjson`;
 }
-
-export function splitArrayIntoChunks<T>(array: T[], chunkSize: number): T[][] {
-  return Array.from({ length: Math.ceil(array.length / chunkSize) }, (_, i) =>
-    array.slice(i * chunkSize, (i + 1) * chunkSize)
-  );
-}

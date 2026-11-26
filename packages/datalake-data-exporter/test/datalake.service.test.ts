@@ -1,13 +1,15 @@
-import {
-  createMultipleOrderedSignals,
-  createSignal,
-  writeSignal,
-  writeSignals
-} from "pagopa-signalhub-commons-test";
+import { createSignal, writeSignal } from "pagopa-signalhub-commons-test";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { config } from "../src/config/env.js";
 import { cleanup, datalakeService, fileManager, postgresDB } from "./utils.js";
+
+const writeOrderedSignals = (howMany: number): Promise<null> =>
+  postgresDB.none(
+    `INSERT INTO ${config.signalHubSchema}.signal (correlation_id, signal_id, object_id, eservice_id, object_type, signal_type)
+     SELECT 'correlation-id-test', g, 'object-id-test', 'eservice-id-test', 'object-type-test', 'CREATE' FROM generate_series(1, $1) g`,
+    [howMany]
+  );
 
 const getNdjsonCalls = (): [string, Buffer][] =>
   vi
@@ -67,7 +69,7 @@ describe("Datalake service", () => {
 
     await datalakeService.exportData();
 
-    const [, ndjsonCall] = vi.mocked(fileManager.storeBytesByKey).mock.calls;
+    const [ndjsonCall] = vi.mocked(fileManager.storeBytesByKey).mock.calls;
     expect(ndjsonCall[0]).toBe(config.dataLakeStorageBucket);
     expect(ndjsonCall[1]).toMatch(
       /^data\/signal\/20260102\/20260102_030405_[0-9a-f-]{36}\.ndjson$/
@@ -81,12 +83,8 @@ describe("Datalake service", () => {
     });
   });
 
-  it("should upload 1001 signals in two ndjson files with different keys", async () => {
-    await writeSignals(
-      createMultipleOrderedSignals(1001),
-      postgresDB,
-      config.signalHubSchema
-    );
+  it("should upload 100001 signals in two ndjson files with different keys", async () => {
+    await writeOrderedSignals(100001);
 
     await datalakeService.exportData();
 
@@ -95,12 +93,8 @@ describe("Datalake service", () => {
     expect(new Set(ndjsonKeys).size).toBe(2);
   });
 
-  it("should upload each of 1001 signals exactly once", async () => {
-    await writeSignals(
-      createMultipleOrderedSignals(1001),
-      postgresDB,
-      config.signalHubSchema
-    );
+  it("should upload each of 100001 signals exactly once", async () => {
+    await writeOrderedSignals(100001);
 
     await datalakeService.exportData();
 
@@ -109,8 +103,20 @@ describe("Datalake service", () => {
       .map((line) => JSON.parse(line).signalId)
       .sort((a, b) => a - b);
     expect(exportedSignalIds).toEqual(
-      Array.from({ length: 1001 }, (_, i) => i + 1)
+      Array.from({ length: 100001 }, (_, i) => i + 1)
     );
+  });
+
+  it("should upload the count file after the ndjson files", async () => {
+    await writeOrderedSignals(100001);
+
+    await datalakeService.exportData();
+
+    const uploadedKeys = vi
+      .mocked(fileManager.storeBytesByKey)
+      .mock.calls.map(([, key]) => key);
+    expect(uploadedKeys).toHaveLength(3);
+    expect(uploadedKeys[2]).toMatch(/^count\//);
   });
 
   it("should upload only the count file if there are no signals", async () => {
