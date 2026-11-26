@@ -14,8 +14,17 @@ const writeOrderedSignals = (howMany: number): Promise<null> =>
 const getNdjsonCalls = (): [string, Buffer][] =>
   vi
     .mocked(fileManager.storeBytesByKey)
-    .mock.calls.filter(([, key]) => key.startsWith("data/"))
+    .mock.calls.filter(([, key]) => key.endsWith(".ndjson"))
     .map(([, key, fileContent]) => [key, fileContent]);
+
+const getManifestKeys = (): string[] =>
+  vi
+    .mocked(fileManager.storeBytesByKey)
+    .mock.calls.map(([, key]) => key)
+    .filter((key) => key.endsWith("/_manifest.json"));
+
+const uuidPattern =
+  "[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
 
 describe("Datalake service", () => {
   afterEach(cleanup);
@@ -25,7 +34,7 @@ describe("Datalake service", () => {
     vi.useRealTimers();
   });
 
-  it("should upload the count file with the number of exported signals", async () => {
+  it("should upload the manifest with the number of exported signals", async () => {
     vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(new Date("2026-01-02T03:04:05.000Z"));
     await writeSignal(createSignal(), postgresDB, config.signalHubSchema);
@@ -35,7 +44,9 @@ describe("Datalake service", () => {
 
     expect(fileManager.storeBytesByKey).toHaveBeenCalledWith(
       config.dataLakeStorageBucket,
-      "count/signal/20260102/20260102_030405.json",
+      expect.stringMatching(
+        new RegExp(`^signal/dt=2026-01-02/run=${uuidPattern}/_manifest\\.json$`)
+      ),
       Buffer.from(
         JSON.stringify({
           count: 2,
@@ -72,7 +83,9 @@ describe("Datalake service", () => {
     const [ndjsonCall] = vi.mocked(fileManager.storeBytesByKey).mock.calls;
     expect(ndjsonCall[0]).toBe(config.dataLakeStorageBucket);
     expect(ndjsonCall[1]).toMatch(
-      /^data\/signal\/20260102\/20260102_030405_[0-9a-f-]{36}\.ndjson$/
+      new RegExp(
+        `^signal/dt=2026-01-02/run=${uuidPattern}/part-000001\\.ndjson$`
+      )
     );
     expect(JSON.parse(ndjsonCall[2].toString())).toEqual({
       signalId: 1,
@@ -83,14 +96,27 @@ describe("Datalake service", () => {
     });
   });
 
-  it("should upload 100001 signals in two ndjson files with different keys", async () => {
+  it("should upload 100001 signals in two numbered ndjson files in the run folder of the manifest", async () => {
     await writeOrderedSignals(100001);
 
     await datalakeService.exportData();
 
+    const [manifestKey] = getManifestKeys();
+    const runFolder = manifestKey.replace("_manifest.json", "");
     const ndjsonKeys = getNdjsonCalls().map(([key]) => key);
-    expect(ndjsonKeys).toHaveLength(2);
-    expect(new Set(ndjsonKeys).size).toBe(2);
+    expect(ndjsonKeys).toEqual([
+      `${runFolder}part-000001.ndjson`,
+      `${runFolder}part-000002.ndjson`
+    ]);
+  });
+
+  it("should use a different run folder for each export", async () => {
+    await datalakeService.exportData();
+    await datalakeService.exportData();
+
+    const manifestKeys = getManifestKeys();
+    expect(manifestKeys).toHaveLength(2);
+    expect(manifestKeys[0]).not.toBe(manifestKeys[1]);
   });
 
   it("should upload each of 100001 signals exactly once", async () => {
@@ -107,7 +133,7 @@ describe("Datalake service", () => {
     );
   });
 
-  it("should upload the count file after the ndjson files", async () => {
+  it("should upload the manifest after the ndjson files", async () => {
     await writeOrderedSignals(100001);
 
     await datalakeService.exportData();
@@ -116,10 +142,10 @@ describe("Datalake service", () => {
       .mocked(fileManager.storeBytesByKey)
       .mock.calls.map(([, key]) => key);
     expect(uploadedKeys).toHaveLength(3);
-    expect(uploadedKeys[2]).toMatch(/^count\//);
+    expect(uploadedKeys[2]).toMatch(/\/_manifest\.json$/);
   });
 
-  it("should upload only the count file if there are no signals", async () => {
+  it("should upload only the manifest if there are no signals", async () => {
     await datalakeService.exportData();
 
     expect(fileManager.storeBytesByKey).toHaveBeenCalledTimes(1);

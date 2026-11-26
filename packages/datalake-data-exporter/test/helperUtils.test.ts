@@ -1,32 +1,28 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import {
   arrayToNdjson,
-  getDataCountBucketKey,
+  getManifestBucketKey,
   getNdjsonBucketKey
 } from "../src/utils/helperUtils.js";
 
-vi.mock("crypto", () => ({
-  randomUUID: vi.fn().mockReturnValue("1234")
-}));
-
 describe("helperUtils", () => {
   describe("getNdjsonBucketKey", () => {
-    it("should return the ndjson path for the given date", () => {
+    it("should return the ndjson path in the run folder with the padded file number", () => {
       const date = new Date("2026-01-02T03:04:05.000Z");
 
-      expect(getNdjsonBucketKey(date)).toBe(
-        "data/signal/20260102/20260102_030405_1234.ndjson"
+      expect(getNdjsonBucketKey(date, "run-id", 12)).toBe(
+        "signal/dt=2026-01-02/run=run-id/part-000012.ndjson"
       );
     });
   });
 
-  describe("getDataCountBucketKey", () => {
-    it("should return the count path for the given date", () => {
+  describe("getManifestBucketKey", () => {
+    it("should return the manifest path in the run folder", () => {
       const date = new Date("2026-01-02T03:04:05.000Z");
 
-      expect(getDataCountBucketKey(date)).toBe(
-        "count/signal/20260102/20260102_030405.json"
+      expect(getManifestBucketKey(date, "run-id")).toBe(
+        "signal/dt=2026-01-02/run=run-id/_manifest.json"
       );
     });
   });

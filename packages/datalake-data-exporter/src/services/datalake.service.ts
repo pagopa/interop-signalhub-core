@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { DB, FileManager, Logger } from "pagopa-signalhub-commons";
 
 import { config } from "../config/env.js";
@@ -5,7 +6,7 @@ import { toExportedSignal } from "../models/domain/toExportedSignal.js";
 import { signalRepository } from "../repositories/signal.repository.js";
 import {
   arrayToNdjson,
-  getDataCountBucketKey,
+  getManifestBucketKey,
   getNdjsonBucketKey
 } from "../utils/helperUtils.js";
 
@@ -21,20 +22,23 @@ export function datalakeServiceBuilder(
 ): IDatalakeService {
   return {
     async exportData(): Promise<void> {
+      const runId = randomUUID();
       logger.info(
-        `DatalakeService::exportData uploading signals to ${config.dataLakeStorageBucket} bucket`
+        `DatalakeService::exportData uploading signals of run ${runId} to ${config.dataLakeStorageBucket} bucket`
       );
       const exportTimestamp = new Date();
       let count = 0;
+      let fileNumber = 0;
 
       await signalRepository(db).forEachChunk(100000, async (records) => {
         const signals = records.map((record) => ({
           ...toExportedSignal(record),
           exportTimestamp
         }));
+        fileNumber += 1;
         await fileManager.storeBytesByKey(
           config.dataLakeStorageBucket,
-          getNdjsonBucketKey(exportTimestamp),
+          getNdjsonBucketKey(exportTimestamp, runId, fileNumber),
           Buffer.from(arrayToNdjson(signals)),
           logger
         );
@@ -44,7 +48,7 @@ export function datalakeServiceBuilder(
       logger.info(`DatalakeService::exportData uploaded ${count} signals`);
       await fileManager.storeBytesByKey(
         config.dataLakeStorageBucket,
-        getDataCountBucketKey(exportTimestamp),
+        getManifestBucketKey(exportTimestamp, runId),
         Buffer.from(JSON.stringify({ count, exportTimestamp })),
         logger
       );
